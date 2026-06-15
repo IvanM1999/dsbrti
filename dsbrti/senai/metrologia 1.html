@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="ubuntu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="DSBRTI — Metrologia Global: Conversões, Tolerâncias ISO e Instrumentação Avançada.">
+  <title>DSBRTI · Metrologia Industrial</title>
+  <link rel="stylesheet" href="../estilos.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23E95420'/%3E%3Ctext x='4' y='24' font-size='20' font-weight='bold' fill='%23fff'%3EM%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+  
+  <nav class="navbar" role="navigation" aria-label="Navegação principal">
+    <div class="nav-container">
+      <span class="nav-brand">⚙ DSBRTI <small style="font-size:0.75rem; font-weight:normal;" id="lang-indicator">[🌐 Auto-Detecting...]</small></span>
+      <ul class="nav-links">
+        <li><a href="../index.html" data-i18n="nav-home">Início</a></li>
+        <li><a href="../landingpage.html" data-i18n="nav-landing">Landing</a></li>
+        <li><a href="metrologia.html" class="active" data-i18n="nav-metro">Metrologia</a></li>
+        <li><a href="../curriculo/index.html" data-i18n="nav-resume">Currículo</a></li>
+      </ul>
+      
+        <div class="theme-switcher">
+          <button data-theme="ubuntu" class="theme-btn active" title="Ubuntu">🐧</button>
+          <button data-theme="fedora" class="theme-btn" title="Fedora">🔵</button>
+          <button data-theme="winxp" class="theme-btn" title="Windows XP">🪟</button>
+        </div>
+              <div style="display: flex; gap: 1rem; align-items: center;">
+        <select id="manual-lang-select" style="background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border); border-radius: 4px; padding: 2px 6px; font-size: 0.85rem;">
+          <option value="pt">Português (PT)</option>
+          <option value="en">English (EN)</option>
+        </select>
+      </div>
+
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <header class="section-header" style="text-align: center; margin-bottom: 2rem;">
+      <h1 data-i18n="main-title">📏 Metrologia &amp; Engenharia</h1>
+      <p class="subtitle" data-i18n="main-subtitle">SENAI — Instrumentação, Tolerâncias de Precisão e Normas ISO</p>
+    </header>
+
+    <section class="tab-bar" role="tablist" style="display:flex; gap:0.5rem; overflow-x:auto; margin-bottom:1.5rem;">
+      <button class="tab active" data-tab="paquimetro" data-i18n="tab-caliper">Paquímetro</button>
+      <button class="tab" data-tab="micrometro" data-i18n="tab-micrometer">Micrômetro</button>
+      <button class="tab" data-tab="rugosidade" data-i18n="tab-roughness">Rugosidade</button>
+      <button class="tab" data-tab="tolerancias" data-i18n="tab-iso">Tolerâncias ISO</button>
+    </section>
+
+    <div class="tab-content">
+      
+      <section id="tab-paquimetro" class="tab-panel active">
+        <h2 data-i18n="caliper-h2">Paquímetro Industrial</h2>
+        <p data-i18n="caliper-p">Instrumento de medição linear de alta resposta com nônio/vernier mecânico ou leitura digital.</p>
+        
+        <div class="dashboard" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-top: 1rem;">
+          <div class="industrial-card">
+            <h3 data-i18n="caliper-c1-title">Escala Principal</h3>
+            <p data-i18n="caliper-c1-desc">Divisões gravadas em milímetros (mm) ou frações de polegada na haste de aço invariável.</p>
+          </div>
+          <div class="industrial-card">
+            <h3 data-i18n="caliper-c2-title">Resolução Métrica</h3>
+            <p data-i18n="caliper-c2-desc">Afastamento mínimo de leitura de <strong>0,02 mm</strong> (50 divisões) ou <strong>0,05 mm</strong> (20 divisões).</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-micrometro" class="tab-panel" hidden>
+        <h2 data-i18n="micro-h2">Micrômetro Centesimal/Milesimal</h2>
+        <p data-i18n="micro-p">Instrumento de precisão referenciado por arco com medições baseadas no deslocamento de fuso roscado.</p>
+        
+        <div class="dashboard" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-top: 1rem;">
+          <div class="industrial-card">
+            <h3 data-i18n="micro-c1-title">Passo Mecânico</h3>
+            <p data-i18n="micro-c1-desc">Passo real do fuso fixado em exatamente 0,5 mm por translação ou volta completa do tambor.</p>
+          </div>
+          <div class="industrial-card">
+            <h3 data-i18n="micro-c2-title">Força Dinâmica</h3>
+            <p data-i18n="micro-c2-desc">Catraca de torque calibrada para manter uma pressão de contato constante entre 5 N e 10 N.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-rugosidade" class="tab-panel" hidden>
+        <h2 data-i18n="rough-h2">Textura e Rugosidade Superficial (ISO 4287)</h2>
+        <p data-i18n="rough-p">Parâmetros normativos para análise de desvios microgeométricos de superfícies usinadas.</p>
+        
+        <table class="data-table" style="width:100%; margin-top:1rem;">
+          <thead>
+            <tr>
+              <th data-i18n="th-class">Classe ISO</th>
+              <th data-i18n="th-metric">Métrico (Ra)</th>
+              <th data-i18n="th-imperial">Imperial (Ra)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>N1</td><td>0.025 µm</td><td>1 µin</td></tr>
+            <tr><td>N6</td><td>0.800 µm</td><td>32 µin</td></tr>
+            <tr><td>N7</td><td>1.600 µm</td><td>63 µin</td></tr>
+            <tr><td>N12</td><td>50.00 µm</td><td>2000 µin</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="tab-tolerancias" class="tab-panel" hidden>
+        <h2 data-i18n="iso-h2">Sistema de Ajustes e Ajustagens ISO 286</h2>
+        <p data-i18n="iso-p">Cálculo estrutural de acoplamentos geométricos para eixos e furos industriais conjugados.</p>
+        
+        <div class="industrial-card" style="margin-top:1rem; border-left:4px solid var(--primary);">
+          <h3 data-i18n="iso-card-title">Ajuste Recomendado H7/g6</h3>
+          <p data-i18n="iso-card-desc">Garante folga livre e movimento relativo preciso. Amplamente aplicado em eixos giratórios de caixas redutoras e guias deslizantes.</p>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="footer" style="margin-top:3rem; padding:2rem 1rem; border-top:1px solid var(--border); text-align:center;">
+    <p>DSBRTI © 2026 — Metrologia Global Hub</p>
+    <p style="font-size:0.85rem; color:var(--text-sub);" id="network-location-log">Network Status: Offline Tracking Enabled</p>
+  </footer>
+
+  <script src="../db_industrial.js"></script>
+  <script src="../calculadoras.js"></script>
+  <script src="../core.js"></script>
+
+
+
+  <div id="toast" class="toast" role="alert" aria-live="assertive"></div>
+  
+  <script src="db_industrial.js"></script>
+  <script src="calculadoras.js"></script>
+  <script src="core.js"></script>
+  <script src="patches.js"></script>
+  
+   // Ativação da camada protetiva contra automações/scrapers
+    document.documentElement.setAttribute('data-protected', 'true');
+    console.log('%c⚙️ DestinyServicesBR Engine Iniciada com Sucesso.', 'color: #92b73e; font-weight: bold;');
+  </script>
+
+
+
+  <script>
+    /**
+     Mapas de Dicionários Técnicos de Engenharia
+     */
+    const dicionarioDicionario = {
+      pt: {
+        "nav-home": "Início", "nav-landing": "Landing", "nav-metro": "Metrologia", "nav-resume": "Currículo",
+        "main-title": "📏 Metrologia & Engenharia", "main-subtitle": "SENAI — Instrumentação, Tolerâncias de Precisão e Normas ISO",
+        "tab-caliper": "Paquímetro", "tab-micrometer": "Micrômetro", "tab-roughness": "Rugosidade", "tab-iso": "Tolerâncias ISO",
+        "caliper-h2": "Paquímetro Industrial", "caliper-p": "Instrumento de medição linear de alta resposta com nônio/vernier mecânico ou leitura digital.",
+        "caliper-c1-title": "Escala Principal", "caliper-c1-desc": "Divisões gravadas em milímetros (mm) ou frações de polegada na haste de aço invariável.",
+        "caliper-c2-title": "Resolução Métrica", "caliper-c2-desc": "Afastamento mínimo de leitura de 0,02 mm (50 divisões) ou 0,05 mm (20 divisões).",
+        "micro-h2": "Micrômetro Centesimal/Milesimal", "micro-p": "Instrumento de precisão referenciado por arco com medições baseadas no deslocamento de fuso roscado.",
+        "micro-c1-title": "Passo Mecânico", "micro-c1-desc": "Passo real do fuso fixado em exatamente 0,5 mm por translação ou volta completa do tambor.",
+        "micro-c2-title": "Força Dinâmica", "micro-c2-desc": "Catraca de torque calibrada para manter uma pressão de contato constante entre 5 N e 10 N.",
+        "rough-h2": "Textura e Rugosidade Superficial (ISO 4287)", "rough-p": "Parâmetros normativos para análise de desvios microgeométricos de superfícies usinadas.",
+        "th-class": "Classe ISO", "th-metric": "Métrico (Ra)", "th-imperial": "Imperial (Ra)",
+        "iso-h2": "Sistema de Ajustes e Ajustagens ISO 286", "iso-p": "Cálculo estrutural de acoplamentos geométricos para eixos e furos industriais conjugados.",
+        "iso-card-title": "Ajuste Recomendado H7/g6", "iso-card-desc": "Garante folga livre e movimento relativo preciso. Amplamente aplicado em eixos giratórios de caixas redutoras e guias deslizantes."
+      },
+      en: {
+        "nav-home": "Home", "nav-landing": "Solutions", "nav-metro": "Metrology", "nav-resume": "Founder",
+        "main-title": "📏 Industrial Metrology", "main-subtitle": "SENAI Normative — High Precision Inspection, ISO Tolerances & Gauges",
+        "tab-caliper": "Caliper", "tab-micrometer": "Micrometer", "tab-roughness": "Roughness", "tab-iso": "ISO Tolerances",
+        "caliper-h2": "Heavy Duty Caliper", "caliper-p": "Linear measuring instrument with mechanical vernier scale or digital encoder output.",
+        "caliper-c1-title": "Main Beam Scale", "caliper-c1-desc": "Engraved divisions in millimeters (mm) or fractional inches along the structural steel frame.",
+        "caliper-c2-title": "Metric Resolution", "caliper-c2-desc": "Minimum reading gap rated at 0.02 mm (50 division vernier) or 0.05 mm (20 division vernier).",
+        "micro-h2": "Precision Micrometer", "micro-p": "Arched instrument for high-accuracy checks using fine-pitch mechanical threads.",
+        "micro-c1-title": "Spindle Pitch", "micro-c1-desc": "True mechanical axis pitch fixed at exactly 0.5 mm per full sleeve rotation.",
+        "micro-c2-title": "Dynamic Ratchet", "micro-c2-desc": "Calibrated torque ratchet designed to apply constant force between 5 N and 10 N.",
+        "rough-h2": "Surface Roughness Matrix (ISO 4287)", "rough-p": "Standard parameters for quantifying micro-geometric deviations on machined parts.",
+        "th-class": "ISO Class", "th-metric": "Metric (Ra)", "th-imperial": "Imperial (Ra)",
+        "iso-h2": "ISO 286 Fits & Limits System", "iso-p": "Structural calculation of geometric shaft-hole clearances for industrial engineering assemblies.",
+        "iso-card-title": "Recommended Fit: H7/g6", "iso-card-desc": "Provides engineering clearance for smooth relative motion. Ideal for transmission gear shafts and slides."
+      }
+    };
+
+    /**
+     Executa a tradução em lote de elementos marcados com data-i18n
+     */
+    function aplicarTraducaoSistema(idioma) {
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const chave = el.getAttribute("data-i18n");
+        if (dicionarioDicionario[idioma] && dicionarioDicionario[idioma][chave]) {
+          el.innerHTML = dicionarioDicionario[idioma][chave];
+        }
+      });
+      document.getElementById("manual-lang-select").value = idioma;
+      console.log(`%c⚙️ Tradução: Sistema chaveado para [ ${idioma.toUpperCase()} ]`, "color: #e95420; font-weight: bold;");
+    }
+
+    /**
+     Motor Cognitivo de Geolocalização por Rede (Rastreia via API IP-API livre de chaves)
+     */
+    async function rastrearLocalizacaoModemRede() {
+      const indicador = document.getElementById("lang-indicator");
+      const logRede = document.getElementById("network-location-log");
+      
+      try {
+        // Realiza requisição direta para resolver o IP público atual do gateway da máquina/modem
+        const resposta = await fetch("http://ip-api.com/json/?fields=status,message,countryCode,country,city,isp");
+        if (!resposta.ok) throw new Error("Falha no barramento de dados de IP.");
+        
+        const dadosRede = await response.json() || await resposta.json();
+        
+        if (dadosRede && dadosRede.status === "success") {
+          const codPais = dadosRede.countryCode.toLowerCase();
+          logRede.innerText = `Network Location: ${dadosRede.city}, ${dadosRede.country} | Provider: ${dadosRede.isp}`;
+          indicador.innerText = `[🌐 ${dadosRede.countryCode}]`;
+          
+          // Heurística de decisão de idioma baseado na região geográfica identificada do modem
+          if (codPais === "br") {
+            aplicarTraducaoSistema("pt");
+          } else {
+            aplicarTraducaoSistema("en");
+          }
+        } else {
+          throw new Error("Geolocalização retornou status negativo.");
+        }
+      } catch (err) {
+        // Fallback de contingência caso a rede esteja isolada ou ocorram bloqueios de CORS/Offline
+        console.warn("Mecanismo de rede offline ou bloqueado. Usando padrão local do navegador.", err);
+        logRede.innerText = "Network Location: Restricted Air-Gapped Mode Enabled";
+        
+        const langNativa = navigator.language || navigator.userLanguage;
+        if (langNativa.startsWith("pt")) {
+          aplicarTraducaoSistema("pt");
+          indicador.innerText = "[🌐 PT-Fallback]";
+        } else {
+          aplicarTraducaoSistema("en");
+          indicador.innerText = "[🌐 EN-Fallback]";
+        }
+      }
+    }
+
+    /**
+     Inicialização Segura e Isolamento de Servidores
+     */
+    document.addEventListener("DOMContentLoaded", () => {
+      // 1. Hook de Isolamento para o domínio do Render
+      if (window.location.hostname.includes("metrologia.onrender.com")) {
+        document.documentElement.classList.add("is-isolated");
+      }
+
+      // 2. Dispara o rastreador geográfico inteligente de rede
+      rastrearLocalizacaoModemRede();
+
+      // 3. Listener para troca manual de idiomas se o usuário preferir forçar
+      document.getElementById("manual-lang-select").addEventListener("change", (e) => {
+        aplicarTraducaoSistema(e.target.value);
+      });
+
+      // 4. Mecanismo SPA local para alternância rápida das abas técnicas
+      const tabs = document.querySelectorAll('.tab');
+      const panels = document.querySelectorAll('.tab-panel');
+      
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          tabs.forEach(t => t.classList.remove('active'));
+          panels.forEach(p => p.hidden = true);
+          
+          tab.classList.add('active');
+          const painelAlvo = document.getElementById(`tab-${tab.dataset.tab}`);
+          if (painelAlvo) painelAlvo.hidden = false;
+        });
+      });
+    });
+  </script>
+</body>
+</html>

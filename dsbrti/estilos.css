@@ -1,0 +1,259 @@
+/* ==========================================================================
+   DSBRTI — ENGINE DE ESTILOS CENTRALIZADA & MATRIZ ADAPTATIVA DE COR
+   ========================================================================== */
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --font-body: 'Segoe UI', 'Ubuntu', 'Fira Sans', system-ui, -apple-system, sans-serif;
+    --font-mono: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace;
+    --radius: 8px;
+    --radius-sm: 4px;
+    --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    --max-width: 1250px;
+}
+
+/* --- TOPO DA MATRIZ DE CORES (GAA) --- */
+:root, html[data-theme="claro"] {
+    --bg-page: #f8f9fa;
+    --bg-card: #ffffff;
+    --text-main: #1e293b;
+    --text-sub: #64748b;
+    --border: #e2e8f0;
+    --primary: #0284c7;
+    --primary-hover: #0369a1;
+    --success-bg: rgba(34, 197, 94, 0.1);
+    --success-border: #22c55e;
+}
+
+html[data-theme="intermediario-claro"] {
+    --bg-page: #f1f5f9;
+    --bg-card: #f8f9fa;
+    --text-main: #0f172a;
+    --text-sub: #475569;
+    --border: #cbd5e1;
+    --primary: #0284c7;
+    --primary-hover: #0369a1;
+    --success-bg: rgba(34, 197, 94, 0.08);
+    --success-border: #16a34a;
+}
+
+html[data-theme="intermediario-escuro"], 
+html[data-theme="noturno-intermediario"] {
+    --bg-page: #1e293b;
+    --bg-card: #0f172a;
+    --text-main: #f8f9fa;
+    --text-sub: #94a3b8;
+    --border: #334155;
+    --primary: #38bdf8;
+    --primary-hover: #0ea5e9;
+    --success-bg: rgba(56, 189, 248, 0.12);
+    --success-border: #38bdf8;
+}
+
+html[data-theme="escuro-puro"] {
+    --bg-page: #0b0f19;
+    --bg-card: #111827;
+    --text-main: #e5e7eb;
+    --text-sub: #9ca3af;
+    --border: #1f2937;
+    --primary: #60a5fa;
+    --primary-hover: #3b82f6;
+    --success-bg: rgba(34, 197, 94, 0.15);
+    --success-border: #4ade80;
+}
+
+/* --- ARQUITETURA E COMPORTAMENTO BASE --- */
+body {
+    font-family: var(--font-body);
+    background-color: var(--bg-page);
+    color: var(--text-main);
+    min-height: 100vh;
+    line-height: 1.5;
+    transition: background-color var(--transition), color var(--transition), border-color var(--transition);
+}
+
+.app-container-root {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+/* HEADER RESPONSIVO */
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1.5rem;
+}
+
+.brand-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* BARRA DE NAVEGAÇÃO INDUSTRIAL - LÍQUIDA */
+.app-navigation {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.5rem;
+    background: var(--bg-card);
+    padding: 0.4rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow);
+}
+
+.nav-tab-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-sub);
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all var(--transition);
+}
+
+.nav-tab-btn:hover {
+    background: var(--bg-page);
+    color: var(--text-main);
+}
+
+.nav-tab-btn.active {
+    background: var(--primary);
+    color: #ffffff;
+}
+
+/* PAINÉIS DE CONTEÚDO */
+.data-panel {
+    display: none;
+}
+.data-panel.active {
+    display: block;
+}
+
+/* RECIPIENTES DO GRID RESPONSIVO UNIVERSAL */
+.grid-metrologico {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+.industrial-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    position: relative;
+}
+
+/* FORMULÁRIOS DA CENTRAL DE CÁLCULO */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    color: var(--text-sub);
+}
+
+.calc-input, .calc-select {
+    width: 100%;
+    padding: 0.75rem;
+    background: var(--bg-page);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color var(--transition);
+}
+
+.calc-input:focus, .calc-select:focus {
+    border-color: var(--primary);
+}
+
+/* SUB-GRID PARA ENTRADAS DE FRAÇÃO */
+.fracao-grid-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.5rem;
+}
+
+/* PAINÉIS DE RESPOSTA E FLUXO DE CÁLCULO */
+.calc-result-display {
+    background: var(--success-bg);
+    border: 1px solid var(--success-border);
+    padding: 1rem;
+    border-radius: var(--radius-sm);
+    margin-top: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+}
+
+.formula-box {
+    background: var(--bg-page);
+    border-left: 4px solid var(--primary);
+    padding: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    margin-top: 1rem;
+    white-space: pre-line;
+    line-height: 1.6;
+}
+
+/* CONFIGURAÇÃO DE EXIBIÇÃO DINÂMICA */
+.hide { display: none !important; }
+
+/* HISTÓRICO DE SESSÃO */
+.history-list {
+    margin-top: 0.5rem;
+}
+.history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px dashed var(--border);
+    font-size: 0.9rem;
+}
+
+/* ==========================================================================
+   BREAKPOINTS RESPONSIVOS DE CHÃO DE FÁBRICA
+   ========================================================================== */
+@media (max-width: 768px) {
+    body { font-size: 15px; }
+    .app-navigation {
+        grid-template-columns: 1fr;
+    }
+    .grid-metrologico {
+        grid-template-columns: 1fr;
+    }
+    .app-header {
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
+    }
+}

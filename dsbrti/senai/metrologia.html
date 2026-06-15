@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="ubuntu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="DSBRTI — Central de Metrologia Industrial Avançada. Ferramentas, cálculos e tolerâncias ISO.">
+  <title>DSBRTI · Metrologia Industrial</title>
+  
+  <link rel="stylesheet" href="../estilos.css">
+  
+  <link rel="stylesheet" href="metrologia.css">
+  
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,...">
+</head>
+<body>
+  
+  <nav class="navbar" role="navigation" aria-label="Navegação principal">
+    <div class="nav-container">
+      <span class="nav-brand">⚙ DSBRTI <small style="font-size:0.75rem; font-weight:normal;" id="lang-indicator">[🌐 Auto-Detecting...]</small></span>
+      <ul class="nav-links">
+        <li><a href="../../../index.html" data-i18n="nav-home">Início</a></li>
+        <li><a href="../../../landingpage.html" data-i18n="nav-landing">Landing</a></li>
+        <li><a href="metrologia.html" class="active" data-i18n="nav-metro">Metrologia</a></li>
+        <li><a href="../../curriculo/index.html" data-i18n="nav-resume">Currículo</a></li>
+      </ul>
+      
+      <div style="display: flex; gap: 1rem; align-items: center;">
+        <select id="manual-lang-select" style="background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border); border-radius: 4px; padding: 2px 6px; font-size: 0.85rem; cursor: pointer;">
+          <option value="pt">Português (PT)</option>
+          <option value="en">English (EN)</option>
+        </select>
+        <div class="theme-switcher">
+          <button data-theme="ubuntu" class="theme-btn active" title="Ubuntu">🐧</button>
+          <button data-theme="fedora" class="theme-btn" title="Fedora">🔵</button>
+          <button data-theme="winxp" class="theme-btn" title="Windows XP">🪟</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <header class="section-header" style="text-align: center; margin-bottom: 2rem;">
+      <h1 data-i18n="main-title">Aba de Instrumentação e Metrologia</h1>
+      <p class="subtitle" data-i18n="main-subtitle">SENAI — Instrumentação, Tolerâncias de Precisão e Cálculos de Engenharia</p>
+    </header>
+
+    <section class="tab-bar" role="tablist" style="display:flex; gap:0.5rem; overflow-x:auto; margin-bottom:1.5rem;">
+      <button class="tab active" data-tab="converter" data-i18n="tab-conv"><i class="fa-solid fa-calculator"></i> Conversor Mestre</button>
+      <button class="tab" data-tab="paquimetro" data-i18n="tab-caliper">Paquímetro &amp; Micrômetro</button>
+      <button class="tab" data-tab="rugosidade" data-i18n="tab-roughness">Rugosidade</button>
+      <button class="tab" data-tab="tolerancias" data-i18n="tab-iso">Tolerâncias ISO</button>
+    </section>
+
+    <div class="tab-content">
+      
+      <section id="tab-converter" class="tab-panel active">
+        <h2 data-i18n="conv-title">Conversor de Medidas</h2>
+        <p data-i18n="conv-desc">Conversões metrológicas instantâneas para Milímetros, Polegadas Milesimais e Polegadas Fracionárias.</p>
+        
+        <div class="industrial-card" style="padding: 1.5rem; margin-top: 1rem;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+            <div>
+              <label for="conv-medida-origem" style="font-weight: bold; display: block; margin-bottom: 0.5rem;" data-i18n="lbl-origin">Medida de Origem:</label>
+              <select id="conv-medida-origem" style="width:100%; padding: 0.5rem; background: var(--bg-page); color: var(--text-main); border: 1px solid var(--border); border-radius: 4px;">
+                <option value="mm">Milímetros (mm)</option>
+                <option value="in_dec">Polegada Milesimal (in)</option>
+                <option value="in_frac">Polegada Fracionária (in)</option>
+              </select>
+            </div>
+            <div>
+              <label for="conv-medida-destino" style="font-weight: bold; display: block; margin-bottom: 0.5rem;" data-i18n="lbl-target">Medida de Destino:</label>
+              <select id="conv-medida-destino" style="width:100%; padding: 0.5rem; background: var(--bg-page); color: var(--text-main); border: 1px solid var(--border); border-radius: 4px;">
+                <option value="mm">Milímetros (mm)</option>
+                <option value="in_dec" selected>Polegada Milesimal (in)</option>
+                <option value="in_frac">Polegada Fracionária (in)</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="painel-input-direto">
+            <label for="input-valor-direto" style="font-weight: bold; display: block; margin-bottom: 0.5rem;" data-i18n="lbl-val">Valor para Conversão:</label>
+            <input type="number" id="input-valor-direto" value="25.4" step="any" style="width: 100%; padding: 0.6rem; background: var(--bg-page); color: var(--text-main); border: 1px solid var(--border); border-radius: 4px; font-family: monospace;">
+          </div>
+
+          <div id="painel-input-fracionaria" class="hide" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem;">
+            <div>
+              <label style="font-size:0.85rem;" data-i18n="frac-int">Inteiro</label>
+              <input type="number" id="frac-int" value="0" min="0" style="width:100%; padding:0.5rem;">
+            </div>
+            <div>
+              <label style="font-size:0.85rem;" data-i18n="frac-num">Numerador</label>
+              <input type="number" id="frac-num" value="1" min="0" style="width:100%; padding:0.5rem;">
+            </div>
+            <div>
+              <label style="font-size:0.85rem;" data-i18n="frac-den">Denominador</label>
+              <select id="frac-den" style="width:100%; padding:0.5rem; height: 34px;">
+                <option value="2">2</option><option value="4">4</option><option value="8">8</option>
+                <option value="16">16</option><option value="32">32</option><option value="64">64</option>
+                <option value="128" selected>128</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="res-metrologia" class="calc-result-display" style="margin-top: 1.5rem;"></div>
+
+          <div class="formula-container" style="margin-top: 1rem; border-top: 1px dashed var(--border); padding-top: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <span style="font-size: 0.85rem; font-weight: bold; color: var(--text-sub);"><i class="fa-solid fa-square-root-variable"></i> Memória de Cálculo / Fórmula</span>
+              <label style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; cursor: pointer; color: var(--text-main);">
+                <input type="checkbox" id="chk-exibir-formula" checked style="width: auto; cursor: pointer;"> Exibir memória passo a passo
+              </label>
+            </div>
+            <div id="painel-formula-passos" class="formula-box" style="font-family: monospace; font-size: 0.85rem; padding: 0.75rem; background: var(--bg-page); border-radius: 4px; border: 1px solid var(--border); color: var(--text-main);"></div>
+          </div>
+        </div>
+
+        <div class="reference-table-wrapper" style="margin-top: 1.5rem;">
+          <button id="btn-toggle-tabela" class="toggle-table-btn">
+            <i class="fa-solid fa-table-list"></i> <span>Exibir Tabela de Conversão Comercial</span> <i class="fa-solid fa-chevron-down arrow-indicator"></i>
+          </button>
+          
+          <div id="tabela-conversao-painel" class="table-accordion-content hide">
+            <div class="industrial-card table-card-inner">
+              <h4 style="margin-bottom: 0.5rem; font-size: 0.95rem; color: var(--text-main);">Tabela de Equivalências (Desenho Técnico)</h4>
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Pol. Fracionária</th>
+                    <th>Pol. Milesimal (in)</th>
+                    <th>Milímetros (mm)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>1/16"</td><td>0.0625"</td><td>1,5875 mm</td></tr>
+                  <tr><td>1/8"</td><td>0.1250"</td><td>3,1750 mm</td></tr>
+                  <tr><td>1/4"</td><td>0.2500"</td><td>6,3500 mm</td></tr>
+                  <tr><td>3/8"</td><td>0.3750"</td><td>9,5250 mm</td></tr>
+                  <tr><td>1/2"</td><td>0.5000"</td><td>12,7000 mm</td></tr>
+                  <tr><td>5/8"</td><td>0.6250"</td><td>15,8750 mm</td></tr>
+                  <tr><td>3/4"</td><td>0.7500"</td><td>19,0500 mm</td></tr>
+                  <tr><td>7/8"</td><td>0.8750"</td><td>22,2250 mm</td></tr>
+                  <tr><td>1"</td><td>1.0000"</td><td>25,4000 mm</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="history-container" style="margin-top: 1.5rem;">
+          <h3 style="font-size: 1rem;" data-i18n="hist-title">⏳ Histórico Recente de Conversões</h3>
+          <div id="history-target">
+            <p style="font-size:0.85rem; color: var(--text-sub);" data-i18n="hist-empty">Nenhum cálculo efetuado nesta sessão.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-paquimetro" class="tab-panel" hidden>
+        <h2 data-i18n="caliper-h2">Leitura e Resolução de Instrumentos Finos</h2>
+        <div class="dashboard" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-top: 1rem;">
+          <div class="industrial-card">
+            <h3 data-i18n="caliper-c1-title">Nônio Mecânico (Vernier)</h3>
+            <p data-i18n="caliper-c1-desc">Uma escala de 49mm dividida perfeitamente em 50 partes confere ao instrumento uma resolução confiável de <strong>0,02 mm</strong>.</p>
+          </div>
+          <div class="industrial-card">
+            <h3 data-i18n="caliper-c2-title">Tambor de Fuso Micrométrico</h3>
+            <p data-i18n="caliper-c2-desc">Com passo real ajustado em 0,5 mm, o tambor centesimal de 50 divisões entrega leituras com precisão de <strong>0,01 mm</strong>.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-rugosidade" class="tab-panel" hidden>
+        <h2 data-i18n="rough-h2">Classes de Rugosidade Superficial (ISO 4287)</h2>
+        <p data-i18n="rough-p">Tabela comparativa técnica para rugosidade média aritmética (Ra).</p>
+        <table class="data-table" style="width:100%; margin-top: 1rem; text-align: left;">
+          <thead>
+            <tr><th>Classe</th><th>Métrico (Ra)</th><th>Imperial (Ra)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>N1</strong></td><td>0.025 µm</td><td>1 µin</td></tr>
+            <tr><td><strong>N4</strong></td><td>0.200 µm</td><td>8 µin</td></tr>
+            <tr><td><strong>N6</strong></td><td>0.800 µm</td><td>32 µin</td></tr>
+            <tr><td><strong>N8</strong></td><td>3.200 µm</td><td>125 µin</td></tr>
+            <tr><td><strong>N12</strong></td><td>50.00 µm</td><td>2000 µin</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="tab-tolerancias" class="tab-panel" hidden>
+        <h2 data-i18n="iso-h2">Ajustes e Sistemas de Acoplamento ISO 286</h2>
+        <p data-i18n="iso-p">Matriz de tolerâncias mecânicas normatizadas (Faixa de diâmetros de 10mm a 30mm).</p>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-top: 1rem;">
+          <div class="industrial-card" style="border-left: 4px solid var(--primary);">
+            <h4>Furo H7 [Padrão Base]</h4>
+            <p style="font-family: monospace; font-size:0.9rem; margin-top:0.3rem;">Afastamento: +0.021 / 0.000 mm</p>
+          </div>
+          <div class="industrial-card" style="border-left: 4px solid #25d366;">
+            <h4>Eixo g6 [Deslizante Livre]</h4>
+            <p style="font-family: monospace; font-size:0.9rem; margin-top:0.3rem;">Afastamento: -0.007 / -0.020 mm</p>
+          </div>
+          <div class="industrial-card" style="border-left: 4px solid var(--ubuntu-orange);">
+            <h4>Eixo p6 [Interferência Prensa]</h4>
+            <p style="font-family: monospace; font-size:0.9rem; margin-top:0.3rem;">Afastamento: +0.035 / +0.022 mm</p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="footer" style="margin-top:4rem; padding:2rem 1rem; text-align:center; border-top: 1px dashed var(--border);">
+    <p>DSBRTI © 2026 — Metrologia Global Hub</p>
+    <p style="font-size:0.8rem; color:var(--text-sub planetary-log);" id="network-location-log">Network Target: Syncing Gateway Network...</p>
+  </footer>
+
+  <div id="toast" class="toast" role="alert" aria-live="assertive"></div>
+
+  <script src="patches.js" defer></script>
+  <script src="../../../db_industrial.js" defer></script>
+  <script src="../../../calculadoras.js" defer></script>
+  <script src="../../../core.js" defer></script>
+  
+  <script src="metrologia.js" defer></script>
+</body>
+</html>
