@@ -1,278 +1,425 @@
-/* ==========================================================================
-   DSBRTI — MOTOR DE DESIGN EXCLUSIVO PARA METROLOGIA INDUSTRIAL
-   Este arquivo estende a identidade visual sem poluir o estilos.css global.
-   ========================================================================== */
+/* ==========================================
+   CENTRAL METROLÓGICA V4.6 - ENGINE DE ESTILOS
+   ========================================== */
 
-/* --- VARIÁVEIS EXCLUSIVAS DE TERMINAL --- */
+/* Importação da biblioteca de ícones Font Awesome */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&family=Ubuntu:wght@400;700&family=Fira+Sans:wght@400;600&display=swap');
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+/* --- TEMA PADRÃO: LINUX MINT --- */
 :root {
-    --metro-mono: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace;
-    --success-glow: rgba(37, 211, 102, 0.15);
-    --success-border: #25d366;
-    --warn-glow: rgba(233, 84, 32, 0.1);
-    --warn-border: var(--primary, #E95420);
-    
-    /* Grid de precisão para fundo das seções metrológicas (efeito prancheta) */
-    --blueprint-grid: radial-gradient(circle, var(--border) 1px, transparent 1px);
+    --bg-page: #e8e8e8;
+    --bg-card: #ffffff;
+    --primary: #92b73e;       /* Verde Mint */
+    --primary-hover: #7ea030;
+    --secondary: #2f343f;     /* Cinza Escuro Cinnamon */
+    --text-main: #2f343f;
+    --text-sub: #687074;
+    --border: #cfd6d9;
+    --window-radius: 6px;
+    --font-stack: 'Fira Sans', 'Segoe UI', sans-serif;
+    --card-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    --glass-bg: rgba(255, 255, 255, 0.9);
+    --glass-blur: 0px;
 }
 
-/* --- ADAPTAÇÕES DE LAYOUT DA CONTEXTUALIZAÇÃO --- */
+/* --- SELEÇÃO DE TEMAS DINÂMICOS --- */
+
+/* UBUNTU */
+body.theme-ubuntu {
+    --bg-page: #2c001e;       /* Aubergine */
+    --bg-card: #ffffff;
+    --primary: #e95420;       /* Laranja Ubuntu */
+    --primary-hover: #c74316;
+    --secondary: #77216f;
+    --text-main: #333333;
+    --text-sub: #666666;
+    --border: #dcdcdc;
+    --window-radius: 4px;
+    --font-stack: 'Ubuntu', system-ui;
+    --card-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* FEDORA */
+body.theme-fedora {
+    --bg-page: #f9f9fb;
+    --bg-card: #ffffff;
+    --primary: #3c6eb4;       /* Azul Fedora */
+    --primary-hover: #2d5389;
+    --secondary: #1d2b40;
+    --text-main: #2e3440;
+    --text-sub: #4c566a;
+    --border: #d8dee9;
+    --window-radius: 8px;
+    --font-stack: system-ui, -apple-system;
+    --card-shadow: 0 4px 12px rgba(60,110,180,0.1);
+}
+
+/* WINDOWS XP */
+body.theme-winxp {
+    --bg-page: #5a7edc;       /* Azul Bliss */
+    --bg-card: #f1efe7;       /* Bege clássico Luna */
+    --primary: #0053e2;       /* Barra Azul */
+    --primary-hover: #003cb3;
+    --secondary: #e1662b;     /* Botão Fechar / Alerta */
+    --text-main: #000000;
+    --text-sub: #555555;
+    --border: #9a9a9a;
+    --window-radius: 0px;
+    --font-stack: 'Tahoma', 'Segoe UI', sans-serif;
+    --card-shadow: 3px 3px 0px #000;
+}
+
+/* WINDOWS VISTA (AERO GLASS) */
+body.theme-winvista {
+    --bg-page: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1920') center/cover fixed;
+    --bg-card: rgba(255, 255, 255, 0.65);
+    --primary: #4b749f;
+    --primary-hover: #37597f;
+    --secondary: #b63939;
+    --text-main: #111111;
+    --text-sub: #444444;
+    --border: rgba(255, 255, 255, 0.6);
+    --window-radius: 8px;
+    --font-stack: 'Segoe UI', sans-serif;
+    --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    --glass-bg: rgba(200, 220, 240, 0.4);
+    --glass-blur: 12px;
+}
+
+/* WINDOWS 7 (AERO PRESTIGE) */
+body.theme-win7 {
+    --bg-page: radial-gradient(circle, #2a5a75 0%, #0b1d28 100%);
+    --bg-card: rgba(225, 235, 245, 0.5);
+    --primary: #1d72b4;
+    --primary-hover: #115082;
+    --secondary: #ab2222;
+    --text-main: #050505;
+    --text-sub: #333333;
+    --border: rgba(255, 255, 255, 0.5);
+    --window-radius: 6px;
+    --font-stack: 'Segoe UI', sans-serif;
+    --card-shadow: 0 10px 25px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.6);
+    --glass-bg: rgba(210, 225, 240, 0.45);
+    --glass-blur: 15px;
+}
+
+/* --- ESTRUTURA BASE --- */
+body {
+    font-family: var(--font-stack);
+    margin: 0;
+    padding: 20px;
+    background: var(--bg-page);
+    color: var(--text-main);
+    line-height: 1.5;
+    transition: all 0.4s ease;
+}
+
 .container {
-    max-width: 1250px;
-    margin: 0 auto;
-    padding: 2rem 1.5rem;
+    max-width: 800px;
+    margin: 20px auto;
+    position: relative;
 }
 
-/* --- ENGINE DE ABAS EXCLUSIVA (TAB-BAR INDUSTRIAL) --- */
-.tab-bar {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius, 8px);
-    padding: 0.4rem;
-    box-shadow: var(--shadow);
-    display: flex;
-    gap: 0.5rem;
-    overflow-x: auto;
-    scrollbar-width: none; /* Oculta scroll no Firefox */
-}
-
-.tab-bar::-webkit-scrollbar {
-    display: none; /* Oculta scroll no Chrome/Safari */
-}
-
-.tab {
-    font-family: var(--font-body);
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: var(--text-sub);
-    background: transparent;
-    border: none;
-    padding: 0.6rem 1.2rem;
-    border-radius: var(--radius-sm, 4px);
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all var(--transition, 0.22s ease);
+/* Topo e Seletor de Temas */
+.header {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    border-bottom: 3px solid var(--primary);
+    padding-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 12px;
 }
 
-.tab:hover {
-    color: var(--text-main);
+.header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.theme-selector-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-card);
+    padding: 6px 12px;
+    border-radius: var(--window-radius);
+    border: 1px solid var(--border);
+    box-shadow: var(--card-shadow);
+}
+
+.theme-selector-box label {
+    font-size: 12px;
+    font-weight: bold;
+    color: var(--text-sub);
+}
+
+.theme-selector-box select {
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
     background: var(--bg-page);
+    color: var(--text-main);
+    font-weight: bold;
+    cursor: pointer;
 }
 
-.tab.active {
-    color: #ffffff !important;
-    background: var(--primary, #E95420);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+/* Abas estilo OS */
+.tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 20px;
 }
 
-/* --- CARDS DE PAINEL METROLÓGICO --- */
-.industrial-card {
+.tab-btn {
+    background: var(--border);
+    border: 1px solid var(--border);
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--text-main);
+    cursor: pointer;
+    border-radius: var(--window-radius) var(--window-radius) 0 0;
+    transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+    background-color: var(--primary-hover);
+    color: #fff;
+}
+
+.tab-btn.active {
+    background-color: var(--bg-card);
+    color: var(--primary);
+    border-bottom: 1px solid transparent;
+    box-shadow: 0 -2px 6px rgba(0,0,0,0.05);
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Windows Vista / 7 Aero Setup */
+.card {
     background: var(--bg-card);
     border: 1px solid var(--border);
-    border-radius: var(--radius, 8px);
-    padding: 1.75rem;
-    box-shadow: var(--shadow);
-    transition: transform var(--transition), box-shadow var(--transition);
+    border-radius: var(--window-radius);
+    padding: 24px;
+    margin-bottom: 20px;
     position: relative;
-    overflow: hidden;
+    box-shadow: var(--card-shadow);
 }
 
-.industrial-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
+body.theme-winvista .card, body.theme-win7 .card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
 }
 
-/* --- DISPLAY DE RESULTADOS MESTRE (SIMULADOR DE DISPLAY DIGITAL) --- */
-.calc-result-display {
-    background: #0d0e11 !important;
-    border: 1px solid #1f242e;
-    border-left: 4px solid var(--success-border);
-    padding: 1.25rem;
-    border-radius: var(--radius-sm, 4px);
-    margin-top: 1.5rem;
-    font-family: var(--metro-mono);
-    color: #25d366;
-    font-size: 1.05rem;
-    line-height: 1.6;
-    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5);
-    text-shadow: 0 0 4px rgba(37, 211, 102, 0.4);
-}
-
-.calc-result-display strong {
-    color: #ffffff;
-    font-weight: 600;
-}
-
-/* --- CAMPOS DE ENTRADA DO CONVERSOR --- */
-input[type="number"], select {
-    font-family: var(--metro-mono);
-    font-size: 1rem;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm, 4px);
-    padding: 0.65rem;
-    background: var(--bg-page);
-    color: var(--text-main);
-    transition: border-color var(--transition), box-shadow var(--transition);
-    width: 100%;
-}
-
-input[type="number"]:focus, select:focus {
-    outline: none;
-    border-color: var(--primary, #E95420);
-    box-shadow: 0 0 0 3px rgba(233, 84, 32, 0.15);
-}
-
-/* Ocultar divs de entrada dinamicamente sem quebrar o grid */
-.hide {
-    display: none !important;
-}
-
-/* --- DASHBOARDS E MATRIZES DE TABELA DE TOLERÂNCIA --- */
-.data-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    margin-top: 1rem;
-    border-radius: var(--radius, 8px);
-    overflow: hidden;
-    border: 1px solid var(--border);
-}
-
-.data-table th {
-    background: var(--bg-page);
-    color: var(--text-main);
-    font-weight: 600;
-    padding: 0.85rem 1rem;
-    font-size: 0.9rem;
-    border-bottom: 2px solid var(--border);
-}
-
-.data-table td {
-    padding: 0.85rem 1rem;
-    background: var(--bg-card);
-    color: var(--text-main);
-    border-bottom: 1px solid var(--border);
-    font-family: var(--metro-mono);
-    font-size: 0.9rem;
-}
-
-.data-table tr:last-child td {
-    border-bottom: none;
-}
-
-.data-table tr:hover td {
-    background: rgba(0, 0, 0, 0.02);
-}
-
-/* --- HISTÓRICO DE SESSÃO TÉCNICA --- */
-.history-container {
-    margin-top: 2rem;
-    border-top: 1px dashed var(--border);
-    padding-top: 1.5rem;
-}
-
-.history-list {
+/* Inputs & Componentes */
+.converter-layout {
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
+    gap: 12px;
+}
+
+.input-group {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    width: 100%;
+}
+
+.field-box {
+    flex: 1;
+}
+
+.field-box input, .field-box select {
+    width: 100%;
+    height: 52px;
+    padding: 0 16px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: 16px;
+    color: var(--text-main);
+    background-color: var(--bg-page);
+    transition: all 0.2s;
+}
+
+.field-box input:focus, .field-box select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
+}
+
+.select-unit {
+    max-width: 220px;
+}
+
+.fraction-row {
+    display: none;
+    gap: 8px;
+    align-items: center;
+    flex: 1;
+}
+
+.fraction-row select {
+    height: 52px;
+    background-color: var(--bg-page);
+    color: var(--text-main);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: 16px;
+    padding: 0 12px;
+}
+
+/* Botão Inverter */
+.swap-wrapper {
+    display: flex;
+    justify-content: center;
+    margin: -4px 0;
+    z-index: 2;
+}
+
+.swap-btn {
+    background: var(--primary);
+    border: 1px solid var(--primary);
+    color: #fff;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: all 0.2s;
+}
+
+.swap-btn:hover {
+    background: var(--primary-hover);
+    transform: scale(1.05) rotate(180deg);
+}
+
+/* Memorial de Cálculo */
+.memorial-box {
+    background-color: rgba(0,0,0,0.03);
+    border-left: 4px solid var(--primary);
+    border-radius: 0 4px 4px 0;
+    padding: 16px;
+    margin-top: 20px;
+    font-size: 14px;
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--primary);
+}
+
+.memorial-title {
+    font-weight: bold;
+    color: var(--primary);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+code {
+    background: rgba(0,0,0,0.06);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Consolas', monospace;
+    font-weight: bold;
+    color: var(--text-main);
+}
+
+/* Histórico */
+.history-list {
+    margin: 0;
     padding: 0;
-    margin-top: 1rem;
+    list-style: none;
 }
 
 .history-item {
-    background: var(--bg-page);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm, 4px);
-    padding: 0.75rem 1rem;
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    font-family: var(--metro-mono);
-    font-size: 0.85rem;
-    color: var(--text-main);
+    padding: 12px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    background: rgba(0,0,0,0.01);
+    margin-bottom: 4px;
+    border-radius: 4px;
 }
 
 .history-item i {
-    color: var(--text-sub);
+    color: var(--primary);
 }
 
-/* --- COMPORTAMENTO ISOLADO. (Sub-domínio render) --- */
-html.is-isolated .navbar {
-    display: none !important;
-}
-html.is-isolated .container {
-    padding-top: 1rem;
-}
-
-/* --- RESPONSIVIDADE DO TERMINAL DE AJUSTES --- */
-@media (max-width: 768px) {
-    .container {
-        padding: 1rem;
-    }
-    .industrial-card {
-        padding: 1.25rem;
-    }
-    .history-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.4rem;
-    }
-}
-/* --- COMPONENTES DA TABELA OCULTA EXPANDÍVEL --- */
-.toggle-table-btn {
+/* Tabela e Busca */
+.search-bar {
     width: 100%;
-    background: var(--bg-card);
+    height: 46px;
+    padding: 0 16px;
+    background-color: var(--bg-card);
     border: 1px solid var(--border);
+    border-radius: var(--window-radius);
     color: var(--text-main);
-    padding: 0.75rem 1rem;
-    font-size: 0.9rem;
-    font-weight: 600;
-    border-radius: var(--radius, 8px);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    transition: background var(--transition), border-color var(--transition);
+    font-size: 15px;
+    margin-bottom: 16px;
 }
 
-.toggle-table-btn:hover {
-    background: var(--bg-page);
-    border-color: var(--primary, #E95420);
-}
-
-.toggle-table-btn .arrow-indicator {
-    transition: transform var(--transition);
-    font-size: 0.8rem;
-    color: var(--text-sub);
-}
-
-/* Estado ativo do botão de alternância */
-.toggle-table-btn.expanded .arrow-indicator {
-    transform: rotate(180deg);
-    color: var(--primary, #E95420);
-}
-
-/* Painel de transição */
-.table-accordion-content {
-    margin-top: 0.5rem;
-    animation: slideDown 0.25s ease-out forwards;
-}
-
-.table-card-inner {
-    padding: 1rem !important;
+.table-wrapper {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--window-radius);
     background: var(--bg-card);
-    border-color: var(--border);
 }
 
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-8px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+table {
+    width: 100%;
+    border-collapse: collapse;
 }
+
+th {
+    background: var(--primary);
+    position: sticky;
+    top: 0;
+    padding: 14px;
+    font-size: 12px;
+    color: #ffffff;
+    text-transform: uppercase;
+    text-align: left;
+}
+
+td {
+    padding: 12px;
+    font-size: 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-main);
+}
+
+tr:hover td {
+    background: rgba(0, 0, 0, 0.03);
+}
+
+tr.row-inch td {
+    background-color: rgba(0, 0, 0, 0.07);
+    font-weight: bold;
+}
+
+.text-right { text-align: right; }
+.hide { display: none !important; }

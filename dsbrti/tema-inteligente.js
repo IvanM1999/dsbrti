@@ -1,93 +1,130 @@
 /**
- * DSBRTI - MOTOR DE ILUMINAÇÃO INTELIGENTE ADAPTADO ÀS CALCULADORAS DO SENAI
+ * DSBRTI - GERENCIADOR DE TEMAS INTELIGENTE E INTEGRADO V2.0
+ * Controla os ecossistemas industriais (Ubuntu, Fedora, Windows XP)
+ * com persistência local e fallback automático por faixa de horário.
  */
 
-// 1. INJEÇÃO DO MOTOR ADAPTATIVO GAA (Executa imediatamente para evitar flashes brancos)
-const MotorIluminacaoIndustrial = {
-    config: { horaNoite: 18, horaDia: 6, intervaloVerificacao: 30000 },
+const GerenciadorTemasIndustrial = {
+    // 1. Tabela central de controle e mapeamento de comportamento dos temas atuais
+    TABELA_TEMAS: {
+        'ubuntu': { id: 'ubuntu', nome: 'Ubuntu OS', padraoDia: true, temaBarra: '#E95420' },
+        'fedora': { id: 'fedora', nome: 'Fedora Linux', padraoDia: false, temaBarra: '#294172' },
+        'winxp':  { id: 'winxp',  nome: 'Windows XP', padraoDia: false, temaBarra: '#215dc6' }
+    },
+
+    CHAVE_STORAGE: 'dsbrti_tema_preferido',
+
+    config: {
+        horaNoite: 18, // Início do turno da noite (aplica winxp se nenhuma escolha prévia existir)
+        horaDia: 6,     // Início do turno do dia
+        intervaloVerificacao: 60000 // 1 minuto
+    },
 
     inicializar() {
-        this.processarAmbienteAtua();
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => this.processarAmbienteAtua());
-        setInterval(() => this.processarAmbienteAtua(), this.config.intervaloVerificacao);
+        // Define o tema inicial baseado nas regras prévias de seleção
+        this.aplicarTemaLogicaPrevia();
+
+        // Vincula dinamicamente os eventos dos botões existentes na UI pós-carregamento
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => this.sincronizarBotoesUI());
+        } else {
+            this.sincronizarBotoesUI();
+        }
+
+        // Monitora mudanças no esquema do Sistema Operacional ou Horário
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => this.verificarMudancaAutomatica());
+        setInterval(() => this.verificarMudancaAutomatica(), this.config.intervaloVerificacao);
     },
 
-    obterBrilhoEstimado() {
-        const hora = new Date().getHours();
-        if (hora >= 11 && hora <= 15) return 100; // Pico do Sol
-        if (hora >= 18 || hora < 6) return 30;    // Turno da Noite/Madrugada
-        return 60;                                // Dia Padrão Interno
-    },
+    // 2. Lógica prévia de seleção com prioridades
+    obterTemaCalculado() {
+        // Prioridade 1: Escolha explícita salva localmente pelo usuário
+        const temaSalvo = localStorage.getItem(this.CHAVE_STORAGE);
+        if (temaSalvo && this.TABELA_TEMAS[temaSalvo]) {
+            return temaSalvo;
+        }
 
-    processarAmbienteAtua() {
-        const horaAtual = new Date().getHours();
+        // Prioridade 2: Preferência do Sistema Operacional (Dark Mode prefere Fedora/XP no ambiente industrial)
         const prefereEscuroSO = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const nivelBrilho = this.obterBrilhoEstimado();
+        if (prefereEscuroSO) {
+            return 'fedora';
+        }
+
+        // Prioridade 3: Fallback Inteligente baseado em faixas de Horário
+        const horaAtual = new Date().getHours();
+        const ehTurnoNoite = (horaAtual >= this.config.horaNoite || horaAtual < this.config.horaDia);
+
+        if (ehTurnoNoite) {
+            return 'winxp'; // Alterna automaticamente para o turno noturno
+        }
+
+        // Tema padrão de fábrica (Ubuntu)
+        return 'ubuntu';
+    },
+
+    aplicarTemaLogicaPrevia() {
+        const temaAlvo = this.obterTemaCalculado();
+        const htmlElement = document.documentElement;
+
+        // Injeta o atributo lido pela folha de estilos CSS
+        htmlElement.setAttribute('data-theme', temaAlvo);
+
+        // Atualiza a cor de contexto do navegador para dispositivos móveis
+        const metaTheme = document.querySelector('meta[name="theme-color"]');
+        if (metaTheme && this.TABELA_TEMAS[temaAlvo]) {
+            metaTheme.setAttribute('content', this.TABELA_TEMAS[temaAlvo].temaBarra);
+        }
+
+        this.atualizarBotoesAtivosUI(temaAlvo);
+    },
+
+    // 3. Salva a predefinição localmente ao interagir com a interface
+    salvarPredefinicaoUsuario(idTema) {
+        if (this.TABELA_TEMAS[idTema]) {
+            localStorage.setItem(this.CHAVE_STORAGE, idTema);
+            this.aplicarTemaLogicaPrevia();
+        }
+    },
+
+    verificarMudancaAutomatica() {
+        // Se o usuário já escolheu e travou um tema localmente, respeita e não altera sozinho
+        if (localStorage.getItem(this.CHAVE_STORAGE)) return;
+
+        this.aplicarTemaLogicaPrevia();
+    },
+
+    sincronizarBotoesUI() {
+        // Localiza os seletores de botões dinamicamente no cabeçalho ou navbar
+        const botoes = document.querySelectorAll('.theme-switch .theme-btn, .theme-switcher .theme-btn');
         
-        let temaCalculado = "claro";
-        const ehNoite = (horaAtual >= this.config.horaNoite || horaAtual < this.config.horaDia);
-        const ehHorarioAlmoco = (horaAtual >= 12 && horaAtual <= 14);
+        botoes.forEach(botao => {
+            const idTema = botao.getAttribute('data-theme');
+            
+            // Remove listeners antigos para evitar execução duplicada
+            const novoBotao = botao.cloneNode(true);
+            botao.parentNode.replaceChild(novoBotao, botao);
 
-        // Matriz de Decisão Baseada nos Requisitos
-        if (ehNoite) {
-            temaCalculado = (nivelBrilho >= 80) ? "noturno-intermediario" : "escuro-puro";
-        } else if (ehHorarioAlmoco) {
-            temaCalculado = (nivelBrilho < 50) ? "intermediario-claro" : "claro";
-        }
-
-        // Conflito Resolvido: Dia + SO Escuro = Intermediário Escuro
-        if (!ehNoite && prefereEscuroSO) {
-            temaCalculado = "intermediario-escuro";
-        }
-
-        document.documentElement.setAttribute('data-env-theme', temaCalculado);
-    }
-};
-
-// Execução do Motor de Tela
-MotorIluminacaoIndustrial.inicializar();
-
-
-// 2. EXTENSÃO SEGURO DA SUITE DE CÁLCULO ORIGINAL DO SEU PROJETO
-// Mantém as assinaturas idênticas exigidas pelo seu HTML (Ex: onchange="mudarTemaOS")
-window.mudarTemaOS = function(nomeClasseTema) {
-    const corpo = document.getElementById('app-body') || document.body;
-    if (corpo) {
-        corpo.className = ""; // Limpa classes antigas
-        corpo.classList.add(nomeClasseTema);
-    }
-};
-
-window.mudarAba = function(idPainel, botaoAtivo) {
-    document.querySelectorAll('.tab-content, .data-panel').forEach(p => p.classList.add('hide'));
-    const alvo = document.getElementById(idPainel);
-    if (alvo) alvo.classList.remove('hide');
-
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    if (botaoAtivo) botaoAtivo.classList.add('active');
-};
-
-// Vinculação reativa automática pós carregamento para evitar erros de leitura de inputs
-document.addEventListener("DOMContentLoaded", () => {
-    // Garante que as rotinas originais escutem mudanças em tempo real sem precisar de botões extras
-    const inputsReativos = [
-        'conv-medida-origem', 'conv-medida-destino', 'input-valor-direto', 
-        'frac-int', 'frac-num', 'frac-den', 'rug-ra', 'torq-val', 'torq-origem'
-    ];
-
-    inputsReativos.forEach(id => {
-        const elemento = document.getElementById(id);
-        if (elemento) {
-            const evento = elemento.tagName === 'SELECT' ? 'change' : 'input';
-            elemento.addEventListener(evento, () => {
-                if (id === 'conv-medida-origem' && typeof engineCalculos !== 'undefined') {
-                    engineCalculos.alternarCamposPolegada();
-                }
-                // Dispara o cálculo se a sua engine antiga estiver instanciada na página
-                if (typeof engineCalculos !== 'undefined' && typeof engineCalculos.processarConversaoMetrologia === 'function') {
-                    engineCalculos.processarConversaoMetrologia();
-                }
+            novoBotao.addEventListener('click', () => {
+                this.salvarPredefinicaoUsuario(idTema);
             });
-        }
-    });
-});
+        });
+
+        // Força sincronia visual imediata na UI
+        const temaAtual = document.documentElement.getAttribute('data-theme') || 'ubuntu';
+        this.atualizarBotoesAtivosUI(temaAtual);
+    },
+
+    atualizarBotoesAtivosUI(temaAtivo) {
+        const botoes = document.querySelectorAll('.theme-switch .theme-btn, .theme-switcher .theme-btn');
+        botoes.forEach(botao => {
+            if (botao.getAttribute('data-theme') === temaAtivo) {
+                botao.classList.add('active');
+            } else {
+                botao.classList.remove('active');
+            }
+        });
+    }
+};
+
+// Execução imediata na leitura do script para mitigar o efeito de "flash branco" antes do carregamento do DOM
+GerenciadorTemasIndustrial.inicializar();
