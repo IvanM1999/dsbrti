@@ -1,107 +1,93 @@
 /**
- * DSBRTI - MOTOR ADAPTATIVO DE ILUMINAÇÃO ERGONÔMICA (PWA INDUSTRIAL)
- * Calcula contexto: Horário + Preferência do Sistema + Sensor de Brilho
+ * DSBRTI - MOTOR DE ILUMINAÇÃO INTELIGENTE ADAPTADO ÀS CALCULADORAS DO SENAI
  */
 
-const MotorTemaIndustrial = {
-    config: {
-        horaNoite: 18,
-        horaDia: 6,
-        passoDebounce: 30000 // Reavalia a cada 30 segundos
-    },
+// 1. INJEÇÃO DO MOTOR ADAPTATIVO GAA (Executa imediatamente para evitar flashes brancos)
+const MotorIluminacaoIndustrial = {
+    config: { horaNoite: 18, horaDia: 6, intervaloVerificacao: 30000 },
 
     inicializar() {
-        this.analisarEConstruirContexto();
-        
-        // Ouvir mudanças nativas do Sistema Operacional em tempo real
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-            this.analisarEConstruirContexto();
-        });
-
-        // Loop de verificação periódica (ajuste de horário)
-        setInterval(() => this.analisarEConstruirContexto(), this.config.passoDebounce);
+        this.processarAmbienteAtua();
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => this.processarAmbienteAtua());
+        setInterval(() => this.processarAmbienteAtua(), this.config.intervaloVerificacao);
     },
 
-    // Retorna estimativa de brilho/luminosidade ambiente (0 a 100)
-    obterLuminosidadeAmbiente(callback) {
-        // Tenta usar a Ambient Light API se o dispositivo/navegador industrial suportar
-        if ('AmbientLightSensor' in window) {
-            try {
-                const sensor = new AmbientLightSensor();
-                sensor.onreading = () => {
-                    // Mapeia lux para uma escala de 0-100 aproximada para o motor
-                    let brilhoEstimado = Math.min((sensor.illuminance / 500) * 100, 100);
-                    callback(brilhoEstimado);
-                };
-                sensor.onerror = () => callback(this.obterBrilhoPorHorario());
-                sensor.start();
-                return;
-            } catch (err) {
-                // Avança para o fallback se houver bloqueio de permissão
-            }
-        }
-        
-        // Fallback baseado no contexto do relógio se não houver sensor de hardware ativo
-        callback(this.obterBrilhoPorHorario());
-    },
-
-    obterBrilhoPorHorario() {
+    obterBrilhoEstimado() {
         const hora = new Date().getHours();
-        // Se for horário de pico de sol (11h às 15h), assume ambiente muito claro (100% brilho necessário)
-        if (hora >= 11 && hora <= 15) return 100;
-        // Se for noite, assume ambiente controlado/escuro (abaixo de 40%)
-        if (hora >= 18 || hora < 6) return 30;
-        return 60; // Intermediário padrão padrão dia
+        if (hora >= 11 && hora <= 15) return 100; // Pico do Sol
+        if (hora >= 18 || hora < 6) return 30;    // Turno da Noite/Madrugada
+        return 60;                                // Dia Padrão Interno
     },
 
-    analisarEConstruirContexto() {
-        const agora = new Date();
-        const horaAtual = agora.getHours();
-        
-        // 1. Detectar preferência do Navegador/SO
+    processarAmbienteAtua() {
+        const horaAtual = new Date().getHours();
         const prefereEscuroSO = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const nivelBrilho = this.obterBrilhoEstimado();
         
-        // 2. Processar com o nível de iluminância/brilho estimado
-        this.obterLuminosidadeAmbiente((nivelBrilho) => {
-            let temaFinal = "claro"; // Fallback de segurança mecânica
+        let temaCalculado = "claro";
+        const ehNoite = (horaAtual >= this.config.horaNoite || horaAtual < this.config.horaDia);
+        const ehHorarioAlmoco = (horaAtual >= 12 && horaAtual <= 14);
 
-            const ehNoite = (horaAtual >= this.config.horaNoite || horaAtual < this.config.dia);
-            const ehHorarioAlmoço = (horaAtual >= 12 && horaAtual <= 14);
+        // Matriz de Decisão Baseada nos Requisitos
+        if (ehNoite) {
+            temaCalculado = (nivelBrilho >= 80) ? "noturno-intermediario" : "escuro-puro";
+        } else if (ehHorarioAlmoco) {
+            temaCalculado = (nivelBrilho < 50) ? "intermediario-claro" : "claro";
+        }
 
-            // --- MATRIZ DE DECISÃO ERGONÔMICA (REGRAS DO PROJETO) ---
-            
-            if (ehNoite) {
-                // "se for depois das 18h e o brilho da tela (ou ambiente) for 100%, mantenha num modo noturno intermediário"
-                if (nivelBrilho >= 80) {
-                    temaFinal = "noturno-intermediario"; 
-                } else {
-                    temaFinal = "escuro-puro"; // Máxima proteção para galpões escuros
-                }
-            } 
-            else if (ehHorarioAlmoço) {
-                // "Se for 13h e o brilho for abaixo de 50%, tema intermediário e se for 100%, tema claro."
-                if (nivelBrilho < 50) {
-                    temaFinal = "intermediario-claro";
-                } else {
-                    temaFinal = "claro";
-                }
-            }
-            
-            // --- CONFLITO: "Se for 13h mas o navegador pede escuro, calcula todo o contexto deixando um intermediário escuro" ---
-            if (!ehNoite && prefereEscuroSO) {
-                // O sistema quer escuro, mas o relógio diz que é dia forte externa. 
-                // Geramos o meio-termo perfeito para não ofuscar nem quebrar a preferência.
-                temaFinal = "intermediario-escuro";
-            }
+        // Conflito Resolvido: Dia + SO Escuro = Intermediário Escuro
+        if (!ehNoite && prefereEscuroSO) {
+            temaCalculado = "intermediario-escuro";
+        }
 
-            // Aplicar o atributo de tema na raiz do documento HTML
-            document.documentElement.setAttribute('data-theme', temaFinal);
-            
-            // Log técnico velado para auditoria do terminal se necessário
-            console.log(`[GAA] Ambiente Atualizado: ${temaFinal} (Brilho Ref: ${nivelBrilho}%, SO Dark: ${prefereEscuroSO})`);
-        });
+        document.documentElement.setAttribute('data-env-theme', temaCalculado);
     }
 };
 
-// Execução imediata pré-renderização para evitar Flash de Luz Branca
-MotorTemaIndustrial.inicializar();
+// Execução do Motor de Tela
+MotorIluminacaoIndustrial.inicializar();
+
+
+// 2. EXTENSÃO SEGURO DA SUITE DE CÁLCULO ORIGINAL DO SEU PROJETO
+// Mantém as assinaturas idênticas exigidas pelo seu HTML (Ex: onchange="mudarTemaOS")
+window.mudarTemaOS = function(nomeClasseTema) {
+    const corpo = document.getElementById('app-body') || document.body;
+    if (corpo) {
+        corpo.className = ""; // Limpa classes antigas
+        corpo.classList.add(nomeClasseTema);
+    }
+};
+
+window.mudarAba = function(idPainel, botaoAtivo) {
+    document.querySelectorAll('.tab-content, .data-panel').forEach(p => p.classList.add('hide'));
+    const alvo = document.getElementById(idPainel);
+    if (alvo) alvo.classList.remove('hide');
+
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    if (botaoAtivo) botaoAtivo.classList.add('active');
+};
+
+// Vinculação reativa automática pós carregamento para evitar erros de leitura de inputs
+document.addEventListener("DOMContentLoaded", () => {
+    // Garante que as rotinas originais escutem mudanças em tempo real sem precisar de botões extras
+    const inputsReativos = [
+        'conv-medida-origem', 'conv-medida-destino', 'input-valor-direto', 
+        'frac-int', 'frac-num', 'frac-den', 'rug-ra', 'torq-val', 'torq-origem'
+    ];
+
+    inputsReativos.forEach(id => {
+        const elemento = document.getElementById(id);
+        if (elemento) {
+            const evento = elemento.tagName === 'SELECT' ? 'change' : 'input';
+            elemento.addEventListener(evento, () => {
+                if (id === 'conv-medida-origem' && typeof engineCalculos !== 'undefined') {
+                    engineCalculos.alternarCamposPolegada();
+                }
+                // Dispara o cálculo se a sua engine antiga estiver instanciada na página
+                if (typeof engineCalculos !== 'undefined' && typeof engineCalculos.processarConversaoMetrologia === 'function') {
+                    engineCalculos.processarConversaoMetrologia();
+                }
+            });
+        }
+    });
+});
