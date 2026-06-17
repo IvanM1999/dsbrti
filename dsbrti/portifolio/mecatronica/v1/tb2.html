@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dashboard Circuitos</title>
+
+<style>
+:root {
+  --bg: #0a0f1f;
+  --card: rgba(255,255,255,0.05);
+  --border: rgba(255,255,255,0.1);
+  --neon: #00f7ff;
+  --text: #ffffff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", sans-serif;
+  background: radial-gradient(circle at top, #0f1c3f, #050913);
+  color: var(--text);
+}
+
+/* HEADER */
+header {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+header h1 {
+  font-size: 2.5rem;
+  background: linear-gradient(90deg, #00f7ff, #00ff9d);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* GRID */
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+/* CARD */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  transition: 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+/* glow */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent, rgba(0,255,255,0.2), transparent);
+  opacity: 0;
+  transition: 0.4s;
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+/* hover */
+.card:hover {
+  transform: translateY(-5px) scale(1.02);
+  border-color: var(--neon);
+  box-shadow: 0 0 20px rgba(0,255,255,0.2);
+}
+
+/* TITULO */
+.card h2 {
+  margin-bottom: 10px;
+  font-size: 1.3rem;
+  color: var(--neon);
+}
+
+/* TABELA */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+td {
+  padding: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.highlight {
+  color: #00ff9d;
+  font-weight: bold;
+}
+
+/* ANIMAÇÃO ENTRADA */
+.card {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeIn 0.6s forwards;
+}
+
+.card:nth-child(1) { animation-delay: 0.1s; }
+.card:nth-child(2) { animation-delay: 0.2s; }
+.card:nth-child(3) { animation-delay: 0.3s; }
+.card:nth-child(4) { animation-delay: 0.4s; }
+.card:nth-child(5) { animation-delay: 0.5s; }
+.card:nth-child(6) { animation-delay: 0.6s; }
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 20px;
+  opacity: 0.6;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>⚡ Dashboard de Circuitos</h1>
+</header>
+
+<div class="container">
+
+<div class="card">
+<h2>Grandezas</h2>
+<table>
+<tr><td>Corrente</td><td class="highlight">I = dQ/dt</td></tr>
+<tr><td>Tensão</td><td class="highlight">V = W/Q</td></tr>
+<tr><td>Resistência</td><td class="highlight">R = V/I</td></tr>
+<tr><td>Potência</td><td class="highlight">P = V·I</td></tr>
+</table>
+</div>
+
+<div class="card">
+<h2>Kirchhoff</h2>
+<table>
+<tr><td>KCL</td><td class="highlight">Σ I = 0</td></tr>
+<tr><td>KVL</td><td class="highlight">Σ V = 0</td></tr>
+</table>
+</div>
+
+<div class="card">
+<h2>Resistores</h2>
+<table>
+<tr><td>Série</td><td class="highlight">Req = R1 + R2 + ...</td></tr>
+<tr><td>Paralelo</td><td class="highlight">1/Req = 1/R1 + ...</td></tr>
+</table>
+</div>
+
+<div class="card">
+<h2>Capacitores</h2>
+<table>
+<tr><td>Série</td><td class="highlight">1/Ceq = 1/C1 + ...</td></tr>
+<tr><td>Paralelo</td><td class="highlight">Ceq = C1 + C2</td></tr>
+</table>
+</div>
+
+<div class="card">
+<h2>Divisores</h2>
+<table>
+<tr><td>Tensão</td><td class="highlight">Vk = V × Rk/Req</td></tr>
+<tr><td>Corrente</td><td class="highlight">Ik = I × Req/Rk</td></tr>
+</table>
+</div>
+
+<div class="card">
+<h2>Thevenin / Norton</h2>
+<table>
+<tr><td>Vth</td><td class="highlight">Fonte equivalente</td></tr>
+<tr><td>In</td><td class="highlight">Vth / Rth</td></tr>
+<tr><td>Rth</td><td class="highlight">= Rn</td></tr>
+</table>
+</div>
+
+</div>
+
+<footer>
+Sistema visual de apoio a circuitos ⚡
+</footer>
+
+<script>
+// efeito de brilho ao mover mouse
+document.querySelectorAll(".card").forEach(card => {
+  card.addEventListener("mousemove", e => {
+    const x = e.offsetX;
+    const y = e.offsetY;
+    card.style.background = `
+      radial-gradient(circle at ${x}px ${y}px,
+      rgba(0,255,255,0.15),
+      rgba(255,255,255,0.03))
+    `;
+  });
+
+  card.addEventListener("mouseleave", () => {
+    card.style.background = "rgba(255,255,255,0.05)";
+  });
+});
+</script>
+
+</body>
+</html>

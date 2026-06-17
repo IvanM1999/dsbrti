@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Treino</title>
+<link rel="stylesheet" href="./css/style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+
+<header class="navbar">
+  <div class="logo">CircuitLab</div>
+  <nav>
+    <a href="index.html">Início</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="treino.html">Treino</a>
+    <a href="analise.html">Análise</a>
+  </nav>
+</header>
+
+<main class="container">
+
+<h1>Treinamento</h1>
+
+<div class="grid grid-2">
+
+<div class="card">
+  <div class="title">Modo Desafio</div>
+
+  <p>Tempo restante:</p>
+  <h2 id="timer">60s</h2>
+
+  <button class="btn" onclick="startChallenge()">Iniciar Desafio</button>
+</div>
+
+<!-- EXERCÍCIO -->
+<div class="card" id="exerciseCard"> <!-- CORREÇÃO: id adicionado -->
+  <div class="title">Exercício</div>
+
+  <p id="question">Clique em novo exercício</p>
+
+  <input id="answer" class="input" placeholder="Resposta">
+
+  <button class="btn" onclick="check()">Verificar</button>
+  <button class="btn" onclick="newExercise()">Novo</button>
+
+  <div id="feedback"></div>
+</div>
+
+<!-- STATUS -->
+<div class="card">
+  <div class="title">Seu Desempenho</div>
+
+  <p>Aproveitamento:</p>
+  <h2 id="acc">0%</h2>
+
+  <p>Total:</p>
+  <span id="total">0</span> <!-- CORREÇÃO -->
+
+  <p>Acertos:</p>
+  <span id="correct">0</span> <!-- CORREÇÃO -->
+</div>
+
+</div>
+
+<div class="card">
+  <div class="title">Ranking</div>
+
+  <ul id="rankingList"></ul>
+
+  <p><b>Recorde:</b> <span id="record">0</span></p>
+</div>
+
+</main>
+
+<script type="module">
+import { Engine } from './js/engine.js';
+import { Exercises } from './js/exercises.js';
+import { Progress } from './js/progress.js';
+import { Challenge } from './js/challenge.js';
+import { Ranking } from './js/ranking.js';
+
+let current;
+
+const card = document.getElementById("exerciseCard");
+
+window.newExercise = () => {
+  const ex = Exercises[Math.floor(Math.random() * Exercises.length)];
+  if (!ex || typeof ex.generate !== "function") return; // CORREÇÃO
+
+  current = ex.generate();
+
+  document.getElementById("question").innerText = current.question || "";
+  document.getElementById("feedback").innerHTML = "";
+  document.getElementById("answer").value = "";
+
+  if (card) card.classList.remove("success", "error"); // CORREÇÃO
+};
+
+window.check = () => {
+
+  if (!current || typeof current.solve !== "function") return; // CORREÇÃO
+
+  const input = document.getElementById("answer").value;
+
+  if (!input) {
+    document.getElementById("feedback").innerHTML =
+      "<span class='feedback-err'>Digite uma resposta</span>";
+    return;
+  }
+
+  const user = parseFloat(input);
+  const result = current.solve(Engine); // CORREÇÃO
+
+  const correctValue = result && typeof result.value === "number"
+    ? result.value
+    : NaN; // CORREÇÃO
+
+  const ok = Number.isFinite(user) && Number.isFinite(correctValue) && Math.abs(user - correctValue) < 0.1; // CORREÇÃO
+
+  Progress.update(current.type, ok);
+
+  if (ok) {
+    document.getElementById("feedback").innerHTML =
+      "<span class='feedback-ok'>✔ Correto</span>";
+
+    if (card) {
+      card.classList.add("success");
+      card.classList.remove("error");
+    }
+
+    if (Challenge.active) {
+      Challenge.hit();
+      setTimeout(() => newExercise(), 300);
+    }
+
+  } else {
+    document.getElementById("feedback").innerHTML =
+      `<span class='feedback-err'>✖ Errado<br>${current.formula || ""}</span>`;
+
+    if (card) {
+      card.classList.add("error");
+      card.classList.remove("success");
+
+      setTimeout(() => card.classList.remove("error"), 400);
+    }
+  }
+
+  updateStats();
+};
+
+window.startChallenge = () => {
+  Challenge.start({
+    newExercise,
+    updateTimer: (t) => {
+      document.getElementById("timer").innerText = t + "s";
+    },
+    feedback: (msg) => {
+      document.getElementById("feedback").innerHTML = msg;
+    },
+    updateRanking
+  });
+};
+
+function updateStats() {
+  const p = Progress.load();
+  const acc = parseFloat(Progress.accuracy());
+
+  document.getElementById("acc").innerText = (Number.isFinite(acc) ? acc : 0) + "%"; // CORREÇÃO
+  document.getElementById("total").innerText = p.total || 0; // CORREÇÃO
+  document.getElementById("correct").innerText = p.correct || 0; // CORREÇÃO
+}
+
+function updateRanking(list) {
+  const el = document.getElementById("rankingList");
+
+  if (!Array.isArray(list)) list = []; // CORREÇÃO
+
+  let html = "";
+
+  list.forEach((r, i) => {
+    const score = (r && typeof r.score === "number") ? r.score : 0; // CORREÇÃO
+    html += `<li>#${i+1} - ${score} pts ${Ranking.medal(score)}</li>`;
+  });
+
+  el.innerHTML = html;
+
+  document.getElementById("record").innerText =
+    list.length ? list[0].score : 0;
+}
+
+// ENTER
+document.getElementById("answer")
+  .addEventListener("keydown", e => {
+    if (e.key === "Enter") check();
+  });
+
+// INIT
+updateStats();
+updateRanking(Ranking.load());
+</script>
+
+</body>
+</html>

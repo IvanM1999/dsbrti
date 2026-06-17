@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tabela de Circuitos</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0a0f1f;
+  color: white;
+}
+
+.container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.table-box {
+  background: #111a33;
+  border-radius: 10px;
+  margin-bottom: 25px;
+  overflow: hidden;
+  box-shadow: 0 0 15px rgba(0,0,0,0.4);
+}
+
+.table-title {
+  background: linear-gradient(90deg, #00c3ff, #005bea);
+  padding: 12px;
+  font-weight: bold;
+  text-align: center;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 10px;
+  text-align: center;
+}
+
+th {
+  background: #1e2a4a;
+}
+
+td {
+  border-top: 1px solid #2c3e70;
+}
+
+.highlight {
+  color: #00ffcc;
+  font-weight: bold;
+}
+
+.note {
+  color: #aaa;
+  font-size: 0.9em;
+}
+</style>
+</head>
+
+<body>
+<nav class="navbar">
+  <h2>⚡ Circuitos SENAI</h2>
+  <div>
+    <a href="index.html">Dashboard</a>
+    <a href="treino.html">Treino</a>
+  </div>
+</nav>
+<div class="container">
+
+<h1>⚡ Tabela Gabarito de Circuitos</h1>
+
+<div class="table-box">
+<div class="table-title">Grandezas Fundamentais</div>
+<table>
+<tr>
+<th>Grandeza</th>
+<th>Símbolo</th>
+<th>Fórmula</th>
+<th>Unidade</th>
+</tr>
+
+<tr>
+<td>Carga</td>
+<td>Q</td>
+<td>-</td>
+<td>C (Coulomb)</td>
+</tr>
+
+<tr>
+<td>Corrente</td>
+<td>I</td>
+<td class="highlight">I = dQ/dt</td>
+<td>A (Ampère)</td>
+</tr>
+
+<tr>
+<td>Tensão</td>
+<td>V</td>
+<td class="highlight">V = W/Q</td>
+<td>V (Volt)</td>
+</tr>
+
+<tr>
+<td>Resistência</td>
+<td>R</td>
+<td class="highlight">R = V/I</td>
+<td>Ω (Ohm)</td>
+</tr>
+
+<tr>
+<td>Potência</td>
+<td>P</td>
+<td class="highlight">P = V·I = I²R = V²/R</td>
+<td>W (Watt)</td>
+</tr>
+
+</table>
+</div>
+
+
+<div class="table-box">
+<div class="table-title">Leis de Kirchhoff</div>
+<table>
+
+<tr>
+<td><b>KCL</b></td>
+<td class="highlight">Σ I = 0</td>
+<td class="note">Correntes entrando = saindo</td>
+</tr>
+
+<tr>
+<td><b>KVL</b></td>
+<td class="highlight">Σ V = 0</td>
+<td class="note">Soma das tensões na malha</td>
+</tr>
+
+</table>
+</div>
+
+
+<div class="table-box">
+<div class="table-title">Resistores</div>
+<table>
+
+<tr>
+<td>Série</td>
+<td class="highlight">Req = R1 + R2 + ... + Rn</td>
+</tr>
+
+<tr>
+<td>Paralelo</td>
+<td class="highlight">1/Req = 1/R1 + ... + 1/Rn</td>
+</tr>
+
+</table>
+</div>
+
+
+<div class="table-box">
+<div class="table-title">Capacitores</div>
+<table>
+
+<tr>
+<td>Série</td>
+<td class="highlight">1/Ceq = 1/C1 + ... + 1/Cn</td>
+</tr>
+
+<tr>
+<td>Paralelo</td>
+<td class="highlight">Ceq = C1 + C2 + ...</td>
+</tr>
+
+</table>
+</div>
+
+
+<div class="table-box">
+<div class="table-title">Divisores</div>
+<table>
+
+<tr>
+<td>Tensão</td>
+<td class="highlight">Vk = Vtotal × (Rk / Req)</td>
+</tr>
+
+<tr>
+<td>Corrente</td>
+<td class="highlight">Ik = Itotal × (Req / Rk)</td>
+</tr>
+
+</table>
+</div>
+
+
+<div class="table-box">
+<div class="table-title">Thevenin e Norton</div>
+<table>
+
+<tr>
+<td>Thevenin</td>
+<td class="highlight">Vth, Rth</td>
+</tr>
+
+<tr>
+<td>Norton</td>
+<td class="highlight">In = Vth / Rth</td>
+</tr>
+
+<tr>
+<td>Relação</td>
+<td class="highlight">Rn = Rth</td>
+</tr>
+
+</table>
+</div>
+
+
+<div class="table-box">
+<div class="table-title">Dicas Rápidas</div>
+<table>
+
+<tr><td>Resistores em série → soma</td></tr>
+<tr><td>Resistores em paralelo → Req menor</td></tr>
+<tr><td>Capacitores em série → Ceq menor</td></tr>
+<tr><td>Capacitores em paralelo → soma</td></tr>
+<tr><td>Malha → usar KVL</td></tr>
+<tr><td>Nó → usar KCL</td></tr>
+
+</table>
+</div>
+
+</div>
+
+</body>
+</html>

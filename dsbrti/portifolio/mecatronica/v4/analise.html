@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Análise de Circuito</title>
+
+<link rel="stylesheet" href="./css/style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+
+<header class="navbar">
+   <div class="logo">CircuitLab</div>
+   <nav>
+      <a href="index.html">Início</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="treino.html">Treino</a>
+      <a href="analise.html" class="active">Análise</a>
+   </nav>
+</header>
+
+<main class="container">
+   
+   <h1>Análise de Circuito</h1>
+   
+   <div class="grid grid-2">
+      
+      <!-- INPUT -->
+      <div class="card">
+         <div class="title">Circuito</div>
+         
+         <textarea id="input" class="input" rows="6">
+V1 value=10 n1=n1 n2=gnd
+R1 value=5 n1=n1 n2=n2
+R2 value=5 n1=n2 n2=gnd
+         </textarea> <!-- correção: formato compatível com parser -->
+         
+         <button class="btn" onclick="resolver()">Resolver</button>
+         <button class="btn" onclick="toggleSteps()">Modo Professor</button>
+      </div>
+      
+      <!-- RESULTADO -->
+      <div class="card">
+         <div class="title">Resultado</div>
+         <pre id="output"></pre>
+         
+         <div id="steps" style="display:none;"></div>
+      </div>
+      
+   </div>
+   
+</main>
+
+<script type="module" src="./js/app.js"></script>
+<script type="module" src="./js/analise.js"></script>
+
+</body>
+</html>

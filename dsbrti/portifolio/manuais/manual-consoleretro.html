@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Manual Simples do Console Infantil</title>
+  <link rel="stylesheet" href="manual-consoleretro.css"> <!-- CSS separado -->
+  <script>
+    // Mostrar/ocultar alternativas
+    function toggleHidden(id) {
+      const el = document.getElementById(id);
+      el.style.display = (el.style.display === 'block') ? 'none' : 'block';
+    }
+
+    // Glossário simples: mostra explicação ao passar o mouse
+    function showGlossario(term, explicacao) {
+      alert(term + ": " + explicacao);
+    }
+
+    // Diagnóstico interativo
+    function diagnostico() {
+      let resultado = "Sugestões para você:\n";
+      if (document.getElementById("check-liga").checked) {
+        resultado += "- Se o computador não liga: verifique a tomada e tente ligar com pendrive.\n";
+      }
+      if (document.getElementById("check-menu").checked) {
+        resultado += "- Se o menu inicial não aparece: isso se chama GRUB. Use o programa Boot Repair.\n";
+      }
+      if (document.getElementById("check-video").checked) {
+        resultado += "- Se o vídeo do YouTube trava: clique na engrenagem e escolha qualidade 480p.\n";
+      }
+      alert(resultado);
+    }
+  </script>
+</head>
+<body>
+  <header>
+    <h1>Manual Simples do Console Infantil</h1>
+    <p>Transformando seu computador antigo em diversão segura</p>
+  </header>
+
+  <nav>
+    <a href="#passo1">Passo 1</a>
+    <a href="#passo2">Passo 2</a>
+    <a href="#passo3">Passo 3</a>
+    <a href="#passo4">Passo 4</a>
+    <a href="#diagnostico">Diagnóstico</a>
+  </nav>
+
+  <section id="passo1">
+    <h2>🔌 Passo 1: Preparar</h2>
+    <div class="card">
+      <p>Você vai precisar de:</p>
+      <ul>
+        <li>Um pendrive (mínimo 8 GB)</li>
+        <li>Dois arquivos chamados “ISOs” (Lubuntu/MX Linux e Batocera)</li>
+        <li>Um programa para gravar esses arquivos no pendrive (Rufus ou Etcher)</li>
+      </ul>
+      <button onclick="toggleHidden('alt1')">Se não conseguir baixar</button>
+      <div id="alt1" class="hidden">
+        <p>Peça ajuda para alguém baixar os arquivos e colocar no pendrive. É como copiar fotos, mas com programas.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="passo2">
+    <h2>💻 Passo 2: Instalar o PC</h2>
+    <div class="card">
+      <p>Coloque o pendrive com Lubuntu/MX Linux e reinicie o computador.</p>
+      <p>Na tela, escolha <strong>Instalar</strong>. O sistema vai pedir para dividir o espaço do disco (pense como separar uma gaveta em duas partes):</p>
+      <ul>
+        <li>Parte 1 → PC (Internet e YouTube)</li>
+        <li>Parte 2 → Console (Jogos)</li>
+      </ul>
+      <button onclick="toggleHidden('alt2')">Se não aparecer essa opção</button>
+      <div id="alt2" class="hidden">
+        <p>Escolha “Instalação automática”. Depois, use o programa chamado GParted para ajustar.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="passo3">
+    <h2>🎮 Passo 3: Instalar o Console</h2>
+    <div class="card">
+      <p>Agora coloque o pendrive com Batocera e reinicie.</p>
+      <p>Na tela, escolha <strong>Instalar Batocera no HD</strong> e selecione a parte livre do disco.</p>
+      <button onclick="toggleHidden('alt3')">Se não funcionar</button>
+      <div id="alt3" class="hidden">
+        <p>Se não instalar, use o Batocera direto do pendrive. Funciona igual, mas sem ocupar espaço no HD.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="passo4">
+    <h2>🎨 Passo 4: Menu Inicial</h2>
+    <div class="card">
+      <p>Quando ligar o computador, vai aparecer um menu. Esse menu se chama 
+        <span onclick="showGlossario('GRUB','É o menu inicial que aparece quando você liga o computador, para escolher qual sistema usar.')">GRUB</span>.
+      </p>
+      <p>Renomeie as opções para:</p>
+      <ul>
+        <li><strong>PC</strong> → Internet e YouTube</li>
+        <li><strong>Console</strong> → Jogos retrô</li>
+      </ul>
+      <p>Defina o Console como padrão, assim ele entra direto nos jogos.</p>
+      <button onclick="toggleHidden('alt4')">Se o menu não aparecer</button>
+      <div id="alt4" class="hidden">
+        <p>Use o programa Boot Repair para reconstruir o menu. Se ainda não funcionar, entre na BIOS e escolha o sistema manualmente.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="diagnostico">
+    <h2>🧩 Diagnóstico rápido</h2>
+    <div class="card">
+      <p>Marque o que aconteceu:</p>
+      <label><input type="checkbox" id="check-liga"> O computador não liga</label><br>
+      <label><input type="checkbox" id="check-menu"> O menu inicial não aparece</label><br>
+      <label><input type="checkbox" id="check-video"> O vídeo do YouTube trava</label><br>
+      <button onclick="diagnostico()">Ver soluções</button>
+    </div>
+  </section>
+
+  <footer>
+    <p>Manual simples e seguro © Imperio</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Central de Metrologia e Ajustes </title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --ubuntu-orange: #E95420;
+            --ubuntu-aubergine: #77216F;
+            --ubuntu-dark: #333333;
+            --bg-main: #111111;
+            --bg-panel: #222222;
+            --bg-card: #2d2d2d;
+            --border: #444444;
+            --text-main: #f5f5f5;
+            --text-sub: #aea79f;
+            --success: #38b44a;
+            --warning: #df382c;
+            --font: 'Ubuntu', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-family: var(--font);
+            font-size: 14px;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-header {
+            background-color: var(--ubuntu-orange);
+            color: #fff;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 56px;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .brand-title { font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .theme-badge { font-size: 11px; background: rgba(0,0,0,0.3); padding: 4px 8px; border-radius: 4px; font-family: monospace; font-weight: bold; }
+
+        .app-viewport {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            padding-bottom: 84px;
+            box-sizing: border-box;
+        }
+
+        /* OMNIBOX DE BUSCA HEURÍSTICA */
+        .omnibox-container { position: sticky; top: 0; z-index: 50; margin-bottom: 16px; }
+        .omnibox-wrapper { position: relative; width: 100%; }
+        .omnibox-wrapper i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--ubuntu-orange); font-size: 16px; }
+        .omnibox-input {
+            width: 100%;
+            background-color: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 14px 16px 14px 44px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s;
+        }
+        .omnibox-input:focus { border-color: var(--ubuntu-orange); box-shadow: 0 0 8px rgba(233, 84, 32, 0.4); }
+
+        /* PAINEL NEURAL DE INSIGHTS */
+        .neural-panel {
+            background: rgba(233, 84, 32, 0.05);
+            border: 1px dashed var(--ubuntu-orange);
+            padding: 14px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            display: none;
+        }
+        .neural-card { background: var(--bg-card); border-left: 4px solid var(--ubuntu-orange); padding: 12px; margin-top: 8px; border-radius: 4px; font-size: 13px; }
+
+        /* PAINÉIS DE CONTEÚDO */
+        .data-panel { display: none; }
+        .data-panel.active { display: block; }
+
+        /* CARDS INDUSTRIAIS */
+        .industrial-card {
+            background-color: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        .card-header-tech {
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--ubuntu-orange);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+        }
+
+        /* GRID DE EXIBIÇÃO DE DADOS */
+        .tech-data-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 12px;
+        }
+        .data-item-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            position: relative;
+        }
+        .data-item-title { font-size: 11px; text-transform: uppercase; color: var(--text-sub); font-weight: 600; }
+        .data-item-value { font-size: 15px; font-weight: bold; color: #fff; font-family: monospace; }
+        .data-item-desc { font-size: 12px; color: var(--text-sub); margin-top: 4px; line-height: 1.4; }
+        .badge-sector { position: absolute; top: 12px; right: 12px; font-size: 9px; background: var(--border); padding: 2px 6px; border-radius: 4px; color: var(--text-sub); font-weight: bold; }
+
+        /* ELEMENTOS FORMULÁRIOS DAS CALCULADORAS */
+        .calc-embedded-box { margin-top: 10px; }
+        .calc-field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+        .calc-field-grid.triple { grid-template-columns: 1fr 1fr 1fr; }
+        .calc-input, .calc-select {
+            width: 100%;
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            padding: 11px;
+            color: #fff;
+            border-radius: 4px;
+            font-size: 13px;
+            outline: none;
+            font-family: monospace;
+        }
+        .calc-input:focus, .calc-select:focus { border-color: var(--ubuntu-orange); }
+        .calc-btn-exec {
+            width: 100%;
+            background: var(--ubuntu-orange);
+            border: 1px solid var(--ubuntu-orange);
+            color: #fff;
+            padding: 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 12px;
+            transition: opacity 0.2s;
+        }
+        .calc-btn-exec:active { opacity: 0.8; }
+        .calc-result-display {
+            background: rgba(56, 180, 74, 0.1);
+            border: 1px solid rgba(56, 180, 74, 0.3);
+            padding: 12px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-family: monospace;
+            color: #62c472;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        /* ÁREA DE HISTÓRICO DE CONVERSÕES */
+        .history-container { margin-top: 14px; border-top: 1px dashed var(--border); padding-top: 12px; }
+        .history-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+        .history-item { background: var(--bg-main); padding: 8px 12px; border-radius: 4px; font-size: 12px; display: flex; justify-content: space-between; font-family: monospace; border-left: 3px solid var(--ubuntu-orange); }
+
+        /* MENU INFERIOR FLUTUANTE (MOBILE COMPACTO) */
+        .app-navigation {
+            background-color: var(--bg-panel);
+            border-top: 1px solid var(--border);
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            height: 64px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 100;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        .nav-tab-btn {
+            background: none; border: none;
+            color: var(--text-sub);
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
+            cursor: pointer; font-size: 10px; font-weight: 600; width: 20%;
+        }
+        .nav-tab-btn i { font-size: 18px; }
+        .nav-tab-btn.active { color: var(--ubuntu-orange); }
+
+        /* ADAPTAÇÃO PARA FORMATO DESKTOP */
+        @media(min-width: 1024px) {
+            .app-container-root { display: grid; grid-template-columns: 240px 1fr; height: 100vh; }
+            .app-navigation {
+                position: static; height: 100%; flex-direction: column;
+                justify-content: flex-start; border-top: none; border-right: 1px solid var(--border);
+                padding: 20px 10px; gap: 6px; width: 240px;
+            }
+            .nav-tab-btn {
+                flex-direction: row; width: 100%; padding: 12px 16px;
+                border-radius: 4px; font-size: 13px; gap: 12px; text-align: left;
+            }
+            .nav-tab-btn i { font-size: 16px; width: 20px; }
+            .nav-tab-btn.active { background: rgba(233, 84, 32, 0.1); color: var(--ubuntu-orange); }
+            .app-viewport { padding: 24px; }
+        }
+
+        .hide { display: none !important; }
+    </style>
+</head>
+<body>
+
+<div class="app-container-root">
+    
+    <nav class="app-navigation" aria-label="Menu de Navegação Principal">
+        <button class="nav-tab-btn active" onclick="mudarAbaAtiva('mod-conversor', this)"><i class="fa-solid fa-calculator"></i><span>Conversor</span></button>
+        <button class="nav-tab-btn" onclick="mudarAbaAtiva('mod-usinagem', this)"><i class="fa-solid fa-screwdriver-wrench"></i><span>Usinagem</span></button>
+        <button class="nav-tab-btn" onclick="mudarAbaAtiva('mod-tolerancias', this)"><i class="fa-solid fa-drafting-compass"></i><span>Tolerâncias</span></button>
+        <button class="nav-tab-btn" onclick="mudarAbaAtiva('mod-manutencao', this)"><i class="fa-solid fa-gauge"></i><span>Manutenção</span></button>
+    </nav>
+
+    <div style="display:flex; flex-direction:column; overflow:hidden; width:100%;">
+        <header class="app-header">
+            <div class="brand-title"><i class="fa-solid fa-desktop"></i> METROLOGY &amp; DESIGN SYSTEM V6.0</div>
+        </header>
+
+        <main class="app-viewport">
+            
+            <div class="omnibox-container">
+                <div class="omnibox-wrapper">
+                    <i class="fa-solid fa-search"></i>
+                    <input type="text" id="engine-omnibox" class="omnibox-input" placeholder="Pesquisa rápida (Ex: M5, H7, 4-20mA, Inox, Ferro Cinzento...)">
+                </div>
+            </div>
+
+            <div id="neural-box" class="neural-panel">
+                <div style="font-size:11px; font-weight:bold; color:var(--ubuntu-orange);"><i class="fa-solid fa-brain"></i> INSIGHT RELACIONAL DE CHÃO DE FÁBRICA</div>
+                <div id="neural-insights-target"></div>
+            </div>
+
+            <section id="mod-conversor" class="data-panel active">
+                <div class="industrial-card">
+                    <div class="card-header-tech"><i class="fa-solid fa-right-left"></i> Conversor Bidirecional Mestre (Fracionária, Milesimal e Milímetros)</div>
+                    <div class="calc-embedded-box">
+                        <div class="calc-field-grid">
+                            <div>
+                                <label class="data-item-title">Unidade de Entrada</label>
+                                <select id="calc-conv-origem" class="calc-select" onchange="engineCalculos.atualizarVisibilidadeCamposConversor()">
+                                    <option value="mm">Milímetros (mm)</option>
+                                    <option value="in_dec">Polegada Milesimal (in)</option>
+                                    <option value="in_frac">Polegada Fracionária (in)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="data-item-title">Unidade de Saída</label>
+                                <select id="calc-conv-destino" class="calc-select">
+                                    <option value="mm">Milímetros (mm)</option>
+                                    <option value="in_dec" selected>Polegada Milesimal (in)</option>
+                                    <option value="in_frac">Polegada Fracionária (in)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div id="wrapper-input-direto" class="calc-field-grid">
+                            <div style="grid-column: span 2;">
+                                <label class="data-item-title">Valor Numérico</label>
+                                <input type="number" id="calc-conv-valor" class="calc-input" value="25.4" step="0.0001">
+                            </div>
+                        </div>
+
+                        <div id="wrapper-input-fracionaria" class="calc-field-grid triple hide">
+                            <div><label class="data-item-title">Inteiro</label><input type="number" id="calc-frac-int" class="calc-input" value="1" min="0"></div>
+                            <div><label class="data-item-title">Numerador</label><input type="number" id="calc-frac-num" class="calc-input" value="1" min="0"></div>
+                            <div><label class="data-item-title">Denominador</label><select id="calc-frac-den" class="calc-select"><option value="2">2</option><option value="4">4</option><option value="8">8</option><option value="16">16</option><option value="32">32</option><option value="64">64</option><option value="128">128</option></select></div>
+                        </div>
+
+                        <button class="calc-btn-exec" onclick="engineCalculos.executarConversaoMestre()">Converter Variável Geometrica</button>
+                        
+                        <div id="res-calc-conversor" class="calc-result-display">Insira a variável mecânica acima para cálculo de tolerância linear...</div>
+                        
+                        <div class="history-container">
+                            <div class="data-item-title" style="margin-bottom:6px;"><i class="fa-solid fa-history"></i> Histórico de Chamadas Práticas</div>
+                            <div id="history-box-target">
+                                <span style="font-size:12px; color:var(--text-sub);">Nenhum cálculo registrado neste turno de manutenção.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="mod-usinagem" class="data-panel">
+                <div class="industrial-card">
+                    <div class="card-header-tech"><i class="fa-solid fa-calculator"></i> Rotação (RPM) e Avanço de Mesa (Vf)</div>
+                    <div class="calc-embedded-box">
+                        <div class="calc-field-grid triple">
+                            <div><label class="data-item-title">Vc (m/min)</label><input type="number" id="calc-usin-vc" class="calc-input" value="200"></div>
+                            <div><label class="data-item-title">Ø Fresa/Broca</label><input type="number" id="calc-usin-dc" class="calc-input" value="10"></div>
+                            <div><label class="data-item-title">fz (mm/z)</label><input type="number" id="calc-usin-fz" class="calc-input" value="0.05"></div>
+                        </div>
+                        <div class="calc-field-grid">
+                            <div style="grid-column: span 2;"><label class="data-item-title">Número de Facas (Z)</label><input type="number" id="calc-usin-z" class="calc-input" value="4"></div>
+                        </div>
+                        <button class="calc-btn-exec" onclick="engineCalculos.calcularUsinagem()">Processar Dinâmica de Corte</button>
+                        <div id="res-calc-usinagem" class="calc-result-display">Aguardando cinemática ferramental...</div>
+                    </div>
+                </div>
+                <div id="target-cards-usinagem" class="tech-data-row"></div>
+            </section>
+
+            <section id="mod-tolerancias" class="data-panel">
+                <div class="industrial-card">
+                    <div class="card-header-tech"><i class="fa-solid fa-arrows-left-right"></i> Buscador de Folgas e Interferências Micrométricas</div>
+                    <div class="calc-embedded-box">
+                        <div class="calc-field-grid">
+                            <div><label class="data-item-title">Diâmetro Nominal (mm)</label><input type="number" id="calc-iso-nominal" class="calc-input" value="20"></div>
+                            <div>
+                                <label class="data-item-title">Campo de Ajuste Técnico</label>
+                                <select id="calc-iso-classe" class="calc-select">
+                                    <option value="H7">H7 (Furo de Acoplamento Padrão)</option>
+                                    <option value="g6">g6 (Eixo de Deslizamento Livre)</option>
+                                    <option value="h6">h6 (Eixo de Posicionamento Estático)</option>
+                                    <option value="p6">p6 (Eixo de Ajuste por Prensa)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="calc-btn-exec" onclick="engineCalculos.calcularToleranciaISO()">Mapear Afastamentos Absolutos</button>
+                        <div id="res-calc-iso" class="calc-result-display">Insira a dimensão de acoplamento do desenho...</div>
+                    </div>
+                </div>
+                <div id="target-cards-tolerancias" class="tech-data-row"></div>
+            </section>
+
+            <section id="mod-manutencao" class="data-panel">
+                <div class="industrial-card">
+                    <div class="card-header-tech"><i class="fa-solid fa-bolt"></i> Calibração e Escalonamento de Loops CLP</div>
+                    <div class="calc-embedded-box">
+                        <div class="calc-field-grid">
+                            <div><label class="data-item-title">Sinal Físico</label><select id="calc-el-tipo" class="calc-select"><option value="4-20">4 - 20 mA</option><option value="0-10">0 - 10 V</option></select></div>
+                            <div><label class="data-item-title">Leitura Multímetro</label><input type="number" id="calc-el-lido" class="calc-input" value="12" step="0.1"></div>
+                        </div>
+                        <div class="calc-field-grid">
+                            <div><label class="data-item-title">Mínimo Processo</label><input type="number" id="calc-el-min" class="calc-input" value="0"></div>
+                            <div><label class="data-item-title">Máximo Processo</label><input type="number" id="calc-el-max" class="calc-input" value="100"></div>
+                        </div>
+                        <button class="calc-btn-exec" onclick="engineCalculos.calcularConversaoSinal()">Interpolar Escala de Engenharia</button>
+                        <div id="res-calc-eletronica" class="calc-result-display">Insira parâmetros elétricos de entrada...</div>
+                    </div>
+                </div>
+
+                <div class="industrial-card">
+                    <div class="card-header-tech"><i class="fa-solid fa-wave-square"></i> Localizador Sônico de Trincas e Falhas Internas</div>
+                    <div class="calc-embedded-box">
+                        <div class="calc-field-grid">
+                            <div><label class="data-item-title">Material de Base</label><select id="calc-us-material" class="calc-select"><option value="5920">Aço Carbono (5920 m/s)</option><option value="5790">Aço Inox (5790 m/s)</option><option value="6320">Alumínio (6320 m/s)</option></select></div>
+                            <div><label class="data-item-title">Tempo de Voo Trinca (µs)</label><input type="number" id="calc-us-tempo" class="calc-input" value="18" step="0.1"></div>
+                        </div>
+                        <button class="calc-btn-exec" onclick="engineCalculos.calcularProfundidadeFALHA()">Calcular Coordenada da Descontinuidade</button>
+                        <div id="res-calc-ultrassom" class="calc-result-display">Insira a resposta em tempo do transdutor...</div>
+                    </div>
+                </div>
+
+                <div class="industrial-card">
+                    <div class="card-header-tech"><i class="fa-solid fa-fire-burner"></i> Compensação de Retração Térmica Metálica</div>
+                    <div class="calc-embedded-box">
+                        <div class="calc-field-grid">
+                            <div><label class="data-item-title">Dimensão Alvo Desenho (mm)</label><input type="number" id="calc-fund-cota" class="calc-input" value="200"></div>
+                            <div><label class="data-item-title">Coeficiente de Contração (%)</label><input type="number" id="calc-fund-taxa" class="calc-input" value="1.2" step="0.1"></div>
+                        </div>
+                        <button class="calc-btn-exec" onclick="engineCalculos.calcularCotaModelo()">Calcular Dimensional de Ferramentaria</button>
+                        <div id="res-calc-fundicao" class="calc-result-display">Calcule a expansão reversa do molde aqui...</div>
+                    </div>
+                </div>
+
+                <div id="target-cards-manutencao" class="tech-data-row"></div>
+            </section>
+
+        </main>
+    </div>
+</div>
+
+<script src="db_industrial.js"></script>
+<script src="calculadoras.js"></script>
+<script src="core.js"></script>
+</body>
+</html>

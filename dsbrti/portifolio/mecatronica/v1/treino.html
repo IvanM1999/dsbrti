@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Treino</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<nav class="navbar">
+  <h2>⚡ Circuitos SENAI</h2>
+  <div>
+    <a href="index.html">Dashboard</a>
+    <a href="treino.html">Treino</a>
+  </div>
+</nav>
+
+<div class="container" style="text-align:center; padding:20px;">
+  <h1>Treinador</h1>
+
+  <div class="card">
+    <p id="question"></p>
+    <input type="number" id="answer">
+
+    <br><br>
+    <button onclick="checkAnswer()">Verificar</button>
+    <button onclick="newExercise()">Novo</button>
+    <button onclick="showAnswer()">Resposta</button>
+
+    <p id="feedback"></p>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

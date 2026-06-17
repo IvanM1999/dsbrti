@@ -1,0 +1,89 @@
+{
+  "nominal_capacity_mAh": 5000,
+  "cycles": [
+    {
+      "id": "ciclo-58-80",
+      "label": "Carga 58→80",
+      "soc_start": 58,
+      "soc_end": 80,
+      "delta_soc_percent": 22,
+      "time_hours": null,
+      "mAh": 1011,
+      "capacity_estimated": 4595,
+      "soh_percent": 91.9,
+      "drain_percent_per_hour": null,
+      "autonomy_hours": null,
+      "note": "Carga parcial medida"
+    },
+    {
+      "id": "ciclo-100-89",
+      "label": "Descarga 100→89",
+      "soc_start": 100,
+      "soc_end": 89,
+      "delta_soc_percent": 11,
+      "time_hours": null,
+      "mAh": 505,
+      "capacity_estimated": 4590,
+      "soh_percent": 91.8,
+      "drain_percent_per_hour": null,
+      "autonomy_hours": null,
+      "note": "Descarga leve"
+    },
+    {
+      "id": "ciclo-100-66",
+      "label": "Descarga 100→66",
+      "soc_start": 100,
+      "soc_end": 66,
+      "delta_soc_percent": 34,
+      "time_hours": null,
+      "mAh": 1610,
+      "capacity_estimated": 4720,
+      "soh_percent": 94.4,
+      "drain_percent_per_hour": null,
+      "autonomy_hours": null,
+      "note": "Descarga média"
+    },
+    {
+      "id": "ciclo-100-45",
+      "label": "Descarga 100→45",
+      "soc_start": 100,
+      "soc_end": 45,
+      "delta_soc_percent": 55,
+      "time_hours": null,
+      "mAh": 2586,
+      "capacity_estimated": 4702,
+      "soh_percent": 94.0,
+      "drain_percent_per_hour": null,
+      "autonomy_hours": null,
+      "note": "Descarga longa"
+    },
+    {
+      "id": "ciclo-100-72",
+      "label": "Descarga 100→72",
+      "soc_start": 100,
+      "soc_end": 72,
+      "delta_soc_percent": 28,
+      "time_hours": 4.4564,
+      "mAh": 1247,
+      "capacity_estimated": 4453.6,
+      "soh_percent": 89.1,
+      "drain_percent_per_hour": 6.28,
+      "autonomy_hours": 11.46,
+      "note": "Ciclo com tempo medido"
+    },
+    {
+      "id": "ciclo-100-37",
+      "label": "Descarga 100→37",
+      "soc_start": 100,
+      "soc_end": 37,
+      "delta_soc_percent": 63,
+      "time_hours": 13.7833,
+      "mAh": 2890,
+      "capacity_estimated": 4587,
+      "soh_percent": 91.7,
+      "drain_percent_per_hour": 4.57,
+      "autonomy_hours": 8.09,
+      "note": "Ciclo completo real (13h47min)"
+    }
+  ]
+}

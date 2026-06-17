@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Volt Precision | Ivan Montibeller</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Space+Grotesk:wght@500;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#9a9078",
+                        "on-secondary": "#2c3132",
+                        "surface-bright": "#293b4d",
+                        "tertiary-fixed": "#b8eaff",
+                        "outline-variant": "#4d4632",
+                        "surface-tint": "#eec209",
+                        "on-primary": "#3c2f00",
+                        "error": "#ffb4ab",
+                        "on-secondary-fixed": "#181c1d",
+                        "inverse-on-surface": "#203243",
+                        "on-secondary-fixed-variant": "#434849",
+                        "on-tertiary-fixed-variant": "#004d61",
+                        "tertiary": "#bfecff",
+                        "on-error": "#690005",
+                        "secondary-container": "#434849",
+                        "on-secondary-container": "#b1b6b7",
+                        "secondary-fixed": "#dfe3e4",
+                        "on-surface-variant": "#d1c6ac",
+                        "background": "#021525",
+                        "on-primary-fixed": "#231b00",
+                        "primary": "#ffe391",
+                        "on-surface": "#d1e4fb",
+                        "surface-container": "#0e2132",
+                        "surface-container-high": "#192b3d",
+                        "on-tertiary": "#003544",
+                        "tertiary-container": "#5ed7ff",
+                        "tertiary-fixed-dim": "#5bd5fd",
+                        "surface-container-lowest": "#000f1e",
+                        "surface-container-low": "#091d2e",
+                        "error-container": "#93000a",
+                        "on-primary-container": "#665200",
+                        "secondary": "#c3c7c8",
+                        "surface-variant": "#243648",
+                        "primary-container": "#f1c40f",
+                        "on-background": "#d1e4fb",
+                        "inverse-primary": "#735c00",
+                        "surface": "#021525",
+                        "on-tertiary-container": "#005c72",
+                        "surface-container-highest": "#243648",
+                        "primary-fixed": "#ffe084",
+                        "secondary-fixed-dim": "#c3c7c8",
+                        "surface-dim": "#021525",
+                        "inverse-surface": "#d1e4fb",
+                        "on-error-container": "#ffdad6",
+                        "primary-fixed-dim": "#eec209",
+                        "on-primary-fixed-variant": "#574500",
+                        "on-tertiary-fixed": "#001f28"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #021525; color: #d1e4fb; }
+        .font-headline { font-family: 'Space Grotesk', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="bg-slate-950/60 backdrop-blur-xl fixed top-0 w-full z-50">
+<nav class="flex justify-between items-center max-w-7xl mx-auto px-8 h-20">
+<div class="text-2xl font-bold tracking-tighter text-yellow-400 font-['Space_Grotesk']">
+                Volt Precision
+            </div>
+<div class="hidden md:flex items-center gap-8 font-['Space_Grotesk'] tracking-tight">
+<a class="text-slate-300 hover:text-yellow-200 transition-colors" href="#sobre">Sobre</a>
+<a class="text-slate-300 hover:text-yellow-200 transition-colors" href="#servicos">Serviços</a>
+<a class="text-slate-300 hover:text-yellow-200 transition-colors" href="#contato">Contato</a>
+<a class="bg-primary-container text-on-primary-container px-6 py-2 rounded-lg font-bold transition-all duration-300 hover:opacity-80 active:scale-95" href="#contato">Orçamento</a>
+</div>
+<button class="md:hidden text-yellow-400">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</nav>
+</header>
+<main>
+<!-- Hero Section -->
+<section class="relative min-h-screen flex items-center pt-20 overflow-hidden">
+<div class="absolute inset-0 z-0">
+<div class="absolute inset-0 bg-gradient-to-r from-surface to-transparent z-10"></div>
+<img class="w-full h-full object-cover opacity-30" data-alt="Modern high-tech industrial electrical panel with glowing amber indicators and complex wiring in a dimly lit technical facility" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJ9bYvrM2F9zDWbSXBc9fV7_CymKIqw_ubtO9EvkcC1WkNOj2Xb6ELafkZHMqBpB58HHuVcNi4W88mAOixDALDkxQv_JhBPb2T6B57FujAMovPq16TNDoTFb3AouzGdkluTYPD4is4lVSsQwUx0V5ctfWKnF-uo8gTv7g20sKrz1u9DGyuw8sRsvTeCWpn8B2ba855EoI3ExcBh5tkwugqpTfEvspL3-JqVFW3OGpPromqDMY4jgKkp_H2Ifc3wGvTHF9-pDaAdxMR"/>
+</div>
+<div class="container mx-auto px-8 relative z-20">
+<div class="max-w-3xl">
+<span class="inline-block py-1 px-3 bg-surface-container-high text-primary font-headline text-xs tracking-widest uppercase mb-6">Ivan Montibeller</span>
+<h1 class="text-6xl md:text-8xl font-headline font-bold text-on-surface leading-[0.9] mb-8 tracking-tighter">
+                        Eletricista <span class="text-primary">Profissional</span>
+</h1>
+<p class="text-xl md:text-2xl text-on-surface-variant font-light mb-10 max-w-xl leading-relaxed">
+                        Soluções de alta performance para setores <span class="text-on-surface font-medium">Residencial • Industrial • Predial</span> com precisão técnica absoluta.
+                    </p>
+<div class="flex flex-col sm:flex-row gap-4">
+<a class="bg-gradient-to-br from-primary to-primary-container text-on-primary px-8 py-4 rounded font-bold text-lg hover:opacity-90 transition-all text-center" href="#servicos">
+                            Solicitar Manutenção
+                        </a>
+<a class="border border-outline-variant px-8 py-4 rounded text-on-surface font-medium hover:bg-surface-container-high transition-all text-center" href="#sobre">
+                            Ver Certificações
+                        </a>
+</div>
+</div>
+</div>
+<div class="absolute bottom-12 right-8 hidden xl:block">
+<div class="flex items-center gap-4 text-xs font-headline tracking-[0.3em] uppercase opacity-40 rotate-90 origin-right">
+<span>Precision • Reliability • Power</span>
+</div>
+</div>
+</section>
+<!-- Sobre Mim -->
+<section class="py-32 bg-surface-container-low" id="sobre">
+<div class="container mx-auto px-8">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+<div class="lg:col-span-5">
+<h2 class="text-4xl font-headline font-bold mb-8 text-on-surface tracking-tight">Experiência que gera <span class="text-primary italic">confiança.</span></h2>
+<div class="space-y-6 text-on-surface-variant leading-relaxed text-lg">
+<p>Com mais de uma década atuando na linha de frente da engenharia elétrica, Ivan Montibeller consolidou-se como referência em diagnósticos complexos e execuções impecáveis.</p>
+<p>Nosso compromisso não é apenas restabelecer a energia, mas otimizar sistemas para máxima eficiência e segurança, seguindo rigorosamente todas as normas técnicas vigentes (NR-10, NR-35).</p>
+</div>
+</div>
+<div class="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="p-8 bg-surface border-l-4 border-primary">
+<h3 class="font-headline font-bold text-xl mb-2">Formação Técnica</h3>
+<p class="text-on-surface-variant text-sm">Especialização avançada em comandos elétricos e automação industrial.</p>
+</div>
+<div class="p-8 bg-surface border-l-4 border-primary">
+<h3 class="font-headline font-bold text-xl mb-2">Certificações</h3>
+<p class="text-on-surface-variant text-sm">NR-10, NR-35 e Qualificação Plena para Alta Tensão.</p>
+</div>
+<div class="p-8 bg-surface border-l-4 border-primary">
+<h3 class="font-headline font-bold text-xl mb-2">Projetos Executados</h3>
+<p class="text-on-surface-variant text-sm">+500 intervenções residenciais e industriais de sucesso.</p>
+</div>
+<div class="p-8 bg-surface border-l-4 border-primary">
+<h3 class="font-headline font-bold text-xl mb-2">Garantia Volt</h3>
+<p class="text-on-surface-variant text-sm">Suporte pós-serviço e monitoramento de integridade sistêmica.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Serviços Section -->
+<section class="py-32 bg-surface" id="servicos">
+<div class="container mx-auto px-8">
+<div class="mb-20">
+<h2 class="text-5xl font-headline font-bold text-on-surface mb-4">Nossa <span class="text-primary">Expertise</span></h2>
+<div class="h-1 w-24 bg-primary"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-outline-variant/20">
+<!-- Card 1 -->
+<div class="bg-surface p-10 hover:bg-surface-container-high transition-all duration-300 group">
+<div class="mb-8">
+<span class="material-symbols-outlined text-primary text-4xl group-hover:scale-110 transition-transform block mb-4" data-icon="bolt">bolt</span>
+<h3 class="text-2xl font-headline font-bold mb-4">Instalações</h3>
+</div>
+<p class="text-on-surface-variant leading-relaxed mb-6">Implantação completa de quadros de força, fiação estruturada e sistemas de iluminação inteligente.</p>
+<ul class="space-y-2 text-sm text-on-surface/70">
+<li class="flex items-center gap-2"><div class="w-1.5 h-1.5 bg-primary"></div> Quadros de Distribuição</li>
+<li class="flex items-center gap-2"><div class="w-1.5 h-1.5 bg-primary"></div> Padrão de Entrada</li>
+</ul>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface p-10 hover:bg-surface-container-high transition-all duration-300 group">
+<div class="mb-8">
+<span class="material-symbols-outlined text-primary text-4xl group-hover:scale-110 transition-transform block mb-4" data-icon="build">build</span>
+<h3 class="text-2xl font-headline font-bold mb-4">Manutenção</h3>
+</div>
+<p class="text-on-surface-variant leading-relaxed mb-6">Preventiva e corretiva para evitar paradas críticas e reduzir custos de consumo elétrico.</p>
+<ul class="space-y-2 text-sm text-on-surface/70">
+<li class="flex items-center gap-2"><div class="w-1.5 h-1.5 bg-primary"></div> Termografia</li>
+<li class="flex items-center gap-2"><div class="w-1.5 h-1.5 bg-primary"></div> Reaperto Técnico</li>
+</ul>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface p-10 hover:bg-surface-container-high transition-all duration-300 group">
+<div class="mb-8">
+<span class="material-symbols-outlined text-primary text-4xl group-hover:scale-110 transition-transform block mb-4" data-icon="warning">warning</span>
+<h3 class="text-2xl font-headline font-bold mb-4">Emergências</h3>
+</div>
+<p class="text-on-surface-variant leading-relaxed mb-6">Atendimento ágil para curto-circuitos, quedas de energia e falhas críticas de segurança.</p>
+<ul class="space-y-2 text-sm text-on-surface/70">
+<li class="flex items-center gap-2"><div class="w-1.5 h-1.5 bg-primary"></div> Plantão Técnico</li>
+<li class="flex items-center gap-2"><div class="w-1.5 h-1.5 bg-primary"></div> Diagnóstico Rápido</li>
+</ul>
+</div>
+<!-- Card 4 -->
+<div class="bg-surface p-10 hover:bg-surface-container-high transition-all duration-300 group">
+<div class="mb-8">
+<span class="material-symbols-outlined text-primary text-4xl group-hover:scale-110 transition-transform block mb-4" data-icon="engineering">engineering</span>
+<h3 class="text-2xl font-headline font-bold mb-4">Projetos Especiais</h3>
+</div>
+<p class="text-on-surface-variant leading-relaxed mb-6">Soluções WEBPERFIL e infraestrutura para automação e carregadores de veículos elétricos.</p>
+<ul class="space-y-2 text-sm text-on-surface/70">
+<li class="flex items-center gap-2"><div class="w-1.5 h-1.5 bg-primary"></div> Carregadores EV</li>
+<li class="flex items-center gap-2"><div class="w-1.5 h-1.5 bg-primary"></div> Automação Residencial</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<!-- Contato Section -->
+<section class="py-32 bg-surface-container-lowest" id="contato">
+<div class="container mx-auto px-8">
+<div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24">
+<div>
+<h2 class="text-5xl font-headline font-bold text-on-surface mb-8">Vamos blindar seu <span class="text-primary">sistema.</span></h2>
+<p class="text-on-surface-variant text-lg mb-12">Precisa de um diagnóstico técnico ou orçamento para sua obra? Preencha os detalhes abaixo e retornaremos com uma análise preliminar.</p>
+<div class="space-y-8">
+<div class="flex items-center gap-6">
+<div class="w-12 h-12 bg-surface-container flex items-center justify-center rounded">
+<span class="material-symbols-outlined text-primary" data-icon="call">call</span>
+</div>
+<div>
+<p class="text-xs font-headline text-outline tracking-widest uppercase">Atendimento Direto</p>
+<p class="text-xl font-medium">+55 (11) 99999-9999</p>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="w-12 h-12 bg-surface-container flex items-center justify-center rounded">
+<span class="material-symbols-outlined text-primary" data-icon="mail">mail</span>
+</div>
+<div>
+<p class="text-xs font-headline text-outline tracking-widest uppercase">Email Corporativo</p>
+<p class="text-xl font-medium">contato@voltprecision.com.br</p>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-surface-container p-10 rounded-lg">
+<form class="space-y-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="text-xs font-headline text-outline uppercase tracking-widest">Nome Completo</label>
+<input class="w-full bg-surface-container-lowest border-b-2 border-outline-variant focus:border-primary focus:ring-0 text-on-surface p-3 transition-colors outline-none" placeholder="Ex: João Silva" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-headline text-outline uppercase tracking-widest">Telefone / WhatsApp</label>
+<input class="w-full bg-surface-container-lowest border-b-2 border-outline-variant focus:border-primary focus:ring-0 text-on-surface p-3 transition-colors outline-none" placeholder="(00) 00000-0000" type="tel"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-headline text-outline uppercase tracking-widest">Tipo de Serviço</label>
+<select class="w-full bg-surface-container-lowest border-b-2 border-outline-variant focus:border-primary focus:ring-0 text-on-surface p-3 transition-colors outline-none appearance-none">
+<option>Residencial</option>
+<option>Industrial</option>
+<option>Predial / Condomínio</option>
+<option>Emergência 24h</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-headline text-outline uppercase tracking-widest">Descrição do Problema</label>
+<textarea class="w-full bg-surface-container-lowest border-b-2 border-outline-variant focus:border-primary focus:ring-0 text-on-surface p-3 transition-colors outline-none resize-none" placeholder="Descreva brevemente a sua necessidade..." rows="4"></textarea>
+</div>
+<button class="w-full bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold py-4 rounded hover:opacity-90 transition-all flex items-center justify-center gap-3" type="submit">
+                                Enviar Solicitação Técnica
+                                <span class="material-symbols-outlined text-sm" data-icon="send">send</span>
+</button>
+</form>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-950">
+<div class="flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto px-8 gap-6 w-full py-12 border-t border-yellow-900/10">
+<div class="flex flex-col items-center md:items-start gap-2">
+<div class="text-lg font-bold text-yellow-500 font-headline">Volt Precision</div>
+<p class="font-['Inter'] text-sm leading-relaxed text-slate-500 text-center md:text-left max-w-xs">Instalações elétricas de alto padrão e engenharia de precisão.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-8 font-['Inter'] text-sm">
+<span class="text-slate-500">São Paulo, SP</span>
+<a class="text-slate-500 hover:text-yellow-400 underline underline-offset-4 transition-opacity duration-200" href="#">Privacidade</a>
+<a class="text-slate-500 hover:text-yellow-400 underline underline-offset-4 transition-opacity duration-200" href="#">Termos</a>
+</div>
+<div class="text-slate-500 text-xs font-light">
+                © 2024 Volt Precision Electrical. Todos os direitos reservados.
+            </div>
+</div>
+</footer>
+</body></html>

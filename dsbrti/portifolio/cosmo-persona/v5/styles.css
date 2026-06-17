@@ -1,0 +1,83 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0a0f1f;
+  color: white;
+}
+
+.header {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.header h1 {
+  font-size: 2.6rem;
+  margin-bottom: 10px;
+}
+
+.header p {
+  font-size: 1.2rem;
+  opacity: 0.8;
+}
+
+/* CATEGORIAS */
+.categories {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  padding: 40px;
+}
+
+.category-card {
+  background: #1a1f2b;
+  padding: 30px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: white;
+  border: 1px solid #00e0ff;
+  transition: 0.2s;
+}
+
+.category-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px #00e0ff;
+}
+
+/* CATÁLOGO */
+.catalogo {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 30px;
+  padding: 40px;
+}
+
+.modelo-card {
+  background: #1a1f2b;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #00e0ff;
+  text-align: center;
+}
+
+.modelo-card img {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.btn-whatsapp {
+  display: inline-block;
+  background: #25D366;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: bold;
+  margin-top: 10px;
+  transition: 0.2s;
+}
+
+.btn-whatsapp:hover {
+  background: #1ebe5d;
+  transform: scale(1.05);
+}

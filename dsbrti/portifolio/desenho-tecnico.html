@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Central de Metrologia Avançada V4.6</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body class="theme-mint" id="app-body">
+
+<div class="container">
+    
+    <div class="header">
+        <h1>Central Metrológica V4.6</h1>
+        
+        <div class="theme-selector-box">
+            <label for="theme-select"><i class="fa-solid fa-palette"></i> Interface OS:</label>
+            <select id="theme-select" onchange="mudarTemaOS(this.value)">
+                <option value="theme-mint" selected>Linux Mint</option>
+                <option value="theme-ubuntu">Ubuntu Linux</option>
+                <option value="theme-fedora">Fedora Workstation</option>
+                <option value="theme-winxp">Windows XP Pro</option>
+                <option value="theme-winvista">Windows Vista (Aero)</option>
+                <option value="theme-win7">Windows 7 (Aero Glass)</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="mudarAba('panel-converter', this)"><i class="fa-solid fa-calculator"></i> Conversor Avançado</button>
+        <button class="tab-btn" onclick="mudarAba('panel-table', this)"><i class="fa-solid fa-table"></i> Tabela de Referência (Até 3")</button>
+    </div>
+
+    <div id="panel-converter" class="tab-content active">
+        <div class="card">
+            <div class="converter-layout">
+                
+                <div class="input-group">
+                    <div class="field-box" id="box-numeric-left">
+                        <input type="number" id="val-left" value="9.5250" step="0.0001" oninput="calcularMetrologia()">
+                    </div>
+                    <div class="fraction-row" id="box-fraction-left">
+                        <select id="frac-int" onchange="calcularMetrologia()"></select>
+                        <select id="frac-num" onchange="calcularMetrologia()"></select>
+                        <span style="font-weight: bold; color: var(--secondary)">/</span>
+                        <select id="frac-den" onchange="calcularMetrologia()"></select>
+                    </div>
+                    <div class="field-box select-unit">
+                        <select id="unit-left" onchange="adaptarInterface()">
+                            <option value="mm" selected>Milímetros (mm)</option>
+                            <option value="in_dec">Polegada Milesimal (in)</option>
+                            <option value="in_frac">Polegada Fracionária (pol)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="swap-wrapper">
+                    <button class="swap-btn" title="Inverter Unidades" onclick="inverterUnidades()"><i class="fa-solid fa-arrows-rotate"></i></button>
+                </div>
+
+                <div class="input-group">
+                    <div class="field-box">
+                        <input type="text" id="val-right" readonly style="font-weight: 600;">
+                    </div>
+                    <div class="field-box select-unit">
+                        <select id="unit-right" onchange="calcularMetrologia()">
+                            <option value="in_frac" selected>Polegada Fracionária (pol)</option>
+                            <option value="in_dec">Polegada Milesimal (in)</option>
+                            <option value="mm">Milímetros (mm)</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="memorial-box">
+                <div class="memorial-title"><i class="fa-solid fa-file-invoice"></i> Resolução e Análise Metrológica</div>
+                <div id="memorial-content">Aguardando dados...</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="memorial-title" style="margin-bottom: 12px; color: var(--text-main);"><i class="fa-solid fa-clock-rotate-left"></i> Histórico de Operações Recentes</div>
+            <div id="history-box">
+                <p style="font-size: 13px; color: var(--text-sub); margin: 0;">Nenhuma conversão guardada nesta sessão.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="panel-table" class="tab-content">
+        <input type="text" class="search-bar" id="search-input" placeholder="🔍 Escreva para filtrar (ex: 3/4, 0.5000, 19.0500...)" oninput="filtrarTabela(this.value)">
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th><i class="fa-solid fa-ruler"></i> Polegada Fracionária</th>
+                        <th class="text-right"><i class="fa-solid fa-arrow-down-1-9"></i> Polegada Milesimal</th>
+                        <th class="text-right"><i class="fa-solid fa-sliders"></i> Milímetros (mm)</th>
+                    </tr>
+                </thead>
+                <tbody id="table-rows"></tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    let historico = [];
+
+    window.onload = function() {
+        popularCamposFracao();
+        gerarTabelaEstrutural();
+        adaptarInterface();
+    };
+
+    function mudarTemaOS(nomeTema) {
+        const body = document.getElementById('app-body');
+        // Limpa classes anteriores de tema
+        body.className = '';
+        // Adiciona a nova classe selecionada
+        body.classList.add(nomeTema);
+    }
+
+    function mudarAba(id, btn) {
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        btn.classList.add('active');
+    }
+
+    function popularCamposFracao() {
+        const iSel = document.getElementById('frac-int');
+        const nSel = document.getElementById('frac-num');
+        const dSel = document.getElementById('frac-den');
+
+        for(let i=0; i<=3; i++) iSel.innerHTML += `<option value="${i}">${i}"</option>`;
+        for(let i=0; i<=64; i++) nSel.innerHTML += `<option value="${i}">${i === 0 ? '0 (inteiro)' : i}</option>`;
+        [2, 4, 8, 16, 32, 64].forEach(d => dSel.innerHTML += `<option value="${d}">${d}</option>`);
+        dSel.value = 16;
+    }
+
+    function mdc(a, b) { return b ? mdc(b, a % b) : a; }
+    function simplificar(n, d) {
+        let g = mdc(n, d);
+        return [n/g, d/g];
+    }
+
+    function gerarTabelaEstrutural() {
+        const tbody = document.getElementById('table-rows');
+        let html = "";
+        for(let i = 1; i < 64; i++) {
+            let [n, d] = simplificar(i, 64);
+            let dec = i / 64;
+            html += `<tr><td>${n}/${d}"</td><td class="text-right">${dec.toFixed(4)}"</td><td class="text-right">${(dec*25.4).toFixed(4)} mm</td></tr>`;
+        }
+        for(let inch = 1; inch <= 3; inch++) {
+            html += `<tr class="row-inch"><td>${inch}" (Inteira)</td><td class="text-right">${inch.toFixed(4)}"</td><td class="text-right">${(inch*25.4).toFixed(4)} mm</td></tr>`;
+            if(inch < 3) {
+                for(let f = 1; f < 16; f++) {
+                    let [n, d] = simplificar(f, 16);
+                    let dec = inch + (f / 16);
+                    html += `<tr><td>${inch} ${n}/${d}"</td><td class="text-right">${dec.toFixed(4)}"</td><td class="text-right">${(dec*25.4).toFixed(4)} mm</td></tr>`;
+                }
+            }
+        }
+        tbody.innerHTML = html;
+    }
+
+    function adaptarInterface() {
+        const mode = document.getElementById('unit-left').value;
+        document.getElementById('box-numeric-left').style.display = (mode === 'in_frac') ? 'none' : 'block';
+        document.getElementById('box-fraction-left').style.display = (mode === 'in_frac') ? 'flex' : 'none';
+        calcularMetrologia();
+    }
+
+    function inverterUnidades() {
+        const leftSel = document.getElementById('unit-left');
+        const rightSel = document.getElementById('unit-right');
+        const valRight = document.getElementById('val-right').value;
+        
+        let oldLeftUnit = leftSel.value;
+        let oldRightUnit = rightSel.value;
+
+        leftSel.value = oldRightUnit;
+        rightSel.value = oldLeftUnit;
+        
+        if (oldRightUnit !== 'in_frac') {
+            let parsedVal = parseFloat(valRight);
+            if (!isNaN(parsedVal)) {
+                document.getElementById('val-left').value = parsedVal;
+            }
+        } else {
+            let textoFrac = valRight.replace(/"/g, '').trim(); 
+            let partesEspaco = textoFrac.split(' ');
+            
+            let inteiro = 0;
+            let fracaoStr = "";
+            
+            if (partesEspaco.length === 2) {
+                inteiro = parseInt(partesEspaco[0]) || 0;
+                fracaoStr = partesEspaco[1];
+            } else if (partesEspaco.length === 1) {
+                if (partesEspaco[0].includes('/')) {
+                    fracaoStr = partesEspaco[0];
+                } else {
+                    inteiro = parseInt(partesEspaco[0]) || 0;
+                }
+            }
+            
+            document.getElementById('frac-int').value = inteiro;
+            
+            if (fracaoStr.includes('/')) {
+                let partesBarra = fracaoStr.split('/');
+                let num = parseInt(partesBarra[0]) || 0;
+                let den = parseInt(partesBarra[1]) || 16;
+                
+                const dSel = document.getElementById('frac-den');
+                if ([2, 4, 8, 16, 32, 64].includes(den)) {
+                    dSel.value = den;
+                } else {
+                    dSel.value = 64;
+                }
+                
+                document.getElementById('frac-num').value = num;
+            } else {
+                document.getElementById('frac-num').value = 0;
+            }
+        }
+        
+        adaptarInterface();
+    }
+
+    let timeoutHistorico = null;
+    function calcularMetrologia() {
+        const uLeft = document.getElementById('unit-left').value;
+        const uRight = document.getElementById('unit-right').value;
+        const outField = document.getElementById('val-right');
+        const memContent = document.getElementById('memorial-content');
+
+        let polegadaDecimal = 0;
+        let explicacao = "";
+        let erroDetectado = false;
+
+        if (uLeft === 'in_dec') {
+            let v = parseFloat(document.getElementById('val-left').value);
+            if(isNaN(v)) erroDetectado = true;
+            else {
+                polegadaDecimal = v;
+                explicacao += `• Entrada definida em <strong>Polegada Milesimal</strong>: <code>${polegadaDecimal.toFixed(4)}"</code>.<br>`;
+            }
+        } 
+        else if (uLeft === 'mm') {
+            let v = parseFloat(document.getElementById('val-left').value);
+            if(isNaN(v)) erroDetectado = true;
+            else {
+                polegadaDecimal = v / 25.4;
+                explicacao += `• Entrada definida em <strong>Milímetros</strong>: <code>${v.toFixed(4)} mm</code>.<br>`;
+                explicacao += `• <strong>Passo 1:</strong> Divisão pela constante padrão (25.4): <code>${v.toFixed(4)} ÷ 25,4000 = ${polegadaDecimal.toFixed(4)}"</code>.<br>`;
+            }
+        } 
+        else if (uLeft === 'in_frac') {
+            const i = parseInt(document.getElementById('frac-int').value) || 0;
+            const n = parseInt(document.getElementById('frac-num').value) || 0;
+            const d = parseInt(document.getElementById('frac-den').value) || 1;
+            polegadaDecimal = i + (n / d);
+
+            explicacao += `• Entrada definida em <strong>Polegada Fracionária</strong>: <code>${i > 0 ? i + ' ' : ''}${n}/${d}"</code>.<br>`;
+            explicacao += `• <strong>Passo 1:</strong> Resolução da fração base: <code>${n} ÷ ${d} = ${(n/d).toFixed(4)}"</code>.<br>`;
+            if(i > 0) explicacao += `• <strong>Passo 2:</strong> Adição da fração ao corpo inteiro: <code>${i} + ${(n/d).toFixed(4)} = ${polegadaDecimal.toFixed(4)}"</code>.<br>`;
+        }
+
+        if(erroDetectado) {
+            outField.value = "";
+            memContent.innerHTML = "Introduza um valor numérico válido para iniciar a análise.";
+            return;
+        }
+
+        let valorFinalStr = "";
+        
+        if (uRight === 'mm') {
+            let calculadoMm = polegadaDecimal * 25.4;
+            valorFinalStr = calculadoMm.toFixed(4) + " mm";
+            if (uLeft !== 'mm') {
+                explicacao += `• <strong>Cálculo Métrico Final:</strong> Multiplicação pelo fator absoluto: <code>${polegadaDecimal.toFixed(4)} × 25,4000 = ${calculadoMm.toFixed(4)} mm</code>.<br>`;
+            }
+        } 
+        else if (uRight === 'in_dec') {
+            valorFinalStr = polegadaDecimal.toFixed(4) + " in";
+            if (uLeft !== 'in_dec') {
+                explicacao += `• <strong>Cálculo Decimal Final:</strong> Valor convertido para formato milesimal puro: <code>${valorFinalStr}</code>.<br>`;
+            }
+        } 
+        else if (uRight === 'in_frac') {
+            let parteInteira = Math.floor(polegadaDecimal);
+            let parteFracionaria = polegadaDecimal - parteInteira;
+            let sessentaAvos = Math.round(parteFracionaria * 64);
+            
+            if (sessentaAvos === 0) {
+                valorFinalStr = parteInteira + '"';
+                explicacao += `• <strong>Conversão Fracionária Inteligente:</strong> O valor mapeado equivale ao inteiro exato <code>${parteInteira}"</code>.<br>`;
+            } else if (sessentaAvos === 64) {
+                valorFinalStr = (parteInteira + 1) + '"';
+                explicacao += `• <strong>Conversão Fracionária Inteligente:</strong> O arredondamento atingiu a próxima polegada inteira: <code>${parteInteira + 1}"</code>.<br>`;
+            } else {
+                let [nSimp, dSimp] = simplificar(sessentaAvos, 64);
+                valorFinalStr = (parteInteira > 0 ? parteInteira + " " : "") + nSimp + "/" + dSimp + '"';
+                
+                explicacao += `• <strong>Conversão Fracionária Inteligente (Base de Oficina de 1/64"):</strong><br>`;
+                explicacao += `&nbsp;&nbsp;1. Extraímos a parte decimal restante: <code>${parteFracionaria.toFixed(4)}"</code>.<br>`;
+                explicacao += `&nbsp;&nbsp;2. Multiplicamos pela precisão comercial (64): <code>${parteFracionaria.toFixed(4)} × 64 = ${sessentaAvos}</code>.<br>`;
+                explicacao += `&nbsp;&nbsp;3. Fração crua encontrada: <code>${sessentaAvos}/64"</code>.<br> `;
+                explicacao += `&nbsp;&nbsp;4. Simplificação por Máximo Divisor Comum (MDC): <code>${nSimp}/${dSimp}"</code>.<br>`;
+            }
+
+            let valorRealFrac = parteInteira + (sessentaAvos / 64);
+            let desvio = (polegadaDecimal - valorRealFrac) * 25.4;
+
+            if (Math.abs(desvio) > 0.0001) {
+                explicacao += `<br><i class="fa-solid fa-magnifying-glass-chart"></i> <strong>Análise de Tolerância Comercial:</strong><br>`;
+                explicacao += `• A fração encontrada (<code>${valorFinalStr}</code>) mede exatamente <code>${(valorRealFrac * 25.4).toFixed(4)} mm</code>.<br>`;
+                explicacao += `• <strong>Desvio/Sobra de Material:</strong> Diferença física real de <code>${desvio > 0 ? '+' : ''}${desvio.toFixed(4)} mm</code> em relação à medida real inserida.<br>`;
+            } else {
+                explicacao += `<br><i class="fa-solid fa-circle-check"></i> <strong>Análise de Tolerância Comercial:</strong><br>• <strong>Aviso:</strong> Esta medida se alinha perfeitamente sem desvios a uma fração exata de mercado.<br>`;
+            }
+        }
+
+        outField.value = valorFinalStr;
+        memContent.innerHTML = explicacao + `<br><strong><i class="fa-solid fa-square-check"></i> Resultado Convertido:</strong> <code>${valorFinalStr}</code>`;
+
+        clearTimeout(timeoutHistorico);
+        timeoutHistorico = setTimeout(() => {
+            adicionarAoHistorico(uLeft, polegadaDecimal, valorFinalStr);
+        }, 1500);
+    }
+
+    function adicionarAoHistorico(unidadeOrigem, valorPolegadas, stringDestino) {
+        let entradaTexto = "";
+        if(unidadeOrigem === 'mm') entradaTexto = (valorPolegadas * 25.4).toFixed(4) + " mm";
+        else if(unidadeOrigem === 'in_dec') entradaTexto = valorPolegadas.toFixed(4) + " in";
+        else {
+            const i = document.getElementById('frac-int').value;
+            const n = document.getElementById('frac-num').value;
+            const d = document.getElementById('frac-den').value;
+            entradaTexto = `${i > 0 ? i + ' ' : ''}${n}/${d}"`;
+        }
+
+        if (historico.length > 0 && historico[0].entrada === entradaTexto && historico[0].saida === stringDestino) return;
+
+        historico.unshift({ entrada: entradaTexto, saida: stringDestino });
+        if(historico.length > 5) historico.pop();
+
+        const hBox = document.getElementById('history-box');
+        let hHtml = `<ul class="history-list">`;
+        historico.forEach(item => {
+            hHtml += `<li class="history-item"><span><i class="fa-solid fa-cloud-arrow-down"></i> ${item.entrada}</span> <span><i class="fa-solid fa-right-long"></i></span> <span><i class="fa-solid fa-cloud-arrow-up"></i> <strong>${item.saida}</strong></span></li>`;
+        });
+        hHtml += `</ul>`;
+        hBox.innerHTML = hHtml;
+    }
+
+    function filtrarTabela(busca) {
+        const filtro = busca.toLowerCase().trim().replace(',', '.');
+        document.querySelectorAll('#table-rows tr').forEach(row => {
+            const txt = row.textContent.toLowerCase().replace(',', '.');
+            row.classList.toggle('hide', !txt.includes(filtro));
+        });
+    }
+</script>
+
+</body>
+</html>
+
+ 

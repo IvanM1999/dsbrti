@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Metrológico Avançado V3</title>
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa; 
+            color: #202124;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: 30px auto;
+        }
+
+        /* Título Principal */
+        .main-title {
+            font-size: 24px;
+            font-weight: 400;
+            margin-bottom: 24px;
+            color: #1a73e8;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Sistema de Abas Estilo Google */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #dadce0;
+            margin-bottom: 20px;
+        }
+
+        .tab-button {
+            background: none;
+            border: none;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #5f6368;
+            cursor: pointer;
+            position: relative;
+            outline: none;
+        }
+
+        .tab-button:hover {
+            color: #1a73e8;
+            background-color: #f1f3f4;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .tab-button.active {
+            color: #1a73e8;
+        }
+
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background-color: #1a73e8;
+            border-radius: 3px 3px 0 0;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Card Base */
+        .google-card {
+            background: #ffffff;
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+            margin-bottom: 20px;
+        }
+
+        /* Grid do Conversor */
+        .converter-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .input-box {
+            flex: 1;
+        }
+
+        .input-box input, .input-box select {
+            width: 100%;
+            height: 48px;
+            padding: 12px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            font-size: 16px;
+            color: #202124;
+            background-color: #fff;
+        }
+
+        .input-box input:focus, .input-box select:focus {
+            outline: none;
+            border-color: #1a73e8; 
+            box-shadow: 0 1px 2px rgba(32,33,36,0.1);
+        }
+
+        .fraction-inputs {
+            display: none;
+            gap: 8px;
+            align-items: center;
+            flex: 1;
+        }
+        
+        .fraction-inputs select {
+            height: 48px;
+            padding: 12px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .equal-sign {
+            font-size: 24px;
+            color: #5f6368;
+            text-align: center;
+            margin: 8px 0;
+        }
+
+        /* Seção de Resolução Passo a Passo */
+        .step-section {
+            background-color: #f1f3f4;
+            border-left: 4px solid #1a73e8;
+            border-radius: 0 8px 8px 0;
+            padding: 16px 20px;
+            margin-top: 20px;
+        }
+
+        .step-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a73e8;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .step-block {
+            font-size: 14px;
+            color: #3c4043;
+            line-height: 1.6;
+        }
+
+        .step-block code {
+            background-color: #ffffff;
+            padding: 2px 6px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+            color: #b06000;
+            font-weight: bold;
+        }
+
+        /* Aba de Fórmulas Fixas */
+        .formula-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        .formula-card {
+            border: 1px solid #dadce0;
+            border-radius: 6px;
+            padding: 16px;
+            background: #fff;
+        }
+
+        .formula-card h4 {
+            margin-top: 0;
+            color: #1a73e8;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        /* Tabelas e Busca */
+        .search-box {
+            width: 100%;
+            height: 44px;
+            padding: 0 16px;
+            border: 1px solid #dadce0;
+            border-radius: 22px; 
+            font-size: 15px;
+            margin-bottom: 16px;
+        }
+
+        .table-card {
+            background: #ffffff;
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            padding: 16px;
+            max-height: 450px;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px 8px;
+            font-size: 12px;
+            color: #70757a;
+            border-bottom: 1px solid #ebebeb;
+        }
+
+        td {
+            padding: 10px 8px;
+            font-size: 14px;
+            color: #3c4043;
+            border-bottom: 1px solid #f1f3f4;
+            font-variant-numeric: tabular-nums;
+        }
+
+        tr.highlight-inch td {
+            background-color: #e8f0fe;
+            color: #1a73e8;
+            font-weight: bold;
+        }
+
+        .text-right { text-align: right; }
+        .hide-row { display: none !important; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="main-title">
+        <span>📐</span> Painel de Metrologia e Conversão Avançada V3
+    </div>
+
+    <div class="tabs">
+        <button class="tab-button active" onclick="switchTab('tab-converter', this)">Conversor Interativo</button>
+        <button class="tab-button" onclick="switchTab('tab-formulas', this)">Biblioteca de Fórmulas</button>
+        <button class="tab-button" onclick="switchTab('tab-table', this)">Tabela Prática (Até 3")</button>
+    </div>
+
+    <div id="tab-converter" class="tab-content active">
+        <div class="google-card">
+            <div class="converter-row">
+                <div class="input-box" id="wrapper-input-left">
+                    <input type="number" id="input-left" value="1.0000" step="0.0001" oninput="executarConversao()">
+                </div>
+                
+                <div class="fraction-inputs" id="wrapper-fraction-left">
+                    <select id="frac-inch-pure" onchange="executarConversao()"></select>
+                    <select id="frac-num" onchange="executarConversao()"></select>
+                    <span style="color:#5f6368; font-weight: bold;">/</span>
+                    <select id="frac-den" onchange="executarConversao()"></select>
+                </div>
+
+                <div class="input-box" style="max-width: 220px;">
+                    <select id="unit-left" onchange="alternarModoInterface()">
+                        <option value="in_dec" selected>Polegada Milesimal (in)</option>
+                        <option value="in_frac">Polegada Fracionária (pol)</option>
+                        <option value="mm">Milímetros (mm)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="equal-sign">=</div>
+
+            <div class="converter-row">
+                <div class="input-box">
+                    <input type="text" id="input-right" readonly style="background-color: #f8f9fa; font-weight: 500;">
+                </div>
+                <div class="input-box" style="max-width: 220px;">
+                    <select id="unit-right" onchange="executarConversao()">
+                        <option value="in_dec">Polegada Milesimal (in)</option>
+                        <option value="mm" selected>Milímetros (mm)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="step-section">
+                <div class="step-title">📋 Demonstração e Passo a Passo da Resolução</div>
+                <div class="step-block" id="resolution-steps">
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tab-formulas" class="tab-content">
+        <div class="formula-grid">
+            <div class="formula-card">
+                <h4>1. Polegada Fracionária para Polegada Milesimal</h4>
+                <p>Divide-se o numerador pelo denominador. Se houver número inteiro, soma-se o inteiro ao resultado.</p>
+                <p><strong>Fórmula:</strong> <code>Decimal = Inteiro + (Numerador ÷ Denominador)</code></p>
+            </div>
+            <div class="formula-card">
+                <h4>2. Polegada Milesimal para Milímetros</h4>
+                <p>Multiplica-se o valor em polegadas pela constante absoluta de conversão de 25,4 mm.</p>
+                <p><strong>Fórmula:</strong> <code>Milímetros = Polegadas × 25,4000</code></p>
+            </div>
+            <div class="formula-card">
+                <h4>3. Milímetros para Polegada Milesimal</h4>
+                <p>Divide-se o valor em milímetros pela constante absoluta de 25,4 mm.</p>
+                <p><strong>Fórmula:</strong> <code>Polegadas = Milímetros ÷ 25,4000</code></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="tab-table" class="tab-content">
+        <input type="text" class="search-box" id="table-search" placeholder="🔍 Filtrar tabela por qualquer medida..." oninput="filtrarTabela(this.value)">
+        <div class="table-card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Polegada Fracionária</th>
+                        <th class="text-right">Polegada Milesimal (in)</th>
+                        <th class="text-right">Milímetros (mm)</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    window.onload = function() {
+        popularSeletoresFracao();
+        gerarTabelaDados();
+        alternarModoInterface();
+    };
+
+    function switchTab(tabId, button) {
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        button.classList.add('active');
+    }
+
+    function popularSeletoresFracao() {
+        const num = document.getElementById('frac-num');
+        const den = document.getElementById('frac-den');
+        const inchPure = document.getElementById('frac-inch-pure');
+
+        for(let i=0; i<=3; i++) inchPure.innerHTML += `<option value="${i}">${i}"</option>`;
+        for(let i=0; i<=64; i++) {
+            if(i === 0) num.innerHTML += `<option value="0">0 (inteiro)</option>`;
+            else num.innerHTML += `<option value="${i}">${i}</option>`;
+        }
+        [2, 4, 8, 16, 32, 64].forEach(d => den.innerHTML += `<option value="${d}">${d}</option>`);
+        den.value = 16; 
+    }
+
+    function mdc(a, b) { return b ? mdc(b, a % b) : a; }
+    function simplificarFracao(n, d) {
+        let g = mdc(n, d);
+        return [n/g, d/g];
+    }
+
+    function gerarTabelaDados() {
+        const tbody = document.getElementById('table-body');
+        let html = "";
+        for(let i = 1; i < 64; i++) {
+            let [n, d] = simplificarFracao(i, 64);
+            let dec = i / 64;
+            html += `<tr><td>${n}/${d}"</td><td class="text-right">${dec.toFixed(4)}"</td><td class="text-right">${(dec*25.4).toFixed(4)} mm</td></tr>`;
+        }
+        for(let inch = 1; inch <= 3; inch++) {
+            html += `<tr class="highlight-inch"><td>${inch}" (Inteira)</td><td class="text-right">${inch.toFixed(4)}"</td><td class="text-right">${(inch*25.4).toFixed(4)} mm</td></tr>`;
+            if(inch < 3) {
+                for(let f = 1; f < 16; f++) {
+                    let [n, d] = simplificarFracao(f, 16);
+                    let dec = inch + (f / 16);
+                    html += `<tr><td>${inch} ${n}/${d}"</td><td class="text-right">${dec.toFixed(4)}"</td><td class="text-right">${(dec*25.4).toFixed(4)} mm</td></tr>`;
+                }
+            }
+        }
+        tbody.innerHTML = html;
+    }
+
+    function alternarModoInterface() {
+        const uLeft = document.getElementById('unit-left').value;
+        document.getElementById('wrapper-input-left').style.display = (uLeft === 'in_frac') ? 'none' : 'block';
+        document.getElementById('wrapper-fraction-left').style.display = (uLeft === 'in_frac') ? 'flex' : 'none';
+        executarConversao();
+    }
+
+    // CÁLCULO E CONSTRUÇÃO DO MEMORIAL DE RESOLUÇÃO PASSO A PASSO
+    function executarConversao() {
+        const uLeft = document.getElementById('unit-left').value;
+        const uRight = document.getElementById('unit-right').value;
+        const outRight = document.getElementById('input-right');
+        const stepsDiv = document.getElementById('resolution-steps');
+        
+        let polegadaDecimalBase = 0;
+        let txtSteps = "";
+
+        // 1. Identificar Entrada e Converter para Polegada Decimal Neutra
+        if (uLeft === 'in_dec') {
+            let v = parseFloat(document.getElementById('input-left').value);
+            if(isNaN(v)) { outRight.value = ""; stepsDiv.innerHTML = "Aguardando entrada válida..."; return; }
+            polegadaDecimalBase = v;
+            txtSteps += `• <strong>Dado inicial recebido:</strong> O utilizador inseriu o valor diretamente em Polegadas Milesimais: <code>${polegadaDecimalBase.toFixed(4)}"</code>.<br>`;
+        } 
+        else if (uLeft === 'mm') {
+            let v = parseFloat(document.getElementById('input-left').value);
+            if(isNaN(v)) { outRight.value = ""; stepsDiv.innerHTML = "Aguardando entrada válida..."; return; }
+            polegadaDecimalBase = v / 25.4;
+            txtSteps += `• <strong>Dado inicial recebido:</strong> Valor em Milímetros: <code>${v.toFixed(4)} mm</code>.<br>`;
+            txtSteps += `• <strong>Passo 1 (Conversão para Polegadas):</strong> Como 1" = 25,4 mm, dividimos o valor por 25,4:<br>`;
+            txtSteps += `&nbsp;&nbsp;&nbsp;&nbsp;<code>${v.toFixed(4)} ÷ 25,4000 = ${polegadaDecimalBase.toFixed(4)}"</code>.<br>`;
+        } 
+        else if (uLeft === 'in_frac') {
+            const inch = parseInt(document.getElementById('frac-inch-pure').value) || 0;
+            const num = parseInt(document.getElementById('frac-num').value) || 0;
+            const den = parseInt(document.getElementById('frac-den').value) || 1;
+            polegadaDecimalBase = inch + (num / den);
+
+            txtSteps += `• <strong>Dado inicial recebido:</strong> Fração mecânica selecionada: <code>${inch > 0 ? inch + ' ' : ''}${num}/${den}"</code>.<br>`;
+            txtSteps += `• <strong>Passo 1 (Resolver a Fração):</strong> Dividimos o numerador pelo denominador: <code>${num} ÷ ${den} = ${(num/den).toFixed(4)}"</code>.<br>`;
+            if (inch > 0) {
+                txtSteps += `• <strong>Passo 2 (Adicionar o Inteiro):</strong> Somamos a parte inteira de polegadas: <code>${inch} + ${(num/den).toFixed(4)} = ${polegadaDecimalBase.toFixed(4)}"</code>.<br>`;
+            }
+        }
+
+        // 2. Processar a Saída Final com Base na Polegada Decimal Neutra
+        let finalOutput = "";
+        if (uRight === 'mm') {
+            let resultadoMm = polegadaDecimalBase * 25.4;
+            finalOutput = resultadoMm.toFixed(4) + " mm";
+            
+            let passoN = (uLeft === 'in_frac' && inch > 0) ? "3" : (uLeft === 'in_dec' ? "1" : "2");
+            if(uLeft !== 'mm') {
+                txtSteps += `• <strong>Passo ${passoN} (Calcular Milímetros):</strong> Multiplicamos o valor em polegadas decimais por 25,4000 para obter o equivalente métrico:<br>`;
+                txtSteps += `&nbsp;&nbsp;&nbsp;&nbsp;<code>${polegadaDecimalBase.toFixed(4)} × 25,4000 = ${resultadoMm.toFixed(4)} mm</code>.<br>`;
+            }
+            txtSteps += `<br>✨ <strong>Resultado Final Concluído:</strong> <code>${finalOutput}</code>`;
+        } 
+        else if (uRight === 'in_dec') {
+            finalOutput = polegadaDecimalBase.toFixed(4) + " in";
+            txtSteps += `<br>✨ <strong>Resultado Final Concluído:</strong> O equivalente em Polegada Milesimal pura é <code>${finalOutput}</code>`;
+        }
+
+        // Envia as strings prontas para os elementos HTML
+        outRight.value = finalOutput;
+        stepsDiv.innerHTML = txtSteps;
+    }
+
+    function filtrarTabela(busca) {
+        const filtro = busca.toLowerCase().trim().replace(',', '.');
+        document.querySelectorAll('#table-body tr').forEach(linha => {
+            const texto = linha.textContent.toLowerCase().replace(',', '.');
+            linha.classList.toggle('hide-row', !texto.includes(filtro));
+        });
+    }
+</script>
+
+</body>
+</html>

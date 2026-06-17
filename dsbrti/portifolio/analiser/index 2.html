@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radar CNPJ - Scanner Real de Contatos e Visibilidade</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #05070f 0%, #0c0b1a 100%); }
+    </style>
+</head>
+<body class="gradient-bg text-slate-100 min-h-screen font-sans">
+
+    <div class="max-w-6xl mx-auto px-4 py-8">
+        
+        <header class="flex flex-col md:flex-row justify-between items-center mb-8 border-b border-slate-800 pb-6 gap-4">
+            <div class="flex items-center gap-3">
+                <i data-lucide="crosshair" class="text-indigo-400 w-8 h-8"></i>
+                <h1 class="text-2xl font-bold tracking-tight bg-gradient-to-r from-white to-indigo-300 bg-clip-text text-transparent">
+                    Engine<span class="text-indigo-400">CNPJ</span>
+                </h1>
+            </div>
+            
+            <div class="flex bg-slate-900/80 p-1 rounded-xl border border-slate-800">
+                <button id="tab-contact-btn" onclick="switchTab('contact')" class="flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg bg-emerald-600 text-white transition-all">
+                    <i data-lucide="search-code" class="w-4 h-4"></i> Scanner de Contatos Real
+                </button>
+                <button id="tab-audit-btn" onclick="switchTab('audit')" class="flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg text-slate-400 hover:text-white transition-all">
+                    <i data-lucide="globe" class="w-4 h-4"></i> Localização & Dados
+                </button>
+            </div>
+        </header>
+
+        <main id="tab-contact-content" class="space-y-6">
+            <section class="max-w-xl mx-auto text-center my-8">
+                <h2 class="text-3xl font-extrabold mb-3 tracking-tight">Extrator de Contatos por CNPJ</h2>
+                <p class="text-slate-400 text-sm">Buscamos os dados na Receita e, de forma inédita, invadimos o site corporativo para capturar telefones e e-mails atualizados.</p>
+                
+                <form id="contact-form" class="bg-slate-900/60 p-6 rounded-2xl border border-slate-800 text-left space-y-4 shadow-2xl mt-6">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-emerald-400 mb-2">Insira o CNPJ Válido</label>
+                        <input type="text" id="contact-cnpj" required placeholder="Ex: 47.960.950/0001-21" class="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 px-4 text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500 text-sm font-mono">
+                    </div>
+                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-6 rounded-xl transition-all flex items-center justify-center gap-2 text-sm">
+                        <span>Executar Varredura Profunda</span>
+                        <i data-lucide="play" class="w-4 h-4 fill-white"></i>
+                    </button>
+                    <p id="error-contact" class="hidden text-xs text-red-400 bg-red-950/20 p-2 rounded border border-red-900/30 text-center"></p>
+                </form>
+            </section>
+
+            <section id="contact-results-section" class="hidden max-w-4xl mx-auto space-y-6">
+                <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <h3 class="text-xl font-bold text-white" id="c-biz-name">--</h3>
+                        <p class="text-xs text-slate-400 font-mono mt-1" id="c-biz-cnpj">CNPJ: --</p>
+                    </div>
+                    <div class="bg-slate-950 px-4 py-2 rounded-xl border border-slate-800 text-left">
+                        <span class="text-[10px] text-slate-500 font-bold block uppercase">Website Detectado</span>
+                        <a id="c-biz-web" target="_blank" href="#" class="text-xs text-indigo-400 hover:underline font-mono">Nenhum</a>
+                    </div>
+                </div>
+
+                <div class="bg-black border border-slate-800 rounded-xl p-4 font-mono text-xs text-slate-400 space-y-1 shadow-inner max-h-40 overflow-y-auto" id="console-log">
+                    </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-5 space-y-4">
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                            <h4 class="text-xs font-bold uppercase text-slate-400 tracking-wider">Base da Receita</h4>
+                            <i data-lucide="building" class="w-4 h-4 text-slate-500"></i>
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-slate-500 block">Telefone Comercial:</span>
+                            <span id="rf-phone" class="font-mono text-sm text-white font-semibold">--</span>
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-slate-500 block">E-mail de Cadastro:</span>
+                            <span id="rf-email" class="font-mono text-xs text-white block break-all">--</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-5 space-y-4">
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                            <h4 class="text-xs font-bold uppercase text-emerald-400 tracking-wider">Telefones no Site</h4>
+                            <i data-lucide="phone-hunting" class="w-4 h-4 text-emerald-500"></i>
+                        </div>
+                        <div id="scraped-phones-container" class="space-y-2 max-h-32 overflow-y-auto">
+                            <span class="text-xs text-slate-600 italic">Aguardando varredura...</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-5 space-y-4">
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                            <h4 class="text-xs font-bold uppercase text-indigo-400 tracking-wider">E-mails no Site</h4>
+                            <i data-lucide="mail-search" class="w-4 h-4 text-indigo-500"></i>
+                        </div>
+                        <div id="scraped-emails-container" class="space-y-2 max-h-32 overflow-y-auto">
+                            <span class="text-xs text-slate-600 italic">Aguardando varredura...</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <main id="tab-audit-content" class="hidden space-y-6">
+            <div id="audit-dashboard" class="max-w-4xl mx-auto bg-slate-900/60 border border-slate-800 rounded-2xl p-6">
+                <h3 class="text-lg font-bold mb-4 text-indigo-400">Quadro de Informações Societárias</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <p><strong class="text-slate-500">Razão Social:</strong> <br><span id="aud-razao" class="text-white font-medium">--</span></p>
+                    <p><strong class="text-slate-500">Nome Fantasia:</strong> <br><span id="aud-fantasia" class="text-white font-medium">--</span></p>
+                    <p><strong class="text-slate-500">CNAE Principal:</strong> <br><span id="aud-cnae" class="text-white font-medium">--</span></p>
+                    <p><strong class="text-slate-500">Data de Abertura:</strong> <br><span id="aud-abertura" class="text-white font-mono">--</span></p>
+                    <p><strong class="text-slate-500">Capital Social:</strong> <br><span id="aud-capital" class="text-emerald-400 font-mono">--</span></p>
+                    <p><strong class="text-slate-500">Endereço Completo:</strong> <br><span id="aud-endereco" class="text-white">--</span></p>
+                </div>
+            </div>
+        </main>
+
+        <div id="global-loader" class="hidden text-center my-20">
+            <div class="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p class="text-xs text-slate-500 font-mono">Injetando requisições assíncronas...</p>
+        </div>
+
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        function switchTab(tab) {
+            const auditBtn = document.getElementById('tab-audit-btn');
+            const contactBtn = document.getElementById('tab-contact-btn');
+            const auditContent = document.getElementById('tab-audit-content');
+            const contactContent = document.getElementById('tab-contact-content');
+
+            if (tab === 'audit') {
+                auditBtn.className = "flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg bg-indigo-600 text-white transition-all";
+                contactBtn.className = "flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg text-slate-400 hover:text-white transition-all";
+                auditContent.classList.remove('hidden');
+                contactContent.classList.add('hidden');
+            } else {
+                contactBtn.className = "flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg bg-emerald-600 text-white transition-all";
+                auditBtn.className = "flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg text-slate-400 hover:text-white transition-all";
+                contactContent.classList.remove('hidden');
+                auditContent.classList.add('hidden');
+            }
+        }
+
+        function logConsole(text, type = 'info') {
+            const consoleBox = document.getElementById('console-log');
+            const color = type === 'success' ? 'text-emerald-400' : type === 'error' ? 'text-red-400' : 'text-slate-400';
+            consoleBox.innerHTML += `<p class="${color}">[${new Date().toLocaleTimeString()}] ${text}</p>`;
+            consoleBox.scrollTop = consoleBox.scrollHeight;
+        }
+
+        document.getElementById('contact-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const err = document.getElementById('error-contact');
+            const results = document.getElementById('contact-results-section');
+            const loader = document.getElementById('global-loader');
+            
+            err.classList.add('hidden');
+            results.classList.add('hidden');
+            document.getElementById('console-log').innerHTML = '';
+
+            let cnpj = document.getElementById('contact-cnpj').value.replace(/\D/g, '');
+            if(cnpj.length !== 14) { err.innerText = "CNPJ precisa conter 14 dígitos."; err.classList.remove('hidden'); return; }
+
+            loader.classList.remove('hidden');
+            logConsole("Iniciando varredura para o CNPJ " + cnpj);
+
+            try {
+                // 1. Chamada Real da Receita Federal
+                logConsole("Conectando ao gateway de dados cadastrais da Receita...");
+                const response = await fetch(`https://brasilapi.com.br/api/cnpj/v1/${cnpj}`);
+                if(!response.ok) throw new Error("CNPJ Inexistente");
+                const data = await response.json();
+                
+                logConsole("Dados da Receita obtidos com sucesso!", "success");
+                
+                loader.classList.add('hidden');
+                results.classList.remove('hidden');
+
+                // Popula Interface Cadastral Básica
+                document.getElementById('c-biz-name').innerText = data.nome_fantasia || data.razao_social;
+                document.getElementById('c-biz-cnpj').innerText = `CNPJ: ${data.cnpj}`;
+                
+                // Dados Fixos da Receita
+                let rfPhoneFormatted = data.telefone ? `(${data.telefone.substring(0,2)}) ${data.telefone.substring(2,6)}-${data.telefone.substring(6)}` : "Não cadastrado";
+                document.getElementById('rf-phone').innerText = rfPhoneFormatted;
+                document.getElementById('rf-email').innerText = data.email ? data.email.toLowerCase() : "Não cadastrado";
+
+                // Popula a Aba 2 (Dados Avançados)
+                document.getElementById('aud-razao').innerText = data.razao_social;
+                document.getElementById('aud-fantasia').innerText = data.nome_fantasia || "Não informado";
+                document.getElementById('aud-cnae').innerText = data.cnae_fiscal_descricao;
+                document.getElementById('aud-abertura').innerText = data.data_inicio_atividade;
+                document.getElementById('aud-capital').innerText = parseFloat(data.capital_social).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+                document.getElementById('aud-endereco').innerText = `${data.logradouro}, ${data.numero} - ${data.bairro}. ${data.municipio}-${data.uf}`;
+
+                // 2. EXTRAÇÃO E SCRAPING DO SITE DA EMPRESA EM TEMPO REAL
+                // Se a empresa tiver e-mail corporativo próprio (ex: contato@magazineluiza.com.br), extraímos o domínio para varrer o site.
+                let email = data.email || "";
+                let domain = email.includes("@") ? email.split("@")[1] : "";
+                const ignores = ["gmail.com", "hotmail.com", "outlook.com", "yahoo.com", "terra.com.br", "uol.com.br", "aol.com"];
+
+                if(domain && !ignores.includes(domain)) {
+                    let targetUrl = `https://www.${domain}`;
+                    document.getElementById('c-biz-web').innerText = targetUrl;
+                    document.getElementById('c-biz-web').href = targetUrl;
+                    
+                    logConsole(`Site corporativo detectado: ${targetUrl}. Disparando robô de extração...`);
+                    
+                    // Usando um Proxy Público de CORS (AllOrigins) para ler o código-fonte do site da empresa sem bloqueio do navegador
+                    try {
+                        const proxyRes = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`);
+                        const proxyData = await proxyRes.json();
+                        const htmlContent = proxyData.contents;
+
+                        logConsole("Código-fonte do site baixado. Analisando tags e nós de texto...", "success");
+
+                        // Regex de captura em lote de telefones brasileiros e e-mails estruturados
+                        const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+                        const phoneRegex = /\(?\d{2}\)?\s?9?\d{4}[-\s]?\d{4}/g;
+
+                        const foundEmails = [...new Set(htmlContent.match(emailRegex))];
+                        const foundPhones = [...new Set(htmlContent.match(phoneRegex))];
+
+                        // Renderiza os E-mails capturados no Site
+                        const emailContainer = document.getElementById('scraped-emails-container');
+                        emailContainer.innerHTML = '';
+                        if(foundEmails && foundEmails.length > 0) {
+                            logConsole(`Sucesso! Encontrado ${foundEmails.length} e-mail(s) no código do site.`, "success");
+                            foundEmails.slice(0, 5).forEach(em => {
+                                emailContainer.innerHTML += `<div class="bg-slate-950 p-2 rounded text-xs text-indigo-300 font-mono border border-slate-800 break-all select-all">${em.toLowerCase()}</div>`;
+                            });
+                        } else {
+                            logConsole("Nenhum e-mail visível encontrado na home do site.", "info");
+                            emailContainer.innerHTML = `<span class="text-xs text-slate-600 italic">Nenhum e-mail público na home.</span>`;
+                        }
+
+                        // Renderiza os Telefones capturados no Site
+                        const phoneContainer = document.getElementById('scraped-phones-container');
+                        phoneContainer.innerHTML = '';
+                        if(foundPhones && foundPhones.length > 0) {
+                            logConsole(`Sucesso! Encontrado ${foundPhones.length} telefone(s) no código do site.`, "success");
+                            foundPhones.slice(0, 5).forEach(ph => {
+                                let cleanPh = ph.replace(/\D/g, '');
+                                phoneContainer.innerHTML += `
+                                    <div class="bg-slate-950 p-2 rounded text-xs text-white font-mono border border-slate-800 flex justify-between items-center">
+                                        <span>${ph}</span>
+                                        <a href="https://api.whatsapp.com/send?phone=55${cleanPh}" target="_blank" class="text-[10px] text-emerald-400 font-bold uppercase hover:underline">Chamar</a>
+                                    </div>`;
+                            });
+                        } else {
+                            logConsole("Nenhum telefone estruturado encontrado no corpo da página.", "info");
+                            phoneContainer.innerHTML = `<span class="text-xs text-slate-600 italic">Nenhum telefone público na home.</span>`;
+                        }
+
+                    } catch (scraperErr) {
+                        logConsole("O site da empresa bloqueou a conexão do robô através do cabeçalho de segurança.", "error");
+                        fallbackMessage();
+                    }
+                } else {
+                    logConsole("Empresa utiliza e-mail genérico. Varredura de site abortada.", "info");
+                    fallbackMessage();
+                }
+
+            } catch (e) {
+                loader.classList.add('hidden');
+                err.innerText = "Erro fatal: CNPJ não existe ou base do governo fora do ar.";
+                err.classList.remove('hidden');
+            }
+        });
+
+        function fallbackMessage() {
+            document.getElementById('c-biz-web').innerText = "Não disponível";
+            document.getElementById('scraped-emails-container').innerHTML = `<span class="text-xs text-slate-600 italic">Site inacessível.</span>`;
+            document.getElementById('scraped-phones-container').innerHTML = `<span class="text-xs text-slate-600 italic">Site inacessível.</span>`;
+        }
+    </script>
+</body>
+</html>

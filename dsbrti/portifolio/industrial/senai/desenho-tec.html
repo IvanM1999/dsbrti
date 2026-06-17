@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Central de Engenharia Integrada | Ubuntu Tech Suite</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+     <script src="patches.js" defer></script>
+</head>
+</head>
+<body>
+
+<div class="app-container-root">
+    
+    <header class="app-header">
+        <div class="brand-title"><i class="fa-solid fa-microchip"></i> INDUSTRIAL ENGINEERING HUB </div>
+        <div class="theme-badge">UBUNTU SYSTEM CORE</div>
+    </header>
+
+    <nav class="app-navigation">
+        <button class="nav-tab-btn active" onclick="mudarAbaAtiva('mod-home', this)"><i class="fa-solid fa-calculator"></i><span>Metrologia</span></button>
+        <button class="nav-tab-btn" onclick="mudarAbaAtiva('mod-usinagem', this)"><i class="fa-solid fa-screwdriver-wrench"></i><span>Usinagem &amp; ISO</span></button>
+        <button class="nav-tab-btn" onclick="mudarAbaAtiva('mod-eletronica', this)"><i class="fa-solid fa-bolt"></i><span>Eletrônica</span></button>
+        <button class="nav-tab-btn" onclick="mudarAbaAtiva('mod-clp', this)"><i class="fa-solid fa-network-wired"></i><span>Programação CLP</span></button>
+        <button class="nav-tab-btn" onclick="mudarAbaAtiva('mod-manutencao', this)"><i class="fa-solid fa-shield-halved"></i><span>NDT &amp; Processos</span></button>
+    </nav>
+
+    <main class="app-viewport">
+        
+        <div class="omnibox-container">
+            <div class="omnibox-wrapper">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="engine-omnibox" class="omnibox-input" placeholder="Pesquisar componentes, roscas, registradores, portas ou fórmulas...">
+            </div>
+        </div>
+
+        <section id="mod-home" class="data-panel active">
+            <div class="industrial-card">
+                <div class="card-header-tech"><i class="fa-solid fa-right-left"></i> Conversor Bidirecional Mestre de Precisão</div>
+                <div class="calc-field-grid">
+                    <div>
+                        <label class="data-item-title">Origem</label>
+                        <select id="calc-conv-origem" class="calc-select" onchange="engineCalculos.atualizarCamposConversor()">
+                            <option value="mm">Milímetros (mm)</option>
+                            <option value="in_dec">Polegada Milesimal (in)</option>
+                            <option value="in_frac" selected>Polegada Fracionária (in)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="data-item-title">Destino</label>
+                        <select id="calc-conv-destino" class="calc-select">
+                            <option value="mm" selected>Milímetros (mm)</option>
+                            <option value="in_dec">Polegada Milesimal (in)</option>
+                            <option value="in_frac">Polegada Fracionária (in)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="wrapper-input-direto" class="calc-field-grid hide">
+                    <div style="grid-column: span 2;">
+                        <label class="data-item-title">Valor Direto</label>
+                        <input type="number" id="calc-conv-valor" class="calc-input" value="25.4" step="0.0001">
+                    </div>
+                </div>
+
+                <div id="wrapper-input-fracionaria" class="calc-field-grid triple">
+                    <div><label class="data-item-title">Inteiro</label><input type="number" id="calc-frac-int" class="calc-input" value="2" min="0"></div>
+                    <div><label class="data-item-title">Numerador</label><input type="number" id="calc-frac-num" class="calc-input" value="1" min="0"></div>
+                    <div>
+                        <label class="data-item-title">Denominador</label>
+                        <select id="calc-frac-den" class="calc-select">
+                            <option value="2">2</option><option value="4">4</option><option value="8">8</option><option value="16">16</option><option value="32">32</option><option value="64">64</option><option value="128" selected>128</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="calc-btn-exec" onclick="engineCalculos.executarConversaoMestre()">Processar Variável Geométrica</button>
+                <div id="res-calc-conversor" class="calc-result-display">Insira frações ou milímetros para conversão instantânea.</div>
+
+                <div class="history-container">
+                    <div class="data-item-title" style="margin-bottom:6px;"><i class="fa-solid fa-history"></i> Log de Conversão Prática</div>
+                    <div id="history-box-target">
+                        <span style="font-size:12px; color:var(--text-sub);">Nenhuma conversão registrada neste turno.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="mod-usinagem" class="data-panel">
+            <div class="industrial-card">
+                <div class="card-header-tech"><i class="fa-solid fa-gears"></i> Cinemática de Usinagem (RPM &amp; Avanço)</div>
+                <div class="calc-field-grid triple">
+                    <div><label class="data-item-title">Vc (m/min)</label><input type="number" id="calc-usin-vc" class="calc-input" value="220"></div>
+                    <div><label class="data-item-title">Ø Fresa (mm)</label><input type="number" id="calc-usin-dc" class="calc-input" value="12"></div>
+                    <div><label class="data-item-title">fz (mm/z)</label><input type="number" id="calc-usin-fz" class="calc-input" value="0.08"></div>
+                </div>
+                <div class="calc-field-grid">
+                    <div style="grid-column: span 2;"><label class="data-item-title">Número de Facas (Z)</label><input type="number" id="calc-usin-z" class="calc-input" value="4"></div>
+                </div>
+                <button class="calc-btn-exec" onclick="engineCalculos.calcularUsinagem()">Calcular Cinemática de Corte</button>
+                <div id="res-calc-usinagem" class="calc-result-display">Aguardando parâmetros ferramentais...</div>
+            </div>
+
+            <div class="industrial-card">
+                <div class="card-header-tech"><i class="fa-solid fa-arrows-left-right"></i> Ajustes Mecânicos ISO 286</div>
+                <div class="calc-field-grid">
+                    <div><label class="data-item-title">Ø Nominal (mm)</label><input type="number" id="calc-iso-nominal" class="calc-input" value="25"></div>
+                    <div>
+                        <label class="data-item-title">Ajuste Alvo</label>
+                        <select id="calc-iso-classe" class="calc-select">
+                            <option value="H7">H7 (Furo Padrão)</option>
+                            <option value="g6">g6 (Eixo Deslizante)</option>
+                            <option value="h6">h6 (Eixo Fixo)</option>
+                            <option value="p6">p6 (Ajuste Forçado/Prensa)</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="calc-btn-exec" onclick="engineCalculos.calcularToleranciaISO()">Mapear Afastamentos</button>
+                <div id="res-calc-iso" class="calc-result-display">Resultado dos desvios micrométricos...</div>
+            </div>
+            
+            <div id="target-cards-usinagem" class="tech-data-row"></div>
+        </section>
+
+        <section id="mod-eletronica" class="data-panel">
+            <div class="industrial-card">
+                <div class="card-header-tech"><i class="fa-solid fa-wave-square"></i> Escalonamento Analógico e Loops de Instrumentação</div>
+                <div class="calc-field-grid">
+                    <div>
+                        <label class="data-item-title">Tipo de Sinal</label>
+                        <select id="calc-el-tipo" class="calc-select">
+                            <option value="4-20">4 - 20 mA</option>
+                            <option value="0-10">0 - 10 V</option>
+                        </select>
+                    </div>
+                    <div><label class="data-item-title">Leitura Atual</label><input type="number" id="calc-el-lido" class="calc-input" value="12" step="0.01"></div>
+                </div>
+                <div class="calc-field-grid">
+                    <div><label class="data-item-title">Mínimo de Engenharia</label><input type="number" id="calc-el-min" class="calc-input" value="0"></div>
+                    <div><label class="data-item-title">Máximo de Engenharia</label><input type="number" id="calc-el-max" class="calc-input" value="150"></div>
+                </div>
+                <button class="calc-btn-exec" onclick="engineCalculos.calcularConversaoSinal()">Interpolar Escala Física</button>
+                <div id="res-calc-eletronica" class="calc-result-display">O valor mapeado aparecerá aqui.</div>
+            </div>
+
+            <div class="industrial-card">
+                <div class="card-header-tech"><i class="fa-solid fa-calculator"></i> Dimensionamento de Resistores de Pull-Up / Divisores</div>
+                <div class="calc-field-grid triple">
+                    <div><label class="data-item-title">Vcc (Alimentação)</label><input type="number" id="calc-el-vcc" class="calc-input" value="24"></div>
+                    <div><label class="data-item-title">Vout (Desejado)</label><input type="number" id="calc-el-vout" class="calc-input" value="5"></div>
+                    <div><label class="data-item-title">R2 Mapeado (Ω)</label><input type="number" id="calc-el-r2" class="calc-input" value="10000"></div>
+                </div>
+                <button class="calc-btn-exec" onclick="engineCalculos.calcularDivisorTensao()">Calcular Resistor R1 Correlato</button>
+                <div id="res-calc-divisor" class="calc-result-display">Insira os níveis lógicos de tensão de rede...</div>
+            </div>
+
+            <div id="target-cards-eletronica" class="tech-data-row"></div>
+        </section>
+
+        <section id="mod-clp" class="data-panel">
+            <div class="industrial-card">
+                <div class="card-header-tech"><i class="fa-solid fa-binary"></i> Conversor de Resolução Analógica (A/D para Word)</div>
+                <div class="calc-field-grid triple">
+                    <div>
+                        <label class="data-item-title">Resolução CLP</label>
+                        <select id="calc-clp-bits" class="calc-select">
+                            <option value="27648">12 Bits (Siemens S7 Padrão - 27648)</option>
+                            <option value="32767">15 Bits + Sinal (Bipolar Estendido - 32767)</option>
+                            <option value="4095">12 Bits Clássico (0 - 4095)</option>
+                        </select>
+                    </div>
+                    <div><label class="data-item-title">Valor Bruto Lido (Word)</label><input type="number" id="calc-clp-bruto" class="calc-input" value="13824"></div>
+                    <div><label class="data-item-title">Unidade de Processo (Max)</label><input type="number" id="calc-clp-pmax" class="calc-input" value="100"></div>
+                </div>
+                <button class="calc-btn-exec" onclick="engineCalculos.calcularNormalizacaoCLP()">Normalizar e Escalonar (Norm_X / Scale_X)</button>
+                <div id="res-calc-clp" class="calc-result-display">Resultados matemáticos internos do bloco funcional do CLP...</div>
+            </div>
+
+            <div class="industrial-card">
+                <div class="card-header-tech"><i class="fa-solid fa-code"></i> Gerador Estruturado Prático de Sintaxe (SCL / Structured Text)</div>
+                <div class="calc-field-grid">
+                    <div style="grid-column: span 2;">
+                        <label class="data-item-title">Tipo de Condicional Requerido</label>
+                        <select id="calc-clp-template" class="calc-select" onchange="engineCalculos.gerarTemplateSCL()">
+                            <option value="interlock">Intertravamento de Segurança de Motor (Interlock)</option>
+                            <option value="escala">Tratamento Analógico Manual de Falha de Sensor</option>
+                        </select>
+                    </div>
+                </div>
+                <label class="data-item-title">Código Estruturado Resultante</label>
+                <textarea id="res-clp-scl" class="calc-textarea" readonly></textarea>
+            </div>
+
+            <div id="target-cards-clp" class="tech-data-row"></div>
+        </section>
+
+        <section id="mod-manutencao" class="data-panel">
+            <div class="industrial-card">
+                <div class="card-header-tech"><i class="fa-solid fa-rss"></i> Localizador Ultrassônico de Trincas e Descontinuidades</div>
+                <div class="calc-field-grid">
+                    <div>
+                        <label class="data-item-title">Material Base</label>
+                        <select id="calc-us-material" class="calc-select">
+                            <option value="5920">Aço Carbono (5920 m/s)</option>
+                            <option value="5790">Aço Inoxidável (5790 m/s)</option>
+                            <option value="6320">Alumínio Pureza Industrial (6320 m/s)</option>
+                        </select>
+                    </div>
+                    <div><label class="data-item-title">Tempo de Resposta (µs)</label><input type="number" id="calc-us-tempo" class="calc-input" value="15" step="0.1"></div>
+                </div>
+                <button class="calc-btn-exec" onclick="engineCalculos.calcularProfundidadeFalha()">Localizar Coordenada da Falha</button>
+                <div id="res-calc-ultrassom" class="calc-result-display">Aguardando emissão sônica...</div>
+            </div>
+
+            <div class="industrial-card">
+                <div class="card-header-tech"><i class="fa-solid fa-fire-burner"></i> Engenharia de Modelagem e Contrações Térmicas</div>
+                <div class="calc-field-grid">
+                    <div><label class="data-item-title">Dimensão Alvo do Desenho (mm)</label><input type="number" id="calc-fund-cota" class="calc-input" value="250"></div>
+                    <div><label class="data-item-title">Coeficiente de Contração Liga (%)</label><input type="number" id="calc-fund-taxa" class="calc-input" value="1.2" step="0.1"></div>
+                </div>
+                <button class="calc-btn-exec" onclick="engineCalculos.calcularCotaModelo()">Calcular Dimensional de Ferramentaria</button>
+                <div id="res-calc-fundicao" class="calc-result-display">Aguardando dados dinâmicos da liga metálica...</div>
+            </div>
+
+            <div id="target-cards-manutencao" class="tech-data-row"></div>
+        </section>
+
+    </main>
+</div>
+<footer style="background-color: #1a1a1a; border-top: 1px solid #333333; padding: 24px 16px; font-family: 'Ubuntu', sans-serif; display: flex; flex-direction: column; gap: 16px; align-items: center; text-align: center; box-sizing: border-box; width: 100%;">
+    
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 24px; width: 100%;">
+        
+        <span id="html-footer-ubuntu-btn" style="background: rgba(233, 84, 32, 0.15); color: #E95420; padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer; transition: background 0.2s; user-select: none;">
+            <i class="fa-brands fa-ubuntu"></i> Ubuntu system core
+        </span>
+        
+        <span style="color: #aea79f; font-size: 13px; display: inline-flex; align-items: center; gap: 6px;">
+            <i class="fa-solid fa-code-branch" style="color: #E95420;"></i> v0.8.0-beta (Release 8)
+        </span>
+
+        <a href="https://github.com/IvanM1999/Curriculum/tree/main/portifolio%2Findustrial%2Fsenai" 
+           target="_blank" 
+           style="display: inline-flex; align-items: center; gap: 8px; background: #24292e; color: #ffffff; text-decoration: none; padding: 6px 14px; border-radius: 4px; font-size: 12px; font-weight: 600; border: 1px solid #444; transition: opacity 0.2s;">
+            <i class="fa-brands fa-github" style="font-size: 14px;"></i> GitHub Projeto
+        </a>
+    </div>
+
+    <div style="width: 100%; max-width: 650px; height: 1px; background: #2e2e2e;"></div>
+
+    <div style="font-size: 12px; color: #888888;">
+        Desenvolvido por 
+        <span id="html-footer-empresa-destiny" style="color: #ffffff; font-weight: 600; cursor: help; border-bottom: 1px dashed #E95420; padding-bottom: 2px; position: relative;">
+            DestinyServicesBR
+        </span>
+    </div>
+
+    <script>
+        (function() {
+            // Estilos CSS dinâmicos necessários para as animações dos Popovers
+            if (!document.getElementById('html-footer-animations')) {
+                const style = document.createElement('style');
+                style.id = 'html-footer-animations';
+                style.innerHTML = `@keyframes footerFadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }`;
+                document.head.appendChild(style);
+            }
+
+            // --- 1. SIGNIFICADO DO BOTÃO UBUNTU ---
+            const btnUbuntu = document.getElementById('html-footer-ubuntu-btn');
+            if (btnUbuntu) {
+                btnUbuntu.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const popoverExistente = document.getElementById('html-ubuntu-popover');
+                    if (popoverExistente) { popoverExistente.remove(); return; }
+
+                    const rect = btnUbuntu.getBoundingClientRect();
+                    const popover = document.createElement('div');
+                    popover.id = 'html-ubuntu-popover';
+                    popover.style.cssText = `
+                        position: fixed; bottom: ${window.innerHeight - rect.top + 10}px; left: ${Math.max(10, rect.left - 40)}px;
+                        background: #77216F; color: #ffffff; padding: 10px 14px; border-radius: 4px; max-width: 260px;
+                        box-shadow: 0 -4px 15px rgba(0,0,0,0.5); font-family: 'Ubuntu', sans-serif; font-size: 12px; line-height: 1.4;
+                        border-bottom: 4px solid #E95420; z-index: 1000000; animation: footerFadeUp 0.2s ease-out;
+                    `;
+                    popover.innerHTML = `<strong>Significado:</strong> Filosofia de origem sul-africana baseada na premissa <em>"Eu sou porque nós somos"</em>. Traduz a importância da coletividade e cooperação mútua.`;
+                    document.body.appendChild(popover);
+
+                    const fecharMundo = function(evt) {
+                        if (!popover.contains(evt.target) && evt.target !== btnUbuntu) {
+                            popover.remove();
+                            document.removeEventListener('click', fecharMundo);
+                        }
+                    };
+                    setTimeout(() => document.addEventListener('click', fecharMundo), 10);
+                });
+            }
+
+            // --- 2. EXIBIÇÃO DO CNPJ (DESTINYSERVICESBR) ---
+            const empresaSpan = document.getElementById('html-footer-empresa-destiny');
+            if (empresaSpan) {
+                const cnpjTexto = "45.609.430/0001-43";
+                empresaSpan.setAttribute('title', `CNPJ: ${cnpjTexto}`);
+
+                const renderTooltip = function() {
+                    let tooltip = document.getElementById('html-cnpj-tooltip');
+                    if (!tooltip) {
+                        tooltip = document.createElement('div');
+                        tooltip.id = 'html-cnpj-tooltip';
+                        tooltip.style.cssText = `
+                            position: fixed; background: #222222; color: #ffffff;
+                            padding: 6px 12px; border-radius: 4px; font-size: 11px;
+                            border: 1px solid #E95420; box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+                            z-index: 1000001; pointer-events: none; font-weight: bold;
+                            font-family: monospace; animation: footerFadeUp 0.15s ease-out;
+                        `;
+                        tooltip.innerHTML = `<i class="fa-solid fa-id-card" style="color: #E95420;"></i> CNPJ: ${cnpjTexto}`;
+                        document.body.appendChild(tooltip);
+                    }
+                    const bounding = empresaSpan.getBoundingClientRect();
+                    tooltip.style.top = `${bounding.top - 38}px`;
+                    tooltip.style.left = `${bounding.left + (bounding.width / 2) - (tooltip.offsetWidth / 2)}px`;
+                };
+
+                const destruirTooltip = function() {
+                    const tooltip = document.getElementById('html-cnpj-tooltip');
+                    if (tooltip) tooltip.remove();
+                };
+
+                // Gatilhos unificados para Hover e Dispositivos Touch/Clique
+                empresaSpan.addEventListener('mouseenter', renderTooltip);
+                empresaSpan.addEventListener('mousemove', renderTooltip);
+                empresaSpan.addEventListener('mouseleave', destruirTooltip);
+                empresaSpan.addEventListener('click', function(ev) {
+                    ev.stopPropagation();
+                    renderTooltip();
+                    setTimeout(destruirTooltip, 3500); // Auto-oculta em telas touch
+                });
+            }
+        })();
+    </script>
+</footer>
+
+<script>
+/**
+ * REPOSITÓRIO DATA INDUSTRIAL E TABELAS DE CONSULTA RÁPIDA
+ */
+const BASE_DADOS_SUITE = [
+    // Usinagem e Ajustes
+    { bitola: "M6 x 1.0", tipo: "Métrica Normal ISO", passo: "1.00 mm", d_menor: "4.917 mm", info: "Furo com broca de 5.0 mm", setor: "usinagem" },
+    { bitola: "M8 x 1.25", tipo: "Métrica Normal ISO", passo: "1.25 mm", d_menor: "6.647 mm", info: "Furo com broca de 6.8 mm", setor: "usinagem" },
+    { bitola: "1/4\" - 20 UNC", tipo: "Polegada Unificada", passo: "1.270 mm", d_menor: "4.970 mm", info: "Furo com broca de 5.1 mm", setor: "usinagem" },
+    { bitola: "Ajuste H7", tipo: "Furo H7 Tolerado", passo: "Faixa 18-30mm", d_menor: "0.000 mm", info: "Afastamento Superior: +0.021 mm | Folga Livre", setor: "usinagem" },
+    
+    // Eletrônica de Campo
+    { bitola: "Pt100 RTD", tipo: "Sensor de Temperatura", passo: "Alfa = 0.00385", d_menor: "100 Ω a 0°C", info: "Variação de ~0.385 Ω por Grau Celsius", setor: "eletronica" },
+    { bitola: "Termopar Tipo K", tipo: "Sensor Termoelétrico", passo: "Chromel / Alumel", d_menor: "0 a 1200°C", info: "Sensibilidade média de 41 µV/°C", setor: "eletronica" },
+    { bitola: "Shunt de Corrente", tipo: "Resistor de Precisão", passo: "Grau Instrumentação", d_menor: "0.1 Ω / 50W", info: "Utilizado para leitura indireta de Corrente por Queda de Tensão", setor: "eletronica" },
+
+    // Programação CLP
+    { bitola: "Modbus TCP", tipo: "Protocolo Industrial", passo: "Porta Padrão 502", d_menor: "Ethernet / IP", info: "Estrutura baseada em Registradores Holding (4XXXX)", setor: "clp" },
+    { bitola: "Profinet", tipo: "Rede Determinística", passo: "Camada IEEE 802.3", d_menor: "Tempo Real (RT/IRT)", info: "Largura de banda dedicada para automação distribuída de alta velocidade", setor: "clp" },
+    { bitola: "DB (Data Block)", tipo: "Estrutura TIA Portal", passo: "Memória Compartilhada", d_menor: "Global / Otimizado", info: "Blocos dedicados para armazenamento persistente de variáveis do processo", setor: "clp" },
+
+    // Processos e Ultrassom
+    { bitola: "Aço Carbono", tipo: "Material END", passo: "V. Long: 5920 m/s", d_menor: "Impedância 45.4", info: "Baixa atenuação acústica em frequências padrão (2.25-5MHz)", setor: "manutencao" },
+    { bitola: "Ferro Cinzento", tipo: "Liga Fundição", passo: "FC250 Padrão", d_menor: "Contração 1.0-1.2%", info: "Alta fluidez física para preenchimento de moldes complexos", setor: "manutencao" }
+];
+
+/**
+ * ENGINE COMPUTACIONAL E CONVERSOR MESTRE BIDIRECIONAL
+ */
+let logHistoricoMetrologia = [];
+
+const engineCalculos = {
+    atualizarCamposConversor() {
+        const origem = document.getElementById('calc-conv-origem').value;
+        document.getElementById('wrapper-input-direto').className = (origem === 'in_frac') ? 'calc-field-grid hide' : 'calc-field-grid';
+        document.getElementById('wrapper-input-fracionaria').className = (origem === 'in_frac') ? 'calc-field-grid triple' : 'calc-field-grid triple hide';
+    },
+
+    executarConversaoMestre() {
+        const origem = document.getElementById('calc-conv-origem').value;
+        const destino = document.getElementById('calc-conv-destino').value;
+        const display = document.getElementById('res-calc-conversor');
+
+        let valorPolegadaDecimal = 0;
+        let strOrigem = "";
+
+        if (origem === 'mm') {
+            const mm = parseFloat(document.getElementById('calc-conv-valor').value) || 0;
+            valorPolegadaDecimal = mm / 25.4;
+            strOrigem = mm.toFixed(3) + " mm";
+        } else if (origem === 'in_dec') {
+            const dec = parseFloat(document.getElementById('calc-conv-valor').value) || 0;
+            valorPolegadaDecimal = dec;
+            strOrigem = dec.toFixed(4) + '"';
+        } else {
+            const i = parseInt(document.getElementById('calc-frac-int').value) || 0;
+            const n = parseInt(document.getElementById('calc-frac-num').value) || 0;
+            const d = parseInt(document.getElementById('calc-frac-den').value) || 1;
+            valorPolegadaDecimal = i + (n / d);
+            strOrigem = `${i > 0 ? i + ' ' : ''}${n}/${d}"`;
+        }
+
+        let strSaida = "";
+        if (destino === 'mm') {
+            strSaida = (valorPolegadaDecimal * 25.4).toFixed(4) + " mm";
+        } else if (destino === 'in_dec') {
+            strSaida = valorPolegadaDecimal.toFixed(4) + '" (Decimal)';
+        } else {
+            strSaida = this.decimalParaFracao(valorPolegadaDecimal);
+        }
+
+        display.innerHTML = `🔄 Saída: <strong style="color:var(--ubuntu-orange); font-size:15px;">${strSaida}</strong>`;
+        this.registrarLog(strOrigem, strSaida);
+    },
+
+    decimalParaFracao(dec) {
+        const inteiro = Math.floor(dec);
+        const residuo = dec - inteiro;
+        if (residuo < 0.0039) return inteiro > 0 ? `${inteiro}"` : '0"';
+
+        let num = Math.round(residuo * 128);
+        let den = 128;
+        if (num === 128) return `${inteiro + 1}"`;
+
+        const mdc = (a, b) => b ? mdc(b, a % b) : a;
+        const div = mdc(num, den);
+        num /= div; den /= div;
+
+        return `${inteiro > 0 ? inteiro + ' ' : ''}${num}/${den}"`;
+    },
+
+    registrarLog(entrada, saida) {
+        if (logHistoricoMetrologia.length > 0 && logHistoricoMetrologia[0].in === entrada && logHistoricoMetrologia[0].out === saida) return;
+        logHistoricoMetrologia.unshift({ in: entrada, out: saida });
+        if (logHistoricoMetrologia.length > 4) logHistoricoMetrologia.pop();
+
+        document.getElementById('history-box-target').innerHTML = `<ul class="history-list">` + 
+            logHistoricoMetrologia.map(item => `<li class="history-item"><span>📥 ${item.in}</span><span>➔</span><span>📤 <strong>${item.out}</strong></span></li>`).join('') + `</ul>`;
+    },
+
+    // MÓDULO: USINAGEM E AJUSTES ISO
+    calcularUsinagem() {
+        const vc = parseFloat(document.getElementById('calc-usin-vc').value) || 0;
+        const dc = parseFloat(document.getElementById('calc-usin-dc').value) || 0;
+        const fz = parseFloat(document.getElementById('calc-usin-fz').value) || 0;
+        const z = parseInt(document.getElementById('calc-usin-z').value) || 1;
+        const dest = document.getElementById('res-calc-usinagem');
+
+        if(dc <= 0) { dest.innerHTML = "Diâmetro inválido."; return; }
+        const rpm = (vc * 1000) / (Math.PI * dc);
+        const vf = rpm * fz * z;
+        dest.innerHTML = `⚙️ Rotação: <strong>${Math.round(rpm)} RPM</strong> | 🚀 Avanço: <strong>${Math.round(vf)} mm/min</strong>`;
+    },
+
+    calcularToleranciaISO() {
+        const nominal = parseFloat(document.getElementById('calc-iso-nominal').value) || 0;
+        const classe = document.getElementById('calc-iso-classe').value;
+        const dest = document.getElementById('res-calc-iso');
+
+        let es = 0, ei = 0;
+        if(nominal >= 10 && nominal <= 30) {
+            if(classe === "H7") { es = 0.021; ei = 0.000; }
+            else if(classe === "g6") { es = -0.007; ei = -0.020; }
+            else if(classe === "h6") { es = 0.000; ei = -0.013; }
+            else if(classe === "p6") { es = 0.035; ei = 0.022; }
+            dest.innerHTML = `📏 Faixa Limite: <strong>[${(nominal+ei).toFixed(3)} mm a ${(nominal+es).toFixed(3)} mm]</strong><br>🎯 ES: ${es > 0 ? '+' : ''}${es.toFixed(3)} | EI: ${ei.toFixed(3)}`;
+        } else {
+            dest.innerHTML = "Matriz de teste limitada entre diâmetros de 10 a 30mm.";
+        }
+    },
+
+    // MÓDULO: ELETRÔNICA
+    calcularConversaoSinal() {
+        const tipo = document.getElementById('calc-el-tipo').value;
+        const lido = parseFloat(document.getElementById('calc-el-lido').value) || 0;
+        const min = parseFloat(document.getElementById('calc-el-min').value) || 0;
+        const max = parseFloat(document.getElementById('calc-el-max').value) || 0;
+        const dest = document.getElementById('res-calc-eletronica');
+
+        let fator = tipo === "4-20" ? (lido - 4) / 16 : lido / 10;
+        if(fator < 0 || fator > 1) { dest.innerHTML = "Aviso: Sinal analógico fora dos limites (Saturação)."; return; }
+        const valorProc = min + (fator * (max - min));
+        dest.innerHTML = `📊 Grandeza Direta: <strong>${valorProc.toFixed(2)} [Unid.]</strong> em ${(fator * 100).toFixed(1)}% do Span.`;
+    },
+
+    calcularDivisorTensao() {
+        const vcc = parseFloat(document.getElementById('calc-el-vcc').value) || 0;
+        const vout = parseFloat(document.getElementById('calc-el-vout').value) || 0;
+        const r2 = parseFloat(document.getElementById('calc-el-r2').value) || 0;
+        const dest = document.getElementById('res-calc-divisor');
+
+        if(vout >= vcc || vout <= 0) { dest.innerHTML = "Vout deve ser menor que Vcc e maior que zero."; return; }
+        const r1 = r2 * (vcc - vout) / vout;
+        dest.innerHTML = `⚡ Resistor R1 Necessário: <strong>${r1.toFixed(1)} Ω</strong> (Para casar com R2 de ${r2} Ω)`;
+    },
+
+    // MÓDULO: CLP
+    calcularNormalizacaoCLP() {
+        const resMax = parseFloat(document.getElementById('calc-clp-bits').value);
+        const bruto = parseFloat(document.getElementById('calc-clp-bruto').value) || 0;
+        const pMax = parseFloat(document.getElementById('calc-clp-pmax').value) || 0;
+        const dest = document.getElementById('res-calc-clp');
+
+        if(bruto > resMax || bruto < 0) { dest.innerHTML = "Valor lido ultrapassa a resolução configurada."; return; }
+        const norm = bruto / resMax;
+        const scaled = norm * pMax;
+        dest.innerHTML = `🔢 NORM_X (0.0 a 1.0): <strong>${norm.toFixed(4)}</strong><br>📈 SCALE_X Escalonado: <strong>${scaled.toFixed(2)}</strong>`;
+    },
+
+    gerarTemplateSCL() {
+        const tipo = document.getElementById('calc-clp-template').value;
+        const box = document.getElementById('res-clp-scl');
+        if(tipo === "interlock") {
+            box.value = `// Intertravamento de Segurança de Motor\nIF "BOTAO_EMERGENCIA" = FALSE OR "PROTECAO_GRADE" = FALSE THEN\n    "SAIDA_CONTATOR_MOTOR" := FALSE;\n    "ALARME_FALHA" := TRUE;\nELSIF "BOTAO_LIGA" = TRUE AND "FALHA_TERMICO" = FALSE THEN\n    "SAIDA_CONTATOR_MOTOR" := TRUE;\nEND_IF;`;
+        } else {
+            box.value = `// Tratamento Analógico e Monitor de Quebra de Fio (4-20mA)\n"VALOR_NORMALIZADO" := INT_TO_REAL("INPUT_WORD_CH7") / 27648.0;\nIF "INPUT_WORD_CH7" < 3500 THEN // Equivalente a menos de 3.8mA\n    "SENSOR_FALHA_CONEXAO" := TRUE;\n    "VALOR_PROCESSO_REAL" := 0.0; // Força valor seguro\nELSE\n    "SENSOR_FALHA_CONEXAO" := FALSE;\n    "VALOR_PROCESSO_REAL" := "VALOR_NORMALIZADO" * 100.0; // Escala 0-100%\nEND_IF;`;
+        }
+    },
+
+    // MÓDULO: NDT & PROCESSOS
+    calcularProfundidadeFalha() {
+        const v = parseFloat(document.getElementById('calc-us-material').value);
+        const tempo = parseFloat(document.getElementById('calc-us-tempo').value) || 0;
+        const dest = document.getElementById('res-calc-ultrassom');
+        const d = (v * (tempo * 1e-6) / 2) * 1000;
+        dest.innerHTML = `🔊 Eco de Fundo: Descontinuidade localizada a <strong>${d.toFixed(2)} mm</strong> da face linear do transdutor.`;
+    },
+
+    calcularCotaModelo() {
+        const cota = parseFloat(document.getElementById('calc-fund-cota').value) || 0;
+        const taxa = parseFloat(document.getElementById('calc-fund-taxa').value) || 0;
+        const dest = document.getElementById('res-calc-fundicao');
+        dest.innerHTML = `📐 Dimensão Linear Compensada para Molde: <strong>${(cota * (1 + (taxa / 100))).toFixed(3)} mm</strong>`;
+    }
+};
+
+/**
+ * RENDERIZADOR DE CARDS E BARRAMENTO DE BUSCA SEMÂNTICA
+ */
+function mudarAbaAtiva(idAba, botao) {
+    document.querySelectorAll('.data-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(idAba).classList.add('active');
+    botao.classList.add('active');
+}
+
+function renderizarTabelas() {
+    const alvos = {
+        usinagem: document.getElementById('target-cards-usinagem'),
+        eletronica: document.getElementById('target-cards-eletronica'),
+        clp: document.getElementById('target-cards-clp'),
+        manutencao: document.getElementById('target-cards-manutencao')
+    };
+
+    Object.keys(alvos).forEach(chave => {
+        if (alvos[chave]) {
+            alvos[chave].innerHTML = BASE_DADOS_SUITE
+                .filter(item => item.setor === chave)
+                .map(r => `
+                    <div class="industrial-card" style="margin-bottom:0;">
+                        <span class="badge-sector">${r.tipo}</span>
+                        <div class="card-header-tech" style="margin-top:8px;">${r.bitola}</div>
+                        <div class="tech-data-row" style="grid-template-columns: 1fr 1fr; margin-top:0;">
+                            <div class="data-item-box"><span class="data-item-title">Métrica Base</span><span class="data-item-value">${r.passo}</span></div>
+                            <div class="data-item-box"><span class="data-item-title">Limite Mínimo</span><span class="data-item-value">${r.d_menor}</span></div>
+                        </div>
+                        <div class="data-item-desc" style="background:var(--bg-main); padding:6px; border-radius:4px; margin-top:8px;"><strong>Diretriz:</strong> ${r.info}</div>
+                    </div>
+                `).join('');
+        }
+    });
+}
+
+// Filtro e Busca em tempo real da Omnibox
+document.getElementById('engine-omnibox').addEventListener('input', (e) => {
+    const busca = e.target.value.toLowerCase().trim();
+    document.querySelectorAll('.tech-data-row > .industrial-card').forEach(card => {
+        const texto = card.textContent.toLowerCase();
+        card.className = texto.includes(busca) ? "industrial-card" : "industrial-card hide";
+    });
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+    renderizarTabelas();
+    engineCalculos.gerarTemplateSCL();
+});
+</script>
+</body> 
+</html>

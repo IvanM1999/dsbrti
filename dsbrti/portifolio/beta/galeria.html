@@ -1,0 +1,182 @@
+
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Galeria | Portfólio Profissional</title>
+  <meta name="description" content="Galeria profissional com projetos, fotos e registros técnicos. Desenvolvido com Tailwind CSS e identidade visual azul e verde." />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: "#004aad",
+            secondary: "#00c16a"
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="bg-gray-100 text-gray-800">
+
+  <!-- HERO -->
+  <header class="relative h-72 flex items-center justify-center text-white bg-primary">
+    <div class="absolute inset-0 bg-black/50"></div>
+    <div class="relative z-10 text-center px-4">
+      <h1 class="text-4xl font-bold">Galeria de Projetos</h1>
+      <p class="text-lg mt-2">Fotos, registros e momentos importantes do meu trabalho</p>
+    </div>
+  </header>
+
+  <!-- GALERIA -->
+  <section class="max-w-6xl mx-auto px-6 py-12">
+    <div class="flex items-center justify-between mb-6 gap-4">
+      <h2 class="text-3xl font-bold text-primary">Portfólio Visual</h2>
+      <span id="info-paginacao" class="text-sm text-gray-600"></span>
+    </div>
+
+    <div id="galeria" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
+
+    <!-- Controles de paginação -->
+    <div class="flex items-center justify-center gap-4 mt-10">
+      <button id="btn-prev"
+              class="px-4 py-2 rounded bg-gray-200 text-gray-700 text-sm font-medium disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-300 transition">
+        Anterior
+      </button>
+      <span id="pagina-atual" class="text-sm font-medium text-gray-700"></span>
+      <button id="btn-next"
+              class="px-4 py-2 rounded bg-primary text-white text-sm font-medium disabled:opacity-40 disabled:cursor-not-allowed hover:bg-blue-700 transition">
+        Próxima
+      </button>
+    </div>
+  </section>
+
+  <!-- LIGHTBOX -->
+  <div id="lightbox"
+       class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 opacity-0 pointer-events-none transition-opacity">
+    <div class="relative max-w-4xl w-full px-4">
+      <button id="lightbox-close"
+              class="absolute -top-10 right-0 text-white text-2xl font-bold">
+        ×
+      </button>
+      <img id="lightbox-img" src="" alt="" class="w-full max-h-[80vh] object-contain rounded-lg shadow-lg" />
+      <div class="mt-4 text-white">
+        <h3 id="lightbox-title" class="text-xl font-semibold"></h3>
+        <p id="lightbox-desc" class="text-sm text-gray-200 mt-1"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="bg-primary text-white text-center py-4 mt-8">
+    © 2026 — Portfólio Profissional | Desenvolvido por Ivan
+  </footer>
+
+  <script>
+    const ITENS_POR_PAGINA = 9;
+    let imagens = [];
+    let paginaAtual = 1;
+    let totalPaginas = 1;
+
+    async function carregarGaleria() {
+      try {
+        const response = await fetch("./src/galeria/ft.json");
+        imagens = await response.json();
+        totalPaginas = Math.max(1, Math.ceil(imagens.length / ITENS_POR_PAGINA));
+        renderizarPagina();
+      } catch (error) {
+        console.error("Erro ao carregar galeria:", error);
+      }
+    }
+
+    function renderizarPagina() {
+      const container = document.getElementById("galeria");
+      container.innerHTML = "";
+
+      const inicio = (paginaAtual - 1) * ITENS_POR_PAGINA;
+      const fim = inicio + ITENS_POR_PAGINA;
+      const paginaItens = imagens.slice(inicio, fim);
+
+      paginaItens.forEach(img => {
+        const card = document.createElement("div");
+        card.className = "bg-white shadow-md rounded-lg overflow-hidden hover:shadow-xl transition cursor-pointer";
+
+        card.innerHTML = `
+          <img src="./src/galeria/${img.arquivo}" class="w-full h-56 object-cover" alt="${img.titulo}">
+          <div class="p-4">
+            <h3 class="text-lg font-semibold text-primary">${img.titulo}</h3>
+            <p class="text-sm text-gray-600 mt-1">${img.descricao}</p>
+          </div>
+        `;
+
+        card.addEventListener("click", () => abrirLightbox(img));
+        container.appendChild(card);
+      });
+
+      atualizarPaginacao();
+    }
+
+    function atualizarPaginacao() {
+      const spanPagina = document.getElementById("pagina-atual");
+      const info = document.getElementById("info-paginacao");
+      const btnPrev = document.getElementById("btn-prev");
+      const btnNext = document.getElementById("btn-next");
+
+      spanPagina.textContent = `Página ${paginaAtual} de ${totalPaginas}`;
+      info.textContent = `${imagens.length} itens no total`;
+
+      btnPrev.disabled = paginaAtual === 1;
+      btnNext.disabled = paginaAtual === totalPaginas;
+    }
+
+    function abrirLightbox(img) {
+      const lightbox = document.getElementById("lightbox");
+      const imgEl = document.getElementById("lightbox-img");
+      const titleEl = document.getElementById("lightbox-title");
+      const descEl = document.getElementById("lightbox-desc");
+
+      imgEl.src = `./src/galeria/${img.arquivo}`;
+      imgEl.alt = img.titulo;
+      titleEl.textContent = img.titulo;
+      descEl.textContent = img.descricao;
+
+      lightbox.classList.remove("pointer-events-none");
+      lightbox.classList.add("opacity-100");
+    }
+
+    function fecharLightbox() {
+      const lightbox = document.getElementById("lightbox");
+      lightbox.classList.add("pointer-events-none");
+      lightbox.classList.remove("opacity-100");
+    }
+
+    document.getElementById("btn-prev").addEventListener("click", () => {
+      if (paginaAtual > 1) {
+        paginaAtual--;
+        renderizarPagina();
+      }
+    });
+
+    document.getElementById("btn-next").addEventListener("click", () => {
+      if (paginaAtual < totalPaginas) {
+        paginaAtual++;
+        renderizarPagina();
+      }
+    });
+
+    document.getElementById("lightbox-close").addEventListener("click", fecharLightbox);
+    document.getElementById("lightbox").addEventListener("click", (e) => {
+      if (e.target.id === "lightbox") fecharLightbox();
+    });
+
+    carregarGaleria();
+  </script>
+</body>
+</html>

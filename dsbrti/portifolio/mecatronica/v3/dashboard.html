@@ -1,0 +1,103 @@
+<tag>
+  <!--Tab to edit-->
+</tag><!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard</title>
+<link rel="stylesheet" href="./css/style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+
+<body>
+
+<header class="navbar">
+  <div class="logo">CircuitLab</div>
+  <nav>
+    <a href="index.html">Início</a>
+    <a href="dashboard.html" class="active">Dashboard</a>
+    <a href="treino.html">Treino</a>
+    <a href="analise.html">Análise</a>
+  </nav>
+</header>
+
+<main class="container">
+
+<h1>Dashboard</h1>
+
+<!-- CARDS PRINCIPAIS -->
+<div class="grid grid-3">
+
+  <div class="card">
+    <div class="title">Aproveitamento</div>
+    <h2 id="accMain">0%</h2>
+  </div>
+
+  <div class="card">
+    <div class="title">Total de Exercícios</div>
+    <h2 id="totalMain">0</h2>
+  </div>
+
+  <div class="card">
+    <div class="title">Acertos</div>
+    <h2 id="correctMain">0</h2>
+  </div>
+
+</div>
+
+<!-- PROGRESSO -->
+<div class="card" style="margin-top:20px;">
+  <div class="title">Progresso</div>
+
+  <div class="progress-box">
+    <div class="progress-bar">
+      <div id="progressFill" class="progress-fill"></div>
+    </div>
+  </div>
+
+  <p id="progressText">0% de aproveitamento</p>
+</div>
+
+<!-- POR ÁREA -->
+<div class="card" style="margin-top:20px;">
+  <div class="title">Desempenho por Área</div>
+  <ul id="topics"></ul>
+</div>
+
+</main>
+
+<script type="module" src="./js/dashboard.js"></script>
+<script type="module" src="./js/app.js"></script>
+<script type="module">
+import { Progress } from './js/progress.js';
+
+function load() {
+  const p = Progress.load();
+  const acc = parseFloat(Progress.accuracy());
+
+  // CARDS
+  document.getElementById("accMain").innerText = acc + "%";
+  document.getElementById("totalMain").innerText = p.total;
+  document.getElementById("correctMain").innerText = p.correct;
+
+  // PROGRESS BAR
+  document.getElementById("progressFill").style.width = acc + "%";
+  document.getElementById("progressText").innerText =
+    acc + "% de aproveitamento";
+
+  // TOPICS
+  let html = "";
+
+  for (let t in p.topics) {
+    let tAcc = (p.topics[t].correct / p.topics[t].total * 100).toFixed(1);
+
+    html += `<li>${t}: ${tAcc}%</li>`;
+  }
+
+  document.getElementById("topics").innerHTML = html || "<li>Sem dados ainda</li>";
+}
+
+load();
+</script>
+
+</body>
+</html>

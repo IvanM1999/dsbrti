@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DestinyServicesTI | Terminal Access</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#849396",
+                        "inverse-surface": "#dae2fd",
+                        "surface": "#0b1326",
+                        "on-error-container": "#ffdad6",
+                        "surface-variant": "#2d3449",
+                        "on-primary-fixed": "#001f24",
+                        "on-surface": "#dae2fd",
+                        "surface-container-highest": "#2d3449",
+                        "secondary-container": "#3a4a5f",
+                        "on-tertiary": "#432c00",
+                        "on-tertiary-container": "#795100",
+                        "background": "#0b1326",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "surface-container-high": "#222a3d",
+                        "on-background": "#dae2fd",
+                        "error": "#ffb4ab",
+                        "surface-container": "#171f33",
+                        "on-surface-variant": "#bac9cc",
+                        "surface-tint": "#00daf3",
+                        "surface-dim": "#0b1326",
+                        "on-primary": "#00363d",
+                        "primary-fixed": "#9cf0ff",
+                        "primary": "#c3f5ff",
+                        "surface-container-lowest": "#060e20",
+                        "on-secondary": "#213145",
+                        "tertiary-container": "#ffc770",
+                        "primary-fixed-dim": "#00daf3",
+                        "surface-container-low": "#131b2e",
+                        "on-tertiary-fixed-variant": "#614000",
+                        "inverse-primary": "#006875",
+                        "on-secondary-fixed": "#0b1c30",
+                        "error-container": "#93000a",
+                        "surface-bright": "#31394d",
+                        "on-error": "#690005",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "tertiary-fixed": "#ffddaf",
+                        "on-tertiary-fixed": "#281800",
+                        "on-primary-container": "#00626e",
+                        "tertiary": "#ffeacf",
+                        "tertiary-fixed-dim": "#ffba43",
+                        "on-primary-fixed-variant": "#004f58",
+                        "inverse-on-surface": "#283044",
+                        "on-secondary-container": "#a9bad3",
+                        "secondary": "#b7c8e1",
+                        "primary-container": "#00e5ff",
+                        "outline-variant": "#3b494c",
+                        "secondary-fixed": "#d3e4fe"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Inter"],
+                        "label": ["Space Grotesk"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #0b1326;
+            background-image: 
+                radial-gradient(circle at top left, #00626e33 0%, transparent 40%),
+                radial-gradient(circle at bottom right, #171f33 0%, transparent 40%);
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(23, 31, 51, 0.7);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 0 40px -10px rgba(0, 229, 255, 0.15);
+        }
+        .cyan-glow {
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+        }
+        .scanning-line {
+            background: linear-gradient(to bottom, transparent, #00e5ff1a, transparent);
+            height: 100px;
+            width: 100%;
+            position: absolute;
+            top: -100px;
+            left: 0;
+            pointer-events: none;
+        }
+        input:focus + label, input:not(:placeholder-shown) + label {
+            transform: translateY(-1.5rem) scale(0.85);
+            color: #00e5ff;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-6 selection:bg-primary-container selection:text-on-primary">
+<!-- Active Alert Banner -->
+<div class="w-full max-w-md mb-8">
+<div class="bg-surface-container-high border-l-4 border-primary-container p-4 flex items-center gap-3 animate-pulse">
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">notifications_active</span>
+<div class="flex flex-col">
+<span class="font-label text-[10px] uppercase tracking-widest text-primary">System Notice</span>
+<span class="font-body text-xs text-on-surface font-medium">Active Alert Central: WhatsApp Notifications Configured</span>
+</div>
+</div>
+</div>
+<!-- Main Auth Container -->
+<main class="w-full max-w-md relative">
+<!-- Logo Branding -->
+<div class="mb-10 text-center">
+<h1 class="font-headline text-3xl font-black tracking-tighter text-primary uppercase">
+                DestinyServicesTI
+            </h1>
+<p class="font-label text-[10px] tracking-[0.2em] text-outline mt-1 uppercase">Secure Infrastructure Access</p>
+</div>
+<!-- Login Card -->
+<div class="glass-panel border border-outline-variant/20 rounded-lg overflow-hidden relative">
+<!-- Subtle Texture/Scanline effect -->
+<div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(#3b494c 1px, transparent 1px); background-size: 16px 16px;"></div>
+<div class="p-8 relative z-10">
+<div class="flex justify-between items-end mb-8">
+<h2 class="font-headline text-xl text-on-surface">Terminal Authentication</h2>
+<span class="font-label text-[10px] text-primary opacity-60">ID: SEC-ROOT-009</span>
+</div>
+<form class="space-y-6">
+<!-- Operator ID Field -->
+<div class="relative group">
+<span class="absolute left-0 bottom-2 material-symbols-outlined text-outline-variant group-focus-within:text-primary transition-colors">badge</span>
+<input class="block w-full pl-8 pb-1 bg-transparent border-0 border-b border-outline-variant focus:border-primary focus:ring-0 text-on-surface font-body text-sm placeholder-transparent transition-all peer" id="operator_id" placeholder=" " type="text"/>
+<label class="absolute left-8 top-0 text-outline-variant font-label text-xs uppercase tracking-wider transition-all pointer-events-none peer-placeholder-shown:top-0 peer-focus:-top-4 peer-focus:text-primary" for="operator_id">Operator ID</label>
+</div>
+<!-- Password Field -->
+<div class="relative group">
+<span class="absolute left-0 bottom-2 material-symbols-outlined text-outline-variant group-focus-within:text-primary transition-colors">key_visualizer</span>
+<input class="block w-full pl-8 pb-1 bg-transparent border-0 border-b border-outline-variant focus:border-primary focus:ring-0 text-on-surface font-body text-sm placeholder-transparent transition-all peer" id="password" placeholder=" " type="password"/>
+<label class="absolute left-8 top-0 text-outline-variant font-label text-xs uppercase tracking-wider transition-all pointer-events-none peer-placeholder-shown:top-0 peer-focus:-top-4 peer-focus:text-primary" for="password">Access Password</label>
+</div>
+<!-- 2FA WhatsApp Toggle -->
+<div class="bg-surface-container-low p-4 border border-outline-variant/10 rounded">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-[#25D366]/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-[#25D366]">chat_bubble</span>
+</div>
+<div>
+<h3 class="font-label text-xs font-bold text-on-surface tracking-tight">2FA via WhatsApp</h3>
+<p class="font-body text-[10px] text-outline">Encrypted session validation</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-on-surface after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container"></div>
+</label>
+</div>
+</div>
+<!-- Primary CTA -->
+<button class="w-full bg-primary-container hover:bg-primary-fixed-dim text-on-primary py-4 px-6 font-label font-black text-xs uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-2 rounded-sm active:scale-[0.98] cyan-glow group" type="submit">
+                        Establish Connection
+                        <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward_ios</span>
+</button>
+</form>
+<!-- Divider -->
+<div class="mt-8 flex items-center gap-4">
+<div class="h-[1px] flex-1 bg-outline-variant opacity-20"></div>
+<span class="font-label text-[9px] text-outline-variant uppercase tracking-widest">Protocol 4-B</span>
+<div class="h-[1px] flex-1 bg-outline-variant opacity-20"></div>
+</div>
+<!-- Secondary Actions -->
+<div class="mt-6 flex justify-center">
+<button class="font-label text-[11px] text-primary hover:text-primary-fixed transition-colors uppercase tracking-widest flex items-center gap-2 group">
+                        Request System Access
+                        <span class="material-symbols-outlined text-xs">add_moderator</span>
+</button>
+</div>
+</div>
+</div>
+<!-- System Meta -->
+<div class="mt-8 flex justify-between items-center px-2">
+<div class="flex items-center gap-2">
+<span class="block w-2 h-2 rounded-full bg-[#25D366] animate-pulse shadow-[0_0_8px_#25D366]"></span>
+<span class="font-body text-[10px] text-outline uppercase tracking-tighter">Core Systems: Online</span>
+</div>
+<div class="font-body text-[10px] text-outline/50 uppercase tracking-tighter">
+                E2EE Active • Ver 4.92.0
+            </div>
+</div>
+</main>
+<!-- Footer Decorative Elements -->
+<footer class="fixed bottom-0 left-0 w-full p-6 flex justify-between items-end pointer-events-none opacity-40">
+<div class="flex flex-col gap-1">
+<div class="w-12 h-1 bg-primary-container/20"></div>
+<div class="w-24 h-[1px] bg-outline-variant"></div>
+<p class="font-label text-[8px] text-outline uppercase mt-2">DestinyServicesTI Internal Terminal</p>
+</div>
+<div class="flex items-center gap-6">
+<img class="w-32 h-12 object-cover opacity-20 grayscale brightness-50 mix-blend-screen rounded" data-alt="close-up abstract visualization of fiber optic cables glowing with cyan light in a dark server room environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPlwU9jTy1Q5ut7Z-NnkicPx8iY73mNf1tZwr4k179WTp8Mm8EbYTQUDqxI1ILzhATcLbPmOyucbR3S4Y0Vl2pIltKykHdl5sOXvyPh_K7Q1RGXWPXDwS7xV1801qEIVSiARjGRBt7SdP6c-57BKdcvEhx2K0jvb_2VVkaWDKobxo0-nYeNEF6USr6mNLqGQh0UH-q7H0KJaNlvfxS3h7FOQjbJRiCjZGXMAEQIpAS_-larCNX9PMaxxBVqTgFnwwaogCaUJkSiU4k"/>
+</div>
+</footer>
+<!-- Background Image Aura -->
+<div class="fixed top-0 right-0 w-[500px] h-[500px] -z-10 pointer-events-none opacity-20 blur-[100px]" style="background: radial-gradient(circle, #00e5ff22 0%, transparent 70%);"></div>
+</body></html><!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DestinyServicesTI | Server Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#849396",
+                        "inverse-surface": "#dae2fd",
+                        "surface": "#0b1326",
+                        "on-error-container": "#ffdad6",
+                        "surface-variant": "#2d3449",
+                        "on-primary-fixed": "#001f24",
+                        "on-surface": "#dae2fd",
+                        "surface-container-highest": "#2d3449",
+                        "secondary-container": "#3a4a5f",
+                        "on-tertiary": "#432c00",
+                        "on-tertiary-container": "#795100",
+                        "background": "#0b1326",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "surface-container-high": "#222a3d",
+                        "on-background": "#dae2fd",
+                        "error": "#ffb4ab",
+                        "surface-container": "#171f33",
+                        "on-surface-variant": "#bac9cc",
+                        "surface-tint": "#00daf3",
+                        "surface-dim": "#0b1326",
+                        "on-primary": "#00363d",
+                        "primary-fixed": "#9cf0ff",
+                        "primary": "#c3f5ff",
+                        "surface-container-lowest": "#060e20",
+                        "on-secondary": "#213145",
+                        "tertiary-container": "#ffc770",
+                        "primary-fixed-dim": "#00daf3",
+                        "surface-container-low": "#131b2e",
+                        "on-tertiary-fixed-variant": "#614000",
+                        "inverse-primary": "#006875",
+                        "on-secondary-fixed": "#0b1c30",
+                        "error-container": "#93000a",
+                        "surface-bright": "#31394d",
+                        "on-error": "#690005",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "tertiary-fixed": "#ffddaf",
+                        "on-tertiary-fixed": "#281800",
+                        "on-primary-container": "#00626e",
+                        "tertiary": "#ffeacf",
+                        "tertiary-fixed-dim": "#ffba43",
+                        "on-primary-fixed-variant": "#004f58",
+                        "inverse-on-surface": "#283044",
+                        "on-secondary-container": "#a9bad3",
+                        "secondary": "#b7c8e1",
+                        "primary-container": "#00e5ff",
+                        "outline-variant": "#3b494c",
+                        "secondary-fixed": "#d3e4fe"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Inter"],
+                        "label": ["Space Grotesk"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .scanning-line {
+            background: linear-gradient(to right, transparent, #00e5ff, transparent);
+            height: 1px;
+            width: 100%;
+            opacity: 0.1;
+        }
+        .tech-grid {
+            background-image: radial-gradient(#3b494c 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary-container selection:text-on-primary">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 right-0 z-50 flex justify-between items-center w-full px-6 py-3 h-16 bg-[#0b1326]">
+<div class="flex items-center gap-8">
+<span class="text-lg font-black tracking-tighter text-[#00e5ff] uppercase">DestinyServicesTI</span>
+<nav class="hidden md:flex items-center gap-6">
+<a class="font-['Space_Grotesk'] tracking-[-0.02em] uppercase text-xs font-bold text-[#dae2fd] opacity-70 hover:text-[#00e5ff] transition-colors" href="#">Network</a>
+<a class="font-['Space_Grotesk'] tracking-[-0.02em] uppercase text-xs font-bold text-[#00e5ff] border-b-2 border-[#00e5ff] pb-1" href="#">Threats</a>
+<a class="font-['Space_Grotesk'] tracking-[-0.02em] uppercase text-xs font-bold text-[#dae2fd] opacity-70 hover:text-[#00e5ff] transition-colors" href="#">Vault</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex gap-2">
+<span class="material-symbols-outlined text-[#00e5ff] cursor-pointer p-2 hover:bg-[#171f33] rounded transition-all">notifications_active</span>
+<span class="material-symbols-outlined text-[#dae2fd] cursor-pointer p-2 hover:bg-[#171f33] rounded transition-all">settings</span>
+</div>
+<button class="bg-primary-container text-on-primary px-4 py-1.5 font-label text-xs font-bold uppercase tracking-wider rounded-sm scale-95 active:opacity-80 transition-all">Secure Terminal</button>
+<div class="h-8 w-8 rounded-full bg-surface-container-high flex items-center justify-center border border-outline-variant/20 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="close-up of electronic circuit board with blue glowing lights, high-tech cybersecurity aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDm1xHC507ejeFHgbb-faiRk75w3NSC1eOARAqoAdfJlqPkwXfQZtmqd6IZvXThzuKdm-V4mOKRVOkYJ4DGVpby3rZ4Fsu2zR3j04JnGmQy9id2MzZSeEzxwJ7qQ3S9-TSlIL42kj-vFvoBfoK11K3f3jHM0x99FqWwgiZAY6oW05lnRF86YAmLf26OLxq0BspZzRQ3O01QbllIPKfe3HN7F3_l0B4_Ab8YbkfQgMuGjokvtGfw_1pe4ncVn_aGdcCh0iji1R1K7yAA"/>
+</div>
+</div>
+</header>
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-16 bottom-0 flex flex-col z-40 bg-[#131b2e] h-full w-64 border-r border-[#3b494c]/15">
+<div class="p-6 border-b border-outline-variant/10">
+<div class="flex items-center gap-3">
+<div class="h-10 w-10 bg-surface-container-high rounded border border-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">dns</span>
+</div>
+<div>
+<h3 class="font-headline text-xs font-bold tracking-widest text-on-surface uppercase">INFRASTRUCTURE</h3>
+<p class="text-[10px] text-primary/70 font-label">Operational: 99.9%</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 py-4">
+<a class="flex items-center gap-3 px-6 py-3 font-['Inter'] text-sm tracking-normal text-[#dae2fd] hover:bg-[#171f33] transition-all" href="#">
+<span class="material-symbols-outlined text-lg">grid_view</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 font-['Inter'] text-sm tracking-normal bg-[#171f33] text-[#00e5ff] border-l-4 border-[#00e5ff] font-bold" href="#">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">dns</span>
+<span>Nodes</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 font-['Inter'] text-sm tracking-normal text-[#dae2fd] hover:bg-[#171f33] transition-all" href="#">
+<span class="material-symbols-outlined text-lg">timeline</span>
+<span>Traffic</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 font-['Inter'] text-sm tracking-normal text-[#dae2fd] hover:bg-[#171f33] transition-all" href="#">
+<span class="material-symbols-outlined text-lg">security</span>
+<span>Firewall</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 font-['Inter'] text-sm tracking-normal text-[#dae2fd] hover:bg-[#171f33] transition-all" href="#">
+<span class="material-symbols-outlined text-lg">description</span>
+<span>Logs</span>
+</a>
+</nav>
+<div class="p-6 border-t border-outline-variant/10">
+<button class="w-full bg-[#171f33] text-[#00e5ff] py-2 text-xs font-bold tracking-widest uppercase border border-[#00e5ff]/30 hover:bg-[#222a3d] transition-all">DEPLOY PATCH</button>
+<div class="mt-4 space-y-2">
+<a class="flex items-center gap-3 text-[#dae2fd] text-xs hover:text-[#00e5ff]" href="#">
+<span class="material-symbols-outlined text-sm">help_center</span>
+<span>Support</span>
+</a>
+<a class="flex items-center gap-3 text-[#dae2fd] text-xs hover:text-[#00e5ff]" href="#">
+<span class="material-symbols-outlined text-sm">terminal</span>
+<span>Diagnostics</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-16 min-h-screen bg-surface tech-grid">
+<div class="p-8 space-y-8 max-w-7xl mx-auto">
+<!-- Page Header -->
+<div class="flex justify-between items-end border-b border-outline-variant/10 pb-6">
+<div>
+<h1 class="font-headline text-3xl font-black text-on-surface tracking-tighter uppercase">Titan-04 <span class="text-primary text-sm font-normal ml-2">// NEW SERVER INSTANCE</span></h1>
+<p class="font-body text-outline text-sm mt-1">Status: <span class="text-primary-container font-bold">INITIALIZING PROTOCOLS</span> | Region: US-EAST-01</p>
+</div>
+<div class="flex gap-3">
+<div class="px-4 py-2 bg-surface-container border border-outline-variant/20 flex flex-col">
+<span class="font-label text-[10px] text-outline uppercase tracking-widest">Uptime</span>
+<span class="font-headline text-lg font-bold text-on-surface">00:12:44:09</span>
+</div>
+<div class="px-4 py-2 bg-surface-container border border-outline-variant/20 flex flex-col">
+<span class="font-label text-[10px] text-outline uppercase tracking-widest">Master Key</span>
+<span class="font-headline text-lg font-bold text-primary tracking-widest">•••• ••••</span>
+</div>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-12 gap-6">
+<!-- Main Status Panel (Large) -->
+<section class="col-span-12 lg:col-span-8 space-y-6">
+<div class="bg-surface-container-low p-6 border-l-2 border-primary relative overflow-hidden">
+<div class="scanning-line absolute top-0 left-0"></div>
+<h2 class="font-headline text-sm font-bold tracking-widest uppercase mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">analytics</span>
+                            Real-Time Telemetry
+                        </h2>
+<div class="grid grid-cols-3 gap-6">
+<!-- CPU Metric -->
+<div class="space-y-4">
+<div class="flex justify-between items-end">
+<span class="font-label text-[10px] text-outline uppercase">CPU Usage</span>
+<span class="font-headline text-2xl font-black text-primary">24%</span>
+</div>
+<div class="h-24 bg-surface-container-lowest flex items-end gap-1 p-2">
+<div class="flex-1 bg-primary/20 h-[30%]"></div>
+<div class="flex-1 bg-primary/20 h-[45%]"></div>
+<div class="flex-1 bg-primary/40 h-[60%]"></div>
+<div class="flex-1 bg-primary/30 h-[25%]"></div>
+<div class="flex-1 bg-primary/60 h-[80%]"></div>
+<div class="flex-1 bg-primary-container h-[95%]"></div>
+<div class="flex-1 bg-primary/40 h-[40%]"></div>
+</div>
+<p class="text-[10px] text-outline font-body leading-tight">Current Load: 2.4/16 Cores active. Temperature stable at 42°C.</p>
+</div>
+<!-- RAM Metric -->
+<div class="space-y-4">
+<div class="flex justify-between items-end">
+<span class="font-label text-[10px] text-outline uppercase">RAM Allocation</span>
+<span class="font-headline text-2xl font-black text-secondary">64GB</span>
+</div>
+<div class="h-24 bg-surface-container-lowest relative flex items-center justify-center overflow-hidden">
+<div class="absolute inset-0 border border-secondary/10 flex items-center justify-center">
+<div class="w-16 h-16 rounded-full border-4 border-secondary/20 border-t-secondary"></div>
+</div>
+<span class="text-[10px] font-bold text-secondary">72% USED</span>
+</div>
+<p class="text-[10px] text-outline font-body leading-tight">Swap: 4GB active. Buffer Cache: 12GB allocated.</p>
+</div>
+<!-- Latency Metric -->
+<div class="space-y-4">
+<div class="flex justify-between items-end">
+<span class="font-label text-[10px] text-outline uppercase">Ping/Latency</span>
+<span class="font-headline text-2xl font-black text-tertiary-fixed-dim">12ms</span>
+</div>
+<div class="h-24 bg-surface-container-lowest flex flex-col justify-center gap-1 px-4">
+<div class="h-1 bg-tertiary-fixed-dim/40 w-full"></div>
+<div class="h-1 bg-tertiary-fixed-dim/20 w-3/4"></div>
+<div class="h-1 bg-tertiary-fixed-dim/10 w-full"></div>
+<div class="h-1 bg-tertiary-fixed-dim/60 w-1/2"></div>
+</div>
+<p class="text-[10px] text-outline font-body leading-tight">Packet Loss: 0.001%. Jitter: 0.4ms stable.</p>
+</div>
+</div>
+</div>
+<!-- Server Configuration Grid -->
+<div class="grid grid-cols-2 gap-6">
+<div class="bg-surface-container-low p-6 border border-outline-variant/10">
+<h2 class="font-headline text-sm font-bold tracking-widest uppercase mb-6">Security Protocols</h2>
+<div class="space-y-4">
+<div class="flex items-center justify-between group">
+<span class="text-sm font-medium">Deep Packet Inspection</span>
+<div class="w-10 h-5 bg-primary-container rounded-full relative flex items-center px-1 cursor-pointer">
+<div class="w-3 h-3 bg-on-primary rounded-full ml-auto"></div>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-sm font-medium">Auto-Isolation Mode</span>
+<div class="w-10 h-5 bg-surface-container-highest rounded-full relative flex items-center px-1 cursor-pointer">
+<div class="w-3 h-3 bg-outline rounded-full"></div>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-sm font-medium">Biometric Handshake</span>
+<div class="w-10 h-5 bg-primary-container rounded-full relative flex items-center px-1 cursor-pointer">
+<div class="w-3 h-3 bg-on-primary rounded-full ml-auto"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 border border-outline-variant/10">
+<h2 class="font-headline text-sm font-bold tracking-widest uppercase mb-6">Access Control</h2>
+<div class="space-y-3">
+<div class="flex gap-3">
+<input class="flex-1 bg-surface-container-high border-none text-xs font-mono text-primary p-2 focus:ring-1 focus:ring-primary" type="text" value="SSH:2280"/>
+<button class="bg-surface-container-high px-3 border border-outline-variant/20"><span class="material-symbols-outlined text-sm">refresh</span></button>
+</div>
+<div class="flex gap-3">
+<input class="flex-1 bg-surface-container-high border-none text-xs font-mono text-primary p-2" type="text" value="IP_WHITELIST:ACTIVE"/>
+<button class="bg-surface-container-high px-3 border border-outline-variant/20"><span class="material-symbols-outlined text-sm">edit</span></button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- WhatsApp Alert Central (Sidebar) -->
+<section class="col-span-12 lg:col-span-4 bg-[#131b2e] border border-primary/10 overflow-hidden flex flex-col h-full min-h-[600px]">
+<div class="p-4 bg-[#171f33] border-b border-outline-variant/10 flex justify-between items-center">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_#00e5ff]"></div>
+<h2 class="font-headline text-sm font-black tracking-widest uppercase">Alert Central</h2>
+</div>
+<span class="text-[10px] font-label text-primary-container uppercase font-bold tracking-tighter bg-on-primary-container px-2 py-0.5">WhatsApp Sync: On</span>
+</div>
+<div class="flex-1 overflow-y-auto p-4 space-y-4 font-mono text-[11px]">
+<!-- Alert Item -->
+<div class="bg-surface-container p-3 border-l border-tertiary-container/30 relative">
+<div class="flex justify-between items-start mb-1">
+<span class="text-tertiary-fixed-dim font-bold">[WARN] SYSTEM_ALERT</span>
+<span class="text-outline text-[9px]">14:22:01</span>
+</div>
+<p class="text-on-surface opacity-80 leading-relaxed">New Login detected from IP: 192.168.1.104 (Unknown Location). Verification token sent to Administrator.</p>
+<div class="mt-2 flex gap-2">
+<button class="text-primary-container border border-primary-container/20 px-2 py-0.5 text-[9px] hover:bg-primary-container/10">ACKNOWLEDGE</button>
+<button class="text-error border border-error/20 px-2 py-0.5 text-[9px] hover:bg-error/10">QUARANTINE</button>
+</div>
+</div>
+<!-- Alert Item -->
+<div class="bg-error-container/10 p-3 border-l-2 border-error relative">
+<div class="flex justify-between items-start mb-1">
+<span class="text-error font-bold">[CRIT] TEMP_BREACH</span>
+<span class="text-outline text-[9px]">14:15:33</span>
+</div>
+<p class="text-on-surface opacity-80 leading-relaxed">Critical Temp reached on Core #3 (88°C). Cooling subsystems activated. Manual inspection required.</p>
+</div>
+<!-- Alert Item -->
+<div class="bg-surface-container p-3 border-l border-primary/30">
+<div class="flex justify-between items-start mb-1">
+<span class="text-primary font-bold">[INFO] DEPLOY_SUCCESS</span>
+<span class="text-outline text-[9px]">13:58:12</span>
+</div>
+<p class="text-on-surface opacity-80 leading-relaxed">Security patch v.4.0.2 deployed successfully. Registry keys updated. Nodes syncing...</p>
+</div>
+<!-- Alert Item -->
+<div class="bg-surface-container p-3 border-l border-tertiary-container/30">
+<div class="flex justify-between items-start mb-1">
+<span class="text-tertiary-fixed-dim font-bold">[WARN] TRAFFIC_SPIKE</span>
+<span class="text-outline text-[9px]">13:42:00</span>
+</div>
+<p class="text-on-surface opacity-80 leading-relaxed">Unusual traffic volume detected on PORT:8080. Potential DDoS vector scanning. Filtering active.</p>
+</div>
+<!-- Alert Item -->
+<div class="bg-surface-container p-3 border-l border-primary/30 opacity-50">
+<div class="flex justify-between items-start mb-1">
+<span class="text-primary font-bold">[INFO] SESSION_END</span>
+<span class="text-outline text-[9px]">12:30:11</span>
+</div>
+<p class="text-on-surface opacity-80 leading-relaxed">Admin session terminated. Log rotation complete.</p>
+</div>
+</div>
+<div class="p-4 bg-surface-container-highest/20 border-t border-outline-variant/10">
+<div class="flex gap-2">
+<input class="flex-1 bg-[#0b1326] border-none text-[11px] font-mono p-2 focus:ring-1 focus:ring-primary text-primary" placeholder="CMD: Run System Check..." type="text"/>
+<button class="bg-primary-container text-on-primary px-3 rounded-sm">
+<span class="material-symbols-outlined text-sm">send</span>
+</button>
+</div>
+</div>
+</section>
+</div>
+<!-- Footer Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<div class="bg-surface-container-low p-4 flex items-center gap-4 border-r border-outline-variant/10">
+<span class="material-symbols-outlined text-primary text-3xl">hub</span>
+<div>
+<p class="text-[10px] text-outline uppercase font-label">Active Nodes</p>
+<p class="font-headline text-xl font-bold">14 / 16</p>
+</div>
+</div>
+<div class="bg-surface-container-low p-4 flex items-center gap-4 border-r border-outline-variant/10">
+<span class="material-symbols-outlined text-secondary text-3xl">bolt</span>
+<div>
+<p class="text-[10px] text-outline uppercase font-label">Power Consumption</p>
+<p class="font-headline text-xl font-bold">480 Watts</p>
+</div>
+</div>
+<div class="bg-surface-container-low p-4 flex items-center gap-4 border-r border-outline-variant/10">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-3xl">shield_locked</span>
+<div>
+<p class="text-[10px] text-outline uppercase font-label">Threats Blocked</p>
+<p class="font-headline text-xl font-bold">1,242 <span class="text-[10px] text-error font-mono ml-1">+12%</span></p>
+</div>
+</div>
+<div class="bg-surface-container-low p-4 flex items-center gap-4">
+<span class="material-symbols-outlined text-outline text-3xl">update</span>
+<div>
+<p class="text-[10px] text-outline uppercase font-label">Last Backup</p>
+<p class="font-headline text-xl font-bold">04:12 AM</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>
+

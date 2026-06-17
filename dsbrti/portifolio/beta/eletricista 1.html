@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ivan Montibeller | Eletricista Profissional</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-variant": "#e1e3e4",
+                    "secondary-fixed": "#ffe084",
+                    "background": "#f8f9fa",
+                    "on-primary-fixed-variant": "#36485b",
+                    "on-error": "#ffffff",
+                    "on-tertiary-fixed": "#291802",
+                    "on-surface-variant": "#43474c",
+                    "on-secondary-container": "#6f5900",
+                    "tertiary-fixed": "#ffddb7",
+                    "on-tertiary-fixed-variant": "#5a4225",
+                    "on-secondary-fixed": "#231b00",
+                    "primary-fixed-dim": "#b5c8df",
+                    "surface-container-low": "#f3f4f5",
+                    "on-primary-container": "#96a9be",
+                    "tertiary": "#362308",
+                    "secondary-fixed-dim": "#eec209",
+                    "inverse-on-surface": "#f0f1f2",
+                    "surface-dim": "#d9dadb",
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary-container": "#4e381c",
+                    "outline-variant": "#c4c6cd",
+                    "tertiary-fixed-dim": "#e3c19b",
+                    "secondary-container": "#fed023",
+                    "error": "#ba1a1a",
+                    "outline": "#74777d",
+                    "surface-container-highest": "#e1e3e4",
+                    "on-secondary": "#ffffff",
+                    "surface-tint": "#4e6073",
+                    "on-tertiary-container": "#c1a17d",
+                    "on-primary-fixed": "#091d2e",
+                    "inverse-primary": "#b5c8df",
+                    "on-error-container": "#93000a",
+                    "primary-container": "#2c3e50",
+                    "secondary": "#735c00",
+                    "primary": "#162839",
+                    "error-container": "#ffdad6",
+                    "primary-fixed": "#d1e4fb",
+                    "inverse-surface": "#2e3132",
+                    "on-background": "#191c1d",
+                    "surface": "#f8f9fa",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-high": "#e7e8e9",
+                    "on-primary": "#ffffff",
+                    "surface-container": "#edeeef",
+                    "surface-bright": "#f8f9fa",
+                    "on-surface": "#191c1d",
+                    "on-secondary-fixed-variant": "#574500"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Space Grotesk"],
+                    "body": ["Manrope"],
+                    "label": ["Manrope"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: #f8f9fa;
+            color: #191c1d;
+        }
+        h1, h2, h3 {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .technical-label {
+            font-family: 'Manrope', sans-serif;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            font-weight: 800;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- TopAppBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-slate-900/80 backdrop-blur-xl">
+<div class="flex justify-between items-center max-w-7xl mx-auto px-8 py-6">
+<a class="text-xl font-bold tracking-tighter text-slate-900 dark:text-slate-50 font-headline" href="#">
+                Ivan Montibeller
+            </a>
+<div class="hidden md:flex space-x-8 items-center">
+<a class="text-slate-600 dark:text-slate-400 font-medium font-label hover:text-amber-500 transition-colors duration-300" href="#services">Services</a>
+<a class="text-slate-600 dark:text-slate-400 font-medium font-label hover:text-amber-500 transition-colors duration-300" href="#about">About</a>
+<a class="text-slate-600 dark:text-slate-400 font-medium font-label hover:text-amber-500 transition-colors duration-300" href="#projects">Projects</a>
+<a class="text-slate-600 dark:text-slate-400 font-medium font-label hover:text-amber-500 transition-colors duration-300" href="#contact">Contact</a>
+<button class="bg-secondary-container text-on-secondary-container px-6 py-2 rounded-xl font-bold font-label scale-95 duration-200 hover:scale-100 transition-transform">
+                    Request Quote
+                </button>
+</div>
+<!-- Mobile Menu Toggle -->
+<button class="md:hidden text-primary">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</nav>
+<main class="pt-24">
+<!-- Hero Section -->
+<section class="relative min-h-[921px] flex items-center px-8 overflow-hidden bg-primary">
+<div class="absolute inset-0 z-0 opacity-40">
+<img alt="Electrical schematic" class="w-full h-full object-cover grayscale brightness-50" data-alt="close-up of complex electrical wiring panel with colorful cables and circuit breakers in a clean industrial environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSe3-QlRhrOOdxpfySZDkWUtP8V86SasWf0gvYV3WewMdK-34WBAblR0IO6GlPqIa3M6r9G5udb5MLP28mLVUYUUu1msHdRSEwyUL3NstptoPBGJflL4aN-ZVrmX7zO0XBNlcLn-I-Yfjb45AEKf_sbhAySONTsy-qXJwzRd1AZ2a8KvZFXHAXWVCKiD5zyzkgIGNrxsxyC0O0LdKd3ti8eqJWSyIWCiycgnDFkAKqxuGr9FR-xcSWfhJuD7VPGWotriOblUCC47_r"/>
+<div class="absolute inset-0 bg-gradient-to-r from-primary via-primary/80 to-transparent"></div>
+</div>
+<div class="relative z-10 max-w-7xl mx-auto w-full grid md:grid-cols-12 gap-8 items-center">
+<div class="md:col-span-8">
+<span class="technical-label text-secondary-container mb-4 block">Electrical Engineering &amp; Precision</span>
+<h1 class="text-6xl md:text-8xl font-bold text-white mb-6 leading-tight tracking-tighter">
+                        Eletricista <br/><span class="text-secondary-container">Profissional</span>
+</h1>
+<p class="text-xl md:text-2xl text-primary-fixed-dim mb-10 max-w-xl font-body leading-relaxed">
+                        Residencial • Industrial • Predial. Soluções de alta engenharia para garantir a segurança e eficiência da sua rede elétrica.
+                    </p>
+<div class="flex flex-col sm:flex-row gap-4">
+<button class="bg-secondary-container text-on-secondary-container px-8 py-4 rounded-xl font-extrabold text-lg flex items-center justify-center gap-2 hover:bg-amber-400 transition-all shadow-xl shadow-primary/20">
+                            Solicite um orçamento
+                            <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<button class="border-b-2 border-white/30 text-white px-8 py-4 font-bold hover:border-white transition-all">
+                            Ver Projetos
+                        </button>
+</div>
+</div>
+</div>
+</section>
+<!-- About Section (The "Sobre mim" Editorial Layout) -->
+<section class="py-32 px-8 bg-surface" id="about">
+<div class="max-w-7xl mx-auto">
+<div class="grid lg:grid-cols-12 gap-16 items-center">
+<div class="lg:col-span-5 relative">
+<div class="aspect-[4/5] bg-surface-container-high rounded-xl overflow-hidden relative z-10">
+<img alt="Professional Profile" class="w-full h-full object-cover" data-alt="professional male electrician in safety gear holding a tablet looking at camera in a modern industrial setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHQnS7goHGgxmcyQMYelcPJOtj5XXHhgBazr7VCtiYUK4QjqNyRGjEOq5hCtQD6iogjr_7ZCQzm5ZmcaWhdZVzUp47foKFFJhaiN_ijz8geV5MWPyfb1LFMkZ6w8QwUp9QytlpqBi23eDoAIrPrSwLROhKsDhi-3IjIOpi_GekXFc7hBL6XX8cfOIO1ROKX-RdLFRJDXQ_840X3u_VImAStqf1ssatHg8z98S8T-YPX8r4sc-98OxaN8wiBKXry-OcZJJgFliiK28V"/>
+</div>
+<!-- Asymmetric Architectural Element -->
+<div class="absolute -bottom-8 -right-8 w-64 h-64 bg-secondary-container -z-0 hidden md:block"></div>
+</div>
+<div class="lg:col-span-7">
+<span class="technical-label text-primary/60 mb-4 block">Sobre mim</span>
+<h2 class="text-4xl md:text-5xl font-bold mb-8 tracking-tight text-primary">
+                            Compromisso com a <span class="italic font-light">Excelência Técnica.</span>
+</h2>
+<p class="text-lg text-on-surface-variant mb-10 leading-relaxed font-body">
+                            Com anos de experiência em projetos complexos, Ivan Montibeller combina o rigor da engenharia com a agilidade do atendimento prático. Especialista em diagnósticos precisos e sistemas de alta performance.
+                        </p>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Certification Badge -->
+<div class="p-6 bg-surface-container-low rounded-lg border-l-4 border-secondary-container">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-primary">verified</span>
+<span class="font-bold text-primary font-headline">NR 10 Certificado</span>
+</div>
+<p class="text-sm text-on-surface-variant font-body">Segurança em instalações e serviços em eletricidade.</p>
+</div>
+<!-- Certification Badge -->
+<div class="p-6 bg-surface-container-low rounded-lg border-l-4 border-secondary-container">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-primary">verified</span>
+<span class="font-bold text-primary font-headline">NR 35 Certificado</span>
+</div>
+<p class="text-sm text-on-surface-variant font-body">Trabalho em altura com máxima segurança operacional.</p>
+</div>
+<!-- Certification Badge -->
+<div class="p-6 bg-surface-container-low rounded-lg border-l-4 border-secondary-container">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-primary">verified</span>
+<span class="font-bold text-primary font-headline">NR 31 Certificado</span>
+</div>
+<p class="text-sm text-on-surface-variant font-body">Segurança e saúde no trabalho na agricultura.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Services Section (Bento-style Grid) -->
+<section class="py-32 px-8 bg-surface-container-low" id="services">
+<div class="max-w-7xl mx-auto">
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
+<div class="max-w-2xl">
+<span class="technical-label text-primary/60 mb-4 block">Especialidades</span>
+<h2 class="text-4xl md:text-6xl font-bold tracking-tight text-primary">Serviços Integrados</h2>
+</div>
+<p class="text-on-surface-variant max-w-sm font-body italic">
+                        "Eletricidade não admite erros. Cada conexão é projetada para durar décadas."
+                    </p>
+</div>
+<div class="grid md:grid-cols-3 gap-8">
+<!-- Card 1 -->
+<div class="group bg-surface p-12 rounded-lg relative overflow-hidden transition-all hover:-translate-y-2 hover:shadow-2xl">
+<div class="absolute top-0 right-0 p-4">
+<span class="technical-label text-primary/20">SPEC-001</span>
+</div>
+<div class="w-16 h-16 bg-primary-fixed flex items-center justify-center mb-10 group-hover:bg-secondary-container transition-colors duration-500">
+<span class="material-symbols-outlined text-3xl text-primary">bolt</span>
+</div>
+<h3 class="text-2xl font-bold mb-4 text-primary">Instalações</h3>
+<p class="text-on-surface-variant font-body leading-relaxed mb-8">
+                            Projetos completos de fiação, quadros de distribuição e sistemas de iluminação técnica para novos empreendimentos.
+                        </p>
+<a class="inline-flex items-center gap-2 text-primary font-extrabold font-label group-hover:gap-4 transition-all" href="#">
+                            SAIBA MAIS <span class="material-symbols-outlined">east</span>
+</a>
+</div>
+<!-- Card 2 -->
+<div class="group bg-surface p-12 rounded-lg relative overflow-hidden transition-all hover:-translate-y-2 hover:shadow-2xl">
+<div class="absolute top-0 right-0 p-4">
+<span class="technical-label text-primary/20">SPEC-002</span>
+</div>
+<div class="w-16 h-16 bg-primary-fixed flex items-center justify-center mb-10 group-hover:bg-secondary-container transition-colors duration-500">
+<span class="material-symbols-outlined text-3xl text-primary">settings</span>
+</div>
+<h3 class="text-2xl font-bold mb-4 text-primary">Manutenção</h3>
+<p class="text-on-surface-variant font-body leading-relaxed mb-8">
+                            Preventiva e corretiva em sistemas industriais e residenciais, garantindo a continuidade da sua operação.
+                        </p>
+<a class="inline-flex items-center gap-2 text-primary font-extrabold font-label group-hover:gap-4 transition-all" href="#">
+                            SAIBA MAIS <span class="material-symbols-outlined">east</span>
+</a>
+</div>
+<!-- Card 3 -->
+<div class="group bg-primary p-12 rounded-lg relative overflow-hidden transition-all hover:-translate-y-2 hover:shadow-2xl">
+<div class="absolute top-0 right-0 p-4">
+<span class="technical-label text-white/20">SPEC-SOS</span>
+</div>
+<div class="w-16 h-16 bg-secondary-container flex items-center justify-center mb-10">
+<span class="material-symbols-outlined text-3xl text-on-secondary-container">priority_high</span>
+</div>
+<h3 class="text-2xl font-bold mb-4 text-white">Emergências</h3>
+<p class="text-primary-fixed-dim font-body leading-relaxed mb-8">
+                            Atendimento rápido para curtos-circuitos, quedas de energia e falhas críticas que não podem esperar.
+                        </p>
+<a class="inline-flex items-center gap-2 text-secondary-container font-extrabold font-label group-hover:gap-4 transition-all" href="#">
+                            CHAMAR AGORA <span class="material-symbols-outlined">phone_in_talk</span>
+</a>
+</div>
+</div>
+</div>
+</section>
+<!-- Contact Section -->
+<section class="py-32 px-8 bg-surface" id="contact">
+<div class="max-w-7xl mx-auto">
+<div class="bg-primary text-white rounded-lg overflow-hidden grid lg:grid-cols-2">
+<div class="p-12 lg:p-20">
+<span class="technical-label text-secondary-container mb-4 block">Contato</span>
+<h2 class="text-4xl md:text-5xl font-bold mb-8">Vamos ligar o seu projeto?</h2>
+<div class="space-y-8 mt-12">
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-secondary-container">mail</span>
+<div>
+<p class="font-bold font-headline">Email</p>
+<p class="text-primary-fixed-dim">contato@ivanmontibeller.eng.br</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-secondary-container">call</span>
+<div>
+<p class="font-bold font-headline">WhatsApp / Telefone</p>
+<p class="text-primary-fixed-dim">+55 (48) 99999-0000</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-secondary-container">location_on</span>
+<div>
+<p class="font-bold font-headline">Área de Atendimento</p>
+<p class="text-primary-fixed-dim">Florianópolis e Região Metropolitana</p>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-12 lg:p-20">
+<form class="space-y-6">
+<div>
+<label class="technical-label text-primary block mb-2">Nome Completo</label>
+<input class="w-full bg-transparent border-0 border-b border-outline-variant/30 focus:ring-0 focus:border-secondary-container py-3 px-0 text-primary transition-all" placeholder="Seu nome" type="text"/>
+</div>
+<div>
+<label class="technical-label text-primary block mb-2">E-mail</label>
+<input class="w-full bg-transparent border-0 border-b border-outline-variant/30 focus:ring-0 focus:border-secondary-container py-3 px-0 text-primary transition-all" placeholder="exemplo@email.com" type="email"/>
+</div>
+<div>
+<label class="technical-label text-primary block mb-2">Mensagem</label>
+<textarea class="w-full bg-transparent border-0 border-b border-outline-variant/30 focus:ring-0 focus:border-secondary-container py-3 px-0 text-primary transition-all resize-none" placeholder="Descreva brevemente sua necessidade" rows="4"></textarea>
+</div>
+<button class="w-full bg-primary text-white py-5 rounded-xl font-bold font-headline hover:bg-slate-800 transition-colors mt-8">
+                                Enviar Mensagem
+                            </button>
+</form>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-900 dark:bg-black w-full py-12">
+<div class="flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto px-8 border-t border-slate-800 pt-8">
+<div class="mb-8 md:mb-0">
+<span class="text-lg font-black text-amber-400 font-headline">Ivan Montibeller</span>
+<p class="text-slate-400 text-sm mt-2 font-body">Engenharia Elétrica &amp; Serviços Profissionais</p>
+</div>
+<div class="flex flex-wrap justify-center gap-8 text-slate-400 text-sm font-label uppercase tracking-widest mb-8 md:mb-0">
+<a class="hover:text-white transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-white transition-colors" href="#">Terms of Service</a>
+<a class="hover:text-white transition-colors" href="#">Licensing</a>
+</div>
+<p class="text-slate-500 text-xs font-body">
+                © 2024 Ivan Montibeller Electrical Engineering. All rights reserved.
+            </p>
+</div>
+</footer>
+</body></html>

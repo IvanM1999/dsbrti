@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Relatório da Bateria – Inteligente</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root { color-scheme: dark; }
+    body {
+      font-family: system-ui, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #020617;
+      color: #e5e7eb;
+    }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .card {
+      background: #020617;
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      border: 1px solid #1e293b;
+    }
+    button {
+      padding: 10px 16px;
+      border-radius: 6px;
+      border: 1px solid #1f2937;
+      background: #22c55e;
+      color: #020617;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 0.85rem;
+    }
+    th, td {
+      padding: 6px 8px;
+      border-bottom: 1px solid #1f2937;
+      text-align: right;
+    }
+    th:first-child, td:first-child { text-align: left; }
+    canvas {
+      width: 100%;
+      background: #020617;
+      border-radius: 10px;
+      border: 1px solid #1e293b;
+      margin-top: 10px;
+    }
+    .metric-box {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+    .metric {
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #1f2937;
+      background: #0f172a;
+    }
+    .metric-label { color: #9ca3af; font-size: 0.8rem; }
+    .metric-value { font-size: 1.2rem; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Relatório da Bateria – Inteligente</h1>
+
+    <div class="card">
+      <button id="btnOpen">Abrir arquivo bateria_nova.json</button>
+      <span id="status">Nenhum arquivo carregado</span>
+    </div>
+
+    <div id="content" style="display:none;">
+
+      <div class="card">
+        <h2>Resumo</h2>
+        <div class="metric-box" id="metrics"></div>
+      </div>
+
+      <div class="card">
+        <h2>Ciclos</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Rótulo</th>
+              <th>SOC</th>
+              <th>Δ</th>
+              <th>Tempo</th>
+              <th>mAh</th>
+              <th>Capacidade</th>
+              <th>SoH</th>
+            </tr>
+          </thead>
+          <tbody id="cycleTable"></tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h2>Capacidade por ciclo</h2>
+        <canvas id="capChart" height="260"></canvas>
+      </div>
+
+      <div class="card">
+        <h2>Projeção de degradação</h2>
+        <canvas id="projChart" height="260"></canvas>
+      </div>
+
+    </div>
+  </div>
+
+  <script type="module">
+    import { openFilePicker, getData, NOMINAL } from "./api.js";
+
+    const btnOpen = document.getElementById("btnOpen");
+    const status = document.getElementById("status");
+    const content = document.getElementById("content");
+
+    const metricsBox = document.getElementById("metrics");
+    const cycleTable = document.getElementById("cycleTable");
+
+    const capCanvas = document.getElementById("capChart");
+    const projCanvas = document.getElementById("projChart");
+
+    function fmt(n, d=0) {
+      return (n ?? "-").toFixed ? n.toFixed(d).replace(".", ",") : n;
+    }
+
+    function setupCanvas(canvas) {
+      const rect = canvas.getBoundingClientRect();
+      const ratio = window.devicePixelRatio || 1;
+      canvas.width = rect.width * ratio;
+      canvas.height = canvas.height * ratio;
+      const ctx = canvas.getContext("2d");
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      return ctx;
+    }
+
+    function drawLineChart(canvas, values, labels, title) {
+      const ctx = setupCanvas(canvas);
+      const rect = canvas.getBoundingClientRect();
+      const w = rect.width;
+      const h = rect.height;
+      const pad = 40;
+
+      const min = Math.min(...values);
+      const max = Math.max(...values);
+      const stepX = (w - pad*2) / (values.length - 1);
+      const scaleY = (h - pad*2) / (max - min || 1);
+
+      ctx.clearRect(0,0,w,h);
+      ctx.strokeStyle = "#1f2937";
+      ctx.strokeRect(pad, pad, w-pad*2, h-pad*2);
+
+      ctx.strokeStyle = "#38bdf8";
+      ctx.beginPath();
+      values.forEach((v,i)=>{
+        const x = pad + i*stepX;
+        const y = h - pad - (v - min)*scaleY;
+        i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+      });
+      ctx.stroke();
+
+      ctx.fillStyle = "#38bdf8";
+      values.forEach((v,i)=>{
+        const x = pad + i*stepX;
+        const y = h - pad - (v - min)*scaleY;
+        ctx.beginPath();
+        ctx.arc(x,y,3,0,Math.PI*2);
+        ctx.fill();
+      });
+
+      ctx.fillStyle = "#9ca3af";
+      ctx.fillText(title, pad, pad-10);
+    }
+
+    function renderMetrics(cycles) {
+      const caps = cycles.map(c => c.capacity_estimated);
+      const avg = caps.reduce((a,b)=>a+b,0)/caps.length;
+      const min = Math.min(...caps);
+      const max = Math.max(...caps);
+
+      const sohAvg = avg / NOMINAL * 100;
+
+      const items = [
+        ["Capacidade média", fmt(avg,0)+" mAh"],
+        ["Capacidade mínima", fmt(min,0)+" mAh"],
+        ["Capacidade máxima", fmt(max,0)+" mAh"],
+        ["Saúde média (SoH)", fmt(sohAvg,1)+" %"],
+        ["Ciclos analisados", cycles.length]
+      ];
+
+      metricsBox.innerHTML = items.map(([l,v])=>`
+        <div class="metric">
+          <div class="metric-label">${l}</div>
+          <div class="metric-value">${v}</div>
+        </div>
+      `).join("");
+    }
+
+    function renderTable(cycles) {
+      cycleTable.innerHTML = cycles.map((c,i)=>`
+        <tr>
+          <td>${i+1}</td>
+          <td>${c.label}</td>
+          <td>${c.soc_start}→${c.soc_end}</td>
+          <td>${c.delta_soc_percent}</td>
+          <td>${c.time_hours ?? "-"}</td>
+          <td>${c.mAh}</td>
+          <td>${fmt(c.capacity_estimated,0)}</td>
+          <td>${fmt(c.soh_percent,1)}%</td>
+        </tr>
+      `).join("");
+    }
+
+    function renderCharts(cycles) {
+      const caps = cycles.map(c => c.capacity_estimated);
+      drawLineChart(capCanvas, caps, cycles.map((_,i)=>"C"+(i+1)), "Capacidade (mAh)");
+
+      const avg = caps.reduce((a,b)=>a+b,0)/caps.length;
+      const soh = avg / NOMINAL * 100;
+
+      const proj = [];
+      for (let m=0; m<=36; m+=3) {
+        proj.push(Math.max(soh - m/3, 70));
+      }
+
+      drawLineChart(projCanvas, proj, proj.map((_,i)=>i*3+"m"), "Projeção SoH (%)");
+    }
+
+    async function loadReport() {
+      try {
+        await openFilePicker();
+        const data = getData();
+
+        if (!data || !data.cycles || !data.cycles.length) {
+          alert("O arquivo está vazio. Adicione ciclos na página nova_entrada.html");
+          return;
+        }
+
+        status.textContent = "Arquivo carregado com sucesso";
+        content.style.display = "";
+
+        const cycles = data.cycles;
+        renderMetrics(cycles);
+        renderTable(cycles);
+        renderCharts(cycles);
+
+      } catch (err) {
+        console.error(err);
+        alert("Erro ao abrir o arquivo. Verifique permissões.");
+      }
+    }
+
+    btnOpen.onclick = loadReport;
+  </script>
+</body>
+</html>

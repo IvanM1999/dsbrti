@@ -1,0 +1,65 @@
+/* ================= BASE ================= */
+
+body {
+  font-family: Arial, sans-serif;
+  background: #0f172a;
+  color: #e2e8f0;
+  padding: 20px;
+}
+
+/* ================= INPUTS ================= */
+
+input {
+  padding: 10px;
+  margin: 5px 0;
+  width: 250px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+}
+
+/* ================= BOTÕES ================= */
+
+button {
+  padding: 10px 15px;
+  margin: 5px 5px 5px 0;
+  border-radius: 8px;
+  border: none;
+  background: #3b82f6;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: #2563eb;
+}
+
+/* ================= CARDS ================= */
+
+.card {
+  background: #1e293b;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+/* ================= TITULOS ================= */
+
+h1, h2 {
+  margin-bottom: 10px;
+}
+
+/* ================= DASHBOARD ================= */
+
+#stats, #logs {
+  margin-top: 20px;
+}
+
+/* ================= IMAGEM ================= */
+
+img {
+  border-radius: 50%;
+  margin-bottom: 10px;
+}

@@ -1,0 +1,60 @@
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #0f172a;
+  color: white;
+}
+
+/* LAYOUT */
+.container {
+  display: flex;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 220px;
+  background: #020617;
+  height: 100vh;
+  padding: 20px;
+}
+
+.sidebar h2 {
+  margin-bottom: 20px;
+}
+
+.sidebar button {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+/* MAIN */
+.main {
+  flex: 1;
+  padding: 20px;
+}
+
+/* CARD */
+.card {
+  background: #1e293b;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 10px;
+}
+
+/* INPUTS */
+input {
+  padding: 10px;
+  margin: 5px;
+  border-radius: 8px;
+  border: none;
+}
+
+/* BUTTON */
+button {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #22c55e;
+  color: white;
+  cursor: pointer;
+}

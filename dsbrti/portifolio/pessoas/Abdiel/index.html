@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abdiel de Athayde | Desenvolvedor Backend</title>
+    <!-- CSS Externos -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Navegação -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <h3 class="logo">&lt;Abdiel.Dev /&gt;</h3>
+            <button id="hamburguer" aria-label="Menu Expansível">
+                <i class="fa fa-bars"></i>
+            </button>
+            <ul id="menu">
+                <li><a href="#sobre">Sobre</a></li>
+                <li><a href="#projetos">Projetos</a></li>
+                <li><a href="#habilidades">Habilidades</a></li>
+                <li><a href="#contato">Contato</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero / Introdução -->
+    <header class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <p class="intro">Olá, eu sou o <span>Abdiel</span></p>
+                <h2>Desenvolvedor Backend</h2>
+                <p class="descricao">Criando soluções robustas e experiências digitais com código de alto nível.</p>
+                <div class="social-links">
+                    <a href="https://github.com/abdieldeathayde" target="_blank" rel="noopener" title="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="#" target="_blank" rel="noopener" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+            <div class="hero-img-box">
+                <img src="https://abdielportfolio.vercel.app/assets/portfolio-image.jpeg" alt="Foto de perfil de Abdiel" class="foto-perfil">
+            </div>
+        </div>
+    </header>
+
+    <!-- Sobre Mim -->
+    <section id="sobre" class="section">
+        <div class="container-small">
+            <h2 class="section-title">Sobre mim</h2>
+            <div class="sobre-texto">
+                <p>Sou um desenvolvedor Backend apaixonado por criar soluções robustas e escaláveis. Tenho experiência prática e acadêmica no desenvolvimento Fullstack utilizando <strong>Java e Spring Boot</strong> no ecossistema de microsserviços e APIs, combinado ao <strong>Angular</strong> no ecossistema Frontend. Estou sempre em busca de novos desafios tecnológicos para otimizar processos e evoluir profissionalmente.</p>
+            </div>
+            <div class="sobre-dados">
+                <div class="dado-card">
+                    <strong>5+</strong>
+                    <span>Projetos concluídos</span>
+                </div>
+                <div class="dado-card">
+                    <strong>1+</strong>
+                    <span>Ano de experiência</span>
+                </div>
+                <div class="dado-card">
+                    <strong>4+</strong>
+                    <span>Tecnologias Core</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projetos -->
+    <section id="projetos" class="section alt-bg">
+        <div class="container">
+            <h2 class="section-title">Meus Projetos</h2>
+            <div class="projetos-grid">
+                
+                <!-- Card 1 -->
+                <div class="projeto-card">
+                    <div class="proj-img">
+                        <img src="https://abdielportfolio.vercel.app/assets/baixados.jpeg" alt="Preview do Sistema de Restaurante">
+                    </div>
+                    <div class="projeto-info">
+                        <h3>Sistema de Restaurante</h3>
+                        <p>Gerenciamento completo para restaurantes criado para otimizar fluxos de trabalho, desde o registro de pratos à gestão de pedidos. Construído com arquitetura modular usando Spring Boot e persistência em MySQL.</p>
+                        <a href="https://github.com/abdieldeathayde/RestauranteApp" target="_blank" rel="noopener" class="btn-projeto">Ver projeto <i class="fa fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="projeto-card">
+                    <div class="proj-img">
+                        <img src="https://abdielportfolio.vercel.app/assets/baixados.jpeg" alt="Preview do Sistema de Biblioteca">
+                    </div>
+                    <div class="projeto-info">
+                        <h3>Sistema de Biblioteca</h3>
+                        <p>Plataforma web para controle de acervo, empréstimos e devoluções de livros. Desenvolvido com foco nas boas práticas de arquitetura MVC para consolidar o desenvolvimento web integrado.</p>
+                        <a href="https://github.com/abdieldeathayde/Biblioteca-Web" target="_blank" rel="noopener" class="btn-projeto">Ver projeto <i class="fa fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="projeto-card">
+                    <div class="proj-img">
+                        <img src="https://abdielportfolio.vercel.app/assets/baixados.jpeg" alt="Preview do Gerenciador de Produtos">
+                    </div>
+                    <div class="projeto-info">
+                        <h3>Gerenciamento de Produtos</h3>
+                        <p>Sistema corporativo focado em inventário com suporte a importação em lote e processamento de dados via planilhas Excel (XLSX). Desenvolvido em Java, Spring Boot e vanilla JS.</p>
+                        <a href="https://github.com/abdieldeathayde/Estoque" target="_blank" rel="noopener" class="btn-projeto">Ver projeto <i class="fa fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="projeto-card">
+                    <div class="proj-img">
+                        <img src="https://abdielportfolio.vercel.app/assets/baixados.jpeg" alt="Preview Real Car Service">
+                    </div>
+                    <div class="projeto-info">
+                        <h3>Real Car &amp; Service</h3>
+                        <p>Aplicação web para apresentação de serviços automotivos com integrações de canais de atendimento direto via e-mail corporativo, WhatsApp e formulários dinâmicos de agendamento.</p>
+                        <a href="https://realcarservice.onrender.com/" target="_blank" rel="noopener" class="btn-projeto">Ver projeto <i class="fa fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Habilidades -->
+    <section id="habilidades" class="section">
+        <div class="container">
+            <h2 class="section-title">Habilidades Técnicas</h2>
+            <p class="section-subtitle">O core da minha pilha tecnológica para construir aplicações eficientes.</p>
+            <div class="habilidades-lista">
+                <div class="habilidades-card shadow-java">
+                    <i class="fab fa-java tech-icon"></i>
+                    <h3>Java / Spring</h3>
+                    <span class="badge backend">Avançado</span>
+                </div>
+                <div class="habilidades-card shadow-js">
+                    <i class="fab fa-js tech-icon"></i>
+                    <h3>JavaScript</h3>
+                    <span class="badge intermed">Intermediário</span>
+                </div>
+                <div class="habilidades-card shadow-html">
+                    <i class="fab fa-html5 tech-icon"></i>
+                    <h3>HTML5</h3>
+                    <span class="badge front">Avançado</span>
+                </div>
+                <div class="habilidades-card shadow-css">
+                    <i class="fab fa-css3-alt tech-icon"></i>
+                    <h3>CSS3</h3>
+                    <span class="badge intermed">Intermediário</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contato -->
+    <section id="contato" class="section alt-bg">
+        <div class="container-small">
+            <h2 class="section-title">Vamos conversar?</h2>
+            <form id="formContato" class="contato-form">
+                <div class="form-group">
+                    <input type="text" id="nome" placeholder="Seu nome" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="email" placeholder="Seu e-mail" required>
+                </div>
+                <div class="form-group">
+                    <textarea id="mensagem" placeholder="Sua mensagem..." rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn-submit">Enviar Mensagem <i class="fa fa-paper-plane"></i></button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Rodapé -->
+    <footer>
+        <p>&copy; 2026 Abdiel de Athayde. Desenvolvido com <i class="fa fa-heart icon-heart"></i></p>
+    </footer>
+
+    <!-- Script Interno -->
+    <script src="script.js"></script>
+</body>
+</html>
