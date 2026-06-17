@@ -33,7 +33,7 @@
   <meta name="twitter:image" content="https://ivanmontibeller.onrender.com/src/img/logo.jpeg">
   <meta name="twitter:image:alt" content="Logo de Ivan Montibeller">
 
-  <!-- Segurança -->
+  <!-- Segurança Rigorosa Mantida -->
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https:; font-src 'self' https://cdn.jsdelivr.net">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
@@ -80,89 +80,97 @@
 </head>
 <body>
 
-  <!-- Menu Superior Padrão do Modelo -->
+  <!-- Menu Superior Alinhado com o Novo Padrão de Ecossistemas Visuais -->
   <nav class="navbar" role="navigation" aria-label="Navegação principal">
     <div class="nav-container">
-      <span class="nav-brand">⚙ Ivan Montibeller</span>
+      <span class="nav-brand">⚙️ Ivan Montibeller</span>
       <ul class="nav-links">
         <li><a href="../index.html">Início</a></li>
         <li><a href="../landingpage.html">Landing</a></li>
         <li><a href="../senai/metrologia.html">Metrologia</a></li>
         <li><a href="index.html" class="active">Currículo</a></li>
-        <li><a href="../portifólio/index.html">Portfólio</a></li>
+        <li><a href="../portfólio/index.html">Portfólio</a></li>
       </ul>
-      <div class="theme-switch">
-        <button data-theme="ubuntu" class="theme-btn active" title="Ubuntu">🐧</button>
-        <button data-theme="fedora" class="theme-btn" title="Fedora">🔵</button>
-        <button data-theme="winxp" class="theme-btn" title="Windows XP">🪟</button>
+      <div class="theme-switcher theme-switch">
+        <button data-theme="ubuntu" class="theme-btn active" title="Ubuntu Linux (Yaru Design)">🦧</button>
+        <button data-theme="fedora" class="theme-btn" title="Linux Mint (Cinnamon Green)">🌿</button>
+        <button data-theme="winxp" class="theme-btn" title="Windows 11 (Fluent Design)">🪟</button>
       </div>
     </div>
   </nav>
 
+  <!-- Container Geral da Página Ajustado (Abertura Correta das Estruturas CSS) -->
+  <main class="container">
+    <div class="curriculo-layout">
+      
       <!-- ========================================== -->
       <!-- BARRA LATERAL (SIDEBAR ASIDE)             -->
       <!-- ========================================== -->
-      <aside class="curriculo-sidebar">
-        <div class="profile-photo">
-          <img src="/src/img/perfil.png" alt="Ivan Montibeller - Desenvolvedor Full Stack">
+      <aside class="curriculo-sidebar" style="padding: 1.75rem; border-radius: var(--radius);">
+        <div class="profile-photo" style="text-align: center; margin-bottom: 1.5rem;">
+          <img src="/src/img/perfil.png" alt="Ivan Montibeller - Desenvolvedor Full Stack" style="width: 140px; height: 140px; border-radius: 50%; border: 2px solid var(--border-glow); object-fit: cover;">
         </div>
         
-        <h1 class="profile-name" id="profName">Ivan Montibeller</h1>
-        <p class="profile-title" id="profTitle">Tecnologia, Inovação, Manutenção &amp; Desenvolvimento</p>
+        <h1 class="profile-name" id="profName" style="font-size: 1.6rem; font-weight: 700; text-align: center; margin-bottom: 0.5rem;">Ivan Montibeller</h1>
+        <p class="profile-title" id="profTitle" style="font-size: 0.9rem; color: var(--text-sec); text-align: center; margin-bottom: 1.5rem;">Tecnologia, Inovação, Manutenção &amp; Desenvolvimento</p>
         
         <!-- Bloco de Contatos e Links Oficiais Convertidos -->
-        <div class="contact-card">
-          <h3>Contato Direto</h3>
-          <p>📧 <a href="mailto:ivan.m301299@outlook.com">ivan.m301299@outlook.com</a></p>
-          <p>💬 <a href="https://wa.me/5547984863051" target="_blank">WhatsApp</a></p>
-          <p>🐙 <a href="https://github.com/IvanM1999/Curriculum/blob/main/README.md" target="_blank">GitHub</a></p>
+        <div class="contact-card" style="margin-bottom: 1.5rem;">
+          <h3 style="font-size: 1rem; margin-bottom: 0.75rem; color: var(--accent);">Contato Direto</h3>
+          <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">📧 <a href="mailto:ivan.m301299@outlook.com" style="word-break: break-all;">ivan.m301299@outlook.com</a></p>
+          <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">💬 <a href="https://wa.me/5547984863051" target="_blank">WhatsApp</a></p>
+          <p style="font-size: 0.9rem;">🐙 <a href="https://github.com/IvanM1999/Curriculum/blob/main/README.md" target="_blank">GitHub</a></p>
         </div>
 
         <!-- Botão de Download de Mídia Convertido -->
-        <div class="action-card">
-          <a href="src/img/cartao-visita.png" download="cartao-visita-ivan-montibeller.png" class="btn-download" title="Baixar cartão de visita de Ivan Montibeller" aria-label="Baixar cartão de visita em formato PNG">
+        <div class="action-card" style="text-align: center;">
+          <a href="src/img/cartao-visita.png" download="cartao-visita-ivan-montibeller.png" class="text-link" style="width: 100%;" title="Baixar cartão de visita de Ivan Montibeller" aria-label="Baixar cartão de visita em formato PNG">
             📥 Cartão de Visita
           </a>
         </div>
       </aside>
 
-        <!-- ========================================== -->
-        <!-- SEÇÃO: SOBRE / BIO                         -->
-        <!-- ========================================== -->
-        <article id="sobre" class="curriculo-section">
-          <h2>👤 Bio / Perfil</h2>
-          <p>
+      <!-- ========================================== -->
+      <!-- CONTEÚDO PRINCIPAL (MÓDULO DE SEÇÕES)     -->
+      <!-- ========================================== -->
+      <section class="curriculo-main" style="display: flex; flex-direction: column; gap: 1.5rem;">
+
+        <!-- SEÇÃO: SOBRE / BIO -->
+        <article id="sobre" class="curriculo-section card">
+          <span class="badge-sector">Resumo Executivo</span>
+          <h2 class="card-header-tech">👤 Bio / Perfil</h2>
+          <p class="data-item-desc">
             Ivan, 26 anos, apaixonado por tecnologia e eletrônica. Com experiência em manutenção de dispositivos eletrônicos e desenvolvimento de soluções tecnológicas, busco sempre por novas habilidades.
           </p>
-          <p style="margin-top: 1rem;">
+          <p class="data-item-desc">
             Natural de Blumenau. Principais habilidades com tecnologias da informação, eletrônica, elétrica, informática e manutenção de afins. À procura de certificações, crescimento profissional e pessoal. Sempre disposto a desenvolver novas habilidades.
           </p>
         </article>
-        <!-- ========================================== -->
-        <!-- SEÇÃO: FORMAÇÕES                           -->
-        <!-- ========================================== -->
-        <article id="formacoes" class="curriculo-section">
-          <h2>🎓 Formações</h2>
 
-          ### Cursos em Andamento
+        <!-- SEÇÃO: FORMAÇÕES -->
+        <article id="formacoes" class="curriculo-section card">
+          <span class="badge-sector">Engenharia &amp; Tecnologia</span>
+          <h2 class="card-header-tech">🎓 Formações</h2>
+
+          <h3 style="font-size: 1.1rem; margin: 1rem 0 0.5rem; color: var(--accent);">Cursos em Andamento</h3>
           
-          <div class="edu-item">
+          <div class="edu-item" style="margin-bottom: 1rem;">
             <h4>Técnico em Mecatrônica</h4>
             <p class="meta">SENAI — 2026 • 2029</p>
           </div>
 
-          <div class="edu-item">
+          <div class="edu-item" style="margin-bottom: 1rem;">
             <h4>Tecnólogo em Análise e Desenvolvimento de Sistemas</h4>
             <p class="meta">UNIASSELVI — 2023 • 2026</p>
             
             <!-- Grade Curricular Expansível Baseada no Modelo -->
-            <details class="grade-details">
-              <summary>Grade Curricular</summary>
-              <div class="grade-content">
+            <details class="grade-details" style="margin-top: 0.5rem; background: rgba(0,0,0,0.15); padding: 0.75rem; border-radius: var(--radius-sm);">
+              <summary style="cursor: pointer; font-weight: 500; font-size: 0.9rem;">Grade Curricular Otimizada</summary>
+              <div class="grade-content" style="margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.85rem; color: var(--text-sec);">
                 
                 <div class="semester-block">
-                  <h5>1º Semestre</h5>
-                  <ul>
+                  <h5 style="color: var(--accent); margin-bottom: 0.25rem;">1º Semestre</h5>
+                  <ul style="list-style-type: square; padding-left: 1.25rem;">
                     <li>Produção do Conhecimento Científico e Tecnologias Emergentes</li>
                     <li>Engenharia e Projeto de Software</li>
                     <li>Fundamentos de Redes de Computadores</li>
@@ -172,8 +180,8 @@
                 </div>
 
                 <div class="semester-block">
-                  <h5>2º Semestre</h5>
-                  <ul>
+                  <h5 style="color: var(--accent); margin-bottom: 0.25rem;">2º Semestre</h5>
+                  <ul style="list-style-type: square; padding-left: 1.25rem;">
                     <li>Perspectivas Profissionais</li>
                     <li>Arquitetura de Computadores</li>
                     <li>Lógica e Técnicas de Programação</li>
@@ -183,8 +191,8 @@
                 </div>
 
                 <div class="semester-block">
-                  <h5>3º Semestre</h5>
-                  <ul>
+                  <h5 style="color: var(--accent); margin-bottom: 0.25rem;">3º Semestre</h5>
+                  <ul style="list-style-type: square; padding-left: 1.25rem;">
                     <li>Cidadania e Protagonismo Social</li>
                     <li>Análise Orientada a Objetos</li>
                     <li>Programação Orientada a Objetos</li>
@@ -194,8 +202,8 @@
                 </div>
 
                 <div class="semester-block">
-                  <h5>4º Semestre</h5>
-                  <ul>
+                  <h5 style="color: var(--accent); margin-bottom: 0.25rem;">4º Semestre</h5>
+                  <ul style="list-style-type: square; padding-left: 1.25rem;">
                     <li>Empreendedorismo Criativo</li>
                     <li>Banco de Dados</li>
                     <li>Linguagens de Programação</li>
@@ -206,8 +214,8 @@
                 </div>
 
                 <div class="semester-block">
-                  <h5>5º Semestre</h5>
-                  <ul>
+                  <h5 style="color: var(--accent); margin-bottom: 0.25rem;">5º Semestre</h5>
+                  <ul style="list-style-type: square; padding-left: 1.25rem;">
                     <li>Programação para Dispositivos Móveis</li>
                     <li>Programação para Web</li>
                     <li>Gerência de Projetos</li>
@@ -221,222 +229,214 @@
             </details>
           </div>
 
-          ### Cursos Concluídos
+          <h3 style="font-size: 1.1rem; margin: 1.5rem 0 0.5rem; color: var(--accent);">Cursos Concluídos</h3>
           
-          <div class="edu-item">
+          <div class="edu-item" style="margin-bottom: 1rem;">
             <h4>Formação Extra Acadêmica</h4>
-            <ul class="cert-links-list">
-              <li><a href="/src/docs/NR10.pdf" target="_blank" title="Certificado">EDUNE Cursos Nr10</a></li>
-              <li><a href="/src/docs/eletrotecnica.pdf" target="_blank" title="Certificado">EDUNE Cursos Eletrotécnica</a></li>
-              <li><a href="/src/docs/nr-31-seguranca-e-saude-no-trabalho.pdf" target="_blank" title="Certificado">EDUNE Cursos NR31 - Saúde E Segurança No Trabalho</a></li>
-              <li><a href="/src/docs/nr-33-espaco-confinado-supervisor-de-entrada.pdf" target="_blank" title="Certificado">EDUNE Cursos NR33 - Espaço Confinado [supervisor de entrada]</a></li>
+            <ul class="cert-links-list" style="list-style: none; display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.5rem;">
+              <li>🔗 <a href="/src/docs/NR10.pdf" target="_blank" style="color: var(--accent);">EDUNE Cursos NR10</a></li>
+              <li>🔗 <a href="/src/docs/eletrotecnica.pdf" target="_blank" style="color: var(--accent);">EDUNE Cursos Eletrotécnica</a></li>
+              <li>🔗 <a href="/src/docs/nr-31-seguranca-e-saude-no-trabalho.pdf" target="_blank" style="color: var(--accent);">EDUNE Cursos NR31 - Saúde E Segurança No Trabalho</a></li>
+              <li>🔗 <a href="/src/docs/nr-33-espaco-confinado-supervisor-de-entrada.pdf" target="_blank" style="color: var(--accent);">EDUNE Cursos NR33 - Espaço Confinado [supervisor]</a></li>
             </ul>
           </div>
 
-          <div class="edu-item">
+          <div class="edu-item" style="margin-bottom: 1rem;">
             <h4>Formação Técnica &amp; Industrial</h4>
-            <ul class="cert-links-list">
-              <li><a href="/src/docs/certificado senai.pdf" target="_blank" title="Certificado">Aprendizagem Industrial de Eletrônico de Manutenção Industrial — SENAI</a></li>
-              <li><a href="/src/docs/certificado_543516802.pdf" target="_blank" title="Certificado">Eletrônica Analógica SENAI</a></li>
-              <li><a href="/src/docs/Automação_de_Sistemas-Certificado_digital_4058464.pdf" target="_blank" title="Certificado">Automação de Sistemas IFRS</a></li>
-              <li><a href="/src/docs/Soldagem_com_Eletrodo_Revestido-Certificado_digital_4058450.pdf" target="_blank" title="Certificado">Soldagem Eletrodo Revestido IFRS</a></li>
+            <ul class="cert-links-list" style="list-style: none; display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.5rem;">
+              <li>🔗 <a href="/src/docs/certificado senai.pdf" target="_blank" style="color: var(--accent);">Aprendizagem Eletrônico de Manutenção Industrial — SENAI</a></li>
+              <li>🔗 <a href="/src/docs/certificado_543516802.pdf" target="_blank" style="color: var(--accent);">Eletrônica Analógica SENAI</a></li>
+              <li>🔗 <a href="/src/docs/Automação_de_Sistemas-Certificado_digital_4058464.pdf" target="_blank" style="color: var(--accent);">Automação de Sistemas IFRS</a></li>
+              <li>🔗 <a href="/src/docs/Soldagem_com_Eletrodo_Revestido-Certificado_digital_4058450.pdf" target="_blank" style="color: var(--accent);">Soldagem Eletrodo Revestido IFRS</a></li>
             </ul>
           </div>
 
           <div class="edu-item">
             <h4>Formação Extra Acadêmica Uniasselvi</h4>
-            <ul class="cert-links-list">
-              <li><a href="/src/docs/certificado-inteligencia_emocional.pdf" target="_blank" title="Certificado">Inteligencia Emocional</a></li>
-              <li><a href="/src/docs/certificado-autismo_saude.pdf" target="_blank" title="Certificado">Autismo e Saúde</a></li>
-              <li><a href="/src/docs/certificado-saude_mental.pdf" target="_blank" title="Certificado">Saúde Mental no Ambiente de Trabalho</a></li>
-              <li><a href="/src/docs/certificado-lideranca.pdf" target="_blank" title="Certificado">Liderança</a></li>
-              <li><a href="/src/docs/Ciência, Tecnologia, Inovacao.pdf" target="_blank" title="Certificado">Ciência, Tecnologia e Inovação</a></li>
+            <ul class="cert-links-list" style="list-style: none; display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.5rem;">
+              <li>🔗 <a href="/src/docs/certificado-inteligencia_emocional.pdf" target="_blank" style="color: var(--accent);">Inteligência Emocional</a></li>
+              <li>🔗 <a href="/src/docs/certificado-autismo_saude.pdf" target="_blank" style="color: var(--accent);">Autismo e Saúde</a></li>
+              <li>🔗 <a href="/src/docs/certificado-saude_mental.pdf" target="_blank" style="color: var(--accent);">Saúde Mental no Ambiente de Trabalho</a></li>
+              <li>🔗 <a href="/src/docs/certificado-lideranca.pdf" target="_blank" style="color: var(--accent);">Liderança</a></li>
+              <li>🔗 <a href="/src/docs/Ciência, Tecnologia, Inovacao.pdf" target="_blank" style="color: var(--accent);">Ciência, Tecnologia e Inovação</a></li>
             </ul>
           </div>
         </article>
 
-        <!-- ========================================== -->
-        <!-- SEÇÃO: IDIOMAS                             -->
-        <!-- ========================================== -->
-        <article id="idiomas" class="curriculo-section">
-          <h2>🌎 Idiomas</h2>
-          <p><strong>Inglés básico</strong> — <i>Busco pelo desenvolvimento</i></p>
+        <!-- SEÇÃO: IDIOMAS -->
+        <article id="idiomas" class="curriculo-section card">
+          <span class="badge-sector">Global</span>
+          <h2 class="card-header-tech">🌎 Idiomas</h2>
+          <p class="data-item-desc"><strong>Inglês básico</strong> — <i>Focado em expansão técnica e leitura de documentações.</i></p>
         </article>
 
-
-        <!-- ========================================== -->
-        <!-- SEÇÃO: HABILIDADES                         -->
-        <!-- ========================================== -->
-        <article id="habilidades" class="curriculo-section">
-          <h2>⚡ Habilidades</h2>
-          <p>
-            Jovem e em desenvolvimento. Habilidade de transformar <strong>todas as idéias em soluções</strong>, habilidades de programação e estratégias tecnológicas que aumentam resultados. Proativo, criativo em qualquer área e orientado a metas.
+        <!-- SEÇÃO: HABILIDADES -->
+        <article id="habilidades" class="curriculo-section card">
+          <span class="badge-sector">Hard &amp; Soft Skills</span>
+          <h2 class="card-header-tech">⚡ Habilidades</h2>
+          <p class="data-item-desc">
+            Orientado a metas, proativo e com facilidade de adaptação. Capacidade técnica para converter requisitos teóricos em arquiteturas funcionais eletroeletrônicas e de software.
           </p>
           
-          <!-- Bloco 1: Habilidades Técnicas -->
-          <div class="edu-item">
-            <h4>Desenvolvendo habilidades em:</h4>
-            <p>
-              <a href="https://developer.mozilla.org/pt-BR/docs/Web/HTML" target="_blank" class="text-link" title="Documentação HTML">HTML</a>,
-              <a href="https://developer.mozilla.org/pt-BR/docs/Web/CSS" target="_blank" class="text-link" title="Documentação CSS">CSS</a>,
-              <a href="https://developer.mozilla.org/pt-BR/docs/Web/JavaScript" target="_blank" class="text-link" title="Documentação JavaScript">JavaScript</a>, Robótica, Gestão,
-              <a href="https://www.gov.br/trabalho-e-emprego/pt-br/assuntos/inspecao/seguranca-e-saude-no-trabalho/normas-regulamentadoras/nr-10" target="_blank" class="text-link" title="NR-10: Segurança em Instalações Elétricas">NR-10</a>.
-            </p>
+          <div class="edu-item" style="margin-bottom: 1rem;">
+            <h4 style="margin-bottom: 0.5rem;">Engenharia de Software &amp; Automação</h4>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+              <a href="https://developer.mozilla.org/pt-BR/docs/Web/HTML" target="_blank" class="badge-sector" style="margin:0;">HTML5</a>
+              <a href="https://developer.mozilla.org/pt-BR/docs/Web/CSS" target="_blank" class="badge-sector" style="margin:0;">CSS3</a>
+              <a href="https://developer.mozilla.org/pt-BR/docs/Web/JavaScript" target="_blank" class="badge-sector" style="margin:0;">JavaScript</a>
+              <span class="badge-sector" style="margin:0;">Robótica</span>
+              <a href="https://www.gov.br/trabalho-e-emprego/pt-br/assuntos/inspecao/seguranca-e-saude-no-trabalho/normas-regulamentadoras/nr-10" target="_blank" class="badge-sector" style="margin:0;">NR-10</a>
+            </div>
             
-            <h4 style="margin-top: 1rem;">Formações Desejadas</h4>
-            <p>
-              Retorno a <a href="https://learn.microsoft.com/pt-br/cpp/cpp/?view=msvc-170" target="_blank" class="text-link" title="Documentação C++">C++</a> e <a href="https://learn.microsoft.com/pt-br/dotnet/" target="_blank" class="text-link" title=".NET Microsoft">.NET</a>, Gestão Industrial; Automação Industrial.
+            <h4 style="margin-bottom: 0.25rem;">Roadmap de Especialização Técnico-Científica</h4>
+            <p class="data-item-desc">
+              Foco no retorno ativo a <a href="https://learn.microsoft.com/pt-br/cpp/cpp/?view=msvc-170" target="_blank" style="color:var(--accent);">C++</a>, ecossistemas <a href="https://learn.microsoft.com/pt-br/dotnet/" target="_blank" style="color:var(--accent);">.NET Microsoft</a>, Gestão de Operações e Automação Industrial Baseada em PLC.
             </p>
-            <p class="meta">NR11, NR12, NR13, NR18, NR33, NR35 (Reciclagem e completo);</p>
+            <p class="meta">Qualificações de Campo: NR11, NR12, NR13, NR18, NR33, NR35 (Planejamento de Reciclagem Integral).</p>
           </div>
         
-          <!-- Bloco 2: Manutenção -->
-          <div class="edu-item">
-            <h4>🛠️ Manutenção</h4>
-            <p>Eletrônica e Elétrica (exceto som e imagem)</p>
+          <div class="edu-item" style="margin-bottom: 1rem;">
+            <h4>🛠️ Engenharia de Manutenção</h4>
+            <p class="data-item-desc">Manutenção Corretiva e Preventiva nos domínios de Eletrônica Analógica/Digital e Sistemas Elétricos Industriais (excluindo linhas de áudio/vídeo comercial).</p>
             <p class="meta">
-              Cursos Planejados a curto Prazo:
-              <a href="https://sp.senai.br/cursos/101948-comandos-eletricos" target="_blank" class="text-link" title="Curso de Comandos Elétricos SENAI">Comandos Elétricos</a>,
-              <a href="https://sp.senai.br/cursos/" target="_blank" class="text-link" title="Curso de Eletrônica de Potência SENAI">Eletrônica de Potência e Industrial</a>
+              Especializações em curto prazo:
+              <a href="https://sp.senai.br/cursos/101948-comandos-eletricos" target="_blank" style="color:var(--accent);">Comandos Elétricos</a> e 
+              <a href="https://sp.senai.br/cursos/" target="_blank" style="color:var(--accent);">Eletrônica de Potência</a>.
             </p>
           </div>
           
-          <!-- Bloco 3: Potencial -->
           <div class="edu-item">
-            <h4>🚀 Diferenças e Potencial</h4>
-            <p>
-              Proativo, Resiliência,
-              <a href="https://www.gov.br/trabalho-e-emprego/pt-br/assuntos/inspecao/seguranca-e-saude-no-trabalho/normas-regulamentadoras/nr-35" target="_blank" class="text-link" title="NR-35: Trabalho em Altura">NR-35</a>
-            </p>
+            <h4>🚀 Diferenciais Estratégicos</h4>
+            <p class="data-item-desc">Resiliência Operacional sob pressão, Proatividade Logística e aptidão física para Trabalho em Altura (<a href="https://www.gov.br/trabalho-e-emprego/pt-br/assuntos/inspecao/seguranca-e-saude-no-trabalho/normas-regulamentadoras/nr-35" target="_blank" style="color:var(--accent);">NR-35</a>).</p>
           </div>
         </article>
-        <!-- ========================================== -->
-        <!-- SEÇÃO: PROJETOS ACADÊMICOS                 -->
-        <!-- ========================================== -->
-        <article id="projetos" class="curriculo-section">
-          <h2>🚀 Projetos Acadêmicos de Extensão - UNIASSELVI</h2>
-          <p class="meta">2024 - 2026</p>
-          <p>Desenvolvimento de sites e serviços públicos com foco na comunidade.</p>
+
+        <!-- SEÇÃO: PROJETOS ACADÊMICOS -->
+        <article id="projetos" class="curriculo-section card">
+          <span class="badge-sector">Laboratório de Software</span>
+          <h2 class="card-header-tech">🚀 Projetos Acadêmicos de Extensão - UNIASSELVI</h2>
+          <p class="meta">Ciclo Ativo: 2024 - 2026</p>
+          <p class="data-item-desc">Desenvolvimento e implantação de serviços Web focados no impacto social e infraestrutura pública comunitária.</p>
           
-          <ul class="cert-links-list">
-            <li><a href="https://conselhotutelarbnu.onrender.com" target="_blank">🔗 Conselho Tutelar de Blumenau</a></li>
-            <li><a href="https://esf-thamara.onrender.com/" target="_blank">🔗 ESF Thamara - Site para divulgação de informações</a></li>
-            <li><a href="https://violenciadomestica.onrender.com/" target="_blank">🔗 Site de Prevenção à Violência Doméstica</a></li>
-            <li><a href="https://beta-m8xz.onrender.com/chat-bot.html" target="_blank">🤖 Assistente Virtual de Saúde e Triagem</a></li>
-            <li><a href="https://campanhafaculdade.onrender.com/" target="_blank">🔗 Campanha de Doações da Faculdade</a></li>
+          <ul class="cert-links-list" style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem;">
+            <li>🔗 <a href="https://conselhotutelarbnu.onrender.com" target="_blank" style="color: var(--accent);">Conselho Tutelar de Blumenau</a></li>
+            <li>🔗 <a href="https://esf-thamara.onrender.com/" target="_blank" style="color: var(--accent);">ESF Thamara - Portal Informativo de Saúde</a></li>
+            <li>🔗 <a href="https://violenciadomestica.onrender.com/" target="_blank" style="color: var(--accent);">Plataforma de Prevenção à Violência Doméstica</a></li>
+            <li>🤖 <a href="https://beta-m8xz.onrender.com/chat-bot.html" target="_blank" style="color: var(--accent);">Assistente Virtual Interativo de Triagem Médica</a></li>
+            <li>🔗 <a href="https://campanhafaculdade.onrender.com/" target="_blank" style="color: var(--accent);">Sistema de Gestão de Campanhas Solidárias</a></li>
           </ul>
           
           <div style="margin-top: 1.5rem;">
-            <a href="https://github.com/IvanM1999" target="_blank" class="text-link">🐙 Ver projetos no GitHub</a>
+            <a href="https://github.com/IvanM1999" target="_blank" class="text-link">🐙 Explorar Repositórios no GitHub</a>
           </div>
         </article>
 
-        <!-- ========================================== -->
-        <!-- SEÇÃO: EXPERIÊNCIAS DE TRABALHO            -->
-        <!-- ========================================== -->
-        <article id="experiencia" class="curriculo-section">
-          <h2>💼 Experiências de Trabalho</h2>
+        <!-- SEÇÃO: EXPERIÊNCIAS DE TRABALHO -->
+        <article id="experiencia" class="curriculo-section card">
+          <span class="badge-sector">Histórico Profissional</span>
+          <h2 class="card-header-tech">💼 Experiências de Trabalho</h2>
           
-          <div class="edu-item">
-            <h4>Salver Construtora</h4>
-            <p class="meta">Eletricista</p>
-          </div>
+          <div class="quick-ref" style="padding: 0; background: transparent; margin: 0; display: flex; flex-direction: column; gap: 0.75rem;">
+            <div style="border-left: 3px solid var(--accent); padding-left: 1rem;">
+              <h4 style="font-size: 1rem;">Salver Construtora</h4>
+              <p class="meta">Eletricista de Manutenção e Instalações</p>
+            </div>
 
-          <div class="edu-item">
-            <h4>Zeus do Brasil</h4>
-            <p class="meta">Almoxarifado</p>
-          </div>
+            <div style="border-left: 3px solid var(--accent); padding-left: 1rem;">
+              <h4 style="font-size: 1rem;">Zeus do Brasil</h4>
+              <p class="meta">Operações de Almoxarifado e Controle de Inventário</p>
+            </div>
 
-          <div class="edu-item">
-            <h4>IBRAPE Indústria e Comércio</h4>
-            <p class="meta">Estágio na produção de circuitos eletrônicos</p>
-          </div>
+            <div style="border-left: 3px solid var(--accent); padding-left: 1rem;">
+              <h4 style="font-size: 1rem;">IBRAPE Indústria e Comércio</h4>
+              <p class="meta">Estágio Técnico na Produção e Análise de Circuitos Eletrônicos</p>
+            </div>
 
-          <div class="edu-item">
-            <h4>Planeta Mix utilidades</h4>
-            <p class="meta">Varejista e repositor <i>(temporário)</i></p>
-          </div>
+            <div style="border-left: 3px solid var(--accent); padding-left: 1rem;">
+              <h4 style="font-size: 1rem;">Planeta Mix Utilidades</h4>
+              <p class="meta">Operações Varejistas e Logística de Reposição (Contrato Temporário)</p>
+            </div>
 
-          <div class="edu-item">
-            <h4>Electro Aço Altona</h4>
-            <p class="meta">Eletricista</p>
-          </div>
+            <div style="border-left: 3px solid var(--accent); padding-left: 1rem;">
+              <h4 style="font-size: 1rem;">Electro Aço Altona</h4>
+              <p class="meta">Eletricista Industrial</p>
+            </div>
 
-          <div class="edu-item">
-            <h4>Electro Aço Altona</h4>
-            <p class="meta">Aprendiz em Eletrônica Industrial - SENAI</p>
-          </div>
+            <div style="border-left: 3px solid var(--accent); padding-left: 1rem;">
+              <h4 style="font-size: 1rem;">Electro Aço Altona</h4>
+              <p class="meta">Aprendiz de Eletrônica Industrial — Parceria SENAI</p>
+            </div>
 
-          <div class="edu-item">
-            <h4>Proesi Componentes Eletrônicos</h4>
-            <p class="meta">Separador <i>(temporário)</i></p>
-          </div>
+            <div style="border-left: 3px solid var(--accent); padding-left: 1rem;">
+              <h4 style="font-size: 1rem;">Proesi Componentes Eletrônicos</h4>
+              <p class="meta">Triagem e Separação de Componentes Eletrônicos (Contrato Temporário)</p>
+            </div>
 
-          <div class="edu-item">
-            <h4>D’Nardelli Atacarejo</h4>
-            <p class="meta">Atendente, Padeiro e auxiliar de padaria <i>(temporário)</i></p>
-          </div>
+            <div style="border-left: 3px solid var(--accent); padding-left: 1rem;">
+              <h4 style="font-size: 1rem;">D’Nardelli Atacarejo</h4>
+              <p class="meta">Atendimento Técnico ao Cliente e Operações de Padaria (Contrato Temporário)</p>
+            </div>
 
-          <div class="edu-item">
-            <h4>Paraíso dos Pastéis Pastelaria</h4>
-            <p class="meta">Auxiliar de cozinha e chapeiro <i>(temporário)</i></p>
-          </div>
+            <div style="border-left: 3px solid var(--accent); padding-left: 1rem;">
+              <h4 style="font-size: 1rem;">Paraíso dos Pastéis</h4>
+              <p class="meta">Operações Logísticas de Cozinha e Preparo Rápido (Contrato Temporário)</p>
+            </div>
 
-          <div class="edu-item">
-            <h4>BC Comércio e Artigos Domésticos Ltda</h4>
-            <p class="meta">Vendedor e repositor <i>(temporário)</i></p>
-          </div>
+            <div style="border-left: 3px solid var(--accent); padding-left: 1rem;">
+              <h4 style="font-size: 1rem;">BC Comércio e Artigos Domésticos Ltda</h4>
+              <p class="meta">Consultoria de Vendas e Gestão de Gôndolas (Contrato Temporário)</p>
+            </div>
 
-          <div class="edu-item">
-            <h4>Posto Zandoná Z12</h4>
-            <p class="meta"><b>Projeto Gerar</b> — Jovem Aprendiz em Logística e Marketing</p>
+            <div style="border-left: 3px solid var(--accent); padding-left: 1rem;">
+              <h4 style="font-size: 1rem;">Posto Zandoná Z12</h4>
+              <p class="meta"><b>Projeto Gerar</b> — Jovem Aprendiz em Logística de Distribuição e Marketing</p>
+            </div>
           </div>
         </article>
-      <!-- Fechamento da section .curriculo-main e da div .curriculo-layout abertas no início -->
+
       </section>
-      </div>
-      </main>
+    </div>
+  </main>
       
-      <!-- ========================================== -->
-      <!-- RODAPÉ E CONTATO (FOOTER)                  -->
-      <!-- ========================================== -->
-      <footer id="contato" class="footer">
-        <div class="footer-container">
-          <h2>Vamos Conversar?</h2>
-          <p>Aberto para novas oportunidades.</p>
-          
-          <!-- Preservação do texto de direitos autorais original -->
-          <p class="footer-msg" style="margin-top: 1rem;">
-            &copy; 2024-2026 Ivan Montibeller. Todos os direitos reservados.
-          </p>
-        </div>
-      </footer>
+  <!-- ========================================== -->
+  <!-- RODAPÉ E CONTATO (FOOTER)                  -->
+  <!-- ========================================== -->
+  <footer id="contato" class="footer">
+    <div class="footer-container">
+      <h2 style="font-size: 1.6rem; margin-bottom: 0.5rem;">Vamos Conversar?</h2>
+      <p style="color: var(--text-sec); margin-bottom: 1.5rem;">Disponível para novos desafios e parcerias em tecnologia e mecatrônica.</p>
       
-      <!-- ========================================== -->
-      <!-- SCRIPTS DE SEGURANÇA E COMPORTAMENTO       -->
-      <!-- ========================================== -->
-      <script>
-        // Proteção contra bot/scraper
-        document.documentElement.setAttribute('data-protected', 'true');
-        
-        // Log de segurança original
-        console.log('%c⚠️ Aviso de Segurança', 'color: red; font-size: 20px; font-weight: bold');
-        console.log('%cEste é um console reservado para desenvolvedores. Não digite comandos de terceiros aqui.', 'color: orange; font-size: 12px');
-        console.log('%cSeu navegador pode estar vulnerável se você copiar e colar código malicioso aqui.', 'color: red; font-size: 12px');
-        
-        // Prevenção de cópia de email/telefone por bots original
-        document.addEventListener('copy', function(e) {
-          let copiedText = window.getSelection().toString();
-          if (copiedText.includes('@') || copiedText.includes('984863051')) {
-            console.warn('Tentativa de cópia de informações sensíveis detectada');
-          }
-        });
-      </script>
+      <!-- Preservação do texto de direitos autorais original -->
+      <p class="footer-msg">
+        &copy; 2024-2026 Ivan Montibeller. Todos os direitos reservados.
+      </p>
+    </div>
+  </footer>
       
-      <!-- Scripts do novo ecossistema e script back-end original -->
-      <script src="../db_industrial.js"></script>
-      <script src="../core.js"></script>
-      <script src="/backend/script.js"></script>
-      </body>
+  <!-- ========================================== -->
+  <!-- SCRIPTS DE SEGURANÇA E COMPORTAMENTO       -->
+  <!-- ========================================== -->
+  <script>
+    // Proteção contra bot/scraper original
+    document.documentElement.setAttribute('data-protected', 'true');
+    
+    // Log de segurança original
+    console.log('%c⚠️ Aviso de Segurança', 'color: red; font-size: 20px; font-weight: bold');
+    console.log('%cEste é um console reservado para desenvolvedores. Não digite comandos de terceiros aqui.', 'color: orange; font-size: 12px');
+    console.log('%cSeu navegador pode estar vulnerável se você copiar e colar código malicioso aqui.', 'color: red; font-size: 12px');
+    
+    // Prevenção de cópia de email/telefone por bots original
+    document.addEventListener('copy', function(e) {
+      let copiedText = window.getSelection().toString();
+      if (copiedText.includes('@') || copiedText.includes('984863051')) {
+        console.warn('Tentativa de cópia de informações sensíveis detectada');
+      }
+    });
+  </script>
       
-      </html>
+  <!-- Injeção dos Motores de Script Traseiros -->
+  <script src="../db_industrial.js"></script>
+  <script src="../core.js"></script>
+  <script src="/backend/script.js"></script>
+</body>
+</html>

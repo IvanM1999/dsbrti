@@ -3,52 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="DestinyServicesBR — Hub Operacional de Engenharia de Software, Metrologia Industrial e Ecossistemas Digitais.">
-  
-  <!-- theme-color dinâmico inicial (será controlado pelos temas, mas começa neutro/escuro elegante) -->
-  <meta name="theme-color" content="#12151c">
-  
-  <title>DestinyServicesBR</title>
-  
-  <!-- Fontes de Alta Performance e Suavização de Renderização (Segoe UI Variable & Ubuntu) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  
+  <meta name="description" content="DSBRTI — Sistema Industrial de Metrologia e Conversões Técnicas">
+  <meta name="theme-color" content="#E95420">
+  <title>DSBRTI · Sistema Industrial</title>
   <link rel="stylesheet" href="estilos.css">
-  
-  <!-- Favicon Geométrico Premium (Substitui o quadrado laranja genérico por um indicador de engrenagem minimalista em vetor limpo) -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='none' stroke='%23ffffff' stroke-width='2' stroke-opacity='0.2'/%3E%3Cpath d='M16 8v16M8 16h16' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-opacity='0.6'/%3E%3Ccircle cx='16' cy='16' r='5' fill='%230078d4'/%3E%3C/svg%3E">
-  
-  <!-- Scripts de Inicialização e Patches de Escopo -->
-  <script src="senai/patches.js" defer></script>
-  <script src="tema-inteligente.js"></script>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23E95420'/%3E%3Ctext x='4' y='24' font-size='20' font-weight='bold' fill='%23fff'%3ED%3C/text%3E%3C/svg%3E">
+    <script src="patches.js"></script>
+    <script src="core.js"></script>
+
 </head>
 
 <body>
 
-  <!-- Barra de Navegação Fluida e Centralizada -->
   <nav class="navbar" role="navigation" aria-label="Navegação principal">
     <div class="nav-container">
-      <span class="nav-brand">⚙️ DestinyServicesBR</span>
-      
+      <span class="nav-brand">⚙ Ivan Montibeller</span>
       <ul class="nav-links">
-        <li><a href="index.html" class="active">Início</a></li>
-        <li><a href="currículo/index.html">Landing</a></li>
-        <li><a href="senai/metrologia.html">Metrologia</a></li>
-        <li><a href="curriculo/index.html">Currículo</a></li>
-        <li><a href="portifólio/index.html">Portfólio</a></li>
+        <li><a href="../index.html">Início</a></li>
+        <li><a href="../landingpage.html">Landing</a></li>
+        <li><a href="../senai/metrologia.html">Metrologia</a></li>
+        <li><a href="index.html">Currículo</a></li>
+        <li><a href="../portifólio/index.html">Portifólio</a></li>
       </ul>
-      
-      <!-- Switcher Atualizado com os Ícones Reais dos Sistemas Modernizados -->
-      <!-- Mantidos os valores "fedora" e "winxp" estritamente nos data-themes para preservar compatibilidade com seu js de troca de classe -->
-      <div class="theme-switcher theme-switch">
-        <button data-theme="ubuntu" class="theme-btn active" title="Ubuntu Linux (Yaru Design)">🦧</button>
-        <button data-theme="fedora" class="theme-btn" title="Linux Mint (Cinnamon Green)">🌿</button>
-        <button data-theme="winxp" class="theme-btn" title="Windows 11 (Fluent Design)">🪟</button>
+      <div class="theme-switch">
+        <button data-theme="ubuntu" class="theme-btn active" title="Ubuntu">🐧</button>
+        <button data-theme="fedora" class="theme-btn" title="Fedora">🔵</button>
+        <button data-theme="winxp" class="theme-btn" title="Windows XP">🪟</button>
       </div>
     </div>
   </nav>
-
 
   <header class="hero">
     <div class="hero-content">
@@ -69,7 +52,7 @@
         <h2>🏢 DestinyServicesBR</h2>
         <p class="meta">CNPJ: 45.609.430/0001-43</p>
         <p style="margin-bottom: 1rem;">
-          A <strong>DestinyServicesBR</strong> nasceu com o propósito de aproximar o desenvolvimento de software moderno das necessidades reais da automação de hardware e do impacto comunitário. Especializada no desenvolvimento de sites institucionais inteligentes, assistentes virtuais de triagem e platforms focadas em utilidade pública.
+          A <strong>DestinyServicesBR</strong> nasceu com o propósito de aproximar o desenvolvimento de software moderno das necessidades reais da automação de hardware e do impacto comunitário. Especializada no desenvolvimento de sites institucionais inteligentes, assistentes virtuais de triagem e plataformas focadas em utilidade pública.
         </p>
         <p>
           Atuamos na intersecção entre a eficiência do código puramente digital e a robustez lógica exigida pelo chão de fábrica e sistemas de controle automotivos ou industriais.
@@ -161,17 +144,16 @@
     </div>
   </footer>
 
-  <!-- Altere apenas a área de scripts no final do seu index.html para isso: -->
   <div id="toast" class="toast" role="alert" aria-live="assertive"></div>
   
-  <!-- Scripts de Controle de Escopo Limpo -->
-  <script src="senai/core.js"></script>
+  <script src="db_industrial.js"></script>
+  <script src="calculadoras.js"></script>
+  <script src="core.js"></script>
+  <script src="patches.js"></script>
   
-  <!-- Camada protetiva e inicialização limpa -->
-  <script>
+    // Ativação da camada protetiva contra automações/scrapers
     document.documentElement.setAttribute('data-protected', 'true');
-    console.log('%c⚙️ DestinyServicesBR Engine Iniciada com Sucesso na Home.', 'color: #92b73e; font-weight: bold;');
+    console.log('%c⚙️ DestinyServicesBR Engine Iniciada com Sucesso.', 'color: #92b73e; font-weight: bold;');
   </script>
-
 </body>
 </html>
