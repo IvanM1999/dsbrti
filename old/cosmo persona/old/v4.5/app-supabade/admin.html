@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body onload="requireAuth(); carregarAdmin();">
+
+<div class="container">
+
+  <div class="sidebar">
+    <h2>Admin</h2>
+    <button onclick="window.location.href='index.html'">Dashboard</button>
+    <button onclick="logout()">Sair</button>
+  </div>
+
+  <div class="main">
+    <h1>Painel Admin</h1>
+    <div id="adminLogs"></div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="auth.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>

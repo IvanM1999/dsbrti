@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CosmoPersona Hub</title>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<style>
+:root{
+--pink:#ff4da6;
+--bg:#0a0a0f;
+--card:rgba(255,255,255,0.05);
+}
+
+body{
+margin:0;
+font-family:system-ui;
+background:linear-gradient(135deg,#1a0026,#000);
+color:white;
+}
+
+/* HEADER */
+.header{
+display:flex;
+justify-content:space-between;
+padding:15px;
+}
+
+button{
+cursor:pointer;
+}
+
+/* GRID */
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:15px;
+padding:20px;
+}
+
+.card{
+background:var(--card);
+padding:15px;
+border-radius:16px;
+text-align:center;
+cursor:pointer;
+}
+
+.card img{
+width:80px;
+height:80px;
+border-radius:50%;
+object-fit:cover;
+}
+
+/* ADMIN */
+.admin{
+position:fixed;
+top:0;
+right:0;
+width:300px;
+height:100%;
+background:#111;
+padding:20px;
+overflow:auto;
+border-left:1px solid #333;
+}
+
+input, textarea{
+width:100%;
+margin-bottom:10px;
+padding:8px;
+border-radius:6px;
+border:none;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<h2>CosmoPersona Hub</h2>
+<button onclick="toggleAdmin()">⚙️ Admin</button>
+</div>
+
+<div id="grid" class="grid"></div>
+
+<!-- ADMIN -->
+<div id="admin" class="admin" style="display:none;">
+<h3>Painel Admin</h3>
+
+<input id="name" placeholder="Nome">
+<input id="area" placeholder="Área">
+<textarea id="desc" placeholder="Descrição"></textarea>
+<input type="file" id="img">
+
+<button onclick="addProfile()">Adicionar</button>
+
+<hr>
+
+<div id="list"></div>
+</div>
+
+<script>
+
+/* ===== DATABASE ===== */
+let profiles = JSON.parse(localStorage.getItem("profiles")) || [];
+
+/* ===== GERAR 100 AUTOMÁTICOS ===== */
+if(profiles.length === 0){
+const areas = ["Espiritual","Educação","Tecnologia","Negócios","Saúde"];
+
+for(let i=1;i<=100;i++){
+profiles.push({
+id:i,
+name:"Persona "+i,
+area:areas[i%5],
+desc:"Perfil profissional fictício número "+i,
+img:"https://i.pravatar.cc/150?img="+i
+});
+}
+
+save();
+}
+
+/* ===== SAVE ===== */
+function save(){
+localStorage.setItem("profiles", JSON.stringify(profiles));
+render();
+renderAdmin();
+}
+
+/* ===== RENDER GRID ===== */
+function render(){
+const grid = document.getElementById("grid");
+grid.innerHTML="";
+
+profiles.forEach(p=>{
+grid.innerHTML += `
+<div class="card">
+<img src="${p.img}">
+<h3>${p.name}</h3>
+<p>${p.area}</p>
+</div>
+`;
+});
+}
+
+/* ===== ADMIN ===== */
+function toggleAdmin(){
+const admin = document.getElementById("admin");
+admin.style.display = admin.style.display==="none"?"block":"none";
+}
+
+/* ADD */
+function addProfile(){
+const name = document.getElementById("name").value;
+const area = document.getElementById("area").value;
+const desc = document.getElementById("desc").value;
+const file = document.getElementById("img").files[0];
+
+if(!name) return alert("Nome obrigatório");
+
+if(file){
+const reader = new FileReader();
+reader.onload = function(e){
+profiles.push({
+id:Date.now(),
+name,area,desc,
+img:e.target.result
+});
+save();
+}
+reader.readAsDataURL(file);
+}else{
+profiles.push({
+id:Date.now(),
+name,area,desc,
+img:"https://i.pravatar.cc/150"
+});
+save();
+}
+}
+
+/* ADMIN LIST */
+function renderAdmin(){
+const list = document.getElementById("list");
+list.innerHTML="";
+
+profiles.forEach(p=>{
+list.innerHTML += `
+<div>
+<b>${p.name}</b>
+<button onclick="del(${p.id})">X</button>
+</div>
+`;
+});
+}
+
+/* DELETE */
+function del(id){
+profiles = profiles.filter(p=>p.id!==id);
+save();
+}
+
+/* INIT */
+render();
+renderAdmin();
+
+</script>
+
+</body>
+</html>

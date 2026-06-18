@@ -1,0 +1,40 @@
+body{
+  margin:0;
+  font-family:system-ui;
+  background:#0a0a0f;
+  color:#fff;
+}
+
+.container{
+  padding:20px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:15px;
+}
+
+.card{
+  background:#111;
+  padding:15px;
+  border-radius:12px;
+}
+
+input,button{
+  padding:10px;
+  border-radius:8px;
+  border:none;
+  margin:5px 0;
+}
+
+button{
+  background:#ff4da6;
+  color:#fff;
+  cursor:pointer;
+}
+
+.nav{
+  display:flex;
+  gap:10px;
+}

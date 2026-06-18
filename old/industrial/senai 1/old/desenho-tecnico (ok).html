@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Central de Metrologia Avançada V4</title>
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a73e8;
+            --primary-hover: #1557b0;
+            --bg-page: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-sub: #64748b;
+            --border: #e2e8f0;
+            --highlight: #e8f0fe;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+        }
+
+        /* Topo */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 16px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 500;
+            color: var(--primary);
+            margin: 0;
+        }
+
+        /* Abas */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-sub);
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            background-color: #f1f5f9;
+            color: var(--primary);
+        }
+
+        .tab-btn.active {
+            background-color: var(--highlight);
+            color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+            margin-bottom: 20px;
+        }
+
+        /* Zona do Conversor Inteligente */
+        .converter-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            position: relative;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            width: 100%;
+        }
+
+        .field-box {
+            flex: 1;
+        }
+
+        .field-box input, .field-box select {
+            width: 100%;
+            height: 52px;
+            padding: 0 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            color: var(--text-main);
+            background-color: #fff;
+            transition: border 0.2s;
+        }
+
+        .field-box input:focus, .field-box select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.15);
+        }
+
+        .select-unit {
+            max-width: 220px;
+        }
+
+        .fraction-row {
+            display: none;
+            gap: 8px;
+            align-items: center;
+            flex: 1;
+        }
+
+        .fraction-row select {
+            height: 52px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            padding: 0 12px;
+        }
+
+        /* Botão Inverter */
+        .swap-wrapper {
+            display: flex;
+            justify-content: center;
+            margin: -4px 0;
+            z-index: 2;
+        }
+
+        .swap-btn {
+            background: #fff;
+            border: 1px solid var(--border);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+        }
+
+        .swap-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        /* Memorial de Cálculo */
+        .memorial-box {
+            background-color: #f8fafc;
+            border-left: 4px solid var(--primary);
+            border-radius: 4px;
+            padding: 16px;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .memorial-title {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        code {
+            background: #fff;
+            padding: 2px 6px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-family: monospace;
+            font-weight: bold;
+            color: #c2410c;
+        }
+
+        /* Histórico */
+        .history-list {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+        
+        .history-item:last-child { border: none; }
+
+        /* Tabela e Busca */
+        .search-bar {
+            width: 100%;
+            height: 46px;
+            padding: 0 16px;
+            border: 1px solid var(--border);
+            border-radius: 23px;
+            font-size: 15px;
+            margin-bottom: 16px;
+        }
+
+        .table-wrapper {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f1f5f9;
+            position: sticky;
+            top: 0;
+            padding: 12px;
+            font-size: 12px;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            text-align: left;
+        }
+
+        td {
+            padding: 10px 12px;
+            font-size: 14px;
+            border-bottom: 1px solid #f1f5f9;
+            font-variant-numeric: tabular-nums;
+        }
+
+        tr.row-inch td {
+            background-color: var(--highlight);
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .text-right { text-align: right; }
+        .hide { display: none !important; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <div class="header">
+        <h1>Central Metrológica V4</h1>
+        <span style="font-size: 12px; color: var(--text-sub)">Alta Precisão Industrial</span>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="mudarAba('panel-converter', this)">Conversor Avançado</button>
+        <button class="tab-btn" onclick="mudarAba('panel-table', this)">Tabela de Referência (Até 3")</button>
+    </div>
+
+    <div id="panel-converter" class="tab-content active">
+        <div class="card">
+            <div class="converter-layout">
+                
+                <div class="input-group">
+                    <div class="field-box" id="box-numeric-left">
+                        <input type="number" id="val-left" value="1.0000" step="0.0001" oninput="calcularMetrologia()">
+                    </div>
+                    <div class="fraction-row" id="box-fraction-left">
+                        <select id="frac-int" onchange="calcularMetrologia()"></select>
+                        <select id="frac-num" onchange="calcularMetrologia()"></select>
+                        <span style="font-weight: bold; color: var(--text-sub)">/</span>
+                        <select id="frac-den" onchange="calcularMetrologia()"></select>
+                    </div>
+                    <div class="field-box select-unit">
+                        <select id="unit-left" onchange="adaptarInterface()">
+                            <option value="in_dec" selected>Polegada Milesimal (in)</option>
+                            <option value="in_frac">Polegada Fracionária (pol)</option>
+                            <option value="mm">Milímetros (mm)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="swap-wrapper">
+                    <button class="swap-btn" title="Inverter Unidades" onclick="inverterUnidades()">⇅</button>
+                </div>
+
+                <div class="input-group">
+                    <div class="field-box">
+                        <input type="text" id="val-right" readonly style="background-color: #f8fafc; font-weight: 600;">
+                    </div>
+                    <div class="field-box select-unit">
+                        <select id="unit-right" onchange="calcularMetrologia()">
+                            <option value="in_dec">Polegada Milesimal (in)</option>
+                            <option value="mm" selected>Milímetros (mm)</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="memorial-box">
+                <div class="memorial-title">📋 Resolução e Análise Metrológica</div>
+                <div id="memorial-content">Aguardando dados...</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="memorial-title" style="margin-bottom: 12px; color: var(--text-main);">🕒 Histórico de Operações Recentes</div>
+            <div id="history-box">
+                <p style="font-size: 13px; color: var(--text-sub); margin: 0;">Nenhuma conversão guardada nesta sessão.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="panel-table" class="tab-content">
+        <input type="text" class="search-bar" id="search-input" placeholder="🔍 Escreva para filtrar (ex: 3/4, 0.5000, 19.0500...)" oninput="filtrarTabela(this.value)">
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Polegada Fracionária</th>
+                        <th class="text-right">Polegada Milesimal</th>
+                        <th class="text-right">Milímetros (mm)</th>
+                    </tr>
+                </thead>
+                <tbody id="table-rows"></tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    let historico = [];
+
+    window.onload = function() {
+        popularCamposFracao();
+        gerarTabelaEstrutural();
+        adaptarInterface();
+    };
+
+    function mudarAba(id, btn) {
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        btn.classList.add('active');
+    }
+
+    function popularCamposFracao() {
+        const iSel = document.getElementById('frac-int');
+        const nSel = document.getElementById('frac-num');
+        const dSel = document.getElementById('frac-den');
+
+        for(let i=0; i<=3; i++) iSel.innerHTML += `<option value="${i}">${i}"</option>`;
+        for(let i=0; i<=64; i++) nSel.innerHTML += `<option value="${i}">${i === 0 ? '0 (inteiro)' : i}</option>`;
+        [2, 4, 8, 16, 32, 64].forEach(d => dSel.innerHTML += `<option value="${d}">${d}</option>`);
+        dSel.value = 16;
+    }
+
+    function mdc(a, b) { return b ? mdc(b, a % b) : a; }
+    function simplificar(n, d) {
+        let g = mdc(n, d);
+        return [n/g, d/g];
+    }
+
+    function gerarTabelaEstrutural() {
+        const tbody = document.getElementById('table-rows');
+        let html = "";
+        for(let i = 1; i < 64; i++) {
+            let [n, d] = simplificar(i, 64);
+            let dec = i / 64;
+            html += `<tr><td>${n}/${d}"</td><td class="text-right">${dec.toFixed(4)}"</td><td class="text-right">${(dec*25.4).toFixed(4)} mm</td></tr>`;
+        }
+        for(let inch = 1; inch <= 3; inch++) {
+            html += `<tr class="row-inch"><td>${inch}" (Inteira)</td><td class="text-right">${inch.toFixed(4)}"</td><td class="text-right">${(inch*25.4).toFixed(4)} mm</td></tr>`;
+            if(inch < 3) {
+                for(let f = 1; f < 16; f++) {
+                    let [n, d] = simplificar(f, 16);
+                    let dec = inch + (f / 16);
+                    html += `<tr><td>${inch} ${n}/${d}"</td><td class="text-right">${dec.toFixed(4)}"</td><td class="text-right">${(dec*25.4).toFixed(4)} mm</td></tr>`;
+                }
+            }
+        }
+        tbody.innerHTML = html;
+    }
+
+    function adaptarInterface() {
+        const mode = document.getElementById('unit-left').value;
+        document.getElementById('box-numeric-left').style.display = (mode === 'in_frac') ? 'none' : 'block';
+        document.getElementById('box-fraction-left').style.display = (mode === 'in_frac') ? 'flex' : 'none';
+        calcularMetrologia();
+    }
+
+    function inverterUnidades() {
+        const leftSel = document.getElementById('unit-left');
+        const rightSel = document.getElementById('unit-right');
+        
+        // Permuta os valores de conversão simples
+        let temp = leftSel.value;
+        // Fração não pode ir para a direita, validamos:
+        let destinoVal = (temp === 'in_frac') ? 'in_dec' : temp;
+        
+        leftSel.value = rightSel.value;
+        rightSel.value = destinoVal;
+        
+        adaptarInterface();
+    }
+
+    // NÚCLEO MATEMÁTICO V4 - ADICIONA PRECISÃO, FRAÇÃO MAIS PRÓXIMA E HISTÓRICO
+    let timeoutHistorico = null;
+    function calcularMetrologia() {
+        const uLeft = document.getElementById('unit-left').value;
+        const uRight = document.getElementById('unit-right').value;
+        const outField = document.getElementById('val-right');
+        const memContent = document.getElementById('memorial-content');
+
+        let polegadaDecimal = 0;
+        let explicacao = "";
+        let erroDetectado = false;
+
+        if (uLeft === 'in_dec') {
+            let v = parseFloat(document.getElementById('val-left').value);
+            if(isNaN(v)) erroDetectado = true;
+            else {
+                polegadaDecimal = v;
+                explicacao += `• Entrada definida em <strong>Polegada Milesimal</strong>: <code>${polegadaDecimal.toFixed(4)}"</code>.<br>`;
+            }
+        } 
+        else if (uLeft === 'mm') {
+            let v = parseFloat(document.getElementById('val-left').value);
+            if(isNaN(v)) erroDetectado = true;
+            else {
+                polegadaDecimal = v / 25.4;
+                explicacao += `• Entrada definida em <strong>Milímetros</strong>: <code>${v.toFixed(4)} mm</code>.<br>`;
+                explicacao += `• <strong>Passo 1:</strong> Divisão pela constante padrão (25.4): <code>${v.toFixed(4)} ÷ 25,4000 = ${polegadaDecimal.toFixed(4)}"</code>.<br>`;
+            }
+        } 
+        else if (uLeft === 'in_frac') {
+            const i = parseInt(document.getElementById('frac-int').value) || 0;
+            const n = parseInt(document.getElementById('frac-num').value) || 0;
+            const d = parseInt(document.getElementById('frac-den').value) || 1;
+            polegadaDecimal = i + (n / d);
+
+            explicacao += `• Entrada definida em <strong>Polegada Fracionária</strong>: <code>${i > 0 ? i + ' ' : ''}${n}/${d}"</code>.<br>`;
+            explicacao += `• <strong>Passo 1:</strong> Resolução da fração base: <code>${n} ÷ ${d} = ${(n/d).toFixed(4)}"</code>.<br>`;
+            if(i > 0) explicacao += `• <strong>Passo 2:</strong> Adição da fração ao corpo inteiro: <code>${i} + ${(n/d).toFixed(4)} = ${polegadaDecimal.toFixed(4)}"</code>.<br>`;
+        }
+
+        if(erroDetectado) {
+            outField.value = "";
+            memContent.innerHTML = "Introduza um valor numérico válido para iniciar a análise.";
+            return;
+        }
+
+        // Processa Saída
+        let valorFinalStr = "";
+        if (uRight === 'mm') {
+            let calculadoMm = polegadaDecimal * 25.4;
+            valorFinalStr = calculadoMm.toFixed(4) + " mm";
+            if (uLeft !== 'mm') {
+                explicacao += `• <strong>Cálculo Métrico Final:</strong> Multiplicação pelo fator absoluto: <code>${polegadaDecimal.toFixed(4)} × 25,4000 = ${calculadoMm.toFixed(4)} mm</code>.<br>`;
+            }
+        } else {
+            valorField = polegadaDecimal.toFixed(4) + " in";
+            valorFinalStr = valorField;
+        }
+
+        // EXTRA V4: Análise de Fração Comercial Mais Próxima (Aproximação até 1/64)
+        if (uLeft === 'mm' || uLeft === 'in_dec') {
+            let parteInteira = Math.floor(polegadaDecimal);
+            let parteFracionaria = polegadaDecimal - parteInteira;
+            let sessentaAvos = Math.round(parteFracionaria * 64);
+            
+            if (sessentaAvos > 0) {
+                let [nSimp, dSimp] = simplificar(sessentaAvos, 64);
+                let fracAproximada = (parteInteira > 0 ? parteInteira + " " : "") + nSimp + "/" + dSimp + '"';
+                let valorRealFrac = parteInteira + (sessentaAvos / 64);
+                let desvio = (polegadaDecimal - valorRealFrac) * 25.4;
+
+                explicacao += `<br>🔍 <strong>Análise de Tolerância Comercial:</strong><br>`;
+                explicacao += `• A fração comercial mais próxima é <code>${fracAproximada}</code> (que vale exatamente <code>${(valorRealFrac * 25.4).toFixed(4)} mm</code>).<br>`;
+                if (Math.abs(desvio) < 0.0001) {
+                    explicacao += `• <strong>Aviso:</strong> Esta medida corresponde perfeitamente a uma fração exata de mercado.<br>`;
+                } else {
+                    explicacao += `• <strong>Desvio/Sobra de Material:</strong> Diferença de <code>${desvio > 0 ? '+' : ''}${desvio.toFixed(4)} mm</code> em relação ao padrão físico.<br>`;
+                }
+            }
+        }
+
+        outField.value = valorFinalStr;
+        memContent.innerHTML = explicacao + `<br><strong>✓ Resultado Convertido:</strong> <code>${valorFinalStr}</code>`;
+
+        // Regista no histórico após 1.5 segundos sem digitação (debounce)
+        clearTimeout(timeoutHistorico);
+        timeoutHistorico = setTimeout(() => {
+            adicionarAoHistorico(uLeft, polegadaDecimal, valorFinalStr);
+        }, 1500);
+    }
+
+    function adicionarAoHistorico(unidadeOrigem, valorPolegadas, stringDestino) {
+        let entradaTexto = "";
+        if(unidadeOrigem === 'mm') entradaTexto = (valorPolegadas * 25.4).toFixed(4) + " mm";
+        else if(unidadeOrigem === 'in_dec') entradaTexto = valorPolegadas.toFixed(4) + " in";
+        else {
+            const i = document.getElementById('frac-int').value;
+            const n = document.getElementById('frac-num').value;
+            const d = document.getElementById('frac-den').value;
+            entradaTexto = `${i > 0 ? i + ' ' : ''}${n}/${d}"`;
+        }
+
+        // Evita duplicados idênticos seguidos
+        if (historico.length > 0 && historico[0].entrada === entradaTexto) return;
+
+        historico.unshift({ entrada: entradaTexto, saida: stringDestino });
+        if(historico.length > 5) historico.pop(); // Mantém apenas os últimos 5
+
+        const hBox = document.getElementById('history-box');
+        let hHtml = `<ul class="history-list">`;
+        historico.forEach(item => {
+            hHtml += `<li class="history-item"><span>📥 ${item.entrada}</span> <span>➔</span> <span>📤 <strong>${item.saida}</strong></span></li>`;
+        });
+        hHtml += `</ul>`;
+        hBox.innerHTML = hHtml;
+    }
+
+    function filtrarTabela(busca) {
+        const filtro = busca.toLowerCase().trim().replace(',', '.');
+        document.querySelectorAll('#table-rows tr').forEach(row => {
+            const txt = row.textContent.toLowerCase().replace(',', '.');
+            row.classList.toggle('hide', !txt.includes(filtro));
+        });
+    }
+</script>
+
+</body>
+</html>

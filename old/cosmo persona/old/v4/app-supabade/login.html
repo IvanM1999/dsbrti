@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>🔐 Acesso ao Sistema</h1>
+
+<div class="card">
+
+  <input id="email" type="email" placeholder="Seu email">
+  <br>
+
+  <input id="senha" type="password" placeholder="Sua senha">
+  <br>
+
+  <button onclick="login()">Entrar</button>
+  <button onclick="registrar()">Criar conta</button>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>

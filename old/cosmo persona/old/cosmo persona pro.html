@@ -1,0 +1,164 @@
+<!DOCTYPE html><html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CosmoPersona PRO</title>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+:root{
+--bg:#0a0a0f;
+--card:rgba(255,255,255,0.06);
+--primary:#ff4da6;
+}
+body{margin:0;font-family:system-ui;background:linear-gradient(135deg,#1a0026,#000);color:#fff}
+.header{display:flex;justify-content:space-between;padding:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px;padding:20px}
+.card{background:var(--card);padding:15px;border-radius:16px;text-align:center;cursor:pointer}
+.card img{width:80px;height:80px;border-radius:50%;object-fit:cover}
+.admin{position:fixed;top:0;right:0;width:320px;height:100%;background:#111;padding:20px;overflow:auto;border-left:1px solid #333;display:none}
+input,textarea{width:100%;margin-bottom:10px;padding:8px;border-radius:6px;border:none}
+button{cursor:pointer;padding:8px 10px;border:none;border-radius:8px;background:var(--primary);color:#fff}
+.profile-page{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;display:none;padding:20px;overflow:auto}
+.profile-page img{width:120px;height:120px;border-radius:50%}
+.search{padding:10px 20px}
+.search input{width:100%;padding:10px;border-radius:8px;border:none}
+</style>
+</head>
+<body><div class="header">
+<h2>CosmoPersona PRO</h2>
+<div>
+<button onclick="login()">🔐 Admin</button>
+</div>
+</div><div class="search">
+<input placeholder="Buscar perfis..." oninput="search(this.value)">
+</div><div id="grid" class="grid"></div><div id="admin" class="admin">
+<h3>Painel Admin</h3>
+<input id="name" placeholder="Nome">
+<input id="area" placeholder="Área">
+<textarea id="desc" placeholder="Descrição"></textarea>
+<input type="file" id="img">
+<button onclick="addProfile()">Adicionar</button>
+<hr>
+<div id="list"></div>
+</div><div id="profilePage" class="profile-page"></div><script>
+
+const ADMIN_PASS = "1234";
+
+let profiles = JSON.parse(localStorage.getItem("profiles")) || [];
+
+if(profiles.length===0){
+const areas=["Espiritual","Educação","Tecnologia","Negócios","Saúde"];
+for(let i=1;i<=500;i++){
+profiles.push({
+id:i,
+name:"Persona "+i,
+area:areas[i%5],
+desc:"Perfil profissional fictício número "+i,
+img:"https://i.pravatar.cc/150?img="+i,
+likes:Math.floor(Math.random()*1000)
+});
+}
+save();
+}
+
+function save(){
+localStorage.setItem("profiles",JSON.stringify(profiles));
+render();
+renderAdmin();
+}
+
+function render(list=profiles){
+const grid=document.getElementById("grid");
+grid.innerHTML="";
+list.forEach(p=>{
+grid.innerHTML+=`
+<div class="card" onclick="openProfile(${p.id})">
+<img src="${p.img}">
+<h3>${p.name}</h3>
+<p>${p.area}</p>
+<small>❤️ ${p.likes}</small>
+</div>`;
+});
+}
+
+function search(q){
+q=q.toLowerCase();
+render(profiles.filter(p=>p.name.toLowerCase().includes(q)||p.area.toLowerCase().includes(q)));
+}
+
+function login(){
+const pass=prompt("Senha admin:");
+if(pass===ADMIN_PASS){
+document.getElementById("admin").style.display="block";
+}else alert("Senha incorreta");
+}
+
+function addProfile(){
+const name=document.getElementById("name").value;
+const area=document.getElementById("area").value;
+const desc=document.getElementById("desc").value;
+const file=document.getElementById("img").files[0];
+
+if(!name) return alert("Nome obrigatório");
+
+if(file){
+const reader=new FileReader();
+reader.onload=e=>{
+profiles.push({id:Date.now(),name,area,desc,img:e.target.result,likes:0});
+save();
+};
+reader.readAsDataURL(file);
+}else{
+profiles.push({id:Date.now(),name,area,desc,img:"https://i.pravatar.cc/150",likes:0});
+save();
+}
+}
+
+function renderAdmin(){
+const list=document.getElementById("list");
+list.innerHTML="";
+profiles.forEach(p=>{
+list.innerHTML+=`
+<div>
+<b>${p.name}</b>
+<button onclick="del(${p.id})">X</button>
+</div>`;
+});
+}
+
+function del(id){
+profiles=profiles.filter(p=>p.id!==id);
+save();
+}
+
+function openProfile(id){
+const p=profiles.find(x=>x.id===id);
+const page=document.getElementById("profilePage");
+page.style.display="block";
+page.innerHTML=`
+<button onclick="closeProfile()">Voltar</button>
+<h2>${p.name}</h2>
+<img src="${p.img}">
+<p>${p.area}</p>
+<p>${p.desc}</p>
+<h3>❤️ ${p.likes}</h3>
+<button onclick="like(${p.id})">Curtir</button>
+`;
+}
+
+function closeProfile(){
+document.getElementById("profilePage").style.display="none";
+}
+
+function like(id){
+const p=profiles.find(x=>x.id===id);
+p.likes++;
+save();
+openProfile(id);
+}
+
+render();
+renderAdmin();
+
+</script></body>
+</html>

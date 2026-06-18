@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>App</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>👤 Criar Perfil</h1>
+
+<div class="card">
+  <input id="name" placeholder="Nome">
+  <br>
+
+  <input id="area" placeholder="Área">
+  <br>
+
+  <input id="desc" placeholder="Descrição">
+  <br>
+
+  <button onclick="criarPerfil()">Salvar Perfil</button>
+</div>
+
+<h2>📂 Meus Perfis</h2>
+
+<div id="lista"></div>
+
+<br>
+
+<button onclick="window.location.href='dashboard.html'">
+  📊 Ir para Dashboard
+</button>
+
+<button onclick="logout()">🚪 Sair</button>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
