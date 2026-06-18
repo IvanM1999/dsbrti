@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mundo Eletromagnético!</title>
+    <style>
+        :root {
+            --primary: #ff4757;
+            --secondary: #1e90ff;
+            --dark: #2f3542;
+            --light: #f1f2f6;
+            --accent: #ffa502;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            animation: bounce 2s infinite;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+            border-left: 5px solid var(--primary);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h2 {
+            color: var(--secondary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .img-container {
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .img-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            max-height: 250px;
+            object-fit: cover;
+        }
+
+        /* Animação do Ímã Dinâmico */
+        .magnet-zone {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 150px;
+            background: #f7f9fa;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .magnet {
+            width: 100px;
+            height: 40px;
+            background: linear-gradient(90deg, #ff4757 50%, #1e90ff 50%);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 15px;
+            align-items: center;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            position: relative;
+            z-index: 2;
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: var(--accent);
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        /* Estilo dos experimentos da Esposa */
+        .esposa-box {
+            background: #ffeaa7;
+            border: 2px dashed #ff9f43;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .esposa-box h4 {
+            color: #d35400;
+            margin-bottom: 5px;
+        }
+
+        /* Botão Interativo */
+        .btn-action {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-action:hover {
+            background: #0077e6;
+        }
+
+        /* Animações */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes pulse-field {
+            0% { transform: scale(1); opacity: 0.5; }
+            100% { transform: scale(2.5); opacity: 0; }
+        }
+
+        .wave-effect {
+            position: absolute;
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            animation: pulse-field 1s linear infinite;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>⚡ Mundo Eletromagnético! 🧲</h1>
+        <p>Descubra o superpoder invisível que move o mundo!</p>
+    </header>
+
+    <div class="container">
+
+        <div class="card">
+            <h2>🔌 1. O Casamento Perfeito</h2>
+            <p>Você sabia que a <strong>Eletricidade</strong> (a energia que carrega seu celular) e o <strong>Magnetismo</strong> (a força dos ímãs de geladeira) são irmãos gêmeos? Quando eles se juntam, criam o <strong>Eletromagnetismo</strong>!</p>
+            <div class="img-container">
+                <img src="https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=800" alt="Ilustração de energia abstrata">
+            </div>
+            <p>Sempre que a eletricidade caminha por um fio, ela cria um campo magnético invisível ao seu redor. É como uma força mágica!</p>
+        </div>
+
+        <div class="card">
+            <h2>🧲 2. Super Ímãs de Neodímio</h2>
+            <p>Os ímãs comuns são legais, mas os de <strong>Neodímio</strong> são os super-heróis dos ímãs! Eles são feitos de uma mistura especial de metais que os torna incrivelmente fortes.</p>
+            
+            <div class="magnet-zone" id="magnetZone">
+                <div class="magnet" id="mainMagnet">
+                    <span>N</span>
+                    <span>S</span>
+                </div>
+            </div>
+            <p style="text-align: center; font-size: 0.9rem; color: #7f8c8d;">👆 Clique no ímã acima para ver a força do campo magnético!</p>
+
+            <div class="esposa-box">
+                <h4>👀 Olho no Experimento!</h4>
+                <p>A professora trouxe ímãs de neodímio de verdade! Veja como eles se atraem com tanta força que é até difícil de separar. Cuidado com os dedos!</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🎵 3. Como a Música ganha Vida?</h2>
+            <p>Como o som sai do seu <strong>fone de ouvido</strong> ou do <strong>altifalante</strong> do celular? Graças ao eletromagnetismo!</p>
+            <div class="img-container">
+                <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800" alt="Fones de ouvido">
+            </div>
+            <p>Dentro deles existe um ímã e uma bobina (um fio enroladinho). Quando a música (que é eletricidade) passa pelo fio, ele vira um ímã que empurra e puxa o outro ímã fixo. Esse movimento faz o fone vibrar o ar, criando o som que você ouve!</p>
+            
+            <div class="esposa-box">
+                <h4>👀 Olho no Experimento!</h4>
+                <p>Vamos olhar de perto os fones e altifalantes que a professora trouxe. Aquela parte redonda atrás deles? É um ímã trabalhando!</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>⚡ 4. O Detector de Fantasmas Elétricos</h2>
+            <p>Como saber se tem eletricidade passando dentro de um fio encapado sem abrir o fio? Usamos uma <strong>chave de teste elétrica sem fio (sensor)</strong>!</p>
+            <div class="img-container">
+                <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800" alt="Tecnologia e circuitos">
+            </div>
+            <p>Lembra que a eletricidade cria um campo magnético invisível? Esse sensor consegue "sentir" as ondas desse campo se movendo no ar. Quando ele chega perto do fio com energia, ele apita ou acende uma luz!</p>
+
+            <div class="esposa-box">
+                <h4>👀 Olho no Experimento!</h4>
+                <p>Veja a mágica acontecer: a professora vai aproximar a chave de teste de um cabo de energia conectado. Ela vai acender/apitar sem nem encostar no metal!</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🧠 Mini Desafio Relâmpago!</h2>
+            <p>O que acontece quando a eletricidade passa por um fio condutor?</p>
+            <button class="btn-action" onclick="checkAnswer(false)">A) O fio derrete e some</button>
+            <button class="btn-action" onclick="checkAnswer(true)">B) Cria um campo magnético invisível</button>
+            <p id="quizResponse" style="margin-top: 15px; font-weight: bold; color: var(--primary);"></p>
+        </div>
+
+    </div>
+
+    <script>
+        // Animação interativa do Ímã
+        const magnet = document.getElementById('mainMagnet');
+        const zone = document.getElementById('magnetZone');
+
+        magnet.addEventListener('click', (e) => {
+            // Cria ondas de choque simulando o campo magnético
+            for(let i = 0; i < 3; i++) {
+                setTimeout(() => {
+                    const wave = document.createElement('div');
+                    wave.classList.add('wave-effect');
+                    wave.style.width = '100px';
+                    wave.style.height = '100px';
+                    wave.style.left = (magnet.offsetLeft + magnet.offsetWidth/2 - 50) + 'px';
+                    wave.style.top = (magnet.offsetTop + magnet.offsetHeight/2 - 50) + 'px';
+                    zone.appendChild(wave);
+                    
+                    // Remove após a animação sumir
+                    setTimeout(() => wave.remove(), 1000);
+                }, i * 200);
+            }
+        });
+
+        // Lógica do Quiz
+        function checkAnswer(isCorrect) {
+            const responseTxt = document.getElementById('quizResponse');
+            if(isCorrect) {
+                responseTxt.innerHTML = "🎉 PARABÉNS! Você acertou! O magnetismo e a eletricidade andam sempre juntos! ⚡🧲";
+                responseTxt.style.color = "#2ed573";
+            } else {
+                responseTxt.innerHTML = "💥 Opa, quase lá! Tente ler a seção 1 novamente!";
+                responseTxt.style.color = "#ff4757";
+            }
+        }
+    </script>
+</body>
+</html>
