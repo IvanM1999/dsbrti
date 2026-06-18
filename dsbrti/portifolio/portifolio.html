@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="ubuntu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="DSBRTI — Portfólio de Ivan Montibeller. Desenvolvimento Web, Sistemas Educacionais, Mecatrônica, Automação Industrial e Pesquisa Aplicada.">
+  <title>Ivan Montibeller | Portfólio DSBRTI</title>
+  <link rel="stylesheet" href="../estilos.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23E95420'/%3E%3Ctext x='4' y='24' font-size='20' font-weight='bold' fill='%23fff'%3ED%3C/text%3E%3C/svg%3E">
+  
+  <script src="../senai/patches.js" defer></script>
+  <script src="../tema-inteligente.js"></script>
+  
+  <style>
+    /* Estilos complementares que integram as novas seções ao CSS original do ecossistema */
+    body { font-family: 'Inter', sans-serif; }
+    .metrics-section { margin: 40px 0; }
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .metric-card {
+      background: var(--card-bg, rgba(255,255,255,0.05)); /* Usa variáveis do seu tema original se houver */
+      border: 1px solid var(--border-color, rgba(255,255,255,0.1));
+      padding: 25px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .metric-card h3 { font-size: 2.2rem; margin-bottom: 5px; color: var(--accent-color, #E95420); }
+    .metric-card span { font-size: 0.9rem; opacity: 0.8; }
+    .search-container { margin: 25px 0; }
+    .search-input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid var(--border-color, rgba(255,255,255,0.1));
+      border-radius: 8px;
+      font-size: 1rem;
+      background: var(--input-bg, transparent);
+      color: inherit;
+    }
+    .timeline {
+      border-left: 3px solid var(--accent-color, #E95420);
+      padding-left: 25px;
+      margin-top: 30px;
+    }
+    .timeline-item { margin-bottom: 25px; }
+    .timeline-item h3 { font-size: 1.3rem; margin-bottom: 5px; }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar" role="navigation" aria-label="Navegação principal">
+    <div class="nav-container">
+      <span class="nav-brand">⚙ DSBRTI</span>
+      <ul class="nav-links">
+        <li><a href="../index.html">Início</a></li>
+        <li><a href="../landingpage/land.html">Landing</a></li>
+        <li><a href="../senai/metrologia.html">Metrologia</a></li>
+        <li><a href="../curriculo/index.html">Currículo</a></li>
+        <li><a href="index.html" class="active">Portfólio</a></li>
+      </ul>
+      <div class="theme-switcher" role="group" aria-label="Selecionar tema">
+        <button data-theme="ubuntu" class="theme-btn active" title="Ubuntu">🐧</button>
+        <button data-theme="fedora" class="theme-btn" title="Fedora">🔵</button>
+        <button data-theme="winxp" class="theme-btn" title="Windows XP">🪟</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <header class="section-header" style="padding-top: 40px;">
+      <h1>📂 Portfólio</h1>
+      <p class="subtitle">Projetos industriais, acadêmicos e de pesquisa aplicada de <strong>Ivan Montibeller</strong></p>
+    </header>
+
+    <section class="metrics-section">
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <h3 id="repos">--</h3>
+          <span>Repositórios</span>
+        </div>
+        <div class="metric-card">
+          <h3 id="followers">--</h3>
+          <span>Seguidores</span>
+        </div>
+        <div class="metric-card">
+          <h3 id="following">--</h3>
+          <span>Seguindo</span>
+        </div>
+        <div class="metric-card">
+          <h3 id="stars">--</h3>
+          <span>Estrelas</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="portfolio-filters">
+      <button class="filter-btn active" data-filter="all">Todos</button>
+      <button class="filter-btn" data-filter="metrologia">Metrologia</button>
+      <button class="filter-btn" data-filter="software">Software</button>
+      <button class="filter-btn" data-filter="mecanica">Mecânica</button>
+      <button class="filter-btn" data-filter="qualidade">Qualidade</button>
+    </div>
+
+    <div class="search-container">
+      <input type="text" class="search-input" id="searchInput" placeholder="Pesquisar projeto por nome ou tecnologia...">
+    </div>
+
+    <div class="portfolio-grid" id="portfolioGrid"></div>
+
+    <section class="project-detail" id="projectDetail" hidden>
+      <button id="detailClose" class="btn-sm">✕ Fechar</button>
+      <div id="detailContent"></div>
+    </section>
+
+    <section style="margin-top: 60px;">
+      <h2>📈 Trajetória Recente</h2>
+      <div class="timeline">
+        <div class="timeline-item">
+          <h3>2026</h3>
+          <p>Expansão da DestinyServicesBR (DSBRTI) e evolução dos ecossistemas digitais aplicados.</p>
+        </div>
+        <div class="timeline-item">
+          <h3>2025</h3>
+          <p>Desenvolvimento do PegaJogos Research e ferramentas avançadas de automação industrial.</p>
+        </div>
+        <div class="timeline-item">
+          <h3>2024</h3>
+          <p>Consolidação da plataforma educacional Mecatrônica V4 e sistemas de metrologia.</p>
+        </div>
+        <div class="timeline-item">
+          <h3>2023</h3>
+          <p>Início dos projetos voltados à pesquisa aplicada e experimentação de software industrial.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>DSBRTI © 2026 — Ivan Montibeller</p>
+    <p class="footer-msg">✔ Projetos demonstrados com excelência.</p>
+  </footer>
+
+  <div id="toast" class="toast" role="alert" aria-live="assertive"></div>
+
+  <script src="../db_industrial.js"></script>
+  <script src="../calculadoras.js"></script>
+  <script src="../core.js"></script>
+  <script src="../patches.js"></script>
+
+  <script>
+    // 1. Busca Métricas reais do seu GitHub de forma assíncrona
+    async function loadGithubMetrics(){
+      try {
+        const userResponse = await fetch("https://api.github.com/users/IvanM1999");
+        if(userResponse.ok) {
+          const user = await userResponse.json();
+          document.getElementById("repos").textContent = user.public_repos;
+          document.getElementById("followers").textContent = user.followers;
+          document.getElementById("following").textContent = user.following;
+        }
+
+        const reposResponse = await fetch("https://api.github.com/users/IvanM1999/repos?per_page=100");
+        if(reposResponse.ok) {
+          const repos = await reposResponse.json();
+          let stars = repos.reduce((total, repo) => total + repo.stargazers_count, 0);
+          document.getElementById("stars").textContent = stars;
+        }
+      } catch(err) {
+        console.error("Erro ao carregar dados do GitHub: ", err);
+      }
+    }
+    
+    // Inicializa a chamada da API
+    loadGithubMetrics();
+
+    // 2. Sistema de Filtro por texto integrado ao seu core.js
+    // Como os seus cards são gerados dinamicamente pelo core.js, o evento escuta o input e varre o grid gerado
+    const searchInput = document.getElementById("searchInput");
+    searchInput.addEventListener("input", function() {
+      const query = this.value.toLowerCase();
+      // Assume-se que o core.js gera elementos com classe '.card' ou '.portfolio-item' dentro do #portfolioGrid
+      const cards = document.querySelectorAll("#portfolioGrid > div, .card, .portfolio-item");
+      
+      cards.forEach(card => {
+        const text = card.innerText.toLowerCase();
+        card.style.display = text.includes(query) ? "" : "none";
+      });
+    });
+  </script>
+</body>
+</html>
