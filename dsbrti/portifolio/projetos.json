@@ -1,0 +1,202 @@
+{
+  "projetos": [
+    {
+      "id": "analiser-main",
+      "titulo": "Analisador Técnico",
+      "descricao": "Sistema de análise técnica e interpretação de dados industriais",
+      "categoria": "software",
+      "tags": ["análise", "dados", "industrial"],
+      "link": "Projetos/analiser/index.html",
+      "imagem": "🔍",
+      "status": "ativo"
+    },
+    {
+      "id": "analiser-radar",
+      "titulo": "Radar Técnico",
+      "descricao": "Visualização em radar de métricas e indicadores industriais",
+      "categoria": "software",
+      "tags": ["visualização", "dados", "gráficos"],
+      "link": "Projetos/analiser/radar.html",
+      "imagem": "📡",
+      "status": "ativo"
+    },
+    {
+      "id": "beta-eletricista",
+      "titulo": "Portal do Eletricista",
+      "descricao": "Plataforma para gerenciamento e consultas de serviços de eletricidade",
+      "categoria": "mecanica",
+      "tags": ["elétrica", "manutenção", "serviços"],
+      "link": "Projetos/beta/eletricista.html",
+      "imagem": "⚡",
+      "status": "beta"
+    },
+    {
+      "id": "beta-galeria",
+      "titulo": "Galeria de Portfólio",
+      "descricao": "Galeria visual de projetos realizados e casos de sucesso",
+      "categoria": "software",
+      "tags": ["galeria", "portfólio", "visual"],
+      "link": "Projetos/beta/galeria.html",
+      "imagem": "🖼️",
+      "status": "ativo"
+    },
+    {
+      "id": "beta-login",
+      "titulo": "Sistema de Autenticação",
+      "descricao": "Interface de login e controle de acesso para plataformas",
+      "categoria": "software",
+      "tags": ["autenticação", "segurança", "login"],
+      "link": "Projetos/beta/login.html",
+      "imagem": "🔐",
+      "status": "beta"
+    },
+    {
+      "id": "beta-server",
+      "titulo": "Gerenciador de Servidor",
+      "descricao": "Dashboard para monitoramento e administração de servidores",
+      "categoria": "software",
+      "tags": ["servidor", "administração", "monitoramento"],
+      "link": "Projetos/beta/servermanager.html",
+      "imagem": "🖥️",
+      "status": "desenvolvimento"
+    },
+    {
+      "id": "cosmo-v5",
+      "titulo": "Cosmo Persona v5",
+      "descricao": "Plataforma avançada de gestão de identidade digital e portfólio profissional",
+      "categoria": "software",
+      "tags": ["identidade", "portfólio", "currículo", "catalogação"],
+      "link": "Projetos/cosmo-persona/v5/",
+      "imagem": "👤",
+      "status": "ativo"
+    },
+    {
+      "id": "destiny-saas",
+      "titulo": "DestinySaaS v5",
+      "descricao": "Plataforma SaaS para gestão integrada de serviços e automação",
+      "categoria": "software",
+      "tags": ["SaaS", "automação", "cloud", "API"],
+      "link": "Projetos/destinysaas-v5/cursos.html",
+      "imagem": "☁️",
+      "status": "ativo"
+    },
+    {
+      "id": "industrial-senai",
+      "titulo": "Sistema Industrial SENAI",
+      "descricao": "Módulo educacional para automação industrial e controle de processos",
+      "categoria": "metrologia",
+      "tags": ["industrial", "automação", "educação", "SENAI"],
+      "link": "Projetos/industrial/",
+      "imagem": "🏭",
+      "status": "ativo"
+    },
+    {
+      "id": "landingpage-comercial",
+      "titulo": "Landing Page Comercial",
+      "descricao": "Página de vendas para apresentação de serviços e pacotes",
+      "categoria": "software",
+      "tags": ["comercial", "vendas", "landing", "marketing"],
+      "link": "Projetos/landingpage/lp.html",
+      "imagem": "📱",
+      "status": "ativo"
+    },
+    {
+      "id": "manuais-consoleretro",
+      "titulo": "Manuais - Console Retrô",
+      "descricao": "Documentação e guias de utilização de consoles vintage",
+      "categoria": "qualidade",
+      "tags": ["manual", "documentação", "retro", "hardware"],
+      "link": "Projetos/manuais/manual-consoleretro.html",
+      "imagem": "📖",
+      "status": "ativo"
+    },
+    {
+      "id": "mecatronica-v1",
+      "titulo": "Mecatrônica v1",
+      "descricao": "Primeira versão da plataforma educacional de mecatrônica",
+      "categoria": "mecanica",
+      "tags": ["mecatrônica", "educação", "robotica", "v1"],
+      "link": "Projetos/mecatronica/v1/",
+      "imagem": "🤖",
+      "status": "legado"
+    },
+    {
+      "id": "mecatronica-v2",
+      "titulo": "Mecatrônica v2",
+      "descricao": "Segunda versão com melhorias e novas funcionalidades",
+      "categoria": "mecanica",
+      "tags": ["mecatrônica", "educação", "robotica", "v2"],
+      "link": "Projetos/mecatronica/v2/",
+      "imagem": "🤖",
+      "status": "legado"
+    },
+    {
+      "id": "mecatronica-v3",
+      "titulo": "Mecatrônica v3",
+      "descricao": "Terceira iteração com integração avançada de sistemas",
+      "categoria": "mecanica",
+      "tags": ["mecatrônica", "educação", "robotica", "v3"],
+      "link": "Projetos/mecatronica/v3/",
+      "imagem": "🤖",
+      "status": "ativo"
+    },
+    {
+      "id": "mecatronica-v4",
+      "titulo": "Mecatrônica v4",
+      "descricao": "Versão estável com interface modernizada e recursos completos",
+      "categoria": "mecanica",
+      "tags": ["mecatrônica", "educação", "robotica", "v4"],
+      "link": "Projetos/mecatronica/v4/",
+      "imagem": "🤖",
+      "status": "ativo"
+    },
+    {
+      "id": "shopping-list",
+      "titulo": "Shopping List App",
+      "descricao": "Aplicação web para gerenciamento de listas de compras compartilhadas",
+      "categoria": "software",
+      "tags": ["aplicação", "produtividade", "compras", "lista"],
+      "link": "Projetos/shopping-list/index.html",
+      "imagem": "🛒",
+      "status": "ativo"
+    },
+    {
+      "id": "thaisi-portfolio",
+      "titulo": "Portfólio Thaisi",
+      "descricao": "Portfólio e apresentação profissional personalizada",
+      "categoria": "software",
+      "tags": ["portfólio", "pessoal", "apresentação"],
+      "link": "Projetos/thaisi/index.html",
+      "imagem": "✨",
+      "status": "ativo"
+    }
+  ],
+  "categorias": {
+    "software": {
+      "nome": "Software",
+      "descricao": "Aplicações web, plataformas SaaS e sistemas digitais",
+      "emoji": "💻"
+    },
+    "metrologia": {
+      "nome": "Metrologia",
+      "descricao": "Ferramentas de medição e controle de qualidade industrial",
+      "emoji": "📐"
+    },
+    "mecanica": {
+      "nome": "Mecânica & Elétrica",
+      "descricao": "Sistemas mecânicos, automação e engenharia elétrica",
+      "emoji": "⚙️"
+    },
+    "qualidade": {
+      "nome": "Qualidade",
+      "descricao": "Documentação, manuais e garantia de qualidade",
+      "emoji": "✅"
+    }
+  },
+  "status": {
+    "ativo": "Projeto ativo em produção",
+    "beta": "Em fase de testes",
+    "desenvolvimento": "Em desenvolvimento",
+    "legado": "Versão anterior mantida para referência"
+  }
+}
