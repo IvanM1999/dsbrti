@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electromagnetic Lab ⚡🧲</title>
+    <style>
+        :root {
+            --neon-blue: #00f2fe;
+            --neon-pink: #ff007f;
+            --neon-green: #39ff14;
+            --dark-bg: #0a0e17;
+            --card-bg: #131a26;
+            --text-color: #e0e6ed;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            padding-bottom: 60px;
+            overflow-x: hidden;
+        }
+
+        /* Navbar com seletor de idioma */
+        nav {
+            background: rgba(19, 26, 38, 0.9);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 2px solid rgba(0, 242, 254, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        .lang-btn {
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-pink));
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.4);
+            transition: transform 0.2s;
+        }
+
+        .lang-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Hero Header estilo laboratório futurista */
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            background: radial-gradient(circle, rgba(0,242,254,0.15) 0%, rgba(10,14,23,1) 70%);
+        }
+
+        header h1 {
+            font-size: 3rem;
+            color: #fff;
+            text-shadow: 0 0 20px var(--neon-blue), 0 0 40px var(--neon-pink);
+            margin-bottom: 15px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 35px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--neon-blue);
+            box-shadow: 0 10px 40px rgba(0, 242, 254, 0.2);
+        }
+
+        .card h2 {
+            color: #fff;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
+        }
+
+        /* Estilos para o contêiner do vídeo e imagens padrão */
+        .img-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .img-container::before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            z-index: -1;
+            background: linear-gradient(135deg, #00f2fe, #ff007f);
+            border-radius: 12px;
+            filter: blur(15px);
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .img-container:hover::before {
+            opacity: 1;
+        }
+
+        .img-container video, .img-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 12px;
+        }
+
+        /* Caixa do Experimento Real da Esposa */
+        .live-experiment {
+            background: rgba(57, 255, 20, 0.05);
+            border: 2px dashed var(--neon-green);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: inset 0 0 15px rgba(57, 255, 20, 0.1);
+        }
+
+        .live-experiment h4 {
+            color: var(--neon-green);
+            text-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* LAB REAL DO ÍMÃ (Movido para o Head de forma correta) */
+        .magnet-lab-real {
+            height: 280px;
+            background: #050811;
+            border-radius: 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid rgba(0, 242, 254, 0.15);
+            margin: 25px 0;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
+        }
+
+        .magnet-container-real {
+            position: relative;
+            width: 160px;
+            height: 90px;
+            cursor: pointer;
+            z-index: 10;
+            user-select: none;
+            transition: transform 0.1s ease;
+        }
+
+        .magnet-container-real:active {
+            transform: scale(0.92);
+        }
+
+        .real-magnet-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 0 20px rgba(0, 242, 254, 0.4));
+        }
+
+        /* Linhas Dinâmicas do Simulador */
+        .magnetic-line {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+            transform-origin: center;
+        }
+
+        .line-north {
+            border: 2px solid rgba(255, 51, 102, 0.7);
+            box-shadow: 0 0 10px rgba(255, 51, 102, 0.3);
+            animation: orbit-north 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        .line-south {
+            border: 2px solid rgba(51, 153, 255, 0.7);
+            box-shadow: 0 0 10px rgba(51, 153, 255, 0.3);
+            animation: orbit-south 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        @keyframes orbit-north {
+            0% {
+                width: 30px;
+                height: 20px;
+                transform: translate(-20%, -50%) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                width: 260px;
+                height: 180px;
+                transform: translate(10%, -50%) rotate(45deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes orbit-south {
+            0% {
+                width: 30px;
+                height: 20px;
+                transform: translate(-80%, -50%) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                width: 260px;
+                height: 180px;
+                transform: translate(-110%, -50%) rotate(-45deg);
+                opacity: 0;
+            }
+        }
+
+        /* Botões do Quiz */
+        .quiz-btn {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 12px 24px;
+            font-size: 1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            margin: 10px 10px 0 0;
+            transition: all 0.2s;
+        }
+
+        .quiz-btn:hover {
+            background: var(--neon-blue);
+            color: #000;
+            font-weight: bold;
+            box-shadow: 0 0 15px var(--neon-blue);
+            border-color: var(--neon-blue);
+        }
+
+        #quiz-feedback {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">⚡ EM LAB // v1.0</div>
+        <button class="lang-btn" id="langToggle" onclick="toggleLanguage()">Switch to English 🇬🇧</button>
+    </nav>
+
+    <header>
+        <h1 id="main-title">Mundo Eletromagnético!</h1>
+        <p id="main-subtitle" style="color: #8a99ad; font-size: 1.2rem;">O superpoder invisível que conecta o universo</p>
+    </header>
+
+    <div class="container">
+
+        <div class="card">
+            <h2 id="s1-title">🔌 1. The Perfect Marriage // O Casamento Perfeito</h2>
+            <p id="s1-p1">Sempre que a eletricidade caminha por um fio, ela cria uma força mágica invisível ao seu redor: um campo magnético! A eletricidade e o magnetismo são melhores amigos inseparáveis.</p>
+            <div class="img-container">
+                <video autoplay loop muted playsinline preload="auto">
+                    <source src="./Cabo-enrolado.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 id="s2-title">🧲 2. Super Ímãs de Neodímio // Neodymium Superpower</h2>
+            <p id="s2-p1">Eles parecem pequenos, mas os ímãs de Neodímio são os mais fortes do planeta! Eles são feitos de elementos especiais para criar campos magnéticos ultra-poderosos. Clique no ímã abaixo para ver o campo magnético real em ação!</p>
+            
+            <div class="magnet-lab-real" id="labZoneReal">
+                <div class="magnet-container-real" id="interactiveMagnetReal">
+                    <img src="./neodímio.jpeg" class="real-magnet-img" alt="Neodymium Super Magnet">
+                </div>
+            </div>
+            
+            <div class="live-experiment">
+                <h4 id="exp-title-1">🎯 Live Demo / Experimento Real</h4>
+                <p id="exp-desc-1">Watch closely! The teacher has real Neodymium magnets. Feel how strong the attraction force is—watch your fingers!</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 id="s3-title">🎵 3. Turning Power into Sound // Do Fone ao Som</h2>
+            <p id="s3-p1">Como os fones de ouvido e altifalantes funcionam? Lá dentro existe um ímã e uma bobina de fio. Quando o sinal elétrico da música passa pelo fio, ele vira um eletroímã que empurra e puxa o ímã fixo, fazendo o ar vibrar e criando a música!</p>
+            <div class="img-container">
+                <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800" alt="Headphones">
+            </div>
+            <div class="live-experiment">
+                <h4 id="exp-title-2">🎯 Live Demo / Experimento Real</h4>
+                <p id="exp-desc-2">Let's check the real speakers and headphones here. Can you spot where the hidden magnet is located?</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 id="s4-title">⚡ 4. The Wireless Energy Scanner // Chave de Teste Sem Fio</h2>
+            <p id="s4-p1">Como descobrir se tem energia passando dentro de um cabo sem cortar o plástico? Usamos sensores sem fio! Eles conseguem "sentir" as ondas do campo eletromagnético flutuando ao redor do fio.</p>
+            <div class="img-container">
+                <img src="https://http2.mlstatic.com/D_NQ_NP_666257-MLA99596779106_122025-O.webp" alt="Scanner tech">
+            </div>
+            <div class="live-experiment">
+                <h4 id="exp-title-3">🎯 Live Demo / Experimento Real</h4>
+                <p id="exp-desc-3">The teacher will move the tester close to a live cable. Watch it light up or beep without touching any metal!</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 id="quiz-title">🧠 Mission Briefing / Desafio Técnico</h2>
+            <p id="quiz-q">What is created around a wire when electric current flows through it?</p>
+            <button class="quiz-btn" id="opt-a" onclick="solveQuiz(false)">A) Fireworks</button>
+            <button class="quiz-btn" id="opt-b" onclick="solveQuiz(true)">B) A Magnetic Field</button>
+            <div id="quiz-feedback"></div>
+        </div>
+
+    </div>
+
+    <script>
+        const content = {
+            pt: {
+                toggleBtn: "Switch to English 🇬🇧",
+                title: "⚡ Mundo Eletromagnético!",
+                subtitle: "O superpoder invisível que conecta o universo",
+                s1Title: "🔌 1. O Casamento Perfeito",
+                s1P1: "Sempre que a eletricidade caminha por um fio, ela cria uma força mágica invisível ao seu redor: um campo magnético! A eletricidade e o magnetismo são melhores amigos inseparáveis.",
+                s2Title: "🧲 2. Super Ímãs de Neodímio",
+                s2P1: "Eles parecem pequenos, mas os ímãs de Neodímio são os mais fortes do planeta! Eles são feitos de elementos especiais para criar campos magnéticos ultra-poderosos. Clique no ímã abaixo para testar!",
+                expT1: "🎯 Experimento Real // Live Demo",
+                expD1: "Olho no experimento! A professora trouxe ímãs de neodímio reais. Veja como a força de atração é absurda—cuidado com os dedos!",
+                s3Title: "🎵 3. Como a Música Ganha Vida",
+                s3P1: "Como os fones de ouvido e altifalantes funcionam? Lá dentro existe um ímã e uma bobina de fio. Quando a eletricidade da música passa pelo fio, ele vira um ímã que empurra e puxa o ímã fixo, fazendo o som vibrar até seu ouvido!",
+                expT2: "🎯 Experimento Real // Live Demo",
+                expD2: "Vamos analisar os fones e altifalantes que estão na mesa. Consegue sentir onde o ímã oculto fica escondido?",
+                s4Title: "⚡ 4. O Scanner de Energia Sem Fio",
+                s4P1: "Como descobrir se tem energia passando dentro de um cabo sem cortar o plástico? Usamos a chave de teste sem fio! Ela consegue detectar e 'sentir' as ondas do campo eletromagnético flutuando ao redor do cabo.",
+                expT3: "🎯 Experimento Real // Live Demo",
+                expD3: "A professora vai aproximar a chave de teste de um cabo com energia. Veja ela acender e apitar sem nem encostar no metal!",
+                quizTitle: "🧠 Desafio Relâmpago",
+                quizQ: "O que é criado ao redor de um fio quando a corrente elétrica passa por ele?",
+                optA: "A) Fogos de artifício",
+                optB: "B) Um Campo Magnético",
+                right: "🎉 PERFEITO! Agent, você decodificou o mistério. Eletricidade gera magnetismo! ⚡",
+                wrong: "❌ Acesso negado! Tente ler a seção 1 novamente para recalibrar seu sistema!"
+            },
+            en: {
+                toggleBtn: "Mudar para Português 🇧🇷",
+                title: "⚡ Electromagnetic Lab",
+                subtitle: "The invisible superpower connecting the universe",
+                s1Title: "🔌 1. The Perfect Marriage",
+                s1P1: "Whenever electricity flows through a wire, it creates an invisible magical force around it: a magnetic field! Electricity and magnetism are inseparable best friends.",
+                s2Title: "🧲 2. Neodymium Superpower",
+                s2P1: "They might look small, but Neodymium magnets are the strongest on the planet! They are engineered with special metals to create ultra-powerful magnetic fields. Click the magnet below to pulse it!",
+                expT1: "🎯 Live Demo // Experimento Real",
+                expD1: "Watch closely! The teacher has real Neodymium magnets. Feel how strong the attraction force is—watch your fingers!",
+                s3Title: "🎵 3. Turning Power into Sound",
+                s3P1: "How do headphones and speakers work? Inside them, there's a magnet and a coil of wire. When the electric music signal runs through the wire, it becomes a temporary magnet that pushes and pulls the permanent magnet. This movement vibrates the air, creating the music!",
+                expT2: "🎯 Live Demo // Experimento Real",
+                expD2: "Let's check the real speakers and headphones here. Can you spot where the hidden magnet is located?",
+                s4Title: "⚡ 4. The Wireless Energy Scanner",
+                s4P1: "How can you tell if there is power inside a cable without cutting the plastic open? We use wireless voltage testers! They can 'sense' the electromagnetic field waves floating around the wire.",
+                expT3: "🎯 Live Demo // Experimento Real",
+                expD3: "The teacher will move the tester close to a live cable. Watch it light up or beep without touching any metal!",
+                quizTitle: "🧠 Mission Briefing",
+                quizQ: "What is created around a wire when electric current flows through it?",
+                optA: "A) Fireworks",
+                optB: "B) A Magnetic Field",
+                right: "🎉 PERFECT! Agent, you decoded the mystery. Electricity generates magnetism! ⚡",
+                wrong: "❌ Access Denied! Read section 1 again to recalibrate your system!"
+            }
+        };
+
+        let currentLang = 'pt';
+
+        function updateUI() {
+            const data = content[currentLang];
+            document.getElementById('langToggle').innerText = data.toggleBtn;
+            document.getElementById('main-title').innerText = data.title;
+            document.getElementById('main-subtitle').innerText = data.subtitle;
+            document.getElementById('s1-title').innerText = data.s1Title;
+            document.getElementById('s1-p1').innerText = data.s1P1;
+            document.getElementById('s2-title').innerText = data.s2Title;
+            document.getElementById('s2-p1').innerText = data.s2P1;
+            document.getElementById('exp-title-1').innerText = data.expT1;
+            document.getElementById('exp-desc-1').innerText = data.expD1;
+            document.getElementById('s3-title').innerText = data.s3Title;
+            document.getElementById('s3-p1').innerText = data.s3P1;
+            document.getElementById('exp-title-2').innerText = data.expT2;
+            document.getElementById('exp-desc-2').innerText = data.expD2;
+            document.getElementById('s4-title').innerText = data.s4Title;
+            document.getElementById('s4-p1').innerText = data.s4P1;
+            document.getElementById('exp-title-3').innerText = data.expT3;
+            document.getElementById('exp-desc-3').innerText = data.expD3;
+            document.getElementById('quiz-title').innerText = data.quizTitle;
+            document.getElementById('quiz-q').innerText = data.quizQ;
+            document.getElementById('opt-a').innerText = data.optA;
+            document.getElementById('opt-b').innerText = data.optB;
+            document.getElementById('quiz-feedback').innerHTML = ""; 
+        }
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'pt' ? 'en' : 'pt';
+            updateUI();
+        }
+
+        // Sistema do Ímã
+        const magnetReal = document.getElementById('interactiveMagnetReal');
+        const zoneReal = document.getElementById('labZoneReal');
+
+        magnetReal.addEventListener('click', () => {
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => {
+                    const centerX = magnetReal.offsetLeft + (magnetReal.offsetWidth / 2);
+                    const centerY = magnetReal.offsetTop + (magnetReal.offsetHeight / 2);
+
+                    const lineN = document.createElement('div');
+                    lineN.classList.add('magnetic-line', 'line-north');
+                    lineN.style.left = centerX + 'px';
+                    lineN.style.top = centerY + 'px';
+                    zoneReal.appendChild(lineN);
+
+                    const lineS = document.createElement('div');
+                    lineS.classList.add('magnetic-line', 'line-south');
+                    lineS.style.left = centerX + 'px';
+                    lineS.style.top = centerY + 'px';
+                    zoneReal.appendChild(lineS);
+
+                    setTimeout(() => {
+                        lineN.remove();
+                        lineS.remove();
+                    }, 1400);
+                }, i * 280);
+            }
+        });
+
+        // Validação do Quiz
+        function solveQuiz(isCorrect) {
+            const feedback = document.getElementById('quiz-feedback');
+            if(isCorrect) {
+                feedback.innerHTML = content[currentLang].right;
+                feedback.style.color = "#39ff14";
+            } else {
+                feedback.innerHTML = content[currentLang].wrong;
+                feedback.style.color = "#ff007f";
+            }
+        }
+
+        updateUI();
+    </script>
+</body>
+</html>
