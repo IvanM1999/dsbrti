@@ -3,29 +3,42 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Soluções em Softwares Web, Automação Mecatrônica e Engenharia de Aplicação por DestinyServicesBR.">
-  <title>DestinyServicesBR · Soluções e Serviços Comerciais</title>
+  <meta name="description" content="DestinyServicesBR — Hub Operacional de Engenharia de Software, Metrologia Industrial e Ecossistemas Digitais.">
+  
+  <!-- theme-color dinâmico inicial (será controlado pelos temas, mas começa neutro/escuro elegante) -->
+  <meta name="theme-color" content="#12151c">
+  
+  <title>DestinyServicesBR</title>
+  
+  <!-- Fontes de Alta Performance e Suavização de Renderização (Segoe UI Variable & Ubuntu) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
   <link rel="stylesheet" href="../estilos.css">
-  <script src="senai/patches.js" defer></script>
-  <script src="tema-inteligente.js"></script>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xm=l,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23E95420'/%3E%3Ctext x='4' y='24' font-size='20' font-weight='bold' fill='%23fff'%3ED%3C/text%3E%3C/svg%3E">
+  
+  <!-- Favicon Geométrico Premium (Substitui o quadrado laranja genérico por um indicador de engrenagem minimalista em vetor limpo) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='none' stroke='%23ffffff' stroke-width='2' stroke-opacity='0.2'/%3E%3Cpath d='M16 8v16M8 16h16' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-opacity='0.6'/%3E%3Ccircle cx='16' cy='16' r='5' fill='%230078d4'/%3E%3C/svg%3E">
+  
+  <!-- Scripts de Inicialização e Patches de Escopo -->
+  <script src="../senai/patches.js" defer></script>
+  <script src="../tema-inteligente.js"></script>
 </head>
+
 <body>
 
+  <!-- Barra de Navegação Fluida e Centralizada -->
   <nav class="navbar" role="navigation" aria-label="Navegação principal">
     <div class="nav-container">
       <span class="nav-brand">⚙️ DestinyServicesBR</span>
       
       <ul class="nav-links">
-        <li><a href="index.html" class="active">Início</a></li>
-        <li><a href="landingpage/index.html">Landing</a></li>
-        <li><a href="senai/metrologia.html">Metrologia</a></li>
-        <li><a href="curriculo/index.html">Currículo</a></li>
-        <li><a href="portifolio/index.html">Portfólio</a></li>
+        <li><a href="../index.html" >Início</a></li>
+        <li><a href="../landingpage/land.html"class="active">Landing</a></li>
+        <li><a href="../senai/metrologia.html">Metrologia</a></li>
+        <li><a href="../curriculo/index.html">Currículo</a></li>
+        <li><a href="../portifolio/index.html">Portfólio</a></li>
       </ul>
       
-      <!-- Switcher Atualizado com os Ícones Reais dos Sistemas Modernizados -->
-      <!-- Mantidos os valores "fedora" e "winxp" estritamente nos data-themes para preservar compatibilidade com seu js de troca de classe -->
       <div class="theme-switcher theme-switch">
         <button data-theme="ubuntu" class="theme-btn active" title="Ubuntu Linux (Yaru Design)">🦧</button>
         <button data-theme="fedora" class="theme-btn" title="Linux Mint (Cinnamon Green)">🌿</button>
@@ -33,6 +46,18 @@
       </div>
     </div>
   </nav>
+
+
+  <header class="hero">
+    <div class="hero-content">
+      <h1>Transformando Ideias em Soluções Tecnológicas</h1>
+      <p class="subtitle">Desenvolvimento de Software, Sistemas Web Interativos e Integração com Hardware/Mecatrônica.</p>
+      <div class="hero-actions" style="margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: center;">
+        <a href="landingpage.html" class="text-link" style="background: var(--primary); color: #fff; padding: 0.75rem 1.5rem; border-radius: var(--radius);">Conhecer Soluções →</a>
+        <a href="#institucional" class="text-link" style="border: 1px solid var(--border); padding: 0.75rem 1.5rem; border-radius: var(--radius);">Sobre Nós</a>
+      </div>
+    </div>
+  </header>
 
   <header class="hero" style="background: linear-gradient(135deg, var(--primary) 0%, #111 100%); text-align: left; padding: 4rem 2rem;">
     <div class="hero-content" style="max-width: 1000px; margin: 0 auto;">
