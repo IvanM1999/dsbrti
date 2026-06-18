@@ -169,6 +169,17 @@
       "link": "Projetos/thaisi/index.html",
       "imagem": "✨",
       "status": "ativo"
+    },
+    {
+      "id": "arm-tank-arduino",
+      "titulo": "ARM Tank Arduino",
+      "descricao": "Sistema de controle de garra robótica e braço robótico com emulação Wokwi.",
+      "categoria": "mecanica",
+      "tags": ["Arduino", "robótica", "garra", "Wokwi"],
+      "link": "https://wokwi.com/projects/466572417984930817",
+      "github": "https://github.com/IvanM1999/arm-tank-arduino",
+      "imagem": "🛠️",
+      "status": "ativo"
     }
   ],
   "categorias": {

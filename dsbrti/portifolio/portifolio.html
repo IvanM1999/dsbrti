@@ -445,9 +445,12 @@
             ${project.tags.map(tag => `<span class="tag">#${tag}</span>`).join('')}
           </div>
           
-          <a href="${project.link}" class="project-link">
-            Acessar Projeto →
-          </a>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: auto;">
+            <a href="${project.link}" target="_blank" rel="noreferrer noopener" class="project-link">
+              Acessar Projeto →
+            </a>
+            ${project.github ? `<a href="${project.github}" target="_blank" rel="noreferrer noopener" class="project-link" style="background: rgba(255,255,255,0.1); color: inherit; border-color: rgba(255,255,255,0.15);">GitHub →</a>` : ''}
+          </div>
         </div>
       `).join('');
       
