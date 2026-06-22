@@ -1,0 +1,560 @@
+{
+  "meta": {
+    "nome": "Banco de Dados de Resistores Comerciais — DSBRti",
+    "versao": "1.0.0",
+    "descricao": "Catálogo completo de resistores de carbono E24, filmes, potências e modelos SMD comercializados",
+    "autor": "DestinyServicesBR — DSBRti",
+    "licenca": "MIT",
+    "ultima_atualizacao": "2025-01-26"
+  },
+
+  "series_e24": {
+    "nome": "Série E24 — Tolerância ±5%",
+    "descricao": "Padrão internacional IEC 60063. 24 valores por década. Resistores de carbono e filme de carbono comerciais.",
+    "tolerancia": "±5%",
+    "codigo_faixa_tolerancia": "Dourado",
+    "valores_base": [10, 11, 12, 13, 15, 16, 18, 20, 22, 24, 27, 30, 33, 36, 39, 43, 47, 51, 56, 62, 68, 75, 82, 91]
+  },
+
+  "series_e12": {
+    "nome": "Série E12 — Tolerância ±10%",
+    "descricao": "Subconjunto da E24. 12 valores por década. Menos usado, mas ainda comum em circuitos de baixo custo.",
+    "tolerancia": "±10%",
+    "codigo_faixa_tolerancia": "Prata",
+    "valores_base": [10, 12, 15, 18, 22, 27, 33, 39, 47, 56, 68, 82]
+  },
+
+  "series_e48": {
+    "nome": "Série E48 — Tolerância ±2%",
+    "descricao": "Série de precisão. 48 valores por década. Resistores de filme metálico.",
+    "tolerancia": "±2%",
+    "valores_base": [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 24, 26, 27, 28, 30, 32, 33, 35, 36, 38, 39, 42, 43, 45, 47, 49, 51, 53, 56, 58, 60, 62, 65, 68, 71, 75, 78, 82, 85, 88, 91, 94, 97]
+  },
+
+  "series_e96": {
+    "nome": "Série E96 — Tolerância ±1%",
+    "descricao": "Série de alta precisão. 96 valores por década. Resistores de filme metálico de precisão.",
+    "tolerancia": "±1%",
+    "valores_base": [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 42, 44, 45, 46, 47, 48, 49, 50, 51, 52, 54, 55, 56, 58, 60, 62, 64, 66, 68, 70, 72, 75, 77, 79, 81, 83, 85, 87, 90, 92, 94, 96, 98]
+  },
+
+  "potencias_comerciais": [
+    {
+      "potencia": "1/8W (0.125W)",
+      "codigo": "1/8W",
+      "descricao": "Resistores de carbono miniatura. Usados em equipamentos compactos, LEDs indicadores e circuitos de baixa corrente.",
+      "tensao_maxima": "150V",
+      "dimensoes_aprox": "3.2mm x 1.8mm",
+      "aplicacoes_tipicas": ["Eletrônica portátil", "Circuitos digitais de baixa potência", "Protoboard e experimentos"]
+    },
+    {
+      "potencia": "1/4W (0.25W)",
+      "codigo": "1/4W",
+      "descricao": "Padrão mais comum para resistores de carbono. Encontrado na maioria dos kits de hobby, Arduino e projetos educacionais.",
+      "tensao_maxima": "250V",
+      "dimensoes_aprox": "6.0mm x 2.3mm",
+      "aplicacoes_tipicas": ["Projetos Arduino/Raspberry", "Circuitos analógicos gerais", "Reparos eletrônicos", "Kits didáticos"],
+      "comum": true
+    },
+    {
+      "potencia": "1/2W (0.5W)",
+      "codigo": "1/2W",
+      "descricao": "Resistores de média potência. Usados em circuitos de potência moderada e estágios de saída.",
+      "tensao_maxima": "350V",
+      "dimensoes_aprox": "9.0mm x 3.0mm",
+      "aplicacoes_tipicas": ["Fontes de alimentação simples", "Circuitos de áudio", "Drivers de relé"],
+      "comum": true
+    },
+    {
+      "potencia": "1W",
+      "codigo": "1W",
+      "descricao": "Resistores de carbono ou fio para potência elevada. Usados em fontes e circuitos de potência.",
+      "tensao_maxima": "500V",
+      "dimensoes_aprox": "12.0mm x 4.5mm",
+      "aplicacoes_tipicas": ["Fontes chaveadas", "Limitadores de corrente", "Pré-reguladores"],
+      "comum": true
+    },
+    {
+      "potencia": "2W",
+      "codigo": "2W",
+      "descricao": "Resistores de potência. Construtivamente maiores para dissipação térmica.",
+      "tensao_maxima": "500V",
+      "dimensoes_aprox": "15.0mm x 5.5mm",
+      "aplicacoes_tipicas": ["Circuitos de potência média", "Cargas dummy", "Snubbers"]
+    },
+    {
+      "potencia": "5W",
+      "codigo": "5W",
+      "descricao": "Resistores de alta potência. Geralmente de fio enrolado (wirewound) ou filme metálico.",
+      "tensao_maxima": "750V",
+      "dimensoes_aprox": "24.0mm x 8.0mm",
+      "aplicacoes_tipicas": ["Fontes de alta corrente", "Cargas de teste", "Circuitos industriais"]
+    },
+    {
+      "potencia": "10W",
+      "codigo": "10W",
+      "descricao": "Resistores de potência elevada. Normalmente wirewound com dissipador de calor.",
+      "tensao_maxima": "1000V",
+      "dimensoes_aprox": "45.0mm x 10.0mm",
+      "aplicacoes_tipicas": ["Fontes de alimentação industriais", "Cargas de teste", "Sistemas de potência"]
+    },
+    {
+      "potencia": "25W",
+      "codigo": "25W",
+      "descricao": "Resistores de alta potência montados em dissipador. Wirewound ou de alumina.",
+      "tensao_maxima": "1500V",
+      "dimensoes_aprox": "60.0mm x 30.0mm (com dissipador)",
+      "aplicacoes_tipicas": ["Bancadas de carga", "Sistemas de potência industrial", "Descarga de capacitores"],
+      "comum": true
+    },
+    {
+      "potencia": "50W",
+      "codigo": "50W",
+      "descricao": "Resistores de altíssima potência. Usados em bancadas de teste e cargas eletrônicas.",
+      "tensao_maxima": "2000V",
+      "dimensoes_aprox": "100.0mm x 40.0mm",
+      "aplicacoes_tipicas": ["Cargas eletrônicas programáveis", "Testes de fontes", "Simulação de carga"]
+    },
+    {
+      "potencia": "100W",
+      "codigo": "100W",
+      "descricao": "Resistores de potência extrema. Necessitam dissipação forçada (ventilação).",
+      "tensao_maxima": "3000V",
+      "dimensoes_aprox": "150.0mm x 60.0mm",
+      "aplicacoes_tipicas": ["Cargas de alta potência", "Testes de inversores", "Retificadores industriais"]
+    }
+  ],
+
+  "categorias_resistores": [
+    {
+      "id": "carbono",
+      "nome": "Resistor de Carbono (Filme de Carbono — CFR)",
+      "descricao": "Tipo mais comum e barato. Tolerância ±5% (série E24). Usa película de carbono depositada sobre substrato cerâmico. Adequado para frequências de até ~100 MHz.",
+      "faixa_valores_tipica": "1 Ω — 10 MΩ",
+      "potencias_disponiveis": ["1/8W", "1/4W", "1/2W", "1W"],
+      "tolerancias": ["±5%", "±10%"],
+      "faixas_cores": 4,
+      "temp_max_operacao": "85°C",
+      "coeficiente_temperatura": "+800 a -1500 ppm/°C",
+      "ruido": "Moderado (-10 dB)",
+      "aplicacoes": ["Circuitos de uso geral", "Educacional/projetos didáticos", "Hobby e prototipagem"],
+      "comercialmente_disponivel": true
+    },
+    {
+      "id": "filme_metalico",
+      "nome": "Resistor de Filme Metálico (MFR)",
+      "descricao": "Precisão superior ao carbono. Tolerância ±1% (série E96) e ±2% (série E48). Baixo ruído e coeficiente de temperatura estável. Ideal para circuitos de precisão.",
+      "faixa_valores_tipica": "1 Ω — 10 MΩ",
+      "potencias_disponiveis": ["1/4W", "1/2W", "1W", "2W"],
+      "tolerancias": ["±0.1%", "±0.5%", "±1%", "±2%"],
+      "faixas_cores": 5,
+      "temp_max_operacao": "155°C",
+      "coeficiente_temperatura": "±50 a ±100 ppm/°C",
+      "ruido": "Baixo (-30 dB)",
+      "aplicacoes": ["Circuitos de precisão analógica", "Multímetros e instrumentação", "Áudio Hi-Fi", "Circuitos de temporização"],
+      "comercialmente_disponivel": true
+    },
+    {
+      "id": "fio_enrolado",
+      "nome": "Resistor de Fio Enrolado (Wirewound — WW)",
+      "descricao": "Alta potência e baixo coeficiente de temperatura. Indutivo (não usar em RF). Excelente para dissipação térmica.",
+      "faixa_valores_tipica": "0.1 Ω — 200 kΩ",
+      "potencias_disponiveis": ["1W", "2W", "5W", "10W", "25W", "50W", "100W"],
+      "tolerancias": ["±1%", "±5%", "±10%"],
+      "faixas_cores": 4,
+      "temp_max_operacao": "250°C (cerâmico) / 125°C (esmaltado)",
+      "coeficiente_temperatura": "±20 a ±200 ppm/°C",
+      "ruido": "Muito baixo",
+      "aplicacoes": ["Fontes de alimentação", "Cargas de teste", "Snubbers", "Limitadores de corrente de partida"],
+      "comercialmente_disponivel": true
+    },
+    {
+      "id": "smd_chip",
+      "nome": "Resistor SMD (Chip Resistor — Montagem Superficial)",
+      "descricao": "Formato miniatura para montagem em superfície. Código numérico de 3 ou 4 dígitos impresso no corpo. Padrão industrial moderno.",
+      "faixa_valores_tipica": "0 Ω (jumper) — 10 MΩ",
+      "potencias_disponiveis": ["1/32W (0201)", "1/20W (0402)", "1/16W (0603)", "1/10W (0805)", "1/8W (1206)", "1/4W (1210)", "1/2W (1812)", "1W (2512)"],
+      "tolerancias": ["±0.5%", "±1%", "±2%", "±5%"],
+      "codificacao": "3 dígitos (E24) ou 4 dígitos (E96) + opcional 'R' para decimal",
+      "temp_max_operacao": "155°C",
+      "coeficiente_temperatura": "±100 a ±200 ppm/°C",
+      "aplicacoes": ["Circuitos PCB modernos", "Dispositivos móveis e IoT", "Microcontroladores e SMD", "Produção automatizada"],
+      "comercialmente_disponivel": true,
+      "tabela_tamanhos_smd": [
+        { "codigo": "0201", "dimensao_imperial": "0.024\" x 0.012\"", "dimensao_metrica": "0.6mm x 0.3mm", "potencia": "1/32W", "tensao_max": "15V" },
+        { "codigo": "0402", "dimensao_imperial": "0.040\" x 0.020\"", "dimensao_metrica": "1.0mm x 0.5mm", "potencia": "1/20W", "tensao_max": "50V" },
+        { "codigo": "0603", "dimensao_imperial": "0.060\" x 0.030\"", "dimensao_metrica": "1.6mm x 0.8mm", "potencia": "1/16W", "tensao_max": "50V" },
+        { "codigo": "0805", "dimensao_imperial": "0.080\" x 0.050\"", "dimensao_metrica": "2.0mm x 1.25mm", "potencia": "1/10W", "tensao_max": "150V" },
+        { "codigo": "1206", "dimensao_imperial": "0.126\" x 0.063\"", "dimensao_metrica": "3.2mm x 1.6mm", "potencia": "1/8W", "tensao_max": "200V" },
+        { "codigo": "1210", "dimensao_imperial": "0.126\" x 0.100\"", "dimensao_metrica": "3.2mm x 2.55mm", "potencia": "1/4W", "tensao_max": "200V" },
+        { "codigo": "1812", "dimensao_imperial": "0.180\" x 0.126\"", "dimensao_metrica": "4.6mm x 3.2mm", "potencia": "1/2W", "tensao_max": "200V" },
+        { "codigo": "2010", "dimensao_imperial": "0.200\" x 0.100\"", "dimensao_metrica": "5.0mm x 2.5mm", "potencia": "1/2W", "tensao_max": "200V" },
+        { "codigo": "2512", "dimensao_imperial": "0.250\" x 0.126\"", "dimensao_metrica": "6.4mm x 3.2mm", "potencia": "1W", "tensao_max": "250V" }
+      ]
+    },
+    {
+      "id": "precisao",
+      "nome": "Resistor de Precisão (Precision Resistor)",
+      "descricao": "Tolerâncias muito apertadas (±0.1% a ±0.01%) com coeficiente de temperatura extremamente baixo (±5 ppm/°C). Usados em instrumentação de altíssima precisão.",
+      "faixa_valores_tipica": "10 Ω — 1 MΩ",
+      "potencias_disponiveis": ["1/4W", "1/2W"],
+      "tolerancias": ["±0.01%", "±0.05%", "±0.1%"],
+      "temp_max_operacao": "125°C",
+      "coeficiente_temperatura": "±5 a ±25 ppm/°C",
+      "aplicacoes": ["Metrologia", "Circuitos de referência de tensão", "Instrumentação de precisão", "Fontes de referência"],
+      "comercialmente_disponivel": true
+    },
+    {
+      "id": "shunt",
+      "nome": "Resistor Shunt (Derivador de Corrente)",
+      "descricao": "Resistor de valor muito baixo (mΩ) e alta potência para medição de corrente por queda de tensão. Alta precisão e baixa indutância.",
+      "faixa_valores_tipica": "0.0001 Ω (100 µΩ) — 1 Ω",
+      "potencias_disponiveis": ["1W", "2W", "3W", "5W", "10W", "25W", "50W", "100W"],
+      "tolerancias": ["±0.5%", "±1%", "±5%"],
+      "aplicacoes": ["Medição de corrente", "Proteção contra sobrecarga", "Fontes chaveadas", "BMS (Battery Management Systems)"],
+      "comercialmente_disponivel": true
+    },
+    {
+      "id": "rede",
+      "nome": "Resistor Rede (Resistor Array / SIP / DIP)",
+      "descricao": "Múltiplos resistores encapsulados em um único componente. Padrões SIP (Single In-line Package) ou DIP (Dual In-line Package).",
+      "faixa_valores_tipica": "10 Ω — 10 MΩ (por resistor)",
+      "configuracoes": ["Isolados", "Derivados para GND (R-2R)", "Pull-up/Pull-down", "Divisores"],
+      "potencias_disponiveis": ["1/8W (por elemento)", "1/4W (por elemento)"],
+      "tolerancias": ["±1%", "±2%", "±5%"],
+      "aplicacoes": ["Pull-ups digitais", "Circuitos de barramento", "Conversores R-2R", "Terminação de linha"],
+      "comercialmente_disponivel": true
+    },
+    {
+      "id": "ntc",
+      "nome": "Termistor NTC (Negative Temperature Coefficient) — Sensor",
+      "descricao": "Resistor não-linear cuja resistência diminui com o aumento da temperatura. Usado para sensoriamento térmico e limitação de corrente de partida (inrush).",
+      "faixa_valores_25c": "1 Ω — 10 MΩ (a 25°C)",
+      "valores_comuns": ["1kΩ", "2kΩ", "4.7kΩ", "10kΩ", "22kΩ", "47kΩ", "100kΩ", "470kΩ"],
+      "potencias_disponiveis": ["Inrush (até 10A)", "Sensor (baixa potência)"],
+      "tolerancias": ["±1%", "±5%", "±10%", "±20%"],
+      "beta": "3000K — 4500K (comum: 3435K, 3950K, 3988K)",
+      "aplicacoes": ["Sensores de temperatura (impressora 3D, climatização)", "Limitação de corrente de partida", "Compensação térmica"],
+      "comercialmente_disponivel": true
+    },
+    {
+      "id": "ptc",
+      "nome": "Termistor PTC (Positive Temperature Coefficient) — Polyswitch / Resettable Fuse",
+      "descricao": "Resistor cuja resistência aumenta drasticamente com a temperatura. Usado como fusível rearmável. Proteção contra sobrecorrente.",
+      "faixa_valores_normais": "0.1 Ω — 100 Ω (a 25°C, estado frio)",
+      "corrente_retencao_tipica": "50 mA — 10 A",
+      "corrente_disparo_tipica": "100 mA — 20 A",
+      "tipo": "Polyswitch / Fusível rearmável (PPTC)",
+      "aplicacoes": ["Proteção de portas USB", "Proteção de motores", "Baterias Li-ion", "Fontes de alimentação"],
+      "comercialmente_disponivel": true
+    },
+    {
+      "id": "ppo",
+      "nome": "Resistor Óptico (LDR — Light Dependent Resistor)",
+      "descricao": "Resistor cujo valor varia conforme a intensidade luminosa (fotoresistor). Alta resistência no escuro, baixa na luz.",
+      "faixa_valores_escuro": "500 kΩ — 10 MΩ (escuro total)",
+      "faixa_valores_luz": "100 Ω — 10 kΩ (luz intensa)",
+      "valores_comuns_10lux": ["4kΩ a 20kΩ (GL55xx série)"],
+      "pico_espectral": "540 nm (verde-amarelo)",
+      "tolerancias": ["±20%", "±30%"],
+      "aplicacoes": ["Sensor de luminosidade", "Lâmpadas automáticas", "Alarmes", "Controle de iluminação"],
+      "comercialmente_disponivel": true
+    },
+    {
+      "id": "ajustavel",
+      "nome": "Resistor Ajustável (Potenciômetro / Trimpot)",
+      "descricao": "Resistor de três terminais com valor ajustável mecanicamente. Usado para calibração e controle de ganho.",
+      "faixa_valores_tipica": "10 Ω — 5 MΩ",
+      "valores_comuns": ["100Ω", "500Ω", "1kΩ", "5kΩ", "10kΩ", "20kΩ", "50kΩ", "100kΩ", "250kΩ", "500kΩ", "1MΩ"],
+      "potencias_disponiveis": ["0.05W (trimpot mini)", "0.1W", "0.25W", "0.5W", "1W", "2W"],
+      "tolerancias": ["±5%", "±10%", "±20%"],
+      "tipos": ["Potenciômetro linear (B)", "Potenciômetro logarítmico (A)", "Trimpot multivolta", "Slider"],
+      "aplicacoes": ["Controle de volume", "Ajuste de ganho", "Calibração de circuitos", "Divisores ajustáveis"],
+      "comercialmente_disponivel": true
+    }
+  ],
+
+  "tabela_cores_4_faixas": {
+    "nome": "Código de Cores — Resistor de 4 Faixas (Carbono E24 ±5%)",
+    "descricao": "Padrão IEC 60062. Faixa 1 = 1º dígito, Faixa 2 = 2º dígito, Faixa 3 = Multiplicador, Faixa 4 = Tolerância.",
+    "faixa_1_e_2": [
+      { "cor": "Preto", "codigo_html": "#000000", "texto": "#FFF", "digito": 0 },
+      { "cor": "Marrom", "codigo_html": "#8B4513", "texto": "#FFF", "digito": 1 },
+      { "cor": "Vermelho", "codigo_html": "#FF0000", "texto": "#FFF", "digito": 2 },
+      { "cor": "Laranja", "codigo_html": "#FFA500", "texto": "#000", "digito": 3 },
+      { "cor": "Amarelo", "codigo_html": "#FFFF00", "texto": "#000", "digito": 4 },
+      { "cor": "Verde", "codigo_html": "#008000", "texto": "#FFF", "digito": 5 },
+      { "cor": "Azul", "codigo_html": "#0000FF", "texto": "#FFF", "digito": 6 },
+      { "cor": "Violeta", "codigo_html": "#EE82EE", "texto": "#000", "digito": 7 },
+      { "cor": "Cinza", "codigo_html": "#808080", "texto": "#FFF", "digito": 8 },
+      { "cor": "Branco", "codigo_html": "#FFFFFF", "texto": "#000", "digito": 9 }
+    ],
+    "faixa_3_multiplicador": [
+      { "cor": "Preto", "codigo_html": "#000000", "texto": "#FFF", "multiplicador": 1, "rotulo": "1 Ω" },
+      { "cor": "Marrom", "codigo_html": "#8B4513", "texto": "#FFF", "multiplicador": 10, "rotulo": "10 Ω" },
+      { "cor": "Vermelho", "codigo_html": "#FF0000", "texto": "#FFF", "multiplicador": 100, "rotulo": "100 Ω" },
+      { "cor": "Laranja", "codigo_html": "#FFA500", "texto": "#000", "multiplicador": 1000, "rotulo": "1 kΩ" },
+      { "cor": "Amarelo", "codigo_html": "#FFFF00", "texto": "#000", "multiplicador": 10000, "rotulo": "10 kΩ" },
+      { "cor": "Verde", "codigo_html": "#008000", "texto": "#FFF", "multiplicador": 100000, "rotulo": "100 kΩ" },
+      { "cor": "Azul", "codigo_html": "#0000FF", "texto": "#FFF", "multiplicador": 1000000, "rotulo": "1 MΩ" },
+      { "cor": "Dourado", "codigo_html": "#D4AF37", "texto": "#000", "multiplicador": 0.1, "rotulo": "0.1 Ω" },
+      { "cor": "Prata", "codigo_html": "#C0C0C0", "texto": "#000", "multiplicador": 0.01, "rotulo": "0.01 Ω" }
+    ],
+    "faixa_4_tolerancia": [
+      { "cor": "Marrom", "codigo_html": "#8B4513", "texto": "#FFF", "tolerancia": "±1%", "serie": "E96" },
+      { "cor": "Vermelho", "codigo_html": "#FF0000", "texto": "#FFF", "tolerancia": "±2%", "serie": "E48" },
+      { "cor": "Verde", "codigo_html": "#008000", "texto": "#FFF", "tolerancia": "±0.5%", "serie": "E192" },
+      { "cor": "Azul", "codigo_html": "#0000FF", "texto": "#FFF", "tolerancia": "±0.25%", "serie": "E192" },
+      { "cor": "Violeta", "codigo_html": "#EE82EE", "texto": "#000", "tolerancia": "±0.1%", "serie": "E192" },
+      { "cor": "Dourado", "codigo_html": "#D4AF37", "texto": "#000", "tolerancia": "±5%", "serie": "E24" },
+      { "cor": "Prata", "codigo_html": "#C0C0C0", "texto": "#000", "tolerancia": "±10%", "serie": "E12" }
+    ]
+  },
+
+  "tabela_cores_5_faixas": {
+    "nome": "Código de Cores — Resistor de 5 Faixas (Filme Metálico E96 ±1%)",
+    "descricao": "Padrão para resistores de precisão. Faixas 1-3 = dígitos, Faixa 4 = multiplicador, Faixa 5 = tolerância.",
+    "faixa_1_2_3": [
+      { "cor": "Preto", "codigo_html": "#000000", "texto": "#FFF", "digito": 0 },
+      { "cor": "Marrom", "codigo_html": "#8B4513", "texto": "#FFF", "digito": 1 },
+      { "cor": "Vermelho", "codigo_html": "#FF0000", "texto": "#FFF", "digito": 2 },
+      { "cor": "Laranja", "codigo_html": "#FFA500", "texto": "#000", "digito": 3 },
+      { "cor": "Amarelo", "codigo_html": "#FFFF00", "texto": "#000", "digito": 4 },
+      { "cor": "Verde", "codigo_html": "#008000", "texto": "#FFF", "digito": 5 },
+      { "cor": "Azul", "codigo_html": "#0000FF", "texto": "#FFF", "digito": 6 },
+      { "cor": "Violeta", "codigo_html": "#EE82EE", "texto": "#000", "digito": 7 },
+      { "cor": "Cinza", "codigo_html": "#808080", "texto": "#FFF", "digito": 8 },
+      { "cor": "Branco", "codigo_html": "#FFFFFF", "texto": "#000", "digito": 9 }
+    ],
+    "faixa_4_multiplicador": [
+      { "cor": "Preto", "codigo_html": "#000000", "texto": "#FFF", "multiplicador": 1, "rotulo": "1 Ω" },
+      { "cor": "Marrom", "codigo_html": "#8B4513", "texto": "#FFF", "multiplicador": 10, "rotulo": "10 Ω" },
+      { "cor": "Vermelho", "codigo_html": "#FF0000", "texto": "#FFF", "multiplicador": 100, "rotulo": "100 Ω" },
+      { "cor": "Laranja", "codigo_html": "#FFA500", "texto": "#000", "multiplicador": 1000, "rotulo": "1 kΩ" },
+      { "cor": "Amarelo", "codigo_html": "#FFFF00", "texto": "#000", "multiplicador": 10000, "rotulo": "10 kΩ" },
+      { "cor": "Verde", "codigo_html": "#008000", "texto": "#FFF", "multiplicador": 100000, "rotulo": "100 kΩ" },
+      { "cor": "Azul", "codigo_html": "#0000FF", "texto": "#FFF", "multiplicador": 1000000, "rotulo": "1 MΩ" },
+      { "cor": "Dourado", "codigo_html": "#D4AF37", "texto": "#000", "multiplicador": 0.1, "rotulo": "0.1 Ω" }
+    ],
+    "faixa_5_tolerancia": [
+      { "cor": "Marrom", "codigo_html": "#8B4513", "texto": "#FFF", "tolerancia": "±1%" },
+      { "cor": "Vermelho", "codigo_html": "#FF0000", "texto": "#FFF", "tolerancia": "±2%" },
+      { "cor": "Laranja", "codigo_html": "#FFA500", "texto": "#000", "tolerancia": "±0.05%", "nota": "Incomum" },
+      { "cor": "Amarelo", "codigo_html": "#FFFF00", "texto": "#000", "tolerancia": "±0.02%", "nota": "Raro" },
+      { "cor": "Verde", "codigo_html": "#008000", "texto": "#FFF", "tolerancia": "±0.5%" },
+      { "cor": "Azul", "codigo_html": "#0000FF", "texto": "#FFF", "tolerancia": "±0.25%" },
+      { "cor": "Violeta", "codigo_html": "#EE82EE", "texto": "#000", "tolerancia": "±0.1%" },
+      { "cor": "Cinza", "codigo_html": "#808080", "texto": "#FFF", "tolerancia": "±0.01%", "nota": "Extremamente raro" }
+    ]
+  },
+
+  "valores_e24_por_decada": {
+    "descricao": "Catalogo completo de resistores E24 organizados por década. 24 valores × 10 décadas = 240 valores comerciais.",
+    "decadas": [
+      {
+        "decada": "0.1 Ω — 0.91 Ω",
+        "prefijo": "",
+        "multiplo": 0.1,
+        "valores": [0.1, 0.11, 0.12, 0.13, 0.15, 0.16, 0.18, 0.20, 0.22, 0.24, 0.27, 0.30, 0.33, 0.36, 0.39, 0.43, 0.47, 0.51, 0.56, 0.62, 0.68, 0.75, 0.82, 0.91]
+      },
+      {
+        "decada": "1 Ω — 9.1 Ω",
+        "prefijo": "",
+        "multiplo": 1,
+        "valores": [1, 1.1, 1.2, 1.3, 1.5, 1.6, 1.8, 2, 2.2, 2.4, 2.7, 3, 3.3, 3.6, 3.9, 4.3, 4.7, 5.1, 5.6, 6.2, 6.8, 7.5, 8.2, 9.1]
+      },
+      {
+        "decada": "10 Ω — 91 Ω",
+        "prefijo": "",
+        "multiplo": 10,
+        "valores": [10, 11, 12, 13, 15, 16, 18, 20, 22, 24, 27, 30, 33, 36, 39, 43, 47, 51, 56, 62, 68, 75, 82, 91]
+      },
+      {
+        "decada": "100 Ω — 910 Ω",
+        "prefijo": "",
+        "multiplo": 100,
+        "valores": [100, 110, 120, 130, 150, 160, 180, 200, 220, 240, 270, 300, 330, 360, 390, 430, 470, 510, 560, 620, 680, 750, 820, 910]
+      },
+      {
+        "decada": "1 kΩ — 9.1 kΩ",
+        "prefijo": "k",
+        "multiplo": 1000,
+        "valores": [1000, 1100, 1200, 1300, 1500, 1600, 1800, 2000, 2200, 2400, 2700, 3000, 3300, 3600, 3900, 4300, 4700, 5100, 5600, 6200, 6800, 7500, 8200, 9100]
+      },
+      {
+        "decada": "10 kΩ — 91 kΩ",
+        "prefijo": "k",
+        "multiplo": 10000,
+        "valores": [10000, 11000, 12000, 13000, 15000, 16000, 18000, 20000, 22000, 24000, 27000, 30000, 33000, 36000, 39000, 43000, 47000, 51000, 56000, 62000, 68000, 75000, 82000, 91000]
+      },
+      {
+        "decada": "100 kΩ — 910 kΩ",
+        "prefijo": "k",
+        "multiplo": 100000,
+        "valores": [100000, 110000, 120000, 130000, 150000, 160000, 180000, 200000, 220000, 240000, 270000, 300000, 330000, 360000, 390000, 430000, 470000, 510000, 560000, 620000, 680000, 750000, 820000, 910000]
+      },
+      {
+        "decada": "1 MΩ — 9.1 MΩ",
+        "prefijo": "M",
+        "multiplo": 1000000,
+        "valores": [1000000, 1100000, 1200000, 1300000, 1500000, 1600000, 1800000, 2000000, 2200000, 2400000, 2700000, 3000000, 3300000, 3600000, 3900000, 4300000, 4700000, 5100000, 5600000, 6200000, 6800000, 7500000, 8200000, 9100000]
+      },
+      {
+        "decada": "10 MΩ — 91 MΩ",
+        "prefijo": "M",
+        "multiplo": 10000000,
+        "valores": [10000000, 11000000, 12000000, 13000000, 15000000, 16000000, 18000000, 20000000, 22000000, 24000000, 27000000, 30000000, 33000000, 36000000, 39000000, 43000000, 47000000, 51000000, 56000000, 62000000, 68000000, 75000000, 82000000, 91000000]
+      }
+    ]
+  },
+
+  "valores_mais_comuns_1_4w": {
+    "descricao": "Top 50 valores de resistores 1/4W ±5% mais vendidos/usados em projetos eletrônicos.",
+    "valores": [
+      { "ohms": 10, "rotulo": "10 Ω", "cor_faixas": "Marrom-Preto-Preto-Dourado" },
+      { "ohms": 22, "rotulo": "22 Ω", "cor_faixas": "Vermelho-Vermelho-Preto-Dourado" },
+      { "ohms": 33, "rotulo": "33 Ω", "cor_faixas": "Laranja-Laranja-Preto-Dourado" },
+      { "ohms": 47, "rotulo": "47 Ω", "cor_faixas": "Amarelo-Violeta-Preto-Dourado" },
+      { "ohms": 100, "rotulo": "100 Ω", "cor_faixas": "Marrom-Preto-Marrom-Dourado" },
+      { "ohms": 120, "rotulo": "120 Ω", "cor_faixas": "Marrom-Vermelho-Marrom-Dourado" },
+      { "ohms": 150, "rotulo": "150 Ω", "cor_faixas": "Marrom-Verde-Marrom-Dourado" },
+      { "ohms": 180, "rotulo": "180 Ω", "cor_faixas": "Marrom-Cinza-Marrom-Dourado" },
+      { "ohms": 220, "rotulo": "220 Ω", "cor_faixas": "Vermelho-Vermelho-Marrom-Dourado" },
+      { "ohms": 270, "rotulo": "270 Ω", "cor_faixas": "Vermelho-Violeta-Marrom-Dourado" },
+      { "ohms": 330, "rotulo": "330 Ω", "cor_faixas": "Laranja-Laranja-Marrom-Dourado" },
+      { "ohms": 390, "rotulo": "390 Ω", "cor_faixas": "Laranja-Branco-Marrom-Dourado" },
+      { "ohms": 470, "rotulo": "470 Ω", "cor_faixas": "Amarelo-Violeta-Marrom-Dourado" },
+      { "ohms": 560, "rotulo": "560 Ω", "cor_faixas": "Verde-Azul-Marrom-Dourado" },
+      { "ohms": 680, "rotulo": "680 Ω", "cor_faixas": "Azul-Cinza-Marrom-Dourado" },
+      { "ohms": 820, "rotulo": "820 Ω", "cor_faixas": "Cinza-Vermelho-Marrom-Dourado" },
+      { "ohms": 1000, "rotulo": "1 kΩ", "cor_faixas": "Marrom-Preto-Vermelho-Dourado" },
+      { "ohms": 1200, "rotulo": "1.2 kΩ", "cor_faixas": "Marrom-Vermelho-Vermelho-Dourado" },
+      { "ohms": 1500, "rotulo": "1.5 kΩ", "cor_faixas": "Marrom-Verde-Vermelho-Dourado" },
+      { "ohms": 1800, "rotulo": "1.8 kΩ", "cor_faixas": "Marrom-Cinza-Vermelho-Dourado" },
+      { "ohms": 2200, "rotulo": "2.2 kΩ", "cor_faixas": "Vermelho-Vermelho-Vermelho-Dourado" },
+      { "ohms": 2700, "rotulo": "2.7 kΩ", "cor_faixas": "Vermelho-Violeta-Vermelho-Dourado" },
+      { "ohms": 3300, "rotulo": "3.3 kΩ", "cor_faixas": "Laranja-Laranja-Vermelho-Dourado" },
+      { "ohms": 3900, "rotulo": "3.9 kΩ", "cor_faixas": "Laranja-Branco-Vermelho-Dourado" },
+      { "ohms": 4700, "rotulo": "4.7 kΩ", "cor_faixas": "Amarelo-Violeta-Vermelho-Dourado" },
+      { "ohms": 5600, "rotulo": "5.6 kΩ", "cor_faixas": "Verde-Azul-Vermelho-Dourado" },
+      { "ohms": 6800, "rotulo": "6.8 kΩ", "cor_faixas": "Azul-Cinza-Vermelho-Dourado" },
+      { "ohms": 8200, "rotulo": "8.2 kΩ", "cor_faixas": "Cinza-Vermelho-Vermelho-Dourado" },
+      { "ohms": 10000, "rotulo": "10 kΩ", "cor_faixas": "Marrom-Preto-Laranja-Dourado" },
+      { "ohms": 12000, "rotulo": "12 kΩ", "cor_faixas": "Marrom-Vermelho-Laranja-Dourado" },
+      { "ohms": 15000, "rotulo": "15 kΩ", "cor_faixas": "Marrom-Verde-Laranja-Dourado" },
+      { "ohms": 18000, "rotulo": "18 kΩ", "cor_faixas": "Marrom-Cinza-Laranja-Dourado" },
+      { "ohms": 22000, "rotulo": "22 kΩ", "cor_faixas": "Vermelho-Vermelho-Laranja-Dourado" },
+      { "ohms": 27000, "rotulo": "27 kΩ", "cor_faixas": "Vermelho-Violeta-Laranja-Dourado" },
+      { "ohms": 33000, "rotulo": "33 kΩ", "cor_faixas": "Laranja-Laranja-Laranja-Dourado" },
+      { "ohms": 39000, "rotulo": "39 kΩ", "cor_faixas": "Laranja-Branco-Laranja-Dourado" },
+      { "ohms": 47000, "rotulo": "47 kΩ", "cor_faixas": "Amarelo-Violeta-Laranja-Dourado" },
+      { "ohms": 56000, "rotulo": "56 kΩ", "cor_faixas": "Verde-Azul-Laranja-Dourado" },
+      { "ohms": 68000, "rotulo": "68 kΩ", "cor_faixas": "Azul-Cinza-Laranja-Dourado" },
+      { "ohms": 82000, "rotulo": "82 kΩ", "cor_faixas": "Cinza-Vermelho-Laranja-Dourado" },
+      { "ohms": 100000, "rotulo": "100 kΩ", "cor_faixas": "Marrom-Preto-Amarelo-Dourado" },
+      { "ohms": 120000, "rotulo": "120 kΩ", "cor_faixas": "Marrom-Vermelho-Amarelo-Dourado" },
+      { "ohms": 150000, "rotulo": "150 kΩ", "cor_faixas": "Marrom-Verde-Amarelo-Dourado" },
+      { "ohms": 180000, "rotulo": "180 kΩ", "cor_faixas": "Marrom-Cinza-Amarelo-Dourado" },
+      { "ohms": 220000, "rotulo": "220 kΩ", "cor_faixas": "Vermelho-Vermelho-Amarelo-Dourado" },
+      { "ohms": 330000, "rotulo": "330 kΩ", "cor_faixas": "Laranja-Laranja-Amarelo-Dourado" },
+      { "ohms": 470000, "rotulo": "470 kΩ", "cor_faixas": "Amarelo-Violeta-Amarelo-Dourado" },
+      { "ohms": 1000000, "rotulo": "1 MΩ", "cor_faixas": "Marrom-Preto-Verde-Dourado" },
+      { "ohms": 2200000, "rotulo": "2.2 MΩ", "cor_faixas": "Vermelho-Vermelho-Verde-Dourado" },
+      { "ohms": 10000000, "rotulo": "10 MΩ", "cor_faixas": "Marrom-Preto-Azul-Dourado" }
+    ]
+  },
+
+  "tabela_smd_codigo_3_digitos": {
+    "descricao": "Resistores SMD com código de 3 dígitos (série E24). Os dois primeiros dígitos são os algarismos significativos, o terceiro é o multiplicador (potência de 10).",
+    "exemplo": "\"472\" = 47 × 10² = 4700 Ω = 4.7 kΩ",
+    "observacao": "Quando o valor é menor que 10 Ω, usa-se 'R' como separador decimal. Ex: '4R7' = 4.7 Ω.",
+    "nota": "Valor 0 = jumper (0 Ω, resistência próxima de zero)."
+  },
+
+  "tabela_smd_codigo_4_digitos": {
+    "descricao": "Resistores SMD de precisão (séries E96/E192) com código de 4 dígitos.",
+    "exemplo": "\"4702\" = 470 × 10² = 47000 Ω = 47 kΩ",
+    "observacao": "Valores abaixo de 100 Ω usam 'R': '47R0' = 47 Ω."
+  },
+
+  "tabela_smd_eia96": {
+    "descricao": "Código EIA-96 para resistores SMD ±1%. Usa 2 dígitos (01 a 96) + 1 letra (multiplicador) para codificar valores E96.",
+    "exemplo": "\"01D\" = 100 × 1000 = 100 kΩ ±1%",
+    "codigos_referencia": "01=100, 02=102, 03=105, ..., 96=976. Letras: A=1, B=10, C=100, D=1000, E=10000, F=100000"
+  },
+
+  "leis_e_formulas": {
+    "lei_de_ohm": {
+      "nome": "Lei de Ohm",
+      "formula": "V = R × I",
+      "descricao": "Tensão (V) = Resistência (Ω) × Corrente (A). Relação fundamental entre tensão, corrente e resistência.",
+      "variacoes": [
+        { "encontrar": "Resistência", "formula": "R = V / I" },
+        { "encontrar": "Corrente", "formula": "I = V / R" },
+        { "encontrar": "Tensão", "formula": "V = R × I" }
+      ]
+    },
+    "potencia": {
+      "nome": "Lei da Potência Elétrica / Dissipação Térmica",
+      "formula": "P = V × I = V² / R = R × I²",
+      "descricao": "Potência dissipada pelo resistor em watts. Essencial para dimensionar a potência nominal do componente.",
+      "exemplos": [
+        { "descricao": "Resistor 100 Ω com 0.1A", "potencia": "P = 100 × 0.1² = 1W" },
+        { "descricao": "Resistor 220 Ω com 12V", "potencia": "P = 12² / 220 = 0.65W (recomendado 1W)" }
+      ]
+    },
+    "associacao_serie": {
+      "nome": "Associação em Série",
+      "formula": "R_total = R₁ + R₂ + R₃ + ... + Rₙ",
+      "descricao": "Resistores conectados em sequência. A resistência total é a soma de todas as resistências."
+    },
+    "associacao_paralelo": {
+      "nome": "Associação em Paralelo",
+      "formula": "1/R_total = 1/R₁ + 1/R₂ + 1/R₃ + ... + 1/Rₙ",
+      "descricao": "Resistores conectados em ramos paralelos. A resistência total é sempre menor que a menor resistência individual.",
+      "caso_especial_dois": "R_total = (R₁ × R₂) / (R₁ + R₂)"
+    },
+    "divisor_tensao": {
+      "nome": "Divisor de Tensão (Pull-Up/Pull-Down)",
+      "formula": "V_out = V_in × R₂ / (R₁ + R₂)",
+      "descricao": "Circuito clássico com dois resistores para obter uma tensão fracionada da tensão de entrada."
+    }
+  },
+
+  "padroes_embalagem": [
+    {
+      "tipo": "Tira (Axl / Through-Hole)",
+      "descricao": "Resistores de carbono/filme metálico com terminais axiais. Embalados em tiras ou avulsos.",
+      "formatos_comuns": ["Tira de 10 unidades", "Tira de 100 unidades", "Saco a granel (1000 unidades)", "Avulso"]
+    },
+    {
+      "tipo": "Carretel (Tape & Reel)",
+      "descricao": "Resistores SMD montados em fita para pick-and-place automático. Padrão industrial.",
+      "formatos_comuns": ["Carretel 5000 unidades (0201/0402)", "Carretel 5000 unidades (0603)", "Carretel 4000 unidades (0805)", "Carretel 2000 unidades (1206/2512)"]
+    },
+    {
+      "tipo": "Caixa (Resistores de Potência)",
+      "descricao": "Resistores de fio enrolado de alta potência. Embalagem individual ou em caixas.",
+      "formatos_comuns": ["Individual com dissipador", "Caixa de 10 unidades", "Caixa de 100 unidades"]
+    }
+  ],
+
+  "fornecedores_e_referencias": {
+    "nacionais": [
+      { "nome": "Farnell / Newark", "website": "br.farnell.com", "frete": "Grátis acima de R$150" },
+      { "nome": "Mouser Electronics", "website": "mouser.com", "frete": "Grátis acima de R$200 (alguns produtos)" },
+      { "nome": "Digi-Key", "website": "digikey.com.br", "frete": "Internacional (pode ter taxa)" },
+      { "nome": "Bait Shop (Santa Ifigênia)", "website": "baitshop.com.br", "frete": "Nacional, loja física SP" },
+      { "nome": "Solder King (Santa Ifigênia)", "website": "solderking.com.br", "frete": "Nacional" },
+      { "nome": "Mercado Livre", "website": "mercadolivre.com.br", "frete": "Marketplace, vários vendedores" },
+      { "nome": "Shopee", "website": "shopee.com.br", "frete": "Marketplace, valores baixos" },
+      { "nome": "Passiv Eletrônica", "website": "passiveletronica.com.br", "frete": "Nacional" }
+    ],
+    "kits_recomendados": [
+      { "nome": "Kit 600 peças E24 1/4W (10 Ω — 1 MΩ)", "faixa": "600 resistores, 24 valores × 25 unidades cada", "aplicacao": "Projetos Arduino e hobby" },
+      { "nome": "Kit 400 peças SMD 0805 E24 (10 Ω — 1 MΩ)", "faixa": "400 resistores SMD, 24 valores", "aplicacao": "Projetos SMD" },
+      { "nome": "Kit 1500 peças E24 1/4W (30 valores × 50 unidades)", "faixa": "1500 resistores, valores estendidos", "aplicacao": "Oficina/laboratório profissional" }
+    ]
+  }
+}
+
