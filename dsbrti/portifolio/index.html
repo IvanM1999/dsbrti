@@ -3,15 +3,225 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="DSBRTI — Portfólio de projetos industriais e acadêmicos">
-  <title>DSBRTI · Portfólio</title>
+  <meta name="description" content="DSBRTI — Portfólio de Ivan Montibeller. Desenvolvimento Web, Sistemas Educacionais, Mecatrônica, Automação Industrial e Pesquisa Aplicada.">
+  <title>Ivan Montibeller | Portfólio DSBRTI</title>
   <link rel="stylesheet" href="../estilos.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23E95420'/%3E%3Ctext x='4' y='24' font-size='20' font-weight='bold' fill='%23fff'%3ED%3C/text%3E%3C/svg%3E">
-  <!-- Scripts de Inicialização e Patches de Escopo -->
+  
   <script src="../senai/patches.js" defer></script>
   <script src="../tema-inteligente.js"></script>
-  </head>
-  <body>
+  
+  <style>
+    /* Estilos complementares que integram as novas seções ao CSS original do ecossistema */
+    body { font-family: 'Inter', sans-serif; }
+    .metrics-section { margin: 40px 0; }
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .metric-card {
+      background: var(--card-bg, rgba(255,255,255,0.05));
+      border: 1px solid var(--border-color, rgba(255,255,255,0.1));
+      padding: 25px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .metric-card h3 { font-size: 2.2rem; margin-bottom: 5px; color: var(--accent-color, #E95420); }
+    .metric-card span { font-size: 0.9rem; opacity: 0.8; }
+    
+    .portfolio-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 25px 0;
+      padding: 15px;
+      background: var(--bg-card, rgba(255,255,255,0.02));
+      border-radius: 8px;
+      border: 1px solid var(--border-color, rgba(255,255,255,0.1));
+    }
+    .filter-btn {
+      padding: 10px 18px;
+      border: 1px solid var(--border-color, rgba(255,255,255,0.2));
+      background: transparent;
+      color: inherit;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+    .filter-btn:hover {
+      background: var(--primary, #E95420);
+      border-color: var(--primary, #E95420);
+      color: white;
+    }
+    .filter-btn.active {
+      background: var(--primary, #E95420);
+      border-color: var(--primary, #E95420);
+      color: white;
+      box-shadow: 0 0 12px rgba(233, 84, 32, 0.4);
+    }
+    
+    .search-container { 
+      margin: 25px 0; 
+      display: flex;
+      flex-direction: column;
+    }
+    .search-input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid var(--border-color, rgba(255,255,255,0.1));
+      border-radius: 8px;
+      font-size: 1rem;
+      background: var(--input-bg, transparent);
+      color: inherit;
+      transition: all 0.3s ease;
+    }
+    .search-input:focus {
+      outline: none;
+      border-color: var(--primary, #E95420);
+      box-shadow: 0 0 8px rgba(233, 84, 32, 0.3);
+    }
+    
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+    
+    .project-card {
+      background: var(--bg-card, rgba(255,255,255,0.05));
+      border: 1px solid var(--border-color, rgba(255,255,255,0.1));
+      border-radius: 12px;
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    
+    .project-card:hover {
+      border-color: var(--primary, #E95420);
+      box-shadow: 0 8px 24px rgba(233, 84, 32, 0.2);
+      transform: translateY(-4px);
+    }
+    
+    .project-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    
+    .project-emoji {
+      font-size: 2rem;
+      line-height: 1;
+    }
+    
+    .project-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 0;
+    }
+    
+    .project-description {
+      font-size: 0.9rem;
+      color: var(--text-sub, rgba(255,255,255,0.7));
+      margin-bottom: 12px;
+      flex-grow: 1;
+    }
+    
+    .project-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-color, rgba(255,255,255,0.1));
+      margin-bottom: 12px;
+    }
+    
+    .project-category {
+      background: var(--primary, #E95420);
+      color: white;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+    
+    .project-status {
+      font-size: 0.8rem;
+      padding: 3px 8px;
+      border-radius: 3px;
+      background: var(--border-color, rgba(255,255,255,0.1));
+      color: inherit;
+    }
+    
+    .project-status.ativo { background: rgba(76, 175, 80, 0.2); color: #4caf50; }
+    .project-status.beta { background: rgba(255, 193, 7, 0.2); color: #ffc107; }
+    .project-status.desenvolvimento { background: rgba(33, 150, 243, 0.2); color: #2196f3; }
+    .project-status.legado { background: rgba(158, 158, 158, 0.2); color: #999; }
+    
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    
+    .tag {
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      background: var(--border-color, rgba(255,255,255,0.1));
+      border-radius: 12px;
+      color: var(--text-sub, rgba(255,255,255,0.7));
+    }
+    
+    .project-link {
+      display: inline-block;
+      padding: 8px 16px;
+      background: var(--primary, #E95420);
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      align-self: flex-start;
+      margin-top: auto;
+    }
+    
+    .project-link:hover {
+      background: var(--primary, #d84315);
+      text-decoration: none;
+    }
+    
+    .timeline {
+      border-left: 3px solid var(--accent-color, #E95420);
+      padding-left: 25px;
+      margin-top: 30px;
+    }
+    .timeline-item { margin-bottom: 25px; }
+    .timeline-item h3 { font-size: 1.3rem; margin-bottom: 5px; }
+    
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-sub, rgba(255,255,255,0.7));
+    }
+    
+    .empty-state h3 { font-size: 1.3rem; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+
   <nav class="navbar" role="navigation" aria-label="Navegação principal">
     <div class="nav-container">
       <span class="nav-brand">⚙ DSBRTI</span>
@@ -20,7 +230,7 @@
         <li><a href="../landingpage/land.html">Landing</a></li>
         <li><a href="../senai/metrologia.html">Metrologia</a></li>
         <li><a href="../curriculo/index.html">Currículo</a></li>
-        <li><a href="index.html" class="active">Portfólio</a></li>
+        <li><a href="portifolio.html" class="active">Portfólio</a></li>
       </ul>
       <div class="theme-switcher" role="group" aria-label="Selecionar tema">
         <button data-theme="ubuntu" class="theme-btn active" title="Ubuntu">🐧</button>
@@ -31,17 +241,33 @@
   </nav>
 
   <main class="container">
-    <header class="section-header">
+    <header class="section-header" style="padding-top: 40px;">
       <h1>📂 Portfólio</h1>
-      <p class="subtitle">Projetos industriais, acadêmicos e de pesquisa aplicada</p>
+      <p class="subtitle">Projetos industriais, acadêmicos e de pesquisa aplicada de <strong>Ivan Montibeller</strong></p>
     </header>
 
-    <div class="portfolio-filters">
-      <button class="filter-btn active" data-filter="all">Todos</button>
-      <button class="filter-btn" data-filter="metrologia">Metrologia</button>
-      <button class="filter-btn" data-filter="software">Software</button>
-      <button class="filter-btn" data-filter="mecanica">Mecânica</button>
-      <button class="filter-btn" data-filter="qualidade">Qualidade</button>
+    <section class="metrics-section">
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <h3 id="repos">--</h3>
+          <span>Repositórios Públicos</span>
+        </div>
+        <div class="metric-card">
+          <h3 id="followers">--</h3>
+          <span>Seguidores Ativos</span>
+        </div>
+        <div class="metric-card">
+          <h3 id="stars">error</h3>
+          <span>Estrelas</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="portfolio-filters" id="filterButtons"></div>
+
+    <div class="search-container">
+      <input type="text" class="search-input" id="searchInput" placeholder="Pesquisar projeto por nome ou tecnologia...">
+      <span id="resultCount" style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-sub);">Carregando projetos...</span>
     </div>
 
     <div class="portfolio-grid" id="portfolioGrid"></div>
@@ -50,18 +276,249 @@
       <button id="detailClose" class="btn-sm">✕ Fechar</button>
       <div id="detailContent"></div>
     </section>
+
+    <section style="margin-top: 60px;">
+      <h2>📈 Trajetória Recente & Ecossistema de Engenharia</h2>
+      <div class="timeline">
+        <div class="timeline-item">
+          <h3>2026</h3>
+          <p><strong>Consolidação da DSBRTI & Automação Avançada:</strong> Integração de hardware e inteligência artificial através de braços robóticos industriais emulados no Wokwi (<em>ARM Tank Arduino</em>). Desenvolvimento do ecossistema corporativo descentralizado <strong>Olympus (Suite, Nexus e Server Provider)</strong> e ferramentas de gerenciamento inteligente em tempo real.</p>
+        </div>
+        <div class="timeline-item">
+          <h3>2025</h3>
+          <p><strong>Sistemas Sociais, Comerciais e IoT:</strong> Implementação de sistemas web de grande impacto institucional, como a plataforma de apoio do <strong>Conselho Tutelar BNU (SIPIA-CT-ECA)</strong> e o <em>Supabase Editor</em>. Prototipagem em automação de hardware e segurança com os projetos <em>Orquidea Inteligent</em> e os módulos de sincronização <em>VortexSync</em>.</p>
+        </div>
+        <div class="timeline-item">
+          <h3>2024</h3>
+          <p><strong>Consolidação Educacional e Metrologia:</strong> Lançamento e estabilização da plataforma educacional <strong>Mecatrônica v4</strong> baseada em Arduino. Desenvolvimento e validação do <strong>Sistema Industrial SENAI</strong>, focado em módulos didáticos de metrologia, controle de processos e instrumentação técnica.</p>
+        </div>
+        <div class="timeline-item">
+          <h3>2023</h3>
+          <p><strong>Fundação do Ecossistema e Pesquisa:</strong> Início do desenvolvimento de softwares industriais e das primeiras iterações legadas da suíte de Mecatrônica (Versões v1 e v2). Foco em pesquisa aplicada, experimentação de arquitetura de software e catalogação de documentações técnicas.</p>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer class="footer">
-    <p>DSBRTI © 2025 — Portfólio</p>
-    <p class="footer-msg">✔ Projetos demonstrados com excelência.</p>
+    <p>DSBRTI © 2026 — Ivan Montibeller</p>
+    <p class="footer-msg">✔ Projetos com Amor.</p>
   </footer>
 
   <div id="toast" class="toast" role="alert" aria-live="assertive"></div>
 
-  <script src="../db_industrial.js"></script>
-  <script src="../calculadoras.js"></script>
-  <script src="../core.js"></script>
-  <script src="../patches.js"></script>
+  <script src="../senai/core.js"></script>
+
+  <script>
+    // Dados globais
+    let allProjects = [];
+    let filteredProjects = [];
+    let currentFilter = 'all';
+
+    // 1. Carrega o JSON de projetos
+    async function loadProjects() {
+      try {
+        const response = await fetch('listas.json');
+        if (!response.ok) throw new Error('Erro ao carregar projetos');
+        const data = await response.json();
+        allProjects = data.projetos;
+        
+        // Renderiza filtros dinamicamente
+        renderFilters(data.categorias);
+        
+        // Renderiza todos os projetos
+        filteredProjects = allProjects;
+        renderProjects();
+        
+        console.log('✅ Projetos carregados com sucesso:', allProjects.length);
+      } catch(err) {
+        console.error('❌ Erro ao carregar projetos:', err);
+        document.getElementById('portfolioGrid').innerHTML = `
+          <div class="empty-state" style="grid-column: 1/-1;">
+            <h3>⚠️ Erro ao carregar projetos</h3>
+            <p>${err.message}</p>
+          </div>
+        `;
+      }
+    }
+
+    // 2. Renderiza os botões de filtro dinamicamente
+    function renderFilters(categorias) {
+      const filterContainer = document.getElementById('filterButtons');
+      filterContainer.innerHTML = '';
+      
+      // Botão "Todos"
+      const allBtn = document.createElement('button');
+      allBtn.className = 'filter-btn active';
+      allBtn.dataset.filter = 'all';
+      allBtn.textContent = '🎯 Todos';
+      allBtn.addEventListener('click', () => filterProjects('all'));
+      filterContainer.appendChild(allBtn);
+      
+      // Botões por categoria
+      Object.entries(categorias).forEach(([key, category]) => {
+        const btn = document.createElement('button');
+        btn.className = 'filter-btn';
+        btn.dataset.filter = key;
+        btn.textContent = `${category.emoji} ${category.nome}`;
+        btn.addEventListener('click', () => filterProjects(key));
+        filterContainer.appendChild(btn);
+      });
+    }
+
+    // 3. Filtra projetos por categoria
+    function filterProjects(category) {
+      currentFilter = category;
+      
+      // Atualiza o estado dos botões
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.filter === category);
+      });
+      
+      // Filtra os projetos
+      if (category === 'all') {
+        filteredProjects = allProjects;
+      } else {
+        filteredProjects = allProjects.filter(p => p.categoria === category);
+      }
+      
+      // Re-aplica a busca se houver
+      const searchQuery = document.getElementById('searchInput').value;
+      if (searchQuery.trim()) {
+        applySearch(searchQuery);
+      } else {
+        renderProjects();
+      }
+    }
+
+    // 4. Busca e filtra em tempo real
+    function applySearch(query) {
+      const lowerQuery = query.toLowerCase().trim();
+      
+      if (!lowerQuery) {
+        renderProjects();
+        return;
+      }
+      
+      filteredProjects = (currentFilter === 'all' ? allProjects : filteredProjects)
+        .filter(project => 
+          project.titulo.toLowerCase().includes(lowerQuery) ||
+          project.descricao.toLowerCase().includes(lowerQuery) ||
+          project.tags.some(tag => tag.toLowerCase().includes(lowerQuery)) ||
+          project.categoria.toLowerCase().includes(lowerQuery)
+        );
+      
+      renderProjects();
+    }
+
+    // 5. Renderiza os cartões de projeto
+    function renderProjects() {
+      const grid = document.getElementById('portfolioGrid');
+      const resultCount = document.getElementById('resultCount');
+      
+      if (filteredProjects.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-state" style="grid-column: 1/-1;">
+            <h3>🔍 Nenhum projeto encontrado</h3>
+            <p>Tente ajustar seus filtros ou busca.</p>
+          </div>
+        `;
+        resultCount.textContent = 'Nenhum resultado';
+        return;
+      }
+      
+      grid.innerHTML = filteredProjects.map(project => `
+        <div class="project-card">
+          <div class="project-header">
+            <span class="project-emoji">${project.imagem}</span>
+            <h3 class="project-title">${project.titulo}</h3>
+          </div>
+          
+          <p class="project-description">${project.descricao}</p>
+          
+          <div class="project-meta">
+            <span class="project-category">${project.categoria.charAt(0).toUpperCase() + project.categoria.slice(1)}</span>
+            <span class="project-status ${project.status}">${project.status}</span>
+          </div>
+          
+          <div class="project-tags">
+            ${project.tags.map(tag => `<span class="tag">#${tag}</span>`).join('')}
+          </div>
+          
+          <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: auto;">
+            <a href="${project.link}" target="_blank" rel="noreferrer noopener" class="project-link">
+              Acessar Projeto →
+            </a>
+            ${project.github ? `<a href="${project.github}" target="_blank" rel="noreferrer noopener" class="project-link" style="background: rgba(255,255,255,0.1); color: inherit; border-color: rgba(255,255,255,0.15);">GitHub →</a>` : ''}
+          </div>
+        </div>
+      `).join('');
+      
+      resultCount.textContent = `Mostrando ${filteredProjects.length} de ${allProjects.length} projetos`;
+    }
+
+    // 6. Carrega métricas unificadas das 3 contas do GitHub
+    async function loadGithubMetrics(){
+      const githubUsers = ["IvanM1999", "IvvyDestiny", "IvvyDestiny1999"];
+      
+      let totalRepos = 0;
+      let totalFollowers = 0;
+      let totalStars = 0;
+
+      try {
+        // Busca os dados de perfil em paralelo para todas as contas
+        const profilePromises = githubUsers.map(user => 
+          fetch(`https://api.github.com/users/${user}`).then(res => res.ok ? res.json() : null)
+        );
+        
+        // Busca os dados de repositórios (estrelas) em paralelo para todas as contas
+        const repoPromises = githubUsers.map(user => 
+          fetch(`https://api.github.com/users/${user}/repos?per_page=100`).then(res => res.ok ? res.json() : [])
+        );
+
+        const profiles = await Promise.all(profilePromises);
+        const reposLists = await Promise.all(repoPromises);
+
+        // Agrega os dados de perfil (Repositórios e Seguidores)
+        profiles.forEach(profile => {
+          if (profile) {
+            totalRepos += profile.public_repos || 0;
+            totalFollowers += profile.followers || 0;
+          }
+        });
+
+        // Agrega a contagem de estrelas de todos os repositórios de todas as contas
+        reposLists.forEach(repos => {
+          if (Array.isArray(repos)) {
+            totalStars += repos.reduce((sum, repo) => sum + (repo.stargazers_count || 0), 0);
+          }
+        });
+
+        // Atualiza a interface de usuário com os totais somados
+        document.getElementById("repos").textContent = totalRepos;
+        document.getElementById("followers").textContent = totalFollowers;
+        document.getElementById("stars").textContent = totalStars;
+        
+        console.log(`📊 Métricas integradas com sucesso! Repos: ${totalRepos} | Seguidores: ${totalFollowers} | Estrelas: ${totalStars}`);
+      } catch(err) {
+        console.error("Erro ao agregar dados das contas do GitHub:", err);
+        document.getElementById("stars").textContent = "error";
+      }
+    }
+
+
+    // 7. Inicialização
+    document.addEventListener('DOMContentLoaded', () => {
+      loadProjects();
+      loadGithubMetrics();
+      
+      // Event listener para busca em tempo real
+      document.getElementById("searchInput").addEventListener("input", (e) => {
+        applySearch(e.target.value);
+      });
+    });
+
+    console.log('%c⚙️ Portfólio Dinâmico Carregado', 'color: #E95420; font-weight: bold;');
+  </script>
 </body>
 </html>
