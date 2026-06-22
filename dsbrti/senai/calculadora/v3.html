@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+   <title>Calculadora de Resistor Master SPA</title>
+       <style>
+        :root {
+            --bg-dark: #0f1015;
+            --panel-bg: #16171e;
+            --accent-blue: #2980b9;
+            --accent-green: #27ae60;
+            --text-main: #f5f6fa;
+            --text-muted: #7f8c8d;
+            --border-color: #2c3e50;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        header {
+            background-color: var(--panel-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo { font-size: 1.1rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: #fff; }
+        nav { display: flex; gap: 10px; }
+
+        .nav-btn {
+            background: transparent; border: 1px solid transparent; color: var(--text-muted);
+            padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600;
+            font-size: 0.9rem; transition: all 0.2s ease;
+        }
+
+        .nav-btn.active {
+            background-color: rgba(41, 128, 185, 0.1); border-color: var(--accent-blue); color: var(--accent-blue);
+        }
+
+        main { flex: 1; padding: 20px; max-width: 1200px; width: 100%; margin: 0 auto; }
+        .spa-view { display: none; opacity: 0; transition: opacity 0.3s ease; }
+        .spa-view.active-view { display: flex; flex-direction: column; gap: 20px; opacity: 1; }
+
+        /* GUI Superior */
+        .top-section {
+            display: grid; grid-template-columns: 1fr 60px; background: var(--panel-bg);
+            border-radius: 16px; padding: 25px; border: 1px solid var(--border-color); position: relative;
+        }
+
+        .wheel-workspace {
+            position: relative; width: 420px; height: 420px; margin: 0 auto;
+            border-radius: 50%; box-shadow: 0 15px 45px rgba(0,0,0,0.5);
+            touch-action: none; overflow: hidden; cursor: grab;
+        }
+        .wheel-workspace:active { cursor: grabbing; }
+
+        .wheel-svg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none; }
+        #wheel1 { width: 420px; height: 420px; z-index: 1; }
+        #wheel2 { width: 300px; height: 300px; z-index: 2; }
+        #wheel3 { width: 180px; height: 180px; z-index: 3; }
+
+        .center-cap {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 50px; height: 50px; background: #000; border-radius: 50%; z-index: 4; border: 2px solid #333;
+        }
+
+        .top-marker {
+            position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 3px; height: 100%; background: linear-gradient(180deg, red 0%, rgba(255,255,255,0.1) 15%, rgba(255,255,255,0.1) 85%, rgba(255,255,255,0) 100%);
+            z-index: 5; pointer-events: none;
+        }
+
+        .slider-column { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 10px; border-left: 1px solid var(--border-color); padding-left: 15px; }
+        .slider-title { writing-mode: vertical-rl; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 2px; color: var(--text-muted); }
+        input[type=range].v-slider { appearance: slider-vertical; width: 12px; height: 300px; background: #2c3e50; border-radius: 6px; outline: none; }
+
+        /* GUI Inferior */
+        .bottom-dashboard { display: grid; grid-template-columns: 320px 1fr 280px; gap: 20px; margin-top: 5px; }
+        .dash-card { background: var(--panel-bg); border-radius: 14px; padding: 18px; border: 1px solid var(--border-color); }
+        .card-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--accent-blue); letter-spacing: 1px; margin-bottom: 12px; }
+
+        .combo-box { display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
+        .digits-strip { display: flex; gap: 8px; align-items: center; font-size: 1.1rem; font-weight: 700; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; border-left: 4px solid var(--accent-blue); }
+        .color-dot-indicator { width: 12px; height: 12px; border-radius: 50%; display: inline-block; border: 1px solid #555; }
+        .display-math-val { font-size: 2.2rem; font-weight: 800; color: #fff; margin-top: 15px; font-family: monospace; }
+
+        .graphic-box { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .resistor-art-container { position: relative; width: 100%; height: 120px; background: rgba(0,0,0,0.15); border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+        .metal-lead { position: absolute; width: 80%; height: 4px; background: #7f8c8d; z-index: 1; }
+        
+        .resistor-body-element {
+            position: relative; width: 240px; height: 60px; background: #e0bb85;
+            border-radius: 30px; z-index: 2; box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+            display: flex; align-items: center; justify-content: space-around; padding: 0 25px;
+        }
+        .band-circle { width: 24px; height: 24px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); box-shadow: 0 2px 5px rgba(0,0,0,0.5); transition: background-color 0.2s; }
+
+        .commercial-box { display: flex; flex-direction: column; gap: 8px; }
+        .comm-pill { background: #1c1d26; border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 6px; font-size: 0.9rem; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+        .comm-pill::after { content: 'E24'; font-size: 0.65rem; background: #27ae60; color: #fff; padding: 2px 4px; border-radius: 3px; }
+
+        /* Aba Paralelo */
+        .parallel-workspace { background: var(--panel-bg); border-radius: 16px; padding: 30px; border: 1px solid var(--border-color); max-width: 600px; margin: 20px auto; }
+        .input-row { display: grid; grid-template-columns: 1fr 140px; gap: 15px; margin-bottom: 12px; align-items: center; }
+        select.spa-select { background: #0f1015; border: 1px solid var(--border-color); color: #fff; padding: 10px; border-radius: 6px; font-weight: 600; outline: none; width: 100%; }
+
+        @media(max-width: 960px) {
+            .bottom-dashboard { grid-template-columns: 1fr; }
+            .top-section { grid-template-columns: 1fr; }
+            .wheel-workspace { width: 300px; height: 300px; }
+            #wheel1 { width: 300px; height: 300px; }
+            #wheel2 { width: 220px; height: 220px; }
+            #wheel3 { width: 140px; height: 140px; }
+        }
+    </style>
+
+   </head>
+<body>
+
+    <header>
+        <div class="logo">🎛️ Engenharia Pro</div>
+        <nav>
+            <button id="btn-calc" class="nav-btn active" onclick="switchView('calc-view')">Calculadora de Discos</button>
+            <button id="btn-parallel" class="nav-btn" onclick="switchView('parallel-view')">Análise de Paralelos</button>
+        </nav>
+    </header>
+
+    <main>
+        <div id="calc-view" class="spa-view active-view">
+            
+            <div class="top-section">
+                <div id="drag-surface" class="wheel-workspace">
+                    <div class="top-marker"></div>
+                    <svg id="wheel1" class="wheel-svg" viewBox="0 0 100 100"></svg>
+                    <svg id="wheel2" class="wheel-svg" viewBox="0 0 100 100"></svg>
+                    <svg id="wheel3" class="wheel-svg" viewBox="0 0 100 100"></svg>
+                    <div class="center-cap"></div>
+                </div>
+                <div class="slider-column">
+                    <div class="slider-title">Girar Mestre</div>
+                    <input id="master-slider" type="range" min="0" max="360" value="0" class="v-slider">
+                </div>
+            </div>
+
+            <div class="bottom-dashboard">
+                
+                <div class="dash-card combo-box">
+                    <div>
+                        <div class="card-label">Combinação Ativa</div>
+                        <div class="digits-strip">
+                            <span id="dot1" class="color-dot-indicator"></span>
+                            <span>D1:</span> <span id="txt-d1">-</span>
+                        </div>
+                        <div class="digits-strip" style="margin-top: 8px;">
+                            <span id="dot2" class="color-dot-indicator"></span>
+                            <span>D2:</span> <span id="txt-d2">-</span>
+                        </div>
+                        <div class="digits-strip" style="margin-top: 8px;">
+                            <span id="dot3" class="color-dot-indicator"></span>
+                            <span>MULT:</span> <span id="txt-m">-</span>
+                        </div>
+                    </div>
+                    <div id="main-output" class="display-math-val">-- Ω</div>
+                </div>
+
+                <div class="dash-card graphic-box">
+                    <div class="card-label" style="align-self: flex-start; width: 100%;">Renderização Gráfica do Resistor</div>
+                    <div class="resistor-art-container">
+                        <div class="metal-lead"></div>
+                        <div class="resistor-body-element">
+                            <div id="circle-band-1" class="band-circle" title="1ª Faixa"></div>
+                            <div id="circle-band-2" class="band-circle" title="2ª Faixa"></div>
+                            <div id="circle-band-3" class="band-circle" title="Multiplicador"></div>
+                            <div class="band-circle" style="background-color: #d4af37;" title="Tolerância Fixa 5%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dash-card">
+                    <div class="card-label">Padrão Comercial E24</div>
+                    <div id="commercial-list" class="commercial-box"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="parallel-view" class="spa-view" style="display: none;">
+            <div class="parallel-workspace">
+                <div class="card-label" style="font-size: 1.1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
+                    Associação de Resistores em Paralelo (Limite: 4)
+                </div>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">
+                    Configure até 4 resistores comerciais simultâneos para calcular a Resistência Equivalente (R_Eq).
+                </p>
+
+                <div class="input-row">
+                    <span>Resistor Comercial 1:</span>
+                    <select id="p1" class="spa-select" onchange="runParallelCalc()"></select>
+                </div>
+                <div class="input-row">
+                    <span>Resistor Comercial 2:</span>
+                    <select id="p2" class="spa-select" onchange="runParallelCalc()"></select>
+                </div>
+                <div class="input-row">
+                    <span>Resistor Comercial 3:</span>
+                    <select id="p3" class="spa-select" onchange="runParallelCalc()"></select>
+                </div>
+                <div class="input-row">
+                    <span>Resistor Comercial 4:</span>
+                    <select id="p4" class="spa-select" onchange="runParallelCalc()"></select>
+                </div>
+
+                <div class="dash-card" style="margin-top: 25px; text-align: center; background: rgba(0,0,0,0.2);">
+                    <div class="card-label">Resistência Equivalente (R_Eq)</div>
+                    <div id="parallel-output" style="font-size: 2.5rem; font-weight: 800; color: var(--accent-green);">-- Ω</div>
+                </div>
+            </div>
+        </div>
+    </main>
+<script>
+    // Banco de Dados Estrito de Cores e Fórmulas Industriais
+    const baseColors = [
+        { name: "Preto",   color: "#000000", text: "#FFF", digit: 0, label: "0" },
+        { name: "Marrom",  color: "#8B4513", text: "#FFF", digit: 1, label: "1" },
+        { name: "Vermelho",color: "#FF0000", text: "#FFF", digit: 2, label: "2" },
+        { name: "Laranja", color: "#FFA500", text: "#000", digit: 3, label: "3" },
+        { name: "Amarelo", color: "#FFFF00", text: "#000", digit: 4, label: "4" },
+        { name: "Verde",   color: "#008000", text: "#FFF", digit: 5, label: "5" },
+        { name: "Azul",    color: "#0000FF", text: "#FFF", digit: 6, label: "6" },
+        { name: "Violeta", color: "#EE82EE", text: "#000", digit: 7, label: "7" },
+        { name: "Cinza",   color: "#808080", text: "#FFF", digit: 8, label: "8" },
+        { name: "Branco",  color: "#FFFFFF", text: "#000", digit: 9, label: "9" }
+    ];
+
+    const multColors = [
+        { name: "Preto",   color: "#000000", text: "#FFF", mult: 1,        label: "0" },
+        { name: "Marrom",  color: "#8B4513", text: "#FFF", mult: 10,       label: "1" },
+        { name: "Vermelho",color: "#FF0000", text: "#FFF", mult: 100,      label: "00" },
+        { name: "Laranja", color: "#FFA500", text: "#000", mult: 1000,     label: "K" },
+        { name: "Amarelo", color: "#FFFF00", text: "#000", mult: 10000,    label: "0K" },
+        { name: "Verde",   color: "#008000", text: "#FFF", mult: 100000,   label: "00K" },
+        { name: "Azul",    color: "#0000FF", text: "#FFF", mult: 1000000,  label: "M" }
+    ];
+
+    const e24Values = [10, 11, 12, 13, 15, 16, 18, 20, 22, 24, 27, 30, 33, 36, 39, 43, 47, 51, 56, 62, 68, 75, 82, 91];
+
+    function buildCommercialDatabase() {
+        let database = [];
+        let multipliers = [1, 10, 100, 1000, 10000, 100000, 1000000];
+        multipliers.forEach(m => {
+            e24Values.forEach(base => database.push((base * m) / 10));
+        });
+        return database;
+    }
+    const fullCommercialList = buildCommercialDatabase();
+
+    // Roteador SPA Estável
+    function switchView(viewId) {
+        document.querySelectorAll('.spa-view').forEach(view => {
+            view.style.display = 'none';
+            view.classList.remove('active-view');
+        });
+        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+
+        const targetView = document.getElementById(viewId);
+        if (targetView) {
+            targetView.style.display = 'flex';
+            setTimeout(() => targetView.classList.add('active-view'), 10);
+        }
+        
+        if(viewId === 'calc-view') document.getElementById('btn-calc').classList.add('active');
+        if(viewId === 'parallel-view') document.getElementById('btn-parallel').classList.add('active');
+    }
+
+    // Motores de Estado Core
+    let masterRotation = 0;
+    let wheels = {};
+
+    document.addEventListener("DOMContentLoaded", () => {
+        wheels = {
+            w1: { dom: document.getElementById('wheel1'), total: 10, data: baseColors },
+            w2: { dom: document.getElementById('wheel2'), total: 10, data: baseColors },
+            w3: { dom: document.getElementById('wheel3'), total: 7,  data: multColors }
+        };
+
+        if(wheels.w1.dom && wheels.w2.dom && wheels.w3.dom) {
+            renderDiskSVG(wheels.w1, 42);
+            renderDiskSVG(wheels.w2, 38);
+            renderDiskSVG(wheels.w3, 33);
+            setupInteractionSystems();
+            initParallelOptions();
+            updateSystemEngine();
+        }
+    });
+
+    function renderDiskSVG(wheel, textOffset) {
+        const step = 360 / wheel.total;
+        wheel.data.forEach((item, i) => {
+            const start = i * step;
+            const end = (i + 1) * step;
+            
+            const r1 = ((start - 90) * Math.PI) / 180;
+            const r2 = ((end - 90) * Math.PI) / 180;
+            
+            const x1 = 50 + 50 * Math.cos(r1); const y1 = 50 + 50 * Math.sin(r1);
+            const x2 = 50 + 50 * Math.cos(r2); const y2 = 50 + 50 * Math.sin(r2);
+
+            const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            path.setAttribute("d", `M 50 50 L ${x1} ${y1} A 50 50 0 0 1 ${x2} ${y2} Z`);
+            path.setAttribute("fill", item.color);
+            path.setAttribute("stroke", "#111");
+            path.setAttribute("stroke-width", "0.2");
+            wheel.dom.appendChild(path);
+
+            const midAngle = start + step / 2;
+            const midRad = ((midAngle - 90) * Math.PI) / 180;
+            const tx = 50 + textOffset * Math.cos(midRad);
+            const ty = 50 + textOffset * Math.sin(midRad);
+
+            const txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            txt.setAttribute("x", tx); txt.setAttribute("y", ty);
+            txt.setAttribute("fill", item.text); txt.setAttribute("font-size", "4.5");
+            txt.setAttribute("text-anchor", "middle"); txt.setAttribute("dominant-baseline", "central");
+            txt.setAttribute("transform", `rotate(${midAngle + 90}, ${tx}, ${ty})`);
+            txt.textContent = item.label;
+            wheel.dom.appendChild(txt);
+        });
+    }
+
+    function setupInteractionSystems() {
+        const slider = document.getElementById('master-slider');
+        const dragZone = document.getElementById('drag-surface');
+        let dragging = false;
+        let lastX = 0;
+
+        slider.addEventListener('input', (e) => {
+            masterRotation = parseInt(e.target.value) % 360;
+            updateSystemEngine();
+        });
+
+        const startAction = (e) => {
+            dragging = true;
+            lastX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+        };
+
+        const moveAction = (e) => {
+            if(!dragging) return;
+            if(e.cancelable) e.preventDefault();
+            const currentX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+            const delta = currentX - lastX;
+            
+            masterRotation = (masterRotation + delta * 0.4) % 360;
+            if(masterRotation < 0) masterRotation += 360;
+
+            slider.value = Math.floor(masterRotation);
+            lastX = currentX;
+            updateSystemEngine();
+        };
+
+        const stopAction = () => dragging = false;
+
+        dragZone.addEventListener('mousedown', startAction);
+        window.addEventListener('mousemove', moveAction);
+        window.addEventListener('mouseup', stopAction);
+
+        dragZone.addEventListener('touchstart', startAction, { passive: false });
+        window.addEventListener('touchmove', moveAction, { passive: false });
+        window.addEventListener('touchend', stopAction);
+    }
+
+    function updateSystemEngine() {
+        if(!wheels.w1) return;
+        const rot = masterRotation;
+
+        const idx1 = getActiveIndex(rot, wheels.w1.total);
+        const idx2 = getActiveIndex(rot, wheels.w2.total);
+        const idxM = getActiveIndex(rot, wheels.w3.total);
+
+        applyRotationDOM(wheels.w1, idx1);
+        applyRotationDOM(wheels.w2, idx2);
+        applyRotationDOM(wheels.w3, idxM);
+
+        const d1 = wheels.w1.data[idx1];
+        const d2 = wheels.w2.data[idx2];
+        const m  = wheels.w3.data[idxM];
+
+        document.getElementById('txt-d1').textContent = d1.digit;
+        document.getElementById('dot1').style.backgroundColor = d1.color;
+        document.getElementById('txt-d2').textContent = d2.digit;
+        document.getElementById('dot2').style.backgroundColor = d2.color;
+        document.getElementById('txt-m').textContent = m.label;
+        document.getElementById('dot3').style.backgroundColor = m.color;
+
+        const rawOhm = (d1.digit * 10 + d2.digit) * m.mult;
+        document.getElementById('main-output').textContent = formatEngineeringUnits(rawOhm);
+
+        document.getElementById('circle-band-1').style.backgroundColor = d1.color;
+        document.getElementById('circle-band-2').style.backgroundColor = d2.color;
+        document.getElementById('circle-band-3').style.backgroundColor = m.color;
+
+        renderCommercialMatches(rawOhm);
+    }
+
+    function getActiveIndex(angle, total) {
+        const step = 360 / total;
+        let normalized = (360 - angle - (step / 2)) % 360;
+        if (normalized < 0) normalized += 360;
+        return Math.floor(normalized / step) % total;
+    }
+
+    function applyRotationDOM(wheel, index) {
+        const step = 360 / wheel.total;
+        wheel.dom.style.transform = `translate(-50%, -50%) rotate(${-(index * step)}deg)`;
+    }
+
+    function formatEngineeringUnits(val) {
+        if(val >= 1e6) return (val / 1e6).toFixed(val % 1e6 === 0 ? 0 : 1) + " MΩ";
+        if(val >= 1e3) return (val / 1e3).toFixed(val % 1e3 === 0 ? 0 : 1) + " kΩ";
+        return val + " Ω";
+    }
+
+    function renderCommercialMatches(val) {
+        let sorted = [...fullCommercialList].sort((a,b) => Math.abs(a - val) - Math.abs(b - val));
+        let matches = Array.from(new Set(sorted.filter(x => x > 0))).slice(0, 3);
+
+        const container = document.getElementById('commercial-list');
+        container.innerHTML = '';
+        matches.forEach(m => {
+            const el = document.createElement('div');
+            el.className = 'comm-pill';
+            el.textContent = formatEngineeringUnits(m);
+            container.appendChild(el);
+        });
+    }
+
+    function initParallelOptions() {
+        const selects = ['p1', 'p2', 'p3', 'p4'].map(id => document.getElementById(id));
+        const uniqueCommercials = fullCommercialList.filter((v, i) => fullCommercialList.indexOf(v) === i && v > 0);
+        
+        selects.forEach(sel => {
+            if(sel) {
+                sel.options.add(new Option("Nenhum (∞)", 0));
+                uniqueCommercials.forEach(v => {
+                    sel.options.add(new Option(formatEngineeringUnits(v), v));
+                });
+            }
+        });
+        if(selects[0] && selects[1]) {
+            selects[0].selectedIndex = 1;
+            selects[1].selectedIndex = 1;
+        }
+        runParallelCalc();
+    }
+
+    function runParallelCalc() {
+        const v1 = parseFloat(document.getElementById('p1').value || 0);
+        const v2 = parseFloat(document.getElementById('p2').value || 0);
+        const v3 = parseFloat(document.getElementById('p3').value || 0);
+        const v4 = parseFloat(document.getElementById('p4').value || 0);
+
+        const active = [v1, v2, v3, v4].filter(x => x > 0);
+        if(active.length === 0) {
+            document.getElementById('parallel-output').textContent = "-- Ω";
+            return;
+        }
+
+        let invSum = 0;
+        active.forEach(r => invSum += (1 / r));
+        const req = 1 / invSum;
+
+        document.getElementById('parallel-output').textContent = formatEngineeringUnits(req);
+    }
+</script>
+</body>
+</html>

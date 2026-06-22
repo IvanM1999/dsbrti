@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Calculadora de Resistor Master - Engenharia de Classe Mundial</title>
+    <style>
+        :root {
+            --bg-color: #121216;
+            --card-bg: #fffbf4; /* Baseado na foto */
+            --accent-color: #3498db;
+            --text-dark: #2c3e50;
+            --interface-bg: #222;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0; padding: 0;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: var(--bg-color);
+            color: #ddd;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden; /* Importante para o touch drag */
+        }
+
+        /* Layout Principal: Interface de Leitura | Discos Interativos */
+        .app-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 20px;
+            max-width: 1200px;
+            width: 95vw;
+            height: 90vh;
+        }
+
+        /* PAINEL ESQUERDO: COMBINAÇÃO E RESULTADOS */
+        .interface-panel {
+            background: var(--interface-bg);
+            border-radius: 16px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            gap: 15px;
+            box-shadow: 10px 0 20px rgba(0,0,0,0.4);
+            z-index: 10;
+        }
+
+        .header-section { text-align: center; margin-bottom: 10px; }
+        .app-title { font-size: 1.2rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #fff; }
+        .app-subtitle { font-size: 0.75rem; color: #aaa; margin-top: 4px; }
+
+        /* Retângulo de Combinação de Números Ativos */
+        .readout-rect {
+            background: rgba(255,255,255,0.05);
+            border: 2px solid #444;
+            border-radius: 12px;
+            padding: 15px;
+            position: relative;
+        }
+
+        .readout-label { font-size: 0.7rem; font-weight: bold; color: var(--accent-color); text-transform: uppercase; margin-bottom: 8px; }
+        .raw-values-container { display: flex; gap: 5px; font-weight: 700; font-size: 1rem; color: #fff; }
+        .raw-digit { width: 30px; text-align: center; }
+        .raw-digit.m { flex-grow: 1; text-align: right; color: #888; }
+        .final-value { font-size: 2rem; font-weight: 800; color: #fff; margin-top: 5px; }
+
+        /* Caixa Gráfica do Resistor */
+        .resistor-display {
+            background: rgba(0,0,0,0.5);
+            border-radius: 12px;
+            padding: 15px;
+            position: relative;
+        }
+
+        .graphic-container {
+            height: 60px;
+            width: 100%;
+            position: relative;
+            margin-top: 8px;
+        }
+
+        .resistor-body {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 140px; height: 35px;
+            background-color: #d1b48c; /* Cor tan padrão */
+            border-radius: 6px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            display: flex; justify-content: space-between; padding: 0 10px;
+            transition: background-color 0.3s;
+        }
+
+        /* Leads */
+        .resistor-body::before, .resistor-body::after {
+            content: ''; position: absolute; top: 50%;
+            width: 30px; height: 4px; background: #888;
+            border-radius: 2px;
+            z-index: -1;
+        }
+        .resistor-body::before { right: 100%; transform: translateY(-50%); }
+        .resistor-body::after { left: 100%; transform: translateY(-50%); }
+
+        .band {
+            width: 10px; height: 100%;
+            box-shadow: 1px 0 2px rgba(0,0,0,0.3);
+            transition: background-color 0.1s;
+        }
+
+        /* Valores Comerciais */
+        .commercial-suggestions { font-size: 0.8rem; color: #aaa; padding-top: 10px; border-top: 1px solid #333; }
+        .comm-title { font-weight: bold; color: #eee; margin-bottom: 5px; }
+        .comm-list { display: flex; gap: 5px; flex-wrap: wrap; }
+        .comm-item { background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 4px; color: #fff; }
+
+        /* PAINEL DIREITO: DISCOS E BARRA SLIDER */
+        .disc-interaction-panel {
+            background: #1a1a1f;
+            border-radius: 16px;
+            display: grid;
+            grid-template-columns: 1fr 60px; /* Discos | Barra deslizante */
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Container dos Discos Coaxiais Interativos */
+        .wheel-container {
+            position: relative;
+            width: 500px;
+            height: 500px;
+            margin: auto;
+            border-radius: 50%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            touch-action: none; /* Crucial para o drag */
+            overflow: hidden;
+            cursor: grab;
+        }
+
+        .wheel-container.grabbing { cursor: grabbing; }
+
+        .wheel-svg {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 1;
+            /* A transição suave agora é gerenciada pelo JS para drag responsivo */
+            /* transition: transform 0.4s cubic-bezier(0.2, 1, 0.3, 1); */ 
+        }
+
+        #wheel1 { width: 500px; height: 500px; }
+        #wheel2 { width: 350px; height: 350px; z-index: 2; }
+        #wheel3 { width: 200px; height: 200px; z-index: 3; }
+
+        /* Centro fixo da foto */
+        .wheel-center-cap {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px; height: 60px;
+            background: #111;
+            border-radius: 50%;
+            z-index: 4;
+            box-shadow: inset 0 0 10px rgba(255,255,255,0.3), 0 2px 5px rgba(0,0,0,0.5);
+            border: 3px solid #333;
+        }
+
+        /* Marcador de Leitura Ativo no Topo (como na foto) */
+        .reading-marker {
+            position: absolute;
+            top: 0; left: 50%;
+            transform: translateX(-50%);
+            width: 2px; height: 100%;
+            background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 10%, rgba(255,255,255,0.4) 90%, rgba(255,255,255,0) 100%);
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        /* Barra Deslizante (Slider Vertical para girar o conjunto) */
+        .slider-control-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            border-left: 1px solid #333;
+            padding-left: 15px;
+        }
+
+        .slider-label { writing-mode: vertical-rl; text-transform: uppercase; font-size: 0.7rem; color: #888; letter-spacing: 1px; }
+
+        input[type=range].vertical-slider {
+            -webkit-appearance: none;
+            writing-mode: bt-lr; /* IE */
+            appearance: slider-vertical; /* Webkit */
+            width: 12px;
+            height: 350px;
+            background: #222;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        input[type=range].vertical-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 25px; height: 25px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+        }
+
+        /* MÓDULO OCULTO DE PARALELO */
+        .hidden-parallel-module {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: #222;
+            padding: 10px 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            font-size: 0.8rem;
+            opacity: 0.5;
+            transition: opacity 0.3s;
+            z-index: 100;
+        }
+        .hidden-parallel-module:hover { opacity: 1; }
+
+        .parallel-modal {
+            display: none;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            justify-content: center; align-items: center;
+        }
+
+        .parallel-card {
+            background: #1a1a1f;
+            width: 400px;
+            padding: 25px;
+            border-radius: 16px;
+            border: 1px solid #444;
+            position: relative;
+        }
+
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; cursor: pointer; color: #888; }
+        .close-modal:hover { color: #fff; }
+
+        .parallel-header { font-weight: bold; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-color); }
+
+        .parallel-inputs { display: grid; grid-template-columns: 1fr 100px; gap: 10px; margin-bottom: 20px; }
+        .parallel-inputs input { background: #111; border: 1px solid #444; color: #fff; padding: 8px; border-radius: 6px; }
+
+        .comm-input-select { background: #111; border: 1px solid #444; color: #fff; padding: 8px; border-radius: 6px; }
+
+        .parallel-result-display {
+            background: rgba(255,255,255,0.05);
+            padding: 15px; border-radius: 10px; text-align: center;
+        }
+
+        /* Responsividade básica */
+        @media (max-width: 900px) {
+            .app-container { grid-template-columns: 1fr; grid-template-rows: auto 1fr; height: 100vh; }
+            .interface-panel { height: auto; box-shadow: 0 5px 15px rgba(0,0,0,0.3); border-radius: 0 0 16px 16px; }
+            .wheel-container { width: 320px; height: 320px; }
+            #wheel1 { width: 320px; height: 320px; }
+            #wheel2 { width: 230px; height: 230px; }
+            #wheel3 { width: 140px; height: 140px; }
+            input[type=range].vertical-slider { height: 200px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="interface-panel">
+        <div class="header-section">
+            <div class="app-title">Master Digital</div>
+            <div class="app-subtitle">Cálculo de Resistores Interativo</div>
+        </div>
+
+        <div class="readout-rect">
+            <div class="readout-label">Combinação de Cores no Topo</div>
+            <div class="raw-values-container">
+                <div>[</div>
+                <div id="readout-d1" class="raw-digit">?</div>
+                <div id="readout-d2" class="raw-digit">?</div>
+                <div>]</div>
+                <div>x</div>
+                <div id="readout-m" class="raw-digit m">?</div>
+            </div>
+            <div id="final-value-text" class="final-value">-- Ω</div>
+        </div>
+
+        <div class="resistor-display">
+            <div class="readout-label">Corpo Gráfico</div>
+            <div class="graphic-container">
+                <div class="resistor-body">
+                    <div id="band1" class="band" style="background:transparent"></div>
+                    <div id="band2" class="band" style="background:transparent"></div>
+                    <div id="band3" class="band" style="background:transparent"></div>
+                    <div class="band" style="background:#b08d57"></div> </div>
+            </div>
+        </div>
+
+        <div class="commercial-suggestions">
+            <div class="comm-title">Valores Comerciais Próximos (E24)</div>
+            <div id="commercial-list" class="comm-list">
+                </div>
+        </div>
+    </div>
+
+    <div class="disc-interaction-panel">
+        <div id="interaction-zone" class="wheel-container">
+            <div class="reading-marker"></div>
+
+            <svg id="wheel1" class="wheel-svg" viewBox="0 0 100 100"></svg>
+            <svg id="wheel2" class="wheel-svg" viewBox="0 0 100 100"></svg>
+            <svg id="wheel3" class="wheel-svg" viewBox="0 0 100 100"></svg>
+            <div class="wheel-center-cap"></div>
+        </div>
+
+        <div class="slider-control-container">
+            <div class="slider-label">Mestre Girar</div>
+            <input id="master-slider" type="range" min="0" max="360" value="0" class="vertical-slider">
+        </div>
+    </div>
+</div>
+
+<div class="hidden-parallel-module" onclick="toggleParallelModal()">R_Eq Oculto</div>
+
+<div id="parallel-modal" class="parallel-modal">
+    <div class="parallel-card">
+        <span class="close-modal" onclick="toggleParallelModal()">&times;</span>
+        <div class="parallel-header">Cálculo de Resistência em Paralelo (Máx 4)</div>
+        
+        <p style="font-size: 0.75rem; color: #aaa; margin-bottom: 15px;">Selecione valores comerciais para calcular a resistência equivalente (R_Eq).</p>
+
+        <div class="parallel-inputs">
+            <div>Resistor 1 (Ω):</div>
+            <select id="p1" class="comm-input-select" onchange="calculateParallel()"></select>
+
+            <div>Resistor 2 (Ω):</div>
+            <select id="p2" class="comm-input-select" onchange="calculateParallel()"></select>
+
+            <div>Resistor 3 (Ω):</div>
+            <select id="p3" class="comm-input-select" onchange="calculateParallel()"></select>
+
+            <div>Resistor 4 (Ω):</div>
+            <select id="p4" class="comm-input-select" onchange="calculateParallel()"></select>
+        </div>
+
+        <div class="parallel-result-display">
+            <div class="readout-label">Resistência Equivalente (R_Eq)</div>
+            <div id="req-result" class="final-value">-- Ω</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- MOTOR DE DADOS DO CÓDIGO DE CORES (Baseado na Foto) ---
+    const standardCode = [
+        { name: "Preto",   color: "#000000", text: "#FFF", digit: 0, label: "0" },
+        { name: "Marrom",  color: "#8B4513", text: "#FFF", digit: 1, label: "1" },
+        { name: "Vermelho",color: "#FF0000", text: "#FFF", digit: 2, label: "2" },
+        { name: "Laranja", color: "#FFA500", text: "#000", digit: 3, label: "3" },
+        { name: "Amarelo", color: "#FFFF00", text: "#000", digit: 4, label: "4" },
+        { name: "Verde",   color: "#008000", text: "#FFF", digit: 5, label: "5" },
+        { name: "Azul",    color: "#0000FF", text: "#FFF", digit: 6, label: "6" },
+        { name: "Violeta", color: "#EE82EE", text: "#000", digit: 7, label: "7" },
+        { name: "Cinza",   color: "#808080", text: "#FFF", digit: 8, label: "8" },
+        { name: "Branco",  color: "#FFFFFF", text: "#000", digit: 9, label: "9" }
+    ];
+
+    const multCode = [
+        { name: "Preto",   color: "#000000", text: "#FFF", mult: 1,        label: "0" },
+        { name: "Marrom",  color: "#8B4513", text: "#FFF", mult: 10,       label: "1" },
+        { name: "Vermelho",color: "#FF0000", text: "#FFF", mult: 100,      label: "00" },
+        { name: "Laranja", color: "#FFA500", text: "#000", mult: 1000,     label: "K" },
+        { name: "Amarelo", color: "#FFFF00", text: "#000", mult: 10000,    label: "0K" },
+        { name: "Verde",   color: "#008000", text: "#FFF", mult: 100000,   label: "00K" },
+        { name: "Azul",    color: "#0000FF", text: "#FFF", mult: 1000000,  label: "M" }
+    ];
+
+    // Série E24 padrão industrial para valores comerciais
+    const e24Series = [10, 11, 12, 13, 15, 16, 18, 20, 22, 24, 27, 30, 33, 36, 39, 43, 47, 51, 56, 62, 68, 75, 82, 91];
+    
+    // Gerador de valores comerciais completos (1R a 91M)
+    function generateCommercialValues() {
+        let values = [0]; // Opção para paralelo vazio
+        let powers = [1, 10, 100, 1000, 10000, 100000, 1000000];
+        powers.forEach(p => {
+            e24Series.forEach(base => values.push(base * p / 10));
+        });
+        return values;
+    }
+    const allCommercialValues = generateCommercialValues();
+
+    // --- ENGENHARIA DO DOM E INICIALIZAÇÃO ---
+    
+    const wheels = {
+        d1: { svg: document.getElementById('wheel1'), angle: 0, segments: 10, data: standardCode },
+        d2: { svg: document.getElementById('wheel2'), angle: 0, segments: 10, data: standardCode },
+        m:  { svg: document.getElementById('wheel3'), angle: 0, segments: 7,  data: multCode }
+    };
+
+    // Variáveis de estado para a interação mestre (drag/slider)
+    let masterAngle = 0;
+    const masterSlider = document.getElementById('master-slider');
+    const interactionZone = document.getElementById('interaction-zone');
+
+    document.addEventListener("DOMContentLoaded", () => {
+        // 1. Renderizar os SVGs idênticos à foto
+        renderSVGWheel(wheels.d1, 40); // Raio do texto
+        renderSVGWheel(wheels.d2, 38);
+        renderSVGWheel(wheels.m, 35);
+        
+        // 2. Setup dos inputs do modal paralelo
+        populateParallelSelects();
+
+        // 3. Setup dos listeners de interação (Solicitado: Touch, Mouse, Slider)
+        setupInteraction();
+
+        // 4. Executar cálculo inicial
+        updateCalculator();
+    });
+
+    // Função de renderização trigonométrica do SVG (Aprimorada para fidelidade visual)
+    function renderSVGWheel(wheel, textRadius) {
+        const total = wheel.segments;
+        const anglePer = 360 / total;
+
+        wheel.data.forEach((data, i) => {
+            const startA = i * anglePer;
+            const endA = (i + 1) * anglePer;
+            
+            // Math SVG Path
+            const rad1 = ((startA - 90) * Math.PI) / 180;
+            const rad2 = ((endA - 90) * Math.PI) / 180;
+            
+            const x1 = 50 + 50 * Math.cos(rad1); const y1 = 50 + 50 * Math.sin(rad1);
+            const x2 = 50 + 50 * Math.cos(rad2); const y2 = 50 + 50 * Math.sin(rad2);
+
+            const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            path.setAttribute("d", `M 50 50 L ${x1} ${y1} A 50 50 0 0 1 ${x2} ${y2} Z`);
+            path.setAttribute("fill", data.color);
+            path.setAttribute("stroke", "#111");
+            path.setAttribute("stroke-width", "0.2");
+            wheel.svg.appendChild(path);
+
+            // Math Texto Radial
+            const tAngle = startA + anglePer / 2;
+            const tRad = ((tAngle - 90) * Math.PI) / 180;
+            const tx = 50 + textRadius * Math.cos(tRad);
+            const ty = 50 + textRadius * Math.sin(tRad);
+
+            const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            text.setAttribute("x", tx); text.setAttribute("y", ty);
+            text.setAttribute("fill", data.text); text.setAttribute("font-size", "5");
+            text.setAttribute("text-anchor", "middle"); text.setAttribute("dominant-baseline", "central");
+            text.setAttribute("transform", `rotate(${tAngle + 90}, ${tx}, ${ty})`);
+            text.textContent = data.label;
+            wheel.svg.appendChild(text);
+        });
+    }
+
+    // --- SISTEMA DE INTERAÇÃO MASTER (Solicitado: Touch e Mouse Drag) ---
+    function setupInteraction() {
+        let isDragging = false;
+        let startX, startAngleState;
+        
+        // Sensibilidade do drag (reduzida para controle fino)
+        const dragSensitivity = 0.5; 
+
+        // Sincronizar Slider Vertical
+        masterSlider.addEventListener('input', (e) => {
+            setMasterRotation(parseInt(e.target.value));
+        });
+
+        // Manipulação direta de Touch/Mouse na zona dos discos
+        const startDrag = (e) => {
+            isDragging = true;
+            interactionZone.classList.add('grabbing');
+            // Captura posição x do mouse ou primeiro touch
+            startX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+            startAngleState = masterAngle;
+        };
+
+        const onDrag = (e) => {
+            if (!isDragging) return;
+            e.preventDefault(); // Prevenir scrolling no mobile
+            
+            const currentX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+            const dx = currentX - startX;
+            
+            // Converter deslocamento x em rotação angular
+            let newAngle = startAngleState + (dx * dragSensitivity);
+            
+            setMasterRotation(newAngle);
+        };
+
+        const stopDrag = () => {
+            isDragging = false;
+            interactionZone.classList.remove('grabbing');
+        };
+
+        // Desktop
+        interactionZone.addEventListener('mousedown', startDrag);
+        window.addEventListener('mousemove', onDrag);
+        window.addEventListener('mouseup', stopDrag);
+
+        // Mobile
+        interactionZone.addEventListener('touchstart', startDrag, { passive: false });
+        window.addEventListener('touchmove', onDrag, { passive: false });
+        window.addEventListener('touchend', stopDrag);
+    }
+
+    // Atualiza a rotação do estado e da UI
+    function setMasterRotation(angle) {
+        masterAngle = angle % 360;
+        
+        // Sincronizar o Slider visualmente
+        let positiveAngle = (masterAngle < 0 ? 360 + masterAngle : masterAngle);
+        masterSlider.value = positiveAngle;
+
+        updateCalculator();
+    }
+
+    // --- CORE DE PROCESSAMENTO E CÁLCULO ---
+    function updateCalculator() {
+        const positiveAngle = (masterAngle < 0 ? 360 + masterAngle : masterAngle);
+
+        // 1. Calcular índices e ângulos ativos baseados na rotação mestre
+        //    Diferente do exemplo anterior, os discos têm diferentes número de segmentos,
+        //    então o giro mestre (0-360) "engata" segmentos em momentos diferentes.
+        
+        const idx1 = getEngagedIndex(positiveAngle, wheels.d1.segments);
+        const idx2 = getEngagedIndex(positiveAngle, wheels.d2.segments);
+        const idxM = getEngagedIndex(positiveAngle, wheels.m.segments);
+
+        // 2. Rotação física dos discos com snaps radiais (suavidade via JS)
+        requestAnimationFrame(() => {
+            applyRadialSnap(wheels.d1, idx1);
+            applyRadialSnap(wheels.d2, idx2);
+            applyRadialSnap(wheels.m, idxM);
+        });
+
+        // 3. Atualizar Retângulo de Leitura à esquerda (Solicitado)
+        const i1 = wheels.d1.data[idx1];
+        const i2 = wheels.d2.data[idx2];
+        const iM = wheels.m.data[idxM];
+
+        document.getElementById('readout-d1').textContent = i1.digit;
+        document.getElementById('readout-d1').style.color = i1.color;
+        
+        document.getElementById('readout-d2').textContent = i2.digit;
+        document.getElementById('readout-d2').style.color = i2.color;
+
+        document.getElementById('readout-m').textContent = iM.label;
+
+        // 4. Calcular Resistência
+        const base = (i1.digit * 10) + i2.digit;
+        const totalRes = base * iM.mult;
+
+        const formattedText = formatRes(totalRes);
+        document.getElementById('final-value-text').textContent = formattedText;
+
+        // 5. Atualizar Gráfico do Resistor (Solicitado: Cores relevantes)
+        document.getElementById('band1').style.backgroundColor = i1.color;
+        document.getElementById('band2').style.backgroundColor = i2.color;
+        document.getElementById('band3').style.backgroundColor = iM.color;
+        
+        // Melhoria de contraste: se o resistor for muito escuro, clarear o corpo
+        const resistorBody = document.querySelector('.resistor-body');
+        resistorBody.style.backgroundColor = iM.color === '#000000' && i1.color === '#000000' ? '#ddd' : '#d1b48c';
+
+        // 6. Atualizar Valores Comerciais Próximos (Solicitado)
+        updateCommercialSuggestions(totalRes);
+    }
+
+    // Helper: Determina qual segmento está no topo (0 graus)
+    function getEngagedIndex(angle, totalSegments) {
+        const segAngle = 360 / totalSegments;
+        // O offset de -segAngle/2 garante que o segmento esteja centralizado no topo
+        let normalizedAngle = (360 - angle - (segAngle / 2)) % 360;
+        if (normalizedAngle < 0) normalizedAngle += 360;
+        return Math.floor(normalizedAngle / segAngle) % totalSegments;
+    }
+
+    // Helper: Aplica rotação com snap radial centralizado
+    function applyRadialSnap(wheel, index) {
+        const segAngle = 360 / wheel.segments;
+        // Centraliza o segmento selecionado exatamente no topo (0 graus)
+        const snapAngle = -(index * segAngle); 
+        wheel.svg.style.transform = `translate(-50%, -50%) rotate(${snapAngle}deg)`;
+    }
+
+    // Formatação de engenharia (Ω, k, M)
+    function formatRes(n) {
+        if (n >= 1e6) return (n / 1e6).toFixed(n % 1e6 === 0 ? 0 : 1) + " MΩ";
+        if (n >= 1e3) return (n / 1e3).toFixed(n % 1e3 === 0 ? 0 : 1) + " kΩ";
+        return n + " Ω";
+    }
+
+    // Sugestão de valores comerciais (Solicitado)
+    function updateCommercialSuggestions(val) {
+        if (val === 0) {
+            document.getElementById('commercial-list').innerHTML = '';
+            return;
+        }
+
+        // Algoritmo de busca binária para achar o valor mais próximo na lista gigante
+        let low = 0, high = allCommercialValues.length - 1;
+        let mid = 0;
+        
+        while (low <= high) {
+            mid = Math.floor((low + high) / 2);
+            if (allCommercialValues[mid] === val) break;
+            if (allCommercialValues[mid] < val) low = mid + 1;
+            else high = mid - 1;
+        }
+
+        // Pegar uma faixa de 3 valores ao redor
+        let start = Math.max(1, mid - 1); // Ignorar o 0
+        let closest = allCommercialValues.slice(start, start + 3);
+
+        const listEl = document.getElementById('commercial-list');
+        listEl.innerHTML = '';
+        closest.forEach(c => {
+            const item = document.createElement('div');
+            item.className = 'comm-item';
+            item.textContent = formatRes(c);
+            listEl.appendChild(item);
+        });
+    }
+
+    // --- MÓDULO DE PARALELO OCULTO (Solicitado) ---
+    
+    function toggleParallelModal() {
+        const modal = document.getElementById('parallel-modal');
+        modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    function populateParallelSelects() {
+        const selects = ['p1', 'p2', 'p3', 'p4'].map(id => document.getElementById(id));
+        
+        // Populando apenas com a base E24 para manter a lista compacta no exemplo.
+        // O ideal de engenharia seria uma caixa de texto que valida valores comerciais.
+        e24Series.forEach(base => {
+            // Adicionar versões de Ω, k, M
+            const vals = [base, base * 1000, base * 1000000];
+            vals.forEach(v => {
+                selects.forEach(s => {
+                    s.options[s.options.length] = new Option(formatRes(v), v);
+                });
+            });
+        });
+
+        // Adicionar opção "Vazio"
+        selects.forEach(s => {
+             s.options.unshift(new Option("Vazio (∞)", 0));
+             s.selectedIndex = s.id === 'p1' || s.id === 'p2' ? 10 : 0; // Padrão 2 resistores engatados
+        });
+
+        calculateParallel();
+    }
+
+    function calculateParallel() {
+        const r1 = parseFloat(document.getElementById('p1').value);
+        const r2 = parseFloat(document.getElementById('p2').value);
+        const r3 = parseFloat(document.getElementById('p3').value);
+        const r4 = parseFloat(document.getElementById('p4').value);
+
+        const activeResistors = [r1, r2, r3, r4].filter(r => r > 0);
+
+        if (activeResistors.length === 0) {
+            document.getElementById('req-result').textContent = "-- Ω";
+            return;
+        }
+
+        // Fórmula: 1/R_Eq = 1/R1 + 1/R2 + ...
+        let inverseSum = 0;
+        activeResistors.forEach(r => inverseSum += (1 / r));
+
+        const req = 1 / inverseSum;
+        document.getElementById('req-result').textContent = formatRes(req);
+    }
+</script>
+</body>
+</html>
