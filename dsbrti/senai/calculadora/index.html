@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Resistor Interativa</title>
+    <style>
+        :root {
+            --bg-color: #1e1e24;
+            --card-bg: #fffbf4;
+            --text-color: #333;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .calculator-card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .header-logo {
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+        }
+
+        /* Container dos Discos Coaxiais */
+        .wheel-outer-container {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            margin: 0 auto 25px auto;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .wheel {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            cursor: pointer;
+        }
+
+        /* Tamanhos dos 3 Círculos da Imagem */
+        #wheel1 { width: 320px; height: 320px; z-index: 1; }
+        #wheel2 { width: 220px; height: 220px; z-index: 2; }
+        #wheel3 { width: 120px; height: 120px; z-index: 3; }
+
+        /* Centro fixo da calculadora */
+        .wheel-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            background: #111;
+            border-radius: 50%;
+            z-index: 4;
+            box-shadow: inset 0 0 5px rgba(255,255,255,0.5);
+        }
+
+        /* Controles de Seleção Síncronos */
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .control-group label {
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        select {
+            padding: 8px;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            background: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Display do Resultado */
+        .result-display {
+            background: #eef2f3;
+            padding: 15px;
+            border-radius: 12px;
+            border: 2px dashed #b2bec3;
+        }
+
+        .result-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #2d3436;
+        }
+    </style>
+</head>
+<body>
+
+<div class="calculator-card">
+    <div class="header-logo">⚙️ Instituto Digital ⚙️</div>
+    <div class="subtitle">Disco para Cálculo de Resistores</div>
+
+    <div class="wheel-outer-container">
+        <svg id="wheel1" class="wheel" viewBox="0 0 100 100"></svg>
+        <svg id="wheel2" class="wheel" viewBox="0 0 100 100"></svg>
+        <svg id="wheel3" class="wheel" viewBox="0 0 100 100"></svg>
+        <div class="wheel-center"></div>
+    </div>
+
+    <div class="controls">
+        <div class="control-group">
+            <label>1º Dígito</label>
+            <select id="digit1" onchange="updateCalculator()"></select>
+        </div>
+        <div class="control-group">
+            <label>2º Dígito</label>
+            <select id="digit2" onchange="updateCalculator()"></select>
+        </div>
+        <div class="control-group">
+            <label>Multiplicador</label>
+            <select id="multiplier" onchange="updateCalculator()"></select>
+        </div>
+    </div>
+
+    <div class="result-display">
+        <div id="result" class="result-value">0 Ω</div>
+    </div>
+</div>
+
+<script>
+    // Definição estrita de dados do padrão internacional de resistores de 4 faixas (representado no disco)
+    const colorCode = [
+        { name: "Preto",   color: "#000000", text: "#FFF", digit: 0, mult: 1,       label: "0" },
+        { name: "Marrom",  color: "#8B4513", text: "#FFF", digit: 1, mult: 10,      label: "1" },
+        { name: "Vermelho",color: "#FF0000", text: "#FFF", digit: 2, mult: 100,     label: "2" },
+        { name: "Laranja", color: "#FFA500", text: "#000", digit: 3, mult: 1000,    label: "3" },
+        { name: "Amarelo", color: "#FFFF00", text: "#000", digit: 4, mult: 10000,   label: "4" },
+        { name: "Verde",   color: "#008000", text: "#FFF", digit: 5, mult: 100000,  label: "5" },
+        { name: "Azul",    color: "#0000FF", text: "#FFF", digit: 6, mult: 1000000, label: "6" },
+        { name: "Violeta", color: "#EE82EE", text: "#000", digit: 7, mult: 10000000,label: "7" },
+        { name: "Cinza",   color: "#808080", text: "#FFF", digit: 8, mult: 1,       label: "8" },
+        { name: "Branco",  color: "#FFFFFF", text: "#000", digit: 9, mult: 1,       label: "9" }
+    ];
+
+    // Multiplicadores específicos representados no terceiro círculo interno da foto (ex: K, 0K, 00K, M)
+    const multipliers = [
+        { name: "Preto (x1)",     color: "#000000", text: "#FFF", mult: 1,          label: "0" },
+        { name: "Marrom (x10)",   color: "#8B4513", text: "#FFF", mult: 10,         label: "1" },
+        { name: "Vermelho (x100)",color: "#FF0000", text: "#FFF", mult: 100,        label: "00" },
+        { name: "Laranja (x1k)",  color: "#FFA500", text: "#000", mult: 1000,       label: "K" },
+        { name: "Amarelo (x10k)", color: "#FFFF00", text: "#000", mult: 10000,      label: "0K" },
+        { name: "Verde (x100k)",  color: "#008000", text: "#FFF", mult: 100000,     label: "00K" },
+        { name: "Azul (x1M)",     color: "#0000FF", text: "#FFF", mult: 1000000,    label: "M" }
+    ];
+
+    // Inicialização da Engine
+    document.addEventListener("DOMContentLoaded", () => {
+        populateSelects();
+        renderSVGWheel("wheel1", colorCode);
+        renderSVGWheel("wheel2", colorCode);
+        renderSVGWheel("wheel3", multipliers);
+        updateCalculator();
+    });
+
+    function populateSelects() {
+        const d1 = document.getElementById("digit1");
+        const d2 = document.getElementById("digit2");
+        const m  = document.getElementById("multiplier");
+
+        colorCode.forEach((item, index) => {
+            d1.options[d1.options.length] = new Option(`${item.digit} - ${item.name}`, index);
+            d2.options[d2.options.length] = new Option(`${item.digit} - ${item.name}`, index);
+        });
+
+        multipliers.forEach((item, index) => {
+            m.options[m.options.length] = new Option(item.name, index);
+        });
+    }
+
+    // Desenha dinamicamente os setores circulares idênticos ao disco físico usando SVG math
+    function renderSVGWheel(wheelId, dataset) {
+        const svg = document.getElementById(wheelId);
+        const totalSlices = dataset.length;
+        const anglePerSlice = 360 / totalSlices;
+
+        dataset.forEach((data, i) => {
+            const startAngle = i * anglePerSlice;
+            const endAngle = (i + 1) * anglePerSlice;
+            
+            // Conversão de coordenadas polares para cartesianas para o path do SVG
+            const rad1 = ((startAngle - 90) * Math.PI) / 180;
+            const rad2 = ((endAngle - 90) * Math.PI) / 180;
+            
+            const x1 = 50 + 50 * Math.cos(rad1);
+            const y1 = 50 + 50 * Math.sin(rad1);
+            const x2 = 50 + 50 * Math.cos(rad2);
+            const y2 = 50 + 50 * Math.sin(rad2);
+
+            const largeArcFlag = anglePerSlice > 180 ? 1 : 0;
+            const pathData = `M 50 50 L ${x1} ${y1} A 50 50 0 ${largeArcFlag} 1 ${x2} ${y2} Z`;
+
+            // Criar setor colorido
+            const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            path.setAttribute("d", pathData);
+            path.setAttribute("fill", data.color);
+            path.setAttribute("stroke", "#222");
+            path.setAttribute("stroke-width", "0.5");
+            svg.appendChild(path);
+
+            // Criar texto interno (números/letras orientados radialmente)
+            const textAngle = startAngle + anglePerSlice / 2;
+            const textRad = ((textAngle - 90) * Math.PI) / 180;
+            const tx = 50 + 35 * Math.cos(textRad);
+            const ty = 50 + 35 * Math.sin(textRad);
+
+            const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            text.setAttribute("x", tx);
+            text.setAttribute("y", ty);
+            text.setAttribute("fill", data.text);
+            text.setAttribute("font-size", "5");
+            text.setAttribute("font-weight", "bold");
+            text.setAttribute("text-anchor", "middle");
+            text.setAttribute("dominant-baseline", "central");
+            text.setAttribute("transform", `rotate(${textAngle + 90}, ${tx}, ${ty})`);
+            text.textContent = data.label;
+            svg.appendChild(text);
+        });
+    }
+
+    // Processamento e sincronização da rotação física com o cálculo matemático
+    function updateCalculator() {
+        const idx1 = document.getElementById("digit1").value;
+        const idx2 = document.getElementById("digit2").value;
+        const idxM = document.getElementById("multiplier").value;
+
+        const item1 = colorCode[idx1];
+        const item2 = colorCode[idx2];
+        const itemM = multipliers[idxM];
+
+        // Gira os discos usando CSS. O alinhamento ativo se dá no topo (0 graus)
+        const angle1 = -(idx1 * (360 / colorCode.length));
+        const angle2 = -(idx2 * (360 / colorCode.length));
+        const angle3 = -(idxM * (360 / multipliers.length));
+
+        document.getElementById("wheel1").style.transform = `translate(-50%, -50%) rotate(${angle1}deg)`;
+        document.getElementById("wheel2").style.transform = `translate(-50%, -50%) rotate(${angle2}deg)`;
+        document.getElementById("wheel3").style.transform = `translate(-50%, -50%) rotate(${angle3}deg)`;
+
+        // Cálculo da resistência elétrica (R = (D1 * 10 + D2) * M)
+        const baseValue = (item1.digit * 10) + item2.digit;
+        const finalResistance = baseValue * itemM.mult;
+
+        document.getElementById("result").textContent = formatResistance(finalResistance);
+    }
+
+    // Formatação de Engenharia Elétrica (Ω, kΩ, MΩ)
+    function formatResistance(num) {
+        if (num >= 1000000) {
+            return (num / 1000000).toFixed(num % 1000000 === 0 ? 0 : 1) + " MΩ";
+        }
+        if (num >= 1000) {
+            return (num / 1000).toFixed(num % 1000 === 0 ? 0 : 1) + " kΩ";
+        }
+        return num + " Ω";
+    }
+</script>
+</body>
+</html>
