@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark-theme">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- ████████████████████████████████████████████████████████████████████████████████ -->
+    <!-- 🚀 SEO PRINCIPAL — DestinyServicesBR | Tabela de Resistores Comerciais           -->
+    <!-- ████████████████████████████████████████████████████████████████████████████████ -->
+
+    <title>Tabela de Resistores Comerciais | E24 · E48 · E96 · E192 | DSBRti</title>
+    <meta name="description" content="Tabela completa de resistores comerciais das séries E24, E48, E96 e E192. Consulte valores padronizados IEC 60063 por década (0.1Ω a 91MΩ). Ferramenta gratuita DestinyServicesBR.">
+    <meta name="keywords" content="tabela resistores, valores resistores comerciais, série e24, e48, e96, e192, tabela resistência, código cores, engenharia elétrica, DestinyServicesBR">
+    <meta name="author" content="DestinyServicesBR — DSBRti">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dsbrti.vercel.app/senai/calculadora/tabela.html">
+
+    <!-- 🌍 Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Tabela de Resistores Comerciais — E24, E48, E96, E192">
+    <meta property="og:description" content="Consulta completa de valores padronizados de resistores por década e série. Ideal para estudantes e profissionais de eletrônica.">
+    <meta property="og:url" content="https://dsbrti.vercel.app/senai/calculadora/tabela.html">
+    <meta property="og:site_name" content="DestinyServicesBR">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:image" content="https://dsbrti.vercel.app/senai/calculadora/og-calc-resistor.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- 🐦 Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Tabela de Resistores Comerciais — DSBRti">
+    <meta name="twitter:description" content="Todos os valores padronizados de resistores E24, E48, E96 e E192 em uma tabela completa.">
+    <meta name="twitter:image" content="https://dsbrti.vercel.app/senai/calculadora/twitter-calc-resistor.png">
+
+    <!-- 🎨 theme-color -->
+    <meta name="theme-color" content="#0a0b10" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+
+    <style>
+        /* ═══════════════════════════════════════════════════════════════════════════════
+           tabela.css — Tabela de Resistores Comerciais | DSBRti
+           ═══════════════════════════════════════════════════════════════════════════════ */
+
+        /* ─── CSS Custom Properties ─── */
+        :root {
+            --bg-primary: #0a0b10;
+            --bg-secondary: #11131c;
+            --bg-card: #141822;
+            --bg-hover: #1c2030;
+            --text-primary: #e8edf5;
+            --text-secondary: #a0a8c0;
+            --text-muted: #6a7290;
+            --accent-cyan: #00d4ff;
+            --accent-blue: #33aaff;
+            --accent-green: #2ecc71;
+            --accent-orange: #f39c12;
+            --accent-red: #e74c3c;
+            --border-color: #1e2538;
+            --border-light: #2a3250;
+            --font-sans: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 14px;
+        }
+
+        /* ─── Reset ─── */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ─── Scrollbar ─── */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-secondary); }
+        ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+        /* ═══════════════════════════════════════════════════════════════════════════════
+           HEADER
+           ═══════════════════════════════════════════════════════════════════════════════ */
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 24px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .brand-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .brand-header svg {
+            width: 36px;
+            height: 36px;
+            flex-shrink: 0;
+        }
+
+        .logo-text { display: flex; flex-direction: column; }
+
+        .brand-name {
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .brand-sub {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        nav {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 7px 16px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-family: var(--font-sans);
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        .nav-btn.active {
+            background: rgba(0, 212, 255, 0.08);
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════════
+           MAIN
+           ═══════════════════════════════════════════════════════════════════════════════ */
+
+        main {
+            flex: 1;
+            padding: 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* ─── Page Header ─── */
+
+        .page-header {
+            margin-bottom: 24px;
+        }
+
+        .page-header h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 6px;
+        }
+
+        .page-header p {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .page-header .stats {
+            display: flex;
+            gap: 16px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .page-header .stats span {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            background: var(--bg-card);
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .page-header .stats strong {
+            color: var(--accent-cyan);
+        }
+
+        /* ─── Filtros ─── */
+
+        .filters {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--bg-card);
+            padding: 4px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 6px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-family: var(--font-sans);
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .filter-btn:hover {
+            color: var(--text-primary);
+            background: rgba(255,255,255,0.04);
+        }
+
+        .filter-btn.active {
+            background: rgba(0, 212, 255, 0.12);
+            color: var(--accent-cyan);
+            box-shadow: 0 0 8px rgba(0, 212, 255, 0.08);
+        }
+
+        .filter-label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            margin-right: 4px;
+        }
+
+        .filter-search {
+            flex: 1;
+            min-width: 200px;
+            max-width: 320px;
+        }
+
+        .filter-search input {
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            font-family: var(--font-sans);
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .filter-search input:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 8px rgba(0, 212, 255, 0.08);
+        }
+
+        .filter-search input::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* ─── Info Bar ─── */
+
+        .info-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 14px;
+            background: var(--bg-card);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            margin-bottom: 16px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .info-bar .count {
+            color: var(--accent-cyan);
+            font-weight: 700;
+        }
+
+        .info-bar .legend {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.7rem;
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════════
+           TABELA
+           ═══════════════════════════════════════════════════════════════════════════════ */
+
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.78rem;
+        }
+
+        thead {
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+
+        thead th {
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.65rem;
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 2px solid var(--border-color);
+            white-space: nowrap;
+            cursor: pointer;
+            user-select: none;
+            transition: color 0.2s ease;
+        }
+
+        thead th:hover {
+            color: var(--accent-cyan);
+        }
+
+        thead th .sort-icon {
+            margin-left: 4px;
+            opacity: 0.4;
+            font-size: 0.6rem;
+        }
+
+        thead th.sorted .sort-icon {
+            opacity: 1;
+        }
+
+        thead th.series-col {
+            text-align: center;
+            width: 60px;
+        }
+
+        tbody tr {
+            transition: background 0.15s ease;
+        }
+
+        tbody tr:hover {
+            background: var(--bg-hover);
+        }
+
+        tbody tr.hidden {
+            display: none;
+        }
+
+        tbody td {
+            padding: 8px 12px;
+            border-bottom: 1px solid rgba(30, 37, 56, 0.4);
+            vertical-align: middle;
+        }
+
+        .col-decada {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            white-space: nowrap;
+            font-family: var(--font-mono);
+        }
+
+        .col-valor {
+            font-family: var(--font-mono);
+            font-weight: 600;
+            color: var(--text-primary);
+            white-space: nowrap;
+        }
+
+        .col-valor .prefix {
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .col-serie {
+            text-align: center;
+        }
+
+        .badge-serie {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-e24  { background: rgba(0, 212, 255, 0.12); color: #00d4ff; }
+        .badge-e48  { background: rgba(51, 170, 255, 0.12); color: #33aaff; }
+        .badge-e96  { background: rgba(46, 204, 113, 0.12); color: #2ecc71; }
+        .badge-e192 { background: rgba(243, 156, 18, 0.12); color: #f39c12; }
+
+        .badge-tol {
+            display: inline-block;
+            padding: 1px 6px;
+            border-radius: 8px;
+            font-size: 0.55rem;
+            font-weight: 700;
+            background: rgba(255,255,255,0.04);
+            color: var(--text-muted);
+        }
+
+        .col-codigo-cores {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        .color-strip {
+            display: inline-flex;
+            gap: 2px;
+            align-items: center;
+        }
+
+        .color-strip span {
+            width: 10px;
+            height: 14px;
+            border-radius: 2px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        /* ─── Empty state ─── */
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state .icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            opacity: 0.5;
+        }
+
+        .empty-state p {
+            font-size: 0.85rem;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════════
+           FOOTER
+           ═══════════════════════════════════════════════════════════════════════════════ */
+
+        .app-footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 16px 24px;
+            margin-top: auto;
+        }
+
+        .footer-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-brand svg {
+            width: 28px;
+            height: 28px;
+            flex-shrink: 0;
+        }
+
+        .footer-name {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .footer-sub {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.75rem;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-cyan);
+        }
+
+        .footer-copy {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            width: 100%;
+            text-align: center;
+            padding-top: 8px;
+            border-top: 1px solid var(--border-color);
+            margin-top: 4px;
+        }
+
+        /* ─── Loading ─── */
+
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .loading .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--accent-cyan);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 12px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════════
+           RESPONSIVO
+           ═══════════════════════════════════════════════════════════════════════════════ */
+
+        @media (max-width: 820px) {
+            main { padding: 16px; }
+            header { padding: 10px 16px; flex-direction: column; align-items: stretch; }
+            nav { justify-content: center; }
+            .page-header h1 { font-size: 1.2rem; }
+            table { font-size: 0.7rem; }
+            thead th, tbody td { padding: 6px 8px; }
+            .filters { flex-direction: column; align-items: stretch; }
+            .filter-search { max-width: 100%; }
+            .info-bar { flex-direction: column; align-items: flex-start; }
+        }
+
+        @media (max-width: 540px) {
+            main { padding: 10px; }
+            .page-header h1 { font-size: 1rem; }
+            table { font-size: 0.65rem; }
+            thead th, tbody td { padding: 4px 6px; }
+            .col-codigo-cores { display: none; }
+            .badge-tol { display: none; }
+            .filter-btn { padding: 4px 10px; font-size: 0.7rem; }
+            .footer-inner { flex-direction: column; text-align: center; }
+        }
+
+        @media (max-width: 400px) {
+            .col-decada { display: none; }
+            .col-serie { width: auto; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            html { scroll-behavior: auto; }
+        }
+
+        /* ─── Print ─── */
+
+        @media print {
+            body { background: #fff; color: #000; }
+            header, .app-footer, .filters, .info-bar, .filter-search { display: none; }
+            .table-wrapper { border: 1px solid #ccc; }
+            table { font-size: 8pt; }
+            thead th { background: #f0f0f0; color: #333; }
+            tbody td { border-bottom: 1px solid #ddd; color: #000; }
+            .badge-e24, .badge-e48, .badge-e96, .badge-e192 {
+                background: #eee !important;
+                color: #333 !important;
+            }
+            .col-valor { color: #000; }
+            .col-valor .prefix { color: #666; }
+            .col-decada { color: #666; }
+            .badge-tol { background: #eee; color: #666; }
+            .page-header h1 { -webkit-text-fill-color: #0055aa; color: #0055aa; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+       HEADER
+       ═══════════════════════════════════════════════════════════════════ -->
+
+    <header role="banner">
+        <div class="brand-header" onclick="window.location.href='v5.html'" title="Voltar à calculadora — DestinyServicesBR" role="button" tabindex="0" aria-label="Voltar à calculadora">
+            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <circle cx="50" cy="50" r="46" stroke="#33aaff" stroke-width="0.5" opacity="0.15" fill="none"/>
+                <circle cx="50" cy="50" r="44" stroke="#00d4ff" stroke-width="2" opacity="0.4" fill="none"/>
+                <circle cx="50" cy="50" r="40" stroke="#00d4ff" stroke-width="1" opacity="0.15" fill="none"/>
+                <g stroke="#00d4ff" stroke-width="1.5" opacity="0.5">
+                    <line x1="50" y1="2" x2="50" y2="8"/>
+                    <line x1="50" y1="92" x2="50" y2="98"/>
+                    <line x1="2" y1="50" x2="8" y2="50"/>
+                    <line x1="92" y1="50" x2="98" y2="50"/>
+                </g>
+                <path d="M30 30 L30 70 Q40 78, 55 70 Q70 62, 70 50 Q70 38, 55 30 Q40 22, 30 30 Z"
+                      stroke="#33aaff" stroke-width="2.5" fill="none" opacity="0.9"/>
+                <path d="M38 38 L38 62 Q48 68, 58 62 Q68 56, 68 50 Q68 44, 58 38 Q48 32, 38 38 Z"
+                      stroke="#00d4ff" stroke-width="1.5" fill="none" opacity="0.5"/>
+                <circle cx="50" cy="50" r="5" fill="#33aaff" opacity="0.8"/>
+                <circle cx="50" cy="50" r="2" fill="#ffffff" opacity="0.9"/>
+            </svg>
+            <div class="logo-text">
+                <span class="brand-name">DestinyServicesBR</span>
+                <span class="brand-sub">DSBRti · Tabela de Resistores</span>
+            </div>
+        </div>
+
+        <nav aria-label="Navegação">
+            <button class="nav-btn" onclick="window.location.href='v5.html'" aria-label="Calculadora de discos">🎯 Calculadora</button>
+            <button class="nav-btn active" onclick="window.location.href='tabela.html'" aria-label="Tabela de resistores">📊 Tabela</button>
+        </nav>
+    </header>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+       MAIN CONTENT
+       ═══════════════════════════════════════════════════════════════════ -->
+
+    <main>
+        <div class="page-header">
+            <h1>📊 Tabela de Resistores Comerciais</h1>
+            <p>Valores padronizados IEC 60063 — Séries E24 (±5%), E48 (±2%), E96 (±1%) e E192 (±0.5%)</p>
+            <div class="stats" id="stats-bar">
+                <span>📦 <strong id="total-count">0</strong> valores carregados</span>
+                <span>📏 <strong>8</strong> décadas (0.1 Ω — 91 MΩ)</span>
+                <span>🎯 <strong id="visible-count">0</strong> visíveis</span>
+            </div>
+        </div>
+
+        <!-- ─── Filtros ─── -->
+        <div class="filters">
+            <div class="filter-group">
+                <span class="filter-label">Série</span>
+                <button class="filter-btn active" data-serie="all" onclick="filterSerie('all')">Todas</button>
+                <button class="filter-btn" data-serie="E24" onclick="filterSerie('E24')">E24</button>
+                <button class="filter-btn" data-serie="E48" onclick="filterSerie('E48')">E48</button>
+                <button class="filter-btn" data-serie="E96" onclick="filterSerie('E96')">E96</button>
+                <button class="filter-btn" data-serie="E192" onclick="filterSerie('E192')">E192</button>
+            </div>
+
+            <div class="filter-group">
+                <span class="filter-label">Década</span>
+                <button class="filter-btn active" data-decada="all" onclick="filterDecada('all')">Todas</button>
+                <button class="filter-btn" data-decada="0.1" onclick="filterDecada('0.1')">0.1Ω</button>
+                <button class="filter-btn" data-decada="1" onclick="filterDecada('1')">1Ω</button>
+                <button class="filter-btn" data-decada="10" onclick="filterDecada('10')">10Ω</button>
+                <button class="filter-btn" data-decada="100" onclick="filterDecada('100')">100Ω</button>
+                <button class="filter-btn" data-decada="1k" onclick="filterDecada('1k')">1kΩ</button>
+                <button class="filter-btn" data-decada="10k" onclick="filterDecada('10k')">10kΩ</button>
+                <button class="filter-btn" data-decada="100k" onclick="filterDecada('100k')">100kΩ</button>
+                <button class="filter-btn" data-decada="1M" onclick="filterDecada('1M')">1MΩ</button>
+                <button class="filter-btn" data-decada="10M" onclick="filterDecada('10M')">10MΩ</button>
+            </div>
+
+            <div class="filter-search">
+                <input type="text" id="search-input" placeholder="🔍 Buscar valor (ex: 4.7k, 100, 10k)" oninput="filterTable()" aria-label="Buscar valor na tabela">
+            </div>
+        </div>
+
+        <!-- ─── Info Bar ─── -->
+        <div class="info-bar">
+            <span>Exibindo <span class="count" id="info-count">0</span> resultados</span>
+            <div class="legend">
+                <span class="legend-item"><span class="legend-dot" style="background:#00d4ff;"></span> E24 ±5%</span>
+                <span class="legend-item"><span class="legend-dot" style="background:#33aaff;"></span> E48 ±2%</span>
+                <span class="legend-item"><span class="legend-dot" style="background:#2ecc71;"></span> E96 ±1%</span>
+                <span class="legend-item"><span class="legend-dot" style="background:#f39c12;"></span> E192 ±0.5%</span>
+                <span class="legend-item">📄 <a href="#" onclick="window.print(); return false;" style="color:var(--accent-cyan);text-decoration:none;font-size:0.7rem;">Imprimir</a></span>
+            </div>
+        </div>
+
+        <!-- ─── Loading ─── -->
+        <div id="loading-state" class="loading">
+            <div class="spinner"></div>
+            <p>Carregando tabela de resistores...</p>
+        </div>
+
+        <!-- ─── Tabela ─── -->
+        <div id="table-container" class="table-wrapper" style="display:none;">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="series-col" onclick="sortTable('serie')" title="Ordenar por série">
+                            Série <span class="sort-icon">↕</span>
+                        </th>
+                        <th onclick="sortTable('valor')" title="Ordenar por valor">
+                            Valor <span class="sort-icon">↕</span>
+                        </th>
+                        <th class="col-decada" onclick="sortTable('decada')" title="Ordenar por década">
+                            Década <span class="sort-icon">↕</span>
+                        </th>
+                        <th onclick="sortTable('tolerancia')" title="Ordenar por tolerância">
+                            Tol. <span class="sort-icon">↕</span>
+                        </th>
+                        <th class="col-codigo-cores" onclick="sortTable('cores')" title="Código de cores 4 faixas">
+                            Faixas de Cor <span class="sort-icon">↕</span>
+                        </th>
+                        <th onclick="sortTable('smd3')" title="Código SMD 3 dígitos">
+                            SMD 3d <span class="sort-icon">↕</span>
+                        </th>
+                        <th onclick="sortTable('smd4')" title="Código SMD 4 dígitos">
+                            SMD 4d <span class="sort-icon">↕</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                    <!-- Renderizado por JS -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════════════════════════════ -->
+
+    <footer class="app-footer" role="contentinfo">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <circle cx="50" cy="50" r="44" stroke="#00d4ff" stroke-width="1.5" opacity="0.3" fill="none"/>
+                    <path d="M30 30 L30 70 Q40 78, 55 70 Q70 62, 70 50 Q70 38, 55 30 Q40 22, 30 30 Z"
+                          stroke="#33aaff" stroke-width="2" fill="none" opacity="0.7"/>
+                    <circle cx="50" cy="50" r="4" fill="#33aaff" opacity="0.6"/>
+                </svg>
+                <div>
+                    <div class="footer-name">DestinyServicesBR</div>
+                    <div class="footer-sub">DSBRti · Tabela de Resistores</div>
+                </div>
+            </div>
+            <div class="footer-links">
+                <a href="https://dsbrti.vercel.app" target="_blank" rel="noopener noreferrer">🏠 Portal</a>
+                <a href="https://github.com/IvanM1999" target="_blank" rel="noopener noreferrer">🐙 GitHub</a>
+                <a href="https://br.linkedin.com/in/ivanm1999" target="_blank" rel="noopener noreferrer">🔗 LinkedIn</a>
+                <a href="https://wa.me/5547984863051" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
+            </div>
+            <div class="footer-copy">
+                &copy; 2024-2026 DestinyServicesBR — Dados conforme IEC 60063
+            </div>
+        </div>
+    </footer>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+       JAVASCRIPT
+       ═══════════════════════════════════════════════════════════════════ -->
+
+    <script>
+        /* ═══════════════════════════════════════════════════════════════════════════════
+           tabela.js — Geração da Tabela de Resistores | DSBRti
+           ═══════════════════════════════════════════════════════════════════════════════ */
+
+        // ─── Dados das séries IEC 60063 ───
+        const SERIES = {
+            E24:  { valores: [10, 11, 12, 13, 15, 16, 18, 20, 22, 24, 27, 30, 33, 36, 39, 43, 47, 51, 56, 62, 68, 75, 82, 91], tol: '±5%', cor: '#00d4ff' },
+            E48:  { valores: [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 24, 26, 27, 28, 30, 32, 33, 35, 36, 38, 39, 42, 43, 45, 47, 49, 51, 53, 56, 58, 60, 62, 65, 68, 71, 75, 78, 82, 85, 88, 91, 94, 97], tol: '±2%', cor: '#33aaff' },
+            E96:  { valores: [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 42, 44, 45, 46, 47, 48, 49, 50, 51, 52, 54, 55, 56, 58, 60, 62, 64, 66, 68, 70, 72, 75, 77, 79, 81, 83, 85, 87, 90, 92, 94, 96, 98], tol: '±1%', cor: '#2ecc71' },
+            E192: { valores: [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99], tol: '±0.5%', cor: '#f39c12' }
+        };
+
+        // Décadas: multiplicador, rótulo
+        const DECADAS = [
+            { mult: 0.1,  rotulo: '0.1 Ω — 0.91 Ω',  prefix: 'm',   label: '0.1' },
+            { mult: 1,    rotulo: '1 Ω — 9.1 Ω',      prefix: '',    label: '1'   },
+            { mult: 10,   rotulo: '10 Ω — 91 Ω',      prefix: '',    label: '10'  },
+            { mult: 100,  rotulo: '100 Ω — 910 Ω',    prefix: '',    label: '100' },
+            { mult: 1000, rotulo: '1 kΩ — 9.1 kΩ',   prefix: 'k',   label: '1k'  },
+            { mult: 10000, rotulo: '10 kΩ — 91 kΩ',  prefix: 'k',   label: '10k' },
+            { mult: 100000, rotulo: '100 kΩ — 910 kΩ', prefix: 'k', label: '100k'},
+            { mult: 1e6,  rotulo: '1 MΩ — 9.1 MΩ',   prefix: 'M',   label: '1M'  },
+            { mult: 1e7,  rotulo: '10 MΩ — 91 MΩ',   prefix: 'M',   label: '10M' }
+        ];
+
+        // Mapa de cores para código de 4 faixas
+        const CORES_DIGITO = [
+            { cor: '#000000', nome: 'Preto',  texto: '#FFF', digito: 0 },
+            { cor: '#8B4513', nome: 'Marrom', texto: '#FFF', digito: 1 },
+            { cor: '#FF0000', nome: 'Vermelho', texto: '#FFF', digito: 2 },
+            { cor: '#FFA500', nome: 'Laranja', texto: '#000', digito: 3 },
+            { cor: '#FFFF00', nome: 'Amarelo', texto: '#000', digito: 4 },
+            { cor: '#008000', nome: 'Verde',   texto: '#FFF', digito: 5 },
+            { cor: '#0000FF', nome: 'Azul',    texto: '#FFF', digito: 6 },
+            { cor: '#EE82EE', nome: 'Violeta', texto: '#000', digito: 7 },
+            { cor: '#808080', nome: 'Cinza',   texto: '#FFF', digito: 8 },
+            { cor: '#FFFFFF', nome: 'Branco',  texto: '#000', digito: 9 }
+        ];
+
+        const CORES_MULT = [
+            { cor: '#000000', nome: 'Preto',    mult: 1,     rotulo: '1 Ω'    },
+            { cor: '#8B4513', nome: 'Marrom',   mult: 10,    rotulo: '10 Ω'   },
+            { cor: '#FF0000', nome: 'Vermelho',  mult: 100,   rotulo: '100 Ω'  },
+            { cor: '#FFA500', nome: 'Laranja',   mult: 1000,  rotulo: '1 kΩ'  },
+            { cor: '#FFFF00', nome: 'Amarelo',   mult: 10000, rotulo: '10 kΩ' },
+            { cor: '#008000', nome: 'Verde',     mult: 1e5,   rotulo: '100 kΩ'},
+            { cor: '#0000FF', nome: 'Azul',      mult: 1e6,   rotulo: '1 MΩ'  },
+            { cor: '#D4AF37', nome: 'Dourado',   mult: 0.1,   rotulo: '0.1 Ω' },
+            { cor: '#C0C0C0', nome: 'Prata',     mult: 0.01,  rotulo: '0.01 Ω'}
+        ];
+
+        const CORES_TOL = {
+            '±5%':  { cor: '#D4AF37', nome: 'Dourado' },
+            '±10%': { cor: '#C0C0C0', nome: 'Prata'   },
+            '±2%':  { cor: '#FF0000', nome: 'Vermelho' },
+            '±1%':  { cor: '#8B4513', nome: 'Marrom'   },
+            '±0.5%':{ cor: '#008000', nome: 'Verde'    },
+            '±0.25%':{cor: '#0000FF', nome: 'Azul'     },
+            '±0.1%':{ cor: '#EE82EE', nome: 'Violeta'  }
+        };
+
+        // ─── Estado ───
+        let allData = [];
+        let filteredData = [];
+        let sortKey = 'valor';
+        let sortDir = 'asc';
+        let activeSerie = 'all';
+        let activeDecada = 'all';
+
+        // ─── Helpers ───
+
+        function formatValor(valor) {
+            if (valor >= 1e6) {
+                let v = valor / 1e6;
+                return v % 1 === 0 ? v.toFixed(0) + ' MΩ' : v.toFixed(1) + ' MΩ';
+            }
+            if (valor >= 1000) {
+                let v = valor / 1000;
+                return v % 1 === 0 ? v.toFixed(0) + ' kΩ' : v.toFixed(1) + ' kΩ';
+            }
+            if (valor % 1 === 0) return valor.toFixed(0) + ' Ω';
+            return valor.toFixed(2) + ' Ω';
+        }
+
+        function getDigitoCor(digito) {
+            return CORES_DIGITO.find(c => c.digito === digito) || CORES_DIGITO[0];
+        }
+
+        function getMultiplicadorCor(mult) {
+            return CORES_MULT.find(c => Math.abs(c.mult - mult) < 0.001) || CORES_MULT[0];
+        }
+
+        function getToleranciaCor(tol) {
+            return CORES_TOL[tol] || { cor: '#D4AF37', nome: 'Dourado' };
+        }
+
+        function getCoresHtml(d1, d2, mult, tol) {
+            const c1 = getDigitoCor(d1);
+            const c2 = getDigitoCor(d2);
+            const cm = getMultiplicadorCor(mult);
+            const ct = getToleranciaCor(tol);
+            return `
+                <span class="color-strip">
+                    <span style="background:${c1.cor}" title="${c1.nome}"></span>
+                    <span style="background:${c2.cor}" title="${c2.nome}"></span>
+                    <span style="background:${cm.cor}" title="${cm.nome}"></span>
+                    <span style="background:${ct.cor}" title="${ct.nome}"></span>
+                </span>
+                <span style="font-size:0.55rem;color:var(--text-muted);margin-left:4px;">
+                    ${c1.nome}-${c2.nome}-${cm.nome}-${ct.nome}
+                </span>`;
+        }
+
+        function getSmd3(valor) {
+            if (valor < 10) {
+                // Usa R como decimal: 4.7 -> 4R7
+                let s = valor.toFixed(1);
+                return s.replace('.', 'R');
+            }
+            let v = Math.round(valor);
+            if (v < 100) return v.toString() + 'R0'; // 47 -> 470 -> wait, 47 -> 470? No.
+            // 3 dígitos: 470 -> 471? No. 470 -> 47 x 10^1 = 471? No.
+            // SMD 3 dígitos: 472 = 47 x 10^2 = 4700 = 4.7k
+            // Vamos usar o valor em ohms. Se valor >= 100, os 2 primeiros são dígitos, o 3o é expoente
+            if (v >= 100) {
+                // Encontra a potência de 10
+                let exp = 0;
+                let base = v;
+                while (base >= 100) {
+                    base /= 10;
+                    exp++;
+                }
+                let d1 = Math.floor(base / 10);
+                let d2 = Math.floor(base % 10);
+                return `${d1}${d2}${exp}`;
+            }
+            return v.toString() + 'R0';
+        }
+
+        function getSmd4(valor) {
+            if (valor < 100) {
+                let s = valor.toFixed(2);
+                return s.replace('.', 'R');
+            }
+            let v = Math.round(valor);
+            // 4 dígitos: 4700 -> 470 x 10^1 = 4701
+            if (v >= 1000) {
+                let exp = 0;
+                let base = v;
+                while (base >= 1000) {
+                    base /= 10;
+                    exp++;
+                }
+                let d1 = Math.floor(base / 100);
+                let d2 = Math.floor((base % 100) / 10);
+                let d3 = Math.floor(base % 10);
+                return `${d1}${d2}${d3}${exp}`;
+            }
+            return v.toString() + 'R0';
+        }
+
+        // ─── Gerar dados ───
+
+        function gerarDados() {
+            const data = [];
+            const seriesNames = ['E24', 'E48', 'E96', 'E192'];
+
+            for (const serieName of seriesNames) {
+                const serie = SERIES[serieName];
+                for (const decada of DECADAS) {
+                    for (const vb of serie.valores) {
+                        const valor = vb * decada.mult;
+                        // Arredonda para evitar problemas de precisão
+                        const valorArred = Math.round(valor * 1e6) / 1e6;
+                        const d1 = Math.floor(vb / 10);
+                        const d2 = vb % 10;
+                        data.push({
+                            serie: serieName,
+                            valor: valorArred,
+                            valorNum: valorArred,
+                            rotulo: formatValor(valorArred),
+                            decada: decada.label,
+                            decadaRotulo: decada.rotulo,
+                            tolerancia: serie.tol,
+                            corSerie: serie.cor,
+                            d1: d1,
+                            d2: d2,
+                            mult: decada.mult
+                        });
+                    }
+                }
+            }
+
+            return data;
+        }
+
+        // ─── Renderizar ───
+
+        function renderTabela(data) {
+            const tbody = document.getElementById('table-body');
+            if (data.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7">
+                            <div class="empty-state">
+                                <div class="icon">🔍</div>
+                                <p>Nenhum resistor encontrado com os filtros atuais.</p>
+                            </div>
+                        </td>
+                    </tr>`;
+                document.getElementById('info-count').textContent = '0';
+                document.getElementById('visible-count').textContent = '0';
+                return;
+            }
+
+            let html = '';
+            for (const item of data) {
+                const badgeClass = `badge-${item.serie.toLowerCase()}`;
+                const coresHtml = getCoresHtml(item.d1, item.d2, item.mult, item.tolerancia);
+                const smd3 = getSmd3(item.valorNum);
+                const smd4 = getSmd4(item.valorNum);
+
+                html += `<tr>
+                    <td class="col-serie">
+                        <span class="badge-serie ${badgeClass}">${item.serie}</span>
+                    </td>
+                    <td class="col-valor">
+                        ${item.rotulo}
+                    </td>
+                    <td class="col-decada">${item.decadaRotulo}</td>
+                    <td>
+                        <span class="badge-tol">${item.tolerancia}</span>
+                    </td>
+                    <td class="col-codigo-cores">${coresHtml}</td>
+                    <td style="font-family:var(--font-mono);font-size:0.7rem;color:var(--text-secondary)">${smd3}</td>
+                    <td style="font-family:var(--font-mono);font-size:0.7rem;color:var(--text-secondary)">${smd4}</td>
+                </tr>`;
+            }
+
+            tbody.innerHTML = html;
+            document.getElementById('info-count').textContent = data.length;
+            document.getElementById('visible-count').textContent = data.length;
+        }
+
+        // ─── Filtros ───
+
+        function filterTable() {
+            const search = document.getElementById('search-input').value.toLowerCase().trim();
+
+            filteredData = allData.filter(item => {
+                // Filtro por série
+                if (activeSerie !== 'all' && item.serie !== activeSerie) return false;
+
+                // Filtro por década
+                if (activeDecada !== 'all' && item.decada !== activeDecada) return false;
+
+                // Filtro por busca textual
+                if (search) {
+                    const rotulo = item.rotulo.toLowerCase();
+                    const valorStr = item.valorNum.toString();
+                    const decadaRot = item.decadaRotulo.toLowerCase();
+                    const serie = item.serie.toLowerCase();
+
+                    // Busca no valor formatado, no valor numérico, na década, na série
+                    const match = rotulo.includes(search) ||
+                                  valorStr.includes(search) ||
+                                  decadaRot.includes(search) ||
+                                  serie.includes(search);
+                    if (!match) return false;
+                }
+
+                return true;
+            });
+
+            // Ordenar
+            sortData(filteredData);
+            renderTabela(filteredData);
+            document.getElementById('total-count').textContent = allData.length;
+        }
+
+        function filterSerie(serie) {
+            activeSerie = serie;
+            document.querySelectorAll('.filter-btn[data-serie]').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.serie === serie);
+            });
+            filterTable();
+        }
+
+        function filterDecada(decada) {
+            activeDecada = decada;
+            document.querySelectorAll('.filter-btn[data-decada]').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.decada === decada);
+            });
+            filterTable();
+        }
+
+        // ─── Ordenação ───
+
+        function sortTable(key) {
+            if (sortKey === key) {
+                sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortKey = key;
+                sortDir = 'asc';
+            }
+
+            // Atualizar ícones
+            document.querySelectorAll('thead th .sort-icon').forEach(el => el.textContent = '↕');
+            document.querySelectorAll('thead th').forEach(th => th.classList.remove('sorted'));
+            const activeTh = document.querySelector(`thead th[onclick*="${key}"]`) ||
+                             document.querySelector(`thead th[onclick*="sortTable('${key}')"]`);
+            if (activeTh) {
+                activeTh.classList.add('sorted');
+                activeTh.querySelector('.sort-icon').textContent = sortDir === 'asc' ? '↑' : '↓';
+            }
+
+            sortData(filteredData);
+            renderTabela(filteredData);
+        }
+
+        function sortData(data) {
+            data.sort((a, b) => {
+                let cmp = 0;
+                switch (sortKey) {
+                    case 'serie': {
+                        const order = ['E24', 'E48', 'E96', 'E192'];
+                        cmp = order.indexOf(a.serie) - order.indexOf(b.serie);
+                        break;
+                    }
+                    case 'valor':
+                        cmp = a.valorNum - b.valorNum;
+                        break;
+                    case 'decada': {
+                        const dOrder = ['0.1', '1', '10', '100', '1k', '10k', '100k', '1M', '10M'];
+                        cmp = dOrder.indexOf(a.decada) - dOrder.indexOf(b.decada);
+                        break;
+                    }
+                    case 'tolerancia': {
+                        const tOrder = ['±0.5%', '±1%', '±2%', '±5%', '±10%'];
+                        cmp = tOrder.indexOf(a.tolerancia) - tOrder.indexOf(b.tolerancia);
+                        break;
+                    }
+                    case 'cores':
+                        cmp = a.d1 - b.d1 || a.d2 - b.d2 || a.mult - b.mult;
+                        break;
+                    case 'smd3':
+                        cmp = a.valorNum - b.valorNum;
+                        break;
+                    case 'smd4':
+                        cmp = a.valorNum - b.valorNum;
+                        break;
+                    default:
+                        cmp = a.valorNum - b.valorNum;
+                }
+                return sortDir === 'asc' ? cmp : -cmp;
+            });
+        }
+
+        // ─── Inicialização ───
+
+        function init() {
+            try {
+                allData = gerarDados();
+                document.getElementById('total-count').textContent = allData.length;
+                document.getElementById('loading-state').style.display = 'none';
+                document.getElementById('table-container').style.display = 'block';
+
+                // Filtro inicial
+                filterTable();
+            } catch (err) {
+                document.getElementById('loading-state').innerHTML = `
+                    <div style="color:var(--accent-red);font-size:1.2rem;">⚠️</div>
+                    <p style="color:var(--accent-red);">Erro ao carregar dados: ${err.message}</p>`;
+            }
+        }
+
+        // ─── Aguardar DOM ───
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+
+        // 🥚 Easter egg
+        console.log('%c📊 Tabela de Resistores Comerciais',
+            'color: #33aaff; font-size: 14px; font-weight: bold; text-shadow: 0 0 8px #33aaff;');
+        console.log('%c📏 E24 · E48 · E96 · E192 — IEC 60063',
+            'color: #00d4ff; font-size: 12px;');
+    </script>
+</body>
+</html>
