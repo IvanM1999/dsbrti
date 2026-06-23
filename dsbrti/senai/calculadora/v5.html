@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <!-- ████████████████████████████████████████████████████████████████████████████████ -->
+    <!-- 🚀 SEO PRINCIPAL — DestinyServicesBR | Calculadora de Resistores por Cores      -->
+    <!-- ████████████████████████████████████████████████████████████████████████████████ -->
+
+    <title>Calculadora de Resistores Online | Código de Cores 4 Faixas | DSBRti</title>
+    <meta name="description" content="Calculadora de resistores interativa com discos de cores giratórios. Descubra o valor de resistência elétrica pelo código de cores (4 faixas) e encontre equivalentes comerciais E24. Ferramenta gratuita DestinyServicesBR.">
+    <meta name="keywords" content="calculadora resistores, código cores resistor, calculadora resistência, disco de cores resistor, tabela cores resistor, ferramenta eletrônica, engenharia elétrica, DestinyServicesBR">
+    <meta name="author" content="DestinyServicesBR — DSBRti">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+    <meta name="revisit-after" content="7 days">
+    <link rel="canonical" href="https://dsbrti.vercel.app/senai/calculadora/v3.html">
+
+    <!-- 🌍 Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Calculadora de Resistores Interativa — Código de Cores 4 Faixas">
+    <meta property="og:description" content="Ferramenta visual com discos de cores giratórios para calcular resistência elétrica. Ideal para estudantes e profissionais de eletrônica.">
+    <meta property="og:url" content="https://dsbrti.vercel.app/senai/calculadora/v3.html">
+    <meta property="og:site_name" content="DestinyServicesBR">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:image" content="https://dsbrti.vercel.app/senai/calculadora/og-calc-resistor.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Calculadora de Resistores por Cores — Ferramenta DestinyServicesBR">
+
+    <!-- 🐦 Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Calculadora de Resistores Interativa — DSBRti">
+    <meta name="twitter:description" content="Descubra valores de resistência pelo código de cores com discos giratórios interativos.">
+    <meta name="twitter:image" content="https://dsbrti.vercel.app/senai/calculadora/twitter-calc-resistor.png">
+    <meta name="twitter:site" content="@DestinyServices">
+    <meta name="twitter:creator" content="@IvanM1999">
+
+    <!-- 🎨 theme-color -->
+    <meta name="theme-color" content="#0a0b10">
+
+    <!-- 📊 JSON-LD — Schema.org Aplicação Web / Ferramenta -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Calculadora de Resistores por Cores",
+        "alternateName": "Resistor Color Code Calculator",
+        "url": "https://dsbrti.vercel.app/senai/calculadora/v3.html",
+        "description": "Calculadora interativa de resistores com discos de cores giratórios. Suporta código de 4 faixas e associação em paralelo com até 4 resistores comerciais E24.",
+        "applicationCategory": "EducationalApplication, EngineeringApplication",
+        "operatingSystem": "All",
+        "browserRequirements": "JavaScript ativado",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "BRL"
+        },
+        "author": {
+            "@type": "Organization",
+            "name": "DestinyServicesBR",
+            "alternateName": "DSBRti",
+            "url": "https://dsbrti.vercel.app",
+            "founder": {
+                "@type": "Person",
+                "name": "Ivan Montibeller"
+            }
+        },
+        "keywords": "calculadora resistores, código cores, resistor 4 faixas, engenharia elétrica, eletrônica, E24"
+    }
+    </script>
+
+    <!-- 📊 JSON-LD — BreadcrumbList -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "DestinyServicesBR", "item": "https://dsbrti.vercel.app" },
+            { "@type": "ListItem", "position": 2, "name": "Senai", "item": "https://dsbrti.vercel.app/senai/metrologia.html" },
+            { "@type": "ListItem", "position": 3, "name": "Calculadora de Resistores", "item": "https://dsbrti.vercel.app/senai/calculadora/v3.html" }
+        ]
+    }
+    </script>
+
+    <!-- 📊 JSON-LD — FAQ (possíveis pesquisas no Google) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "Como usar a calculadora de resistores por cores?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Gire os discos coloridos para alinhar as cores das faixas do resistor. O valor da resistência é calculado automaticamente com base no código de cores de 4 faixas (2 dígitos, 1 multiplicador, 1 tolerância)."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "O que é a associação de resistores em paralelo?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Na associação em paralelo, todos os resistores compartilham os mesmos terminais. A resistência equivalente é calculada pela soma dos inversos: 1/Req = 1/R1 + 1/R2 + ... + 1/Rn."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "O que significa E24 em resistores?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "E24 é uma série de valores padronizados de resistores com tolerância de 5%, contendo 24 valores por década (10, 11, 12, 13, 15, 16, 18, 20, 22, 24, 27, 30, 33, 36, 39, 43, 47, 51, 56, 62, 68, 75, 82, 91)."
+                }
+            }
+        ]
+    }
+    </script>
+
+    <!-- 🎨 ESTILOS PRINCIPAIS -->
+<link rel="stylesheet" href="v5.css">
+
+
+</head>
+<body>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         ██╗  ██╗███████╗ █████╗ ██████╗ ███████╗██████╗
+         ██║  ██║██╔════╝██╔══██╗██╔══██╗██╔════╝██╔══██╗
+         ███████║█████╗  ███████║██║  ██║█████╗  ██████╔╝
+         ██╔══██║██╔══╝  ██╔══██║██║  ██║██╔══╝  ██╔══██╗
+         ██║  ██║███████╗██║  ██║██████╔╝███████╗██║  ██║
+         ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝ ╚══════╝╚═╝  ╚═╝
+         ═══════════════════════════════════════════════════════════════════ -->
+
+    <header>
+        <div class="brand-header" onclick="location.reload()" title="Clique para recarregar — DestinyServicesBR">
+            <div class="logo-dsbrti">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="46" stroke="#33aaff" stroke-width="0.5" opacity="0.15" fill="none"/>
+                    <circle cx="50" cy="50" r="44" stroke="#00d4ff" stroke-width="2" opacity="0.4" fill="none"/>
+                    <circle cx="50" cy="50" r="40" stroke="#00d4ff" stroke-width="1" opacity="0.15" fill="none"/>
+                    <g stroke="#00d4ff" stroke-width="1.5" opacity="0.5">
+                        <line x1="50" y1="2" x2="50" y2="8"/>
+                        <line x1="50" y1="92" x2="50" y2="98"/>
+                        <line x1="2" y1="50" x2="8" y2="50"/>
+                        <line x1="92" y1="50" x2="98" y2="50"/>
+                        <line x1="15.5" y1="15.5" x2="19.5" y2="19.5"/>
+                        <line x1="80.5" y1="80.5" x2="84.5" y2="84.5"/>
+                        <line x1="15.5" y1="84.5" x2="19.5" y2="80.5"/>
+                        <line x1="80.5" y1="19.5" x2="84.5" y2="15.5"/>
+                        <line x1="8" y1="25.9" x2="13" y2="28.5"/>
+                        <line x1="87" y1="25.9" x2="92" y2="28.5"/>
+                        <line x1="8" y1="74.1" x2="13" y2="71.5"/>
+                        <line x1="87" y1="74.1" x2="92" y2="71.5"/>
+                    </g>
+                    <path d="M30 30 L30 70 Q40 78, 55 70 Q70 62, 70 50 Q70 38, 55 30 Q40 22, 30 30 Z"
+                          stroke="#33aaff" stroke-width="2.5" fill="none" opacity="0.9"/>
+                    <path d="M38 38 L38 62 Q48 68, 58 62 Q68 56, 68 50 Q68 44, 58 38 Q48 32, 38 38 Z"
+                          stroke="#00d4ff" stroke-width="1.5" fill="none" opacity="0.5"/>
+                    <circle cx="50" cy="50" r="5" fill="#33aaff" opacity="0.8"/>
+                    <circle cx="50" cy="50" r="2" fill="#ffffff" opacity="0.9"/>
+                    <ellipse cx="50" cy="50" rx="28" ry="8" stroke="#33aaff" stroke-width="0.8" opacity="0.2" fill="none"
+                             transform="rotate(-30 50 50)"/>
+                    <ellipse cx="50" cy="50" rx="28" ry="8" stroke="#00d4ff" stroke-width="0.6" opacity="0.15" fill="none"
+                             transform="rotate(30 50 50)"/>
+                </svg>
+                <div class="logo-text">
+                    <span class="brand-name">DestinyServicesBR</span>
+                    <span class="brand-sub">DSBRti · v5 — 3 Sliders</span>
+                </div>
+            </div>
+        </div>
+
+        <nav>
+            <button id="btn-calc"   class="nav-btn active" onclick="switchView('calc-view')">🎯 Discos</button>
+            <button id="btn-parallel" class="nav-btn"      onclick="switchView('parallel-view')">⚡ Paralelo</button>
+        </nav>
+    </header>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+       📐 CONTEÚDO PRINCIPAL
+       ═══════════════════════════════════════════════════════════════════ -->
+    <main>
+
+        <!-- ──── VIEW: CALCULADORA ──── -->
+        <div id="calc-view" class="spa-view active-view">
+            <div class="top-section">
+
+                <!-- █████  PAINEL ESQUERDO: RESULTADO + COMBO  █████ -->
+                <div class="combo-horizontal">
+                    <div class="combo-result">
+                        <div class="result-label">Resistência</div>
+                        <div id="main-output" class="result-value">-- Ω</div>
+                        <div class="combo-tolerance">Tolerância: <strong>±5%</strong> (ouro)</div>
+                    </div>
+
+                    <!-- Detalhamento inline -->
+                    <div class="combo-detail">
+                        <div class="detail-row">
+                            <span id="dot1" class="color-dot-indicator"></span>
+                            <span class="detail-label">1º Dígito:</span>
+                            <span id="txt-d1" class="detail-val">-</span>
+                        </div>
+                        <div class="detail-row">
+                            <span id="dot2" class="color-dot-indicator"></span>
+                            <span class="detail-label">2º Dígito:</span>
+                            <span id="txt-d2" class="detail-val">-</span>
+                        </div>
+                        <div class="detail-row">
+                            <span id="dot3" class="color-dot-indicator"></span>
+                            <span class="detail-label">× Multiplicador:</span>
+                            <span id="txt-m" class="detail-val">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- █████  DISCO DE CORES  █████ -->
+                <div id="drag-surface" class="wheel-workspace">
+                    <div class="left-marker"></div>
+                    <svg id="wheel1" class="wheel-svg" viewBox="0 0 100 100"></svg>
+                    <svg id="wheel2" class="wheel-svg" viewBox="0 0 100 100"></svg>
+                    <svg id="wheel3" class="wheel-svg" viewBox="0 0 100 100"></svg>
+                    <div class="center-cap"></div>
+                </div>
+
+                <!-- █████  3 SLIDERS INDIVIDUAIS (DIREITA)  █████ -->
+                <div class="slider-column">
+                    <div class="slider-title">Sliders</div>
+
+                    <div class="slider-group">
+                        <span class="slider-label">1º</span>
+                        <input id="slider-w1" type="range" min="0" max="360" value="0" class="v-slider" step="1">
+                        <span class="slider-val" id="slider-val-w1">0</span>
+                    </div>
+
+                    <div class="slider-group">
+                        <span class="slider-label">2º</span>
+                        <input id="slider-w2" type="range" min="0" max="360" value="0" class="v-slider" step="1">
+                        <span class="slider-val" id="slider-val-w2">0</span>
+                    </div>
+
+                    <div class="slider-group">
+                        <span class="slider-label">×</span>
+                        <input id="slider-w3" type="range" min="0" max="360" value="0" class="v-slider" step="1">
+                        <span class="slider-val" id="slider-val-w3">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ──── BOTTOM DASHBOARD ──── -->
+            <div class="bottom-dashboard">
+                <div class="dash-card graphic-box">
+                    <div class="card-label">🎨 Resistor Visual</div>
+                    <div class="resistor-art-container">
+                        <div class="metal-lead"></div>
+                        <div class="resistor-body-element">
+                            <div id="circle-band-1" class="band-circle" title="1ª Faixa — Dígito 1"></div>
+                            <div id="circle-band-2" class="band-circle" title="2ª Faixa — Dígito 2"></div>
+                            <div id="circle-band-3" class="band-circle" title="3ª Faixa — Multiplicador"></div>
+                            <div class="band-circle" style="background: linear-gradient(135deg, #d4af37, #f0d060);" title="Tolerância Fixa 5% (Ouro)"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dash-card">
+                    <div class="card-label">📦 Equivalentes E24</div>
+                    <div id="commercial-list" class="commercial-box"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ──── VIEW: PARALELO ──── -->
+        <div id="parallel-view" class="spa-view">
+            <div class="parallel-workspace">
+                <div class="card-label" style="font-size: 1.1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
+                    ⚡ Associação em Paralelo
+                </div>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">
+                    Até 4 resistores comerciais E24 simultâneos.
+                </p>
+
+                <div class="input-row">
+                    <span>R₁</span>
+                    <select id="p1" class="spa-select" onchange="runParallelCalc()"></select>
+                </div>
+                <div class="input-row">
+                    <span>R₂</span>
+                    <select id="p2" class="spa-select" onchange="runParallelCalc()"></select>
+                </div>
+                <div class="input-row">
+                    <span>R₃</span>
+                    <select id="p3" class="spa-select" onchange="runParallelCalc()"></select>
+                </div>
+                <div class="input-row">
+                    <span>R₄</span>
+                    <select id="p4" class="spa-select" onchange="runParallelCalc()"></select>
+                </div>
+
+                <div class="dash-card" style="margin-top: 25px; text-align: center; background: rgba(0,0,0,0.25);">
+                    <div class="card-label">🔻 R<sub>Eq</sub> Paralelo</div>
+                    <div id="parallel-output" style="font-size: 2.5rem; font-weight: 800; color: var(--accent-green); text-shadow: 0 0 12px rgba(46, 204, 113, 0.2);">-- Ω</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+       🦊 FOOTER
+       ═══════════════════════════════════════════════════════════════════ -->
+    <footer class="app-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="44" stroke="#00d4ff" stroke-width="1.5" opacity="0.3" fill="none"/>
+                    <path d="M30 30 L30 70 Q40 78, 55 70 Q70 62, 70 50 Q70 38, 55 30 Q40 22, 30 30 Z"
+                          stroke="#33aaff" stroke-width="2" fill="none" opacity="0.7"/>
+                    <circle cx="50" cy="50" r="4" fill="#33aaff" opacity="0.6"/>
+                </svg>
+                <div>
+                    <div class="footer-name">DestinyServicesBR</div>
+                    <div class="footer-sub">DSBRti · v5 — 3 Sliders Individuais</div>
+                </div>
+            </div>
+            <div class="footer-links">
+                <a href="https://dsbrti.vercel.app" target="_blank" rel="noopener">🏠 Portal</a>
+                <a href="https://github.com/IvanM1999" target="_blank" rel="noopener">🐙 GitHub</a>
+                <a href="https://br.linkedin.com/in/ivanm1999" target="_blank" rel="noopener">🔗 LinkedIn</a>
+                <a href="https://wa.me/5547984863051" target="_blank" rel="noopener">💬 WhatsApp</a>
+            </div>
+            <div class="footer-copy">
+                &copy; 2024-2026 DestinyServicesBR — v5
+            </div>
+        </div>
+    </footer>
+
+    <!-- 📜 JS externo (fetch db.json + 3 sliders) -->
+    <script src="script.js"></script>
+
+    <!-- 🥚 Console easter egg -->
+    <script>
+        console.log('%c⚔️ v5 · 3 Sliders Individuais ⚔️',
+            'color: #33aaff; font-size: 14px; font-weight: bold; text-shadow: 0 0 8px #33aaff;');
+        console.log('%c🦊 Cada disco tem seu próprio slider + dados do db.json',
+            'color: #00d4ff; font-size: 12px;');
+    </script>
+</body>
+</html>
