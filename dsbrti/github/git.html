@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Contribution Widget</title>
+    
+    <script src="https://unpkg.com/github-calendar@latest/dist/github-calendar.min.js"></script>
+    
+    <style>
+        /* Reset básico para o modo isolado */
+        body {
+            margin: 0;
+            padding: 10px;
+            background: transparent;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Container idêntico ao formato de Widget da imagem */
+        .widget-container {
+            background-color: #09090b; /* Fundo ultra escuro */
+            border-radius: 28px;       /* Bordas bem arredondadas como no print */
+            padding: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            display: inline-block;
+            max-width: 100%;
+            overflow-hidden: scroll;
+            scrollbar-width: none; /* Oculta a barra no Firefox */
+        }
+        .widget-container::-webkit-scrollbar {
+            display: none; /* Oculta a barra no Chrome/Safari */
+        }
+
+        /* Customização dos blocos do gráfico (SVG do GitHub) */
+        .widget-container svg.js-calendar-graph-svg {
+            background: transparent !important;
+        }
+
+        /* Força os quadradinhos a ficarem arredondados e com espaçamento sutil */
+        .widget-container rect.ContributionCalendar-day {
+            rx: 4px; /* Arredonda os cantos de cada dia */
+            ry: 4px;
+            shape-rendering: geometricPrecision;
+        }
+
+        /* Customização das cores do tema Dark/Green clássico do widget */
+        .widget-container [data-level="0"] { fill: #212124 !important; }
+        .widget-container [data-level="1"] { fill: #0e4429 !important; }
+        .widget-container [data-level="2"] { fill: #006d32 !important; }
+        .widget-container [data-level="3"] { fill: #26a641 !important; }
+        .widget-container [data-level="4"] { fill: #39d353 !important; }
+
+        /* Esconder textos desnecessários para manter o visual minimalista de Widget */
+        .ContributionCalendar-label, 
+        .calendar .width-full > .float-left, 
+        .calendar .render-grap-error {
+            display: none !important;
+        }
+        
+        /* Centralizar e ajustar tamanho do bloco */
+        .js-calendar-graph {
+            margin: 0 !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="widget-container">
+        <div class="calendar">
+            <span style="color: #666; font-size: 14px;">Carregando dados...</span>
+        </div>
+    </div>
+
+    <script>
+        // Inicializa a busca para o usuário especificado
+        GitHubCalendar(".calendar", "IvanM1999", { 
+            responsive: true,
+            summaryHtml: "" // Remove o texto resumo de commits abaixo do gráfico
+        });
+    </script>
+</body>
+</html>
