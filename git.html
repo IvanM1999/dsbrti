@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Contributions - IvanM1999</title>
+    
+    <!-- Biblioteca oficial do calendário do GitHub -->
+    <script src="https://unpkg.com/github-calendar@latest/dist/github-calendar.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/github-calendar@latest/dist/github-calendar-responsive.css" />
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        body {
+            margin: 0;
+            padding: 5px;
+            background: transparent;
+            font-family: 'Inter', -apple-system, sans-serif;
+            color: #f3f4f6;
+            box-sizing: border-box;
+        }
+
+        /* Container ajustado para o espaço menor da iframe (220px) */
+        .dashboard-container {
+            background: linear-gradient(145deg, #181d24, #11141a);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: row; /* Lado a lado por padrão no desktop */
+            gap: 16px;
+            align-items: center;
+        }
+
+        /* Lado Esquerdo: Perfil do Usuário */
+        .profile-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 18px;
+            padding: 12px;
+            text-align: center;
+            min-width: 130px;
+            flex-shrink: 0;
+        }
+
+        .avatar-container {
+            width: 45px;
+            height: 45px;
+            margin: 0 auto 8px auto;
+        }
+
+        .avatar-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #26a641;
+        }
+
+        .username {
+            font-size: 13px;
+            font-weight: 700;
+            color: #ffffff;
+            margin: 0 0 2px 0;
+        }
+
+        .role-text {
+            font-size: 10px;
+            color: #9ca3af;
+            margin: 0;
+        }
+
+        /* Lado Direito: Área do Gráfico */
+        .grid-content {
+            flex-grow: 1;
+            min-width: 0; /* Evita quebra de flexbox */
+        }
+
+        .section-title {
+            font-size: 10px;
+            font-weight: 700;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        /* Wrapper do calendário com scroll suave para telas pequenas */
+        .calendar-wrapper {
+            overflow-x: auto;
+            width: 100%;
+            scrollbar-width: none; /* Oculta barra no Firefox */
+        }
+        .calendar-wrapper::-webkit-scrollbar {
+            display: none; /* Oculta barra no Chrome/Safari */
+        }
+
+        /* Limpeza das labels e textos da API do GitHub */
+        .calendar text, .calendar .contrib-column, .calendar .contrib-number,
+        .calendar .text-muted, .calendar h2, .calendar .float-left,
+        .calendar-graph text, .ContributionCalendar-label, .sr-only, .month {
+            display: none !important;
+        }
+
+        .calendar { border: none !important; background: transparent !important; }
+        .js-calendar-graph { margin: 0 !important; padding: 0 !important; }
+        svg.js-calendar-graph-svg { background: transparent !important; }
+
+        /* Estilo dos quadradinhos */
+        .grid-content rect.ContributionCalendar-day {
+            rx: 4px !important;
+            ry: 4px !important;
+            width: 11px !important;
+            height: 11px !important;
+        }
+
+        /* Paleta de cores */
+        .grid-content [data-level="0"] { fill: #2d3139 !important; }
+        .grid-content [data-level="1"] { fill: #0e4429 !important; }
+        .grid-content [data-level="2"] { fill: #006d32 !important; }
+        .grid-content [data-level="3"] { fill: #26a641 !important; }
+        .grid-content [data-level="4"] { fill: #39d353 !important; }
+
+        .widget-footer-text {
+            font-size: 10px;
+            color: #6b7280;
+            margin-top: 8px;
+        }
+
+        /* ================= MEDIA QUERY PARA CELULARES (MOBILE) ================= */
+        @media (max-width: 600px) {
+            .dashboard-container {
+                flex-direction: column; /* Empilha o perfil acima do gráfico */
+                align-items: stretch;
+                padding: 12px;
+                gap: 10px;
+            }
+
+            .profile-card {
+                display: flex;
+                align-items: center;
+                text-align: left;
+                padding: 8px 12px;
+                min-width: 100%;
+                box-sizing: border-box;
+            }
+
+            .avatar-container {
+                margin: 0 12px 0 0;
+                width: 35px;
+                height: 35px;
+            }
+
+            .widget-footer-text {
+                display: none; /* Esconde o texto longo no mobile para poupar espaço */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <!-- Perfil -->
+        <div class="profile-card">
+            <div class="avatar-container">
+                <img src="https://github.com/IvanM1999.png" alt="IvanM1999" class="avatar-img" onerror="this.src='https://github.com/identicons/IvanM1999.png'">
+            </div>
+            <div>
+                <h3 class="username">IvanM1999</h3>
+                <p class="role-text">Developer • Contribution Hub</p>
+            </div>
+        </div>
+        
+        <!-- Gráfico -->
+        <div class="grid-content">
+            <div class="section-title">Commit Activity</div>
+            <div class="calendar-wrapper">
+                <div class="calendar">
+                    <span style="color: #6b7280; font-size: 11px;">Carregando...</span>
+                </div>
+            </div>
+            <div class="widget-footer-text">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        GitHubCalendar(".calendar", "IvanM1999", { 
+            responsive: true,
+            summaryHtml: "" 
+        });
+    </script>
+</body>
+</html>
