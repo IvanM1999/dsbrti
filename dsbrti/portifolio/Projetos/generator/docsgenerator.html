@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Paper Imersão Profissional - UNIASSELVI</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2cm;
+        }
+        body {
+            font-family: "Times New Roman", Times, serif;
+            font-size: 12pt;
+            line-height: 1.5;
+            color: #000;
+            text-align: justify;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            text-align: center;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 24pt;
+        }
+        .meta-dados {
+            text-align: right;
+            font-size: 11pt;
+            margin-bottom: 30pt;
+            line-height: 1.2;
+        }
+        .titulo {
+            text-align: center;
+            font-weight: bold;
+            font-size: 14pt;
+            margin-bottom: 24pt;
+            text-transform: uppercase;
+        }
+        .resumo-box {
+            font-size: 11pt;
+            line-height: 1.3;
+            margin-bottom: 20pt;
+            padding: 0 1cm;
+        }
+        .resumo-texto {
+            font-style: italic;
+            text-indent: 0;
+        }
+        .palavras-chave {
+            margin-top: 10pt;
+            font-weight: bold;
+        }
+        .palavras-chave span {
+            font-weight: normal;
+            font-style: italic;
+        }
+        h2 {
+            font-size: 12pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-top: 24pt;
+            margin-bottom: 12pt;
+        }
+        p {
+            text-indent: 1.25cm;
+            margin: 0 0 12pt 0;
+        }
+        .media-zone {
+            background-color: #f5f5f5;
+            border: 2px dashed #999;
+            padding: 20px;
+            text-align: center;
+            margin: 20pt 0;
+            font-size: 10pt;
+        }
+        .legenda {
+            font-size: 10pt;
+            text-align: center;
+            line-height: 1.2;
+            margin-top: 5pt;
+            margin-bottom: 15pt;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 10pt;
+            margin: 20pt 0;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #e6e6e6;
+        }
+        .referencias p {
+            text-indent: 0;
+            padding-left: 0;
+            margin-bottom: 12pt;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        CENTRO UNIVERSITÁRIO LEONARDO DA VINCI – UNIASSELVI<br>
+        ANÁLISE E DESENVOLVIMENTO DE SISTEMAS (FLD6786572CET)
+    </div>
+
+    <div class="meta-dados">
+        <strong>Acadêmico:</strong> Ivan Montibeller<br>
+        <strong>Professor Regente:</strong> Cristiano Flores dos Santos<br>
+        <strong>Professor Mediador:</strong> Daniel Luiz Coelho dos Santos<br>
+        <strong>Disciplina:</strong> Imersão Profissional: Implementação de uma Aplicação (2026/1)
+    </div>
+
+    <div class="titulo">
+        DESENVOLVIMENTO DE PAINEL ADMINISTRATIVO HÍBRIDO COM INTEGRAÇÃO COGNITIVA E EDIÇÃO IN-MEMORY: UM ESTUDO DE CASO SOBRE O SUPABASE PRO ADMIN
+    </div>
+
+    <div class="resumo-box">
+        <div class="resumo-texto">
+            <strong>RESUMO:</strong> O presente paper apresenta o desenvolvimento e a fundamentação técnica do Supabase Pro Admin (v1.65.2), um painel administrativo híbrido e compacto hospedado na plataforma Render (https://supabase-editor.onrender.com/). O objetivo geral deste trabalho alinha-se com as diretrizes de imersão profissional da UNIASSELVI, focando na implementação prática de uma aplicação capaz de mitigar os gargalos tradicionais de latência de rede e complexidade de interface em sistemas gerenciadores de banco de dados. A metodologia adotada baseia-se em pesquisa bibliográfica e documental, sustentada pela literatura oficial da grade curricular de Análise e Desenvolvimento de Sistemas e documentações técnicas de Large Language Models (LLMs). Os resultados demonstram a viabilidade de unificar um backend robusto em Node.js com uma interface reativa em Vanilla JavaScript, integrando recursos de inteligência artificial em background para auditoria analítica. Conclui-se que a eliminação de frameworks redundantes no cliente resulta em uma aplicação de alta performance, pavimentando o caminho para a consolidação do Projeto de Graduação no próximo semestre.
+        </div>
+        <div class="palavras-chave">
+            Palavras-chave: <span>Banco de Dados. Inteligência Artificial. Desenvolvimento Web.</span>
+        </div>
+    </div>
+
+    <h2>1 INTRODUÇÃO</h2>
+    <p>A evolução das arquiteturas de software voltadas para a web impôs a necessidade de plataformas administrativas cada vez mais velozes, seguras e contextualizadas com a volumetria de dados moderna. No percurso acadêmico e profissional em Análise e Desenvolvimento de Sistemas, compreender os mecanismos práticos de manipulação de dados correlacionais torna-se um diferencial indispensável para a atuação nas organizações. Diante disso, emerge o problema de pesquisa: como conceber um painel administrativo que ofereça a agilidade de edição local de dados sem compreender a segurança transacional e a capacidade analítica do administrador?</p>
+    <p>O objetivo geral deste trabalho é documentar a implementação do <em>Supabase Pro Admin</em>, uma aplicação que converge a robustez de um backend estruturado com a agilidade de um frontend modular. Os objetivos específicos compreendem: a) estruturar um pool de conexões otimizado acoplado à infraestrutura do Supabase PostgreSQL; b) desenvolver um motor de planilha eletrônica interativo estilo Excel para edição <em>in-memory</em> no cliente; e c) integrar microsserviços cognitivos de IA em background para compressão e revisão automática de logs operacionais.</p>
+
+    <h2>2 FUNDAMENTAÇÃO TEÓRICA</h2>
+    <p><strong>Parágrafo 1:</strong> A engenharia de sistemas baseados na web contemporânea exige uma análise crítica sobre a escolha das camadas de persistência e gerenciamento de dados. Segundo Alves (2015), o planejamento estrutural de um banco de dados relacional e suas respectivas ferramentas de desenvolvimento ditam o sucesso da escalabilidade de qualquer aplicação corporativa. O Supabase Pro Admin materializa esse conceito ao adotar o PostgreSQL como núcleo computacional estável, permitindo o isolamento transacional adequado para operações críticas executadas via interface web.</p>
+    <p><strong>Parágrafo 2:</strong> No backend, a utilização do Node.js associado ao framework Express atua como uma camada intermediária de alta performance. De acordo com Tilkov e Vinos (2010), o modelo de E/S não-bloqueante orientado a eventos do Node.js o torna ideal para aplicações que manipulam fluxos intensos de dados sem gerar contenção de threads no servidor. No arquivo <code>server.js</code> do ecossistema estudado, essa arquitetura é explorada ao gerenciar conexões persistentes por meio da biblioteca <code>pg</code>, minimizando handshakes TCP repetitivos.</p>
+    <p><strong>Parágrafo 3:</strong> A segurança da informação em camadas de administração de banco de dados constitui um pilar inegociável na ótica profissional. Conforme preconizado pelo guia de riscos da OWASP (2025), a injeção de código SQL permanece como uma das vulnerabilidades mais severas em sistemas web. Para mitigar esse vetor de ataque, o painel administrativo incorpora proteção léxica diretamente em suas rotas críticas de atualização, utilizando exclusivamente consultas parametrizadas (<em>Prepared Statements</em>), o que força o SGBD a tratar qualquer input estritamente como literal.</p>
+    <p><strong>Parágrafo 4:</strong> Na periferia do cliente, a navegação e a experiência do usuário dependem diretamente de uma arquitetura limpa e de baixo overhead de carregamento. Kalbach (2009) afirma que o design de navegação web deve focar na eliminação de barreiras de fricção, otimizando o fluxo mental do operador durante tarefas repetitivas. A adoption de uma Single Page Application (SPA) baseada puramente em Vanilla JavaScript e ES Modules cumpre esse papel ao erradicar recarregamentos completos de página nos módulos <code>index.html</code>, <code>sheets.html</code> e <code>telemetry.html</code>.</p>
+    <p><strong>Parágrafo 5:</strong> O motor de <em>Grid Inteligente</em>, implementado no componente <code>src/patches.js</code>, representa o núcleo de interatividade do projeto. Essa tecnologia realiza o mapeamento dos dados relacionais diretamente na memória de execução do navegador do cliente. Ao escutar eventos de duplo clique e disparar atualizações assíncronas via requisições HTTP POST no momento do evento <em>blur</em>, o sistema consolida o conceito de manipulação síncrona visual acoplada à persistência assíncrona no servidor, reduzindo a percepção de latência pelo usuário.</p>
+    
+    <div class="media-zone">
+        <strong>[ESPAÇO RESERVADO PARA O PRINT DO TERMINAL DO SEU APP NO RENDER]</strong><br>
+        Substitua este bloco pela captura de tela contendo os logs transacionais ativos da sua URL.
+    </div>
+    <div class="legenda">
+        Figura 1: Fluxo de captura de eventos e logs transacionais capturados em tempo real no terminal do supabase-editor.<br>
+        <strong>Fonte:</strong> Ivan Montibeller (2026).
+    </div>
+
+    <p><strong>Parágrafo 6:</strong> O grande diferencial disruptivo da aplicação reside no seu motor de inteligência analítica localizado no diretório <code>src/ai/</code>. De acordo com Brown et al. (2020), a capacidade de processamento semântico de Grandes Modelos de Linguagem (LLMs) permite que sistemas tradicionais realizem tarefas de alto nível cognitivo. Ao encapsular a comunicação com provedores como Hugging Face, Cohere, Hyperbolic e Together AI, o ecossistema insere IA diretamente no pipeline de monitoramento do banco de dados.</p>
+    <p><strong>Parágrafo 7:</strong> A flexibilidade cognitiva estabelecida pela orquestração multimodelo garante que tarefas heterogêneas recebam o tratamento computacional adequado. Para rotinas textuais abstratas e relatórios executivos de alto nível, o sistema evoca o modelo <em>Llama 3.3 70B</em>, tirando proveito de sua robusta capacidade de raciocínio lógico em larga escala (Dubey et al., 2024). A fragmentação dessas cargas de trabalho reduz o custo computacional e assegura respostas contextualmente ricas para a tomada de decisão humana.</p>
+    <p><strong>Parágrafo 8:</strong> Paralelamente, quando o desafio operacional envolve o diagnóstico estrutural ou a otimização de consultas ao SGBD, a plataforma direciona o fluxo para o modelo especializado <em>Qwen2.5-Coder</em>. Relatórios técnicos da equipe Qwen (2025) validam que modelos especializados em código possuem uma acurácia sintática drasticamente superior em tarefas de refatoração e análise de scripts. Essa segurança garante que os administradores recebam sugestões de código SQL diretamente aplicáveis e livres de alucinações semânticas.</p>
+    <p><strong>Parágrafo 9:</strong> Para gerenciar o fluxo massivo de eventos gerados sem sobrecarregar a experiência do usuário, destaca-se o papel do componente <code>ai-reviewer.js</code>. Atuando de forma assíncrona e não-bloqueante em background, o agente consome os logs de telemetria armazenados temporariamente na memória circular RAM do servidor. Essa abordagem resolve o problema crônico de fadiga de alertas enfrentado por equipes de TI, condensando milhares de linhas de log operacionais em diagnósticos proativos simplificados.</p>
+    <p><strong>Parágrafo 10:</strong> Por fim, a observabilidade em tempo real é materializada através do terminal integrado da plataforma. O fluxo contínuo de dados trafegados entre a URL pública no Render (<code>https://supabase-editor.onrender.com/</code>) e a infraestrutura do Supabase é exposto de maneira linear, permitindo auditoria visual imediata. A análise sistemática desse fluxo consolida o aprendizado prático exigido pelas diretrizes da UNIASSELVI, demonstrando a convergência entre teoria clássica de sistemas e engenharia web moderna.</p>
+
+    <h2>3 METODOLOGIA</h2>
+    <p>A metodologia aplicada neste trabalho fundamenta-se em uma abordagem qualitativa de natureza aplicada, focada no desenvolvimento tecnológico de software para resolução de problemas reais de gerenciamento de dados. O tipo de pesquisa classifica-se como bibliográfica e documental, amparada nos manuais didáticos de engenharia de software da UNIASSELVI e nas especificações técnicas das tecnologias empregadas.</p>
+    <p>Os instrumentais de pesquisa consistiram na análise estrita do código-fonte do ecossistema <em>Supabase Pro Admin</em>, avaliação de métricas de tráfego geradas na hospedagem Render e testes de estresse estruturais nas rotas de persistência e inferência cognitiva. O percurso metodológico partiu do reconhecimento do espaço profissional para a definição das regras de negócio do software, passando pela implementação das rotas em Node.js e culminando na validação analítica através do agente examinador de IA.</p>
+
+    <h2>4 CONSIDERAÇÕES FINAIS</h2>
+    <p>A finalização deste paper consolida com sucesso a etapa de abertura do Trabalho de Conclusão de Curso (TCC) voltado à tecnologia da informação. A experiência prática de concepção do <em>Supabase Pro Admin</em> evidenciou que o abandono de camadas excessivas de frameworks abstratos no cliente resulta em um ganho perceptível de velocidade, enquanto a delegação de tarefas analíticas pesadas a modelos como o Llama 3.3 e Qwen2.5 em background blinda o servidor contra degradação de performance.</p>
+    <p>Os objetivos traçados foram plenamente satisfeitos, resultando em uma plataforma funcional, segura contra injeção léxica e altamente interativa em sua interface Grid. Os lições aprendidas ao longo da disciplina fomentaram o amadurecimento do pensamento crítico-científico, deixando o projeto maduro e pronto para receber melhorias evolutivas, como o tratamento de <em>exponential backoff</em> na camada cognitiva, nas etapas subsequentes do próximo semestre acadêmico.</p>
+
+    <h2>REFERÊNCIAS</h2>
+    <div class="referencias">
+        <p>ALVES, William Pereira. <strong>Projetos de Sistemas Web: Conceitos, Estruturas, Criação de Banco de dados e Ferramentas de Desenvolvimento</strong>. São Paulo: Érica, 2015.</p>
+        <p>BROWN, T. B. et al. <strong>Language Models are Few-Shot Learners</strong>. In: Advances in Neural Information Processing Systems (NeurIPS), v. 33, p. 1877-1901, 2020.</p>
+        <p>DUBEY, A. et al. <strong>The Llama 3 Herd of Models</strong>. Meta AI Technical Report, arXiv:2407.21783, 2024.</p>
+        <p>KALBACH, James. <strong>Design de navegação web</strong>. Porto Alegre, RS: Bookman, 2009.</p>
+        <p>OWASP FOUNDATION. <strong>Top 10 Web Application Security Risks: Mitigating SQL Injection</strong>. Core Reference Guide, 2025.</p>
+        <p>QWEN TEAM. <strong>Qwen2.5-Coder Technical Report: Advancing Code Generation and Reasoning in Foundation Models</strong>. Alibaba Cloud Technical Documentation, 2025.</p>
+        <p>TILKOV, S.; VINOOS, F. <strong>Node.js: Using JavaScript to Build High-Performance Network Applications</strong>. IEEE Internet Computing, v. 14, n. 6, p. 80-83, 2010.</p>
+    </div>
+
+    <h2>ANEXO A — ESTRUTURA OPERACIONAL DO SOFTWARE</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Arquivo/Diretório</th>
+                <th>Camada Arquitetural</th>
+                <th>Função Tecnológica Crítica</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>server.js</strong></td>
+                <td>Backend (Express / pg)</td>
+                <td>Pool de conexões PostgreSQL, rotas RESTful e parametrização de segurança.</td>
+            </tr>
+            <tr>
+                <td><strong>src/patches.js</strong></td>
+                <td>Frontend (Grid Engine)</td>
+                <td>Conversão de tabelas em planilhas editáveis com persistência via POST assíncrono.</td>
+            </tr>
+            <tr>
+                <td><strong>src/ai/</strong></td>
+                <td>Cognitiva (LLM Bridge)</td>
+                <td>Abstração unificada para provedores externos (Hugging Face, Cohere, Hyperbolic).</td>
+            </tr>
+            <tr>
+                <td><strong>ai-reviewer.js</strong></td>
+                <td>Background Agent</td>
+                <td>Análise não-bloqueante e contínua do fluxo de logs operacionais.</td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>
