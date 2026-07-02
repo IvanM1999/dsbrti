@@ -48,13 +48,35 @@
     <button id="btn-calibrar">Injetar Calibração</button>
 </div>
 
-        <div class="section">
-            <h3 class="cyan">> MEDIDOR DE ALIANÇA E CIRCUNFERÊNCIA</h3>
-            <select id="select-pais"><option value="BR">Brasil (ABNT)</option><option value="US">EUA</option></select>
-            <input type="range" id="slider-ring" min="14" max="22" step="0.1" value="16.2" style="width: 100%;">
-            <div style="margin: 10px 0;">Diâmetro: <span id="ring-diam" class="amber">-</span>mm | Aro Equivalente: <span id="ring-size-num" class="green">-</span></div>
-            <div id="interactive-ring"></div>
-        </div>
+<div class="section">
+    <h3 class="cyan">> MÓDULO III: CALIBRAÇÃO POKA-YOKE (CONECTORES METÁLICOS)</h3>
+    <p style="font-size:0.8rem; color:#94a3b8; margin-bottom: 15px;">
+        Coloque o plugue metálico do seu carregador em cima do desenho abaixo. Ajuste o slider até que a silhueta azul fique **exatamente do mesmo tamanho** que o metal do seu cabo.
+    </p>
+    
+    <div style="margin-bottom: 15px;">
+        <label>Selecione o seu Cabo Comercial:</label>
+        <select id="poka-select-usb">
+            <option value="8.25" data-tipo="C">USB Tipo-C (Padrão Novo)</option>
+            <option value="6.70" data-tipo="L">iPhone Lightning (Clássico)</option>
+            <option value="6.85" data-tipo="V8">Micro-USB V8 (Trapezoidal)</option>
+        </select>
+    </div>
+
+    <input type="range" id="poka-slider" min="5.0" max="12.0" step="0.05" value="8.25" style="width: 100%;">
+    
+    <div style="margin: 10px 0; font-size: 0.85rem;">
+        Largura Alvo no Vidro: <span id="poka-largura-val" class="amber">8.25</span> mm
+    </div>
+
+    <div style="background: #020617; padding: 20px; border-radius: 6px; display: flex; justify-content: center; align-items: center; min-height: 100px;">
+        <div id="poka-silhouette" style="background: rgba(56, 189, 248, 0.2); border: 2px solid #38bdf8; transition: all 0.05s ease; box-shadow: 0 0 15px rgba(56,189,248,0.3);"></div>
+    </div>
+    
+    <div style="margin-top: 15px; text-align: center;">
+        <button id="poka-btn-confirmar" style="background: #4ade80; color: #020617; width: 100%;">🔒 Confirmar Encaixe Perfeito & Calibrar Tela</button>
+    </div>
+</div>
     </div>
 
     <script type="module">
@@ -63,7 +85,9 @@
         import { RingEngine } from './ring.js';
 
         window.addEventListener('DOMContentLoaded', () => {
-            // 1. Inicializa Detectores e Vincula a UI
+            // =========================================================================
+            // 1. INICIALIZAÇÃO DE DETECTORES E VINCULAÇÃO DA UI
+            // =========================================================================
             const perfil = HardwareIntelligence.mapearAmbiente();
             document.getElementById('env-device').textContent = perfil.device;
             document.getElementById('env-dpr').textContent = perfil.dpr.toFixed(2);
@@ -75,14 +99,93 @@
             // Sincroniza Anel Inicial
             atualizarAnel();
 
-            // 2. Ouvintes de Eventos da Calibração
+            // =========================================================================
+            // 2. OUVINTES DE EVENTOS - CALIBRAÇÃO POR OBJETOS (PAPELARIA)
+            // =========================================================================
             document.getElementById('btn-calibrar').addEventListener('click', () => {
                 let ref = parseFloat(document.getElementById('select-objeto').value);
                 MetrologyEngine.calibrarPorObjeto(ref);
                 atualizarAnel();
+                atualizarSilhuetaPokaYoke();
             });
 
-            // Ouvintes do Slider do Anel
+            // =========================================================================
+            // 3. OUVINTES DE EVENTOS - SISTEMA POKA-YOKE (CONECTORES USB)
+            // =========================================================================
+            const pokaSelect = document.getElementById('poka-select-usb');
+            const pokaSlider = document.getElementById('poka-slider');
+            const pokaValue = document.getElementById('poka-largura-val');
+            const pokaSilhouette = document.getElementById('poka-silhouette');
+            const pokaBtn = document.getElementById('poka-btn-confirmar');
+
+            function atualizarSilhuetaPokaYoke() {
+                if (!pokaSlider || !pokaSilhouette) return;
+
+                let larguraMm = parseFloat(pokaSlider.value);
+                pokaValue.textContent = larguraMm.toFixed(2);
+
+                const opcaoSelecionada = pokaSelect.options[pokaSelect.selectedIndex];
+                const tipoCabo = opcaoSelecionada.getAttribute('data-tipo');
+
+                // Utiliza a inteligência de hardware + o fator ativo no motor de metrologia
+                let pxPorMmReal = HardwareIntelligence.profile.pxPerMmLg * MetrologyEngine.fatorCorrecao;
+                let larguraPx = larguraMm * pxPorMmReal;
+
+                if (tipoCabo === "C") {
+                    pokaSilhouette.style.width = `${larguraPx}px`;
+                    pokaSilhouette.style.height = `${larguraPx * 0.30}px`;
+                    pokaSilhouette.style.borderRadius = `${larguraPx * 0.12}px`;
+                    pokaSilhouette.style.clipPath = "none";
+                } 
+                else if (tipoCabo === "L") {
+                    pokaSilhouette.style.width = `${larguraPx}px`;
+                    pokaSilhouette.style.height = `${larguraPx * 0.22}px`;
+                    pokaSilhouette.style.borderRadius = "3px";
+                    pokaSilhouette.style.clipPath = "none";
+                } 
+                else if (tipoCabo === "V8") {
+                    let alturaPx = larguraPx * 0.26;
+                    pokaSilhouette.style.width = `${larguraPx}px`;
+                    pokaSilhouette.style.height = `${alturaPx}px`;
+                    pokaSilhouette.style.borderRadius = "0px";
+                    pokaSilhouette.style.clipPath = "polygon(12% 0%, 88% 0%, 100% 100%, 0% 100%)";
+                }
+            }
+
+            pokaSlider.addEventListener('input', atualizarSilhuetaPokaYoke);
+            pokaSelect.addEventListener('change', () => {
+                pokaSlider.value = pokaSelect.value;
+                atualizarSilhuetaPokaYoke();
+            });
+
+            pokaBtn.addEventListener('click', () => {
+                const opcaoSelecionada = pokaSelect.options[pokaSelect.selectedIndex];
+                const larguraNominalMundoReal = parseFloat(opcaoSelecionada.value);
+                let larguraAjustadaUsuario = parseFloat(pokaSlider.value);
+
+                if (larguraAjustadaUsuario === 0) return;
+
+                // Processa a re-calibração cruzada
+                let razaoDeErro = larguraAjustadaUsuario / larguraNominalMundoReal;
+                MetrologyEngine.fatorCorrecao = MetrologyEngine.fatorCorrecao * razaoDeErro;
+
+                // Dispara a re-estilização física dos containers
+                MetrologyEngine.aplicarEscalaFisica();
+                atualizarAnel();
+
+                // Reseta o slider para a nova base nominal estável
+                pokaSlider.value = larguraNominalMundoReal;
+                atualizarSilhuetaPokaYoke();
+
+                alert("⚙️ [POKA-YOKE]: Calibração realizada com sucesso! Todo o ecossistema está em escala 1:1.");
+            });
+
+            // Inicializa a silhueta USB
+            setTimeout(atualizarSilhuetaPokaYoke, 100);
+
+            // =========================================================================
+            // 4. OUVINTES DE EVENTOS - SLIDER DO ANEL
+            // =========================================================================
             document.getElementById('slider-ring').addEventListener('input', atualizarAnel);
             document.getElementById('select-pais').addEventListener('change', atualizarAnel);
 
@@ -92,7 +195,9 @@
                 RingEngine.atualizarMedidas(diam, pais, 'ring-diam', 'ring-size-num', 'interactive-ring');
             }
 
-            // 3. Ouvintes de Toque e Arrasto do Paquímetro (Encapsulados)
+            // =========================================================================
+            // 5. OUVINTES DE EVENTOS - TOQUE E ARRASTO DO PAQUÍMETRO
+            // =========================================================================
             const svgEl = document.getElementById('paquimetro');
             const cursorMovel = document.getElementById('cursor-moved-temp') || svgEl.querySelector('#cursor-movel');
 
@@ -112,7 +217,7 @@
 
             const moveDrag = (e) => {
                 if (!MetrologyEngine.arrastando) return;
-                if(e.cancelable) e.preventDefault();
+                if (e.cancelable) e.preventDefault();
                 let pt = localSVG(e);
                 let deltaX = pt.x - MetrologyEngine.xInicialLocal;
                 let novaPos = MetrologyEngine.xInicialCursor + deltaX;
