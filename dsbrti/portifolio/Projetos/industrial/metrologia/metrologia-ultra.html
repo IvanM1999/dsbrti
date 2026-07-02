@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sistema de Metrologia Digital de Alta Precisão</title>
+    <style>
+        :root {
+            --bg-terminal: #020617;
+            --border-tech: #334155;
+            --accent-cyan: #38bdf8;
+            --accent-green: #4ade80;
+            --accent-amber: #f59e0b;
+        }
+        body {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            background-color: #0f172a;
+            color: #cbd5e1;
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .app-container {
+            width: 100%;
+            max-width: 1000px;
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-sizing: border-box;
+        }
+        .header-main {
+            text-align: center;
+            border-bottom: 2px solid var(--border-tech);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .header-main h1 { color: #fff; margin: 0; font-size: 1.5rem; }
+        
+        .section-box {
+            background: #0f172a;
+            border: 1px solid var(--border-tech);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .section-title {
+            color: var(--accent-cyan);
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1rem;
+            border-bottom: 1px solid var(--border-tech);
+            padding-bottom: 5px;
+        }
+        
+        /* Grid das Ferramentas */
+        .flex-container {
+            display: block;
+        }
+        .svg-wrapper {
+            width: 100%;
+            touch-action: none;
+            user-select: none;
+            background: #020617;
+            border: 2px solid #1e293b;
+            border-radius: 6px;
+            margin: 10px 0;
+            position: relative;
+        }
+        svg { width: 100%; height: auto; display: block; }
+
+        /* Controles de Calibração */
+        .calib-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            margin-top: 10px;
+        }
+        select, input, button {
+            background: #1e293b;
+            border: 1px solid var(--accent-cyan);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+        button {
+            background: #0284c7;
+            cursor: pointer;
+            border: none;
+            font-weight: bold;
+        }
+        button:hover { background: #0369a1; }
+
+        /* Estilo Terminal */
+        .terminal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            font-size: 0.8rem;
+            color: var(--accent-green);
+        }
+        .term-col { background: #020617; padding: 10px; border-radius: 4px; border: 1px solid #1e293b; }
+        .param { color: #94a3b8; }
+        .val { color: #fff; font-weight: bold; }
+
+        .painel-leitura {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #fff;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        /* Ferramenta Aliança / Anel */
+        .ring-tool-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media(max-width: 768px) {
+            .ring-tool-layout { grid-template-columns: 1fr; }
+        }
+        .ring-display {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #020617;
+            border-radius: 6px;
+            height: 200px;
+            position: relative;
+        }
+        #interactive-ring {
+            border: 2px solid var(--accent-amber);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+            transition: width 0.05s ease, height 0.05s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="header-main">
+            <h1>🔬 CENTRAL DE METROLOGIA COMPUTACIONAL V1.0</h1>
+            <div style="font-size:0.8rem; color:var(--accent-amber); margin-top:5px;">Moto G73 & Multi-Device Absolut-Accuracy Calibration Engine</div>
+        </div>
+
+        <div class="section-box">
+            <div class="section-title">🖥️ MÓDULO I: INTELEGÊNCIA DE AMBIENTE & HARDWARE</div>
+            <div class="terminal-grid">
+                <div class="term-col">
+                    <div>[DISPOSITIVO ESTIMADO]: <span id="env-device" style="color:var(--accent-cyan)">Detectando...</span></div>
+                    <div>[NAVEGADOR]: <span id="env-ua" class="val">-</span></div>
+                    <div>[DPR DO SISTEMA]: <span id="env-dpr" class="val">-</span></div>
+                </div>
+                <div class="term-col">
+                    <div>[SCREEN RESOLUTION]: <span id="env-res" class="val">-</span></div>
+                    <div>[PIXELS/MM TEÓRICO]: <span id="env-pxmm" class="val">-</span></div>
+                    <div>[FATOR DE CONVERSÃO $F_m$]: <span id="env-fator" style="color:var(--accent-amber)">1.00000</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-box">
+            <div class="section-title">📏 MÓDULO II: PAQUÍMETRO ANALÓGICO COM RESOLUÇÃO DE 0,05 mm</div>
+            <div class="painel-leitura">
+                MEDIÇÃO: <span id="leitura-mm" style="color: var(--accent-cyan);">0,00</span> mm
+            </div>
+            <div id="wrapper-paquimetro" class="svg-wrapper">
+                <svg id="paquimetro" viewBox="0 0 950 260"></svg>
+            </div>
+        </div>
+
+        <div class="section-box">
+            <div class="section-title">⚙️ MÓDULO III: MATRIZ DE CALIBRAÇÃO (FONTES DO MUNDO REAL)</div>
+            <p style="font-size:0.85rem; margin:0 0 10px 0; color:#94a3b8;">
+                Escolha um objeto real que você possui em mãos, meça-o com o paquímetro digital acima ajustando as garras exatas do objeto, e clique em "Calibrar por Referência".
+            </p>
+            <div class="calib-controls">
+                <label>Objeto de Referência:</label>
+                <select id="select-objeto">
+                    <option value="8.30">Corpo Caneta BIC Sextavada (8.30 mm)</option>
+                    <option value="1.00">Ponta Esferográfica BIC Padrão (1.00 mm)</option>
+                    <option value="7.00">Lápis Sextavado Faber-Castell (7.00 mm)</option>
+                    <option value="15.00">Lápis de Pedreiro (Largura Maior: 15.00 mm)</option>
+                    <option value="7.50">Lápis de Pedreiro (Espessura Menor: 7.50 mm)</option>
+                    <option value="5.00">Bloco de 10 Minas Grafite 0.5mm juntas (5.00 mm)</option>
+                    <option value="7.00">Bloco de 10 Minas Grafite 0.7mm juntas (7.00 mm)</option>
+                    <option value="custom">Outro valor feito em Régua Física (Inserir ao lado)</option>
+                </select>
+                <input type="number" step="0.01" id="input-custom-val" placeholder="Valor em mm" style="width:110px; display:none;">
+                <button onclick="MetrologyEngine.executarCalibracaoObjeto()">Calibrar por Referência</button>
+            </div>
+        </div>
+
+        <div class="section-box">
+            <div class="section-title">💍 MÓDULO IV: MEDIDOR INTERNACIONAL DE ALIANÇAS & DETECTOR DE SURPRESA</div>
+            <div class="ring-tool-layout">
+                <div>
+                    <h4 style="margin:0 0 10px 0; color:#fff;">1. Tabela de Conversão Dinâmica</h4>
+                    <label>Padrão do País:</label>
+                    <select id="select-pais" onchange="RingEngine.atualizarTabelaPais()">
+                        <option value="BR">Brasil (Padrão ABNT - Diâmetro Interno)</option>
+                        <option value="US">EUA / Canadá</option>
+                        <option value="EU">Europa (França/Alemanha)</option>
+                        <option value="AS">Ásia (China/Japão)</option>
+                    </select>
+                    
+                    <div style="margin-top:15px; font-size:0.85rem; line-height:1.6;">
+                        <div>Diâmetro Interno Atual: <span id="ring-diam" style="color:var(--accent-amber)">16.20</span> mm</div>
+                        <div>Tamanho Correspondente: <span id="ring-size-num" style="color:var(--accent-green); font-weight:bold; font-size:1.1rem;">12</span></div>
+                    </div>
+                </div>
+                <div>
+                    <h4 style="margin:0 0 10px 0; color:#fff;">2. Descobridor Secreto (Ajuste Físico de Aro)</h4>
+                    <p style="font-size:0.75rem; color:#94a3b8; margin:0 0 10px 0;">
+                        Coloque um anel que o parceiro(a) já usa em cima do círculo. Ajuste a barra deslizante até que o círculo laranja preencha **exatamente a parte interna de metal** do anel.
+                    </p>
+                    <input type="range" id="slider-ring" min="12" max="24" step="0.1" value="16.2" style="width:100%;">
+                    <div class="ring-display" style="margin-top:10px;">
+                        <div id="interactive-ring"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // =========================================================================
+        // MÓDULO I: NÚCLEO DE INTELIGÊNCIA DE AMBIENTE (HARDWARE INTELLIGENCE NODE)
+        // =========================================================================
+        const HardwareIntelligence = {
+            profile: { ppi: 96, dpr: 1, pxPerMmLg: 3.77, device: "Genérico / Desktop" },
+            
+            mapearAmbiente: function() {
+                this.profile.dpr = window.devicePixelRatio || 1;
+                const ua = navigator.userAgent;
+                
+                // Mapeamento específico do Motorola Moto G73 5G
+                // Baseado no tamanho de tela física de 6.5" com 405 PPI de fábrica
+                if (/Android/i.test(ua) && (screen.width === 1080 || screen.height === 1080)) {
+                    this.profile.ppi = 405;
+                    this.profile.device = "Motorola Moto G73 5G (IPS 405 PPI Perfil)";
+                } else if (/Mani/i.test(ua) || /Android/i.test(ua) || /iPhone/i.test(ua)) {
+                    this.profile.ppi = 320; // Média base mobile genérica
+                    this.profile.device = "Mobile Desconhecido (Estimado 320 PPI)";
+                } else {
+                    this.profile.ppi = 141; // Média para monitores Desktop comuns (FullHD 15.6" ou 24")
+                    this.profile.device = "Monitor Monitor Desktop Genérico";
+                }
+
+                // Cálculo de conversão puramente lógico-físico: PPI / 25.4mm por polegada / Escala lógica do navegador
+                this.profile.pxPerMmLg = (this.profile.ppi / 25.4) / this.profile.dpr;
+
+                // Escreve no Terminal de Diagnóstico
+                document.getElementById('env-device').textContent = this.profile.device;
+                document.getElementById('env-ua').textContent = navigator.vendor || "Webkit Engine";
+                document.getElementById('env-dpr').textContent = this.profile.dpr.toFixed(2);
+                document.getElementById('env-res').textContent = `${screen.width}x${screen.height}`;
+                document.getElementById('env-pxmm').textContent = this.profile.pxPerMmLg.toFixed(4);
+            }
+        };
+
+        // =========================================================================
+        // MÓDULO II & III: NÚCLEO DE PROCESSAMENTO DE CALIBRAÇÃO (METROLOGY ENGINE)
+        // =========================================================================
+        const MetrologyEngine = {
+            fatorCorrecao: 1.638, // Fator matemático de ajuste fino ajustável
+            viewBoxPxPerMm: 10,
+            limiteMaxPx: 600,
+            zeroAbsolutoX: 150,
+            posicaoAtualPx: 0,
+            mmPrecisoGlobal: 0,
+            arrastando: false,
+            xInicialLocal: 0,
+            xInicialCursor: 0,
+
+            inicializar: function() {
+                HardwareIntelligence.mapearAmbiente();
+                this.limiteMaxPx = 60 * this.viewBoxPxPerMm;
+                this.renderizarSymmetricInstrument();
+                this.aplicarMatrizEscalaContainer();
+                
+                // Monitor do Select customizado
+                document.getElementById('select-objeto').addEventListener('change', function() {
+                    document.getElementById('input-custom-val').style.display = (this.value === 'custom') ? 'inline-block' : 'none';
+                });
+            },
+
+            aplicarMatrizEscalaContainer: function() {
+                // Matemática de amarração: Ajusta o wrapper CSS baseado na densidade real resolvida
+                let pxPorMmReal = HardwareIntelligence.profile.pxPerMmLg * this.fatorCorrecao;
+                let larguraIdealSvgEmMm = 950 / this.viewBoxPxPerMm; // Largura total de design do componente
+                let larguraResultanteEmPixelsCss = larguraIdealSvgEmMm * pxPorMmReal;
+                
+                document.getElementById('wrapper-paquimetro').style.width = larguraResultanteEmPixelsCss + 'px';
+                document.getElementById('env-fator').textContent = this.fatorCorrecao.toFixed(5);
+            },
+
+            executarCalibracaoObjeto: function() {
+                let valorAlvoRef = document.getElementById('select-objeto').value;
+                if(valorAlvoRef === 'custom') {
+                    valorAlvoRef = parseFloat(document.getElementById('input-custom-val').value);
+                } else {
+                    valorAlvoRef = parseFloat(valorAlvoRef);
+                }
+
+                if(!valorAlvoRef || this.mmPrecisoGlobal === 0) {
+                    alert("Erro: Defina uma abertura maior do que zero no paquímetro antes de processar.");
+                    return;
+                }
+
+                // MATEMÁTICA ABSURDA DE CONVERSÃO DE ESCALA
+                // Encontra a proporção exata de desvio de erro linear e multiplica o fator base
+                let razaoDeErroCalculada = this.mmPrecisoGlobal / valorAlvoRef;
+                this.fatorCorrecao = this.fatorCorrecao * razaoDeErroCalculada;
+                
+                this.aplicarMatrizEscalaContainer();
+                RingEngine.sincronizarAroPorCalibracao(); // Sincroniza anéis
+                alert(`Sucesso! Fator ${this.fatorCorrecao.toFixed(5)} injetado. Dispositivo calibrado.`);
+            },
+
+            renderizarSymmetricInstrument: function() {
+                const svg = document.getElementById('paquimetro');
+                let htmlFixo = `
+                    <rect x="20" y="80" width="910" height="60" fill="#cbd5e1" stroke="#94a3b8" stroke-width="2"/>
+                    <path d="M 50 80 L 50 240 L 110 240 L 150 140 L 150 80 Z" fill="#cbd5e1" stroke="#94a3b8" stroke-width="2"/>
+                `;
+                for (let i = 0; i <= 60; i++) {
+                    let x = this.zeroAbsolutoX + (i * this.viewBoxPxPerMm);
+                    let altura = (i % 10 === 0) ? 22 : (i % 5 === 0 ? 16 : 10);
+                    htmlFixo += `<line x1="${x}" y1="140" x2="${x}" y2="${140 - altura}" stroke="#1e293b" stroke-width="1.5"/>`;
+                    if (i % 10 === 0) {
+                        htmlFixo += `<text x="${x}" y="112" font-size="12" font-family="sans-serif" text-anchor="middle" font-weight="bold" fill="#475569">${i/10}</text>`;
+                    }
+                }
+
+                const larguraDivisaoNonioPx = 0.95 * this.viewBoxPxPerMm; 
+                let htmlMovel = `
+                    <g id="cursor-movel" transform="translate(0,0)">
+                        <path d="M ${this.zeroAbsolutoX} 80 L ${this.zeroAbsolutoX} 140 L ${this.zeroAbsolutoX + 40} 240 L ${ZERO_ABSOLUTO_X_TEMP = this.zeroAbsolutoX + 80} 240 L ${this.zeroAbsolutoX + 80} 140 L 450 140 L 450 80 Z" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2"/>
+                        <rect x="${this.zeroAbsolutoX}" y="140" width="220" height="45" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2"/>
+                `;
+                for (let i = 0; i <= 20; i++) {
+                    let x = this.zeroAbsolutoX + (i * larguraDivisaoNonioPx);
+                    let altura = (i % 2 === 0) ? 18 : 11;
+                    htmlMovel += `<line x1="${x}" y1="140" x2="${x}" y2="${140 + altura}" stroke="#dc2626" stroke-width="1.5"/>`;
+                    if (i % 2 === 0) {
+                        htmlMovel += `<text x="${x}" y="174" font-size="11" fill="#1e293b" font-family="sans-serif" text-anchor="middle" font-weight="bold">${i/2}</text>`;
+                    }
+                }
+                htmlMovel += `</g>`;
+                svg.innerHTML = htmlFixo + htmlMovel;
+            }
+        };
+
+        // =========================================================================
+        // MÓDULO IV: MOTOR DE CONVERSÃO DE ANÉIS (RING CONVERSION ENGINE)
+        // =========================================================================
+        const RingEngine = {
+            // Tabelas de Mapeamento Baseadas em Diâmetro Interno (mm)
+            tabelas: {
+                BR: [
+                    { diam: 14.8, size: "10" }, { diam: 15.2, size: "11" }, { diam: 15.5, size: "12" },
+                    { diam: 15.8, size: "13" }, { diam: 16.2, size: "14" }, { diam: 16.5, size: "15" },
+                    { diam: 16.8, size: "16" }, { diam: 17.2, size: "17" }, { diam: 17.5, size: "18" },
+                    { diam: 17.8, size: "19" }, { diam: 18.2, size: "20" }, { diam: 18.5, size: "21" },
+                    { diam: 18.8, size: "22" }, { diam: 19.2, size: "23" }, { diam: 19.5, size: "24" }
+                ],
+                US: [
+                    { diam: 14.8, size: "4" }, { diam: 15.2, size: "4.5" }, { diam: 15.6, size: "5" },
+                    { diam: 16.0, size: "5.5" }, { diam: 16.4, size: "6" }, { diam: 16.9, size: "6.5" },
+                    { diam: 17.3, size: "7" }, { diam: 17.7, size: "7.5" }, { diam: 18.2, size: "8" },
+                    { diam: 18.6, size: "8.5" }, { diam: 19.0, size: "9" }, { diam: 19.4, size: "9.5" }
+                ],
+                EU: [
+                    { diam: 14.6, size: "46" }, { diam: 15.3, size: "48" }, { diam: 15.9, size: "50" },
+                    { diam: 16.5, size: "52" }, { diam: 17.2, size: "54" }, { diam: 17.8, size: "56" },
+                    { diam: 18.5, size: "58" }, { diam: 19.1, size: "60" }, { diam: 19.8, size: "62" }
+                ],
+                AS: [
+                    { diam: 14.6, size: "7" }, { diam: 15.0, size: "9" }, { diam: 15.4, size: "11" },
+                    { diam: 15.8, size: "13" }, { diam: 16.3, size: "15" }, { diam: 16.7, size: "17" },
+                    { diam: 17.1, size: "19" }, { diam: 17.6, size: "21" }, { diam: 18.0, size: "23" },
+                    { diam: 18.5, size: "25" }
+                ]
+            },
+
+            atualizarTabelaPais: function() {
+                this.calcularAroInterno(parseFloat(document.getElementById('slider-ring').value));
+            },
+
+            calcularAroInterno: function(diametroMm) {
+                const pais = document.getElementById('select-pais').value;
+                const lista = this.tabelas[pais];
+                
+                // Encontra o tamanho mais próximo por proximidade linear absoluta
+                let melhorAjuste = lista[0];
+                let menorDiferenca = Math.abs(diametroMm - lista[0].diam);
+                
+                for(let i = 1; i < lista.length; i++) {
+                    let diff = Math.abs(diametroMm - lista[i].diam);
+                    if(diff < menorDiferenca) {
+                        menorDiferenca = diff;
+                        melhorAjuste = lista[i];
+                    }
+                }
+
+                document.getElementById('ring-diam').textContent = diametroMm.toFixed(2);
+                document.getElementById('ring-size-num').textContent = melhorAjuste.size;
+            },
+
+            sincronizarAroPorCalibracao: function() {
+                let diametroMm = parseFloat(document.getElementById('slider-ring').value);
+                // Transforma o tamanho físico em pixels reais CSS de tela baseados na calibração ativa
+                let pxPorMmReal = HardwareIntelligence.profile.pxPerMmLg * MetrologyEngine.fatorCorrecao;
+                let tamanhoEmPixelsCss = diametroMm * pxPorMmReal;
+                
+                const circulo = document.getElementById('interactive-ring');
+                circulo.style.width = tamanhoEmPixelsCss + 'px';
+                circulo.style.height = tamanhoEmPixelsCss + 'px';
+                
+                this.calcularAroInterno(diametroMm);
+            }
+        };
+
+        // =========================================================================
+        // CONTROLADORES DE EVENTO INTERATIVO (MÓDULO INTERFACE)
+        // =========================================================================
+        window.addEventListener('DOMContentLoaded', () => {
+            MetrologyEngine.inicializar();
+            RingEngine.sincronizarAroPorCalibracao();
+            
+            const svgEl = document.getElementById('paquimetro');
+            const cursorMovel = document.getElementById('cursor-movel');
+            const leituraMm = document.getElementById('leitura-mm');
+            const sliderRing = document.getElementById('slider-ring');
+
+            sliderRing.addEventListener('input', () => {
+                RingEngine.sincronizarAroPorCalibracao();
+            });
+
+            function obterCoordenadasLocaisSVG(e) {
+                const ponto = svgEl.createSVGPoint();
+                if (e.touches && e.touches.length > 0) {
+                    ponto.x = e.touches[0].clientX; ponto.y = e.touches[0].clientY;
+                } else {
+                    ponto.x = e.clientX; ponto.y = e.clientY;
+                }
+                return ponto.matrixTransform(svgEl.getScreenCTM().inverse());
+            }
+
+            svgEl.addEventListener('mousedown', (e) => {
+                MetrologyEngine.arrastando = true;
+                let pt = obterCoordenadasLocaisSVG(e);
+                MetrologyEngine.xInicialLocal = pt.x;
+                MetrologyEngine.xInicialCursor = MetrologyEngine.posicaoAtualPx;
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!MetrologyEngine.arrastando) return;
+                let pt = obterCoordenadasLocaisSVG(e);
+                let deltaX = pt.x - MetrologyEngine.xInicialLocal;
+                
+                let novaPos = MetrologyEngine.xInicialCursor + deltaX;
+                if (novaPos < 0) novaPos = 0;
+                if (novaPos > MetrologyEngine.limiteMaxPx) novaPos = MetrologyEngine.limiteMaxPx;
+
+                let mmBruto = novaPos / MetrologyEngine.viewBoxPxPerMm;
+                MetrologyEngine.mmPrecisoGlobal = Math.round(mmBruto / RESOLUCAO = 0.05) * 0.05;
+                MetrologyEngine.posicaoAtualPx = MetrologyEngine.mmPrecisoGlobal * MetrologyEngine.viewBoxPxPerMm;
+
+                cursorMovel.setAttribute('transform', `translate(${MetrologyEngine.posicaoAtualPx}, 0)`);
+                leituraMm.textContent = MetrologyEngine.mmPrecisoGlobal.toFixed(2).replace('.', ',');
+            });
+
+            window.addEventListener('mouseup', () => { MetrologyEngine.arrastando = false; });
+            
+            // Toque Mobile
+            svgEl.addEventListener('touchstart', (e) => {
+                MetrologyEngine.arrastando = true;
+                let pt = obterCoordenadasLocaisSVG(e);
+                MetrologyEngine.xInicialLocal = pt.x;
+                MetrologyEngine.xInicialCursor = MetrologyEngine.posicaoAtualPx;
+            }, { passive: true });
+
+            window.addEventListener('touchmove', (e) => {
+                if (!MetrologyEngine.arrastando) return;
+                if(e.cancelable) e.preventDefault();
+                let pt = obterCoordenadasLocaisSVG(e);
+                let deltaX = pt.x - MetrologyEngine.xInicialLocal;
+                let novaPos = MetrologyEngine.xInicialCursor + deltaX;
+                if (novaPos < 0) novaPos = 0;
+                if (novaPos > MetrologyEngine.limiteMaxPx) novaPos = MetrologyEngine.limiteMaxPx;
+
+                let mmBruto = novaPos / MetrologyEngine.viewBoxPxPerMm;
+                MetrologyEngine.mmPrecisoGlobal = Math.round(mmBruto / 0.05) * 0.05;
+                MetrologyEngine.posicaoAtualPx = MetrologyEngine.mmPrecisoGlobal * MetrologyEngine.viewBoxPxPerMm;
+
+                cursorMovel.setAttribute('transform', `translate(${MetrologyEngine.posicaoAtualPx}, 0)`);
+                leituraMm.textContent = MetrologyEngine.mmPrecisoGlobal.toFixed(2).replace('.', ',');
+            }, { passive: false });
+
+            window.addEventListener('touchend', () => { MetrologyEngine.arrastando = false; });
+        });
+    </script>
+</body>
+</html>
