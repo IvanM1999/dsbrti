@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Paquímetro Realista Calibrado</title>
+    <title>Paquímetro Escala Real 1:1</title>
     <style>
         body {
             font-family: system-ui, -apple-system, sans-serif;
@@ -12,29 +12,31 @@
             align-items: center;
             background-color: #f1f5f9;
             margin: 0;
-            padding: 10px;
+            padding: 20px;
         }
         .container {
-            width: 100%;
-            max-width: 950px;
             background: white;
             padding: 20px;
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             text-align: center;
-            box-sizing: border-box;
         }
+        
+        /* O truque mestre: Forçamos o tamanho físico exato usando a unidade 'mm' do CSS */
         .svg-wrapper {
-            width: 100%;
+            width: 95mm; 
+            height: 26mm;
             touch-action: none;
             user-select: none;
+            margin: 0 auto;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            background: #fafafa;
         }
         svg {
             width: 100%;
-            height: auto;
-            background: #fafafa;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
+            height: 100%;
+            display: block;
             cursor: grab;
         }
         svg:active { cursor: grabbing; }
@@ -56,27 +58,28 @@
 <body>
 
     <div class="container">
-        <h2>Paquímetro Virtual Calibrado (0,05 mm)</h2>
+        <h2>Paquímetro Virtual - Escala Real Física (1:1)</h2>
+        <p style="font-size: 0.9rem; color: #64748b; margin-top: -10px;">
+            Ajustado para bater exatamente com um instrumento físico encostado ao ecrã.
+        </p>
         
         <div class="svg-wrapper">
-            <svg id="paquimetro" viewBox="0 0 1000 260"></svg>
+            <svg id="paquimetro" viewBox="0 0 950 260"></svg>
         </div>
 
         <div class="painel-leitura">
-            Leitura Real: <span id="leitura-mm" class="valor-destaque">0,00</span> mm
+            Leitura: <span id="leitura-mm" class="valor-destaque">0,00</span> mm
         </div>
     </div>
 
     <script>
         const svg = document.getElementById('paquimetro');
         
-        // --- CALIBRAÇÃO ESTÁTICA ---
-        const PIXELS_POR_MM = 10;   // 10 pixels = 1mm absoluto na tela
+        // --- CONSTANTES DE DESIGN DO VIRTUAL (VIEWBOX) ---
+        const VIEWBOX_PIXELS_POR_MM = 10; // No universo virtual do SVG, 10 unidades = 1mm
         const RESOLUCAO = 0.05;     
-        const MAX_MM = 70;          
-        const LIMITE_MAX_PX = MAX_MM * PIXELS_POR_MM;
-        
-        // O "Zero" absoluto de encontro das duas mandíbulas será em X = 150
+        const MAX_MM = 55; // Limite físico para caber na janela de 95mm
+        const LIMITE_MAX_PX = MAX_MM * VIEWBOX_PIXELS_POR_MM;
         const ZERO_ABSOLUTO_X = 150; 
 
         let arrastando = false;
@@ -84,16 +87,18 @@
         let xInicialLocal = 0;
         let posicaoAtualPx = 0;
 
+        // Variavel que guardará a escala física real calculada pelo ecran do dispositivo
+        let pixelsPorMmVital = 10; 
+
         function desenharInstrumento() {
             // 1. ESCALA FIXA (Régua Superior)
             let htmlFixo = `
-                <rect x="20" y="80" width="950" height="60" fill="#cbd5e1" stroke="#94a3b8" stroke-width="2"/>
+                <rect x="20" y="80" width="910" height="60" fill="#cbd5e1" stroke="#94a3b8" stroke-width="2"/>
                 <path d="M 50 80 L 50 240 L 110 240 L 150 140 L 150 80 Z" fill="#cbd5e1" stroke="#94a3b8" stroke-width="2"/>
             `;
 
-            // Gerar divisões da escala principal (de 0 a 75 mm)
-            for (let i = 0; i <= 75; i++) {
-                let x = ZERO_ABSOLUTO_X + (i * PIXELS_POR_MM);
+            for (let i = 0; i <= 60; i++) {
+                let x = ZERO_ABSOLUTO_X + (i * VIEWBOX_PIXELS_POR_MM);
                 let altura = (i % 10 === 0) ? 22 : (i % 5 === 0 ? 16 : 10);
                 htmlFixo += `<line x1="${x}" y1="140" x2="${x}" y2="${140 - altura}" stroke="#1e293b" stroke-width="1.5"/>`;
                 
@@ -103,16 +108,13 @@
             }
 
             // 2. CURSOR MÓVEL (Nônio)
-            // A face de medição móvel começa exatamente alinhada em ZERO_ABSOLUTO_X (quando translate é 0)
-            const larguraDivisaoNonioPx = 0.95 * PIXELS_POR_MM; // Cada traço do nônio dista 0.95mm do anterior
-            
+            const larguraDivisaoNonioPx = 0.95 * VIEWBOX_PIXELS_POR_MM; 
             let htmlMovel = `
                 <g id="cursor-movel" transform="translate(0,0)">
                     <path d="M ${ZERO_ABSOLUTO_X} 80 L ${ZERO_ABSOLUTO_X} 140 L ${ZERO_ABSOLUTO_X + 40} 240 L ${ZERO_ABSOLUTO_X + 80} 240 L ${ZERO_ABSOLUTO_X + 80} 140 L 450 140 L 450 80 Z" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2"/>
                     <rect x="${ZERO_ABSOLUTO_X}" y="140" width="220" height="45" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2"/>
             `;
 
-            // O zero do nônio fica exatamente na linha da face de medição móvel (ZERO_ABSOLUTO_X)
             for (let i = 0; i <= 20; i++) {
                 let x = ZERO_ABSOLUTO_X + (i * larguraDivisaoNonioPx);
                 let altura = (i % 2 === 0) ? 18 : 11;
@@ -132,6 +134,7 @@
         const cursorMovel = document.getElementById('cursor-movel');
         const leituraMm = document.getElementById('leitura-mm');
 
+        // CALIBRADOR: Descobre a conversão exata de píxeis de ecrã para o Universo SVG
         function obterCoordenadasLocaisSVG(e) {
             const ponto = svg.createSVGPoint();
             if (e.touches && e.touches.length > 0) {
@@ -170,13 +173,12 @@
             if (novaPosicaoPx < 0) novaPosicaoPx = 0;
             if (novaPosicaoPx > LIMITE_MAX_PX) novaPosicaoPx = LIMITE_MAX_PX;
 
-            // Tratamento estrito de conversão baseado na resolução real de 0,05mm
-            let mmBruto = novaPosicaoPx / PIXELS_POR_MM;
+            // Conversão baseada rigidamente na nossa escala interna calibrada com o CSS 'mm'
+            let mmBruto = novaPosicaoPx / VIEWBOX_PIXELS_POR_MM;
             let mmPreciso = Math.round(mmBruto / RESOLUCAO) * RESOLUCAO;
 
-            posicaoAtualPx = mmPreciso * PIXELS_POR_MM;
+            posicaoAtualPx = mmPreciso * VIEWBOX_PIXELS_POR_MM;
 
-            // Move o cursor exatamente a quantidade correta de pixels calibrados
             cursorMovel.setAttribute('transform', `translate(${posicaoAtualPx}, 0)`);
             leituraMm.textContent = mmPreciso.toFixed(2).replace('.', ',');
         }
