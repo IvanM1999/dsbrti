@@ -33,69 +33,92 @@
             </div>
         </div>
 
-<div class="section">
-    <h3 class="cyan">> CALIBRAÇÃO POR OBJETOS DO COTIDIANO (INCLUINDO ALIANÇAS)</h3>
-    <p style="font-size:0.8rem; color:#94a3b8; margin-bottom: 10px;">
-        Abra as garras do paquímetro digital acima na medida exata do objeto em suas mãos, selecione-o na lista e confirme.
-    </p>
-    <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center;">
-        <select id="select-objeto" style="flex: 1; min-width: 250px;">
-            <optgroup label="Plugues Metálicos">
-                <option value="8.25">Plugue USB Tipo-C (Largura: 8.25 mm)</option>
-                <option value="6.70">Plugue iPhone Lightning (Largura: 6.70 mm)</option>
-                <option value="6.85">Plugue Micro-USB V8 (Largura: 6.85 mm)</option>
-            </optgroup>
+        <div class="section">
+            <h3 class="cyan">> CALIBRAÇÃO POR OBJETOS DO COTIDIANO</h3>
+            <p style="font-size:0.8rem; color:#94a3b8; margin-bottom: 10px;">
+                Abra as garras do paquímetro digital acima na medida exata do objeto em suas mãos, selecione-o na lista e confirme.
+            </p>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center;">
+                <select id="select-objeto" style="flex: 1; min-width: 250px;">
+                    <optgroup label="Plugues Metálicos">
+                        <option value="8.25">Plugue USB Tipo-C (Largura: 8.25 mm)</option>
+                        <option value="6.70">Plugue iPhone Lightning (Largura: 6.70 mm)</option>
+                        <option value="6.85">Plugue Micro-USB V8 (Largura: 6.85 mm)</option>
+                    </optgroup>
+                    
+                    <optgroup label="Alianças (Padrão Brasil)">
+                        <option value="16.80">Aliança Aro 16 BR (Diâmetro Interno: 16.80 mm)</option>
+                        <option value="18.20">Aliança Aro 20 BR (Diâmetro Interno: 18.20 mm)</option>
+                        <option value="custom">Outro Aro / Medida Customizada de Aliança</option>
+                    </optgroup>
+
+                    <optgroup label="Material de Escrita">
+                        <option value="8.30">Corpo Caneta BIC Sextavada (8.30 mm)</option>
+                        <option value="1.00">Ponta Caneta BIC Padrão (1.00 mm)</option>
+                        <option value="7.00">Lápis Sextavado Faber-Castell (7.00 mm)</option>
+                        <option value="15.00">Lápis de Pedreiro (Largura Maior: 15.00 mm)</option>
+                    </optgroup>
+                </select>
+
+                <input type="number" step="0.01" id="input-custom-val" placeholder="Inserir mm real" style="width: 140px; display: none;">
+                
+                <button id="btn-calibrar">Injetar Calibração</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3 class="cyan">> MÓDULO III: CALIBRAÇÃO POKA-YOKE (CONECTORES METÁLICOS)</h3>
+            <p style="font-size:0.8rem; color:#94a3b8; margin-bottom: 15px;">
+                Coloque o plugue metálico do seu carregador em cima do desenho abaixo. Ajuste o slider até que a silhueta azul fique **exatamente do mesmo tamanho** que o metal do seu cabo.
+            </p>
             
-            <optgroup label="Alianças (Padrão Brasil)">
-                <option value="16.80">Aliança Aro 16 BR (Diâmetro Interno: 16.80 mm)</option>
-                <option value="18.20">Aliança Aro 20 BR (Diâmetro Interno: 18.20 mm)</option>
-                <option value="custom">Outro Aro / Medida Customizada de Aliança</option>
-            </optgroup>
+            <div style="margin-bottom: 15px;">
+                <label>Selecione o seu Cabo Comercial:</label>
+                <select id="poka-select-usb">
+                    <option value="8.25" data-tipo="C">USB Tipo-C (Padrão Novo)</option>
+                    <option value="6.70" data-tipo="L">iPhone Lightning (Clássico)</option>
+                    <option value="6.85" data-tipo="V8">Micro-USB V8 (Trapezoidal)</option>
+                </select>
+            </div>
 
-            <optgroup label="Material de Escrita">
-                <option value="8.30">Corpo Caneta BIC Sextavada (8.30 mm)</option>
-                <option value="1.00">Ponta Caneta BIC Padrão (1.00 mm)</option>
-                <option value="7.00">Lápis Sextavado Faber-Castell (7.00 mm)</option>
-                <option value="15.00">Lápis de Pedreiro (Largura Maior: 15.00 mm)</option>
-            </optgroup>
-        </select>
+            <input type="range" id="poka-slider" min="5.0" max="12.0" step="0.05" value="8.25" style="width: 100%;">
+            
+            <div style="margin: 10px 0; font-size: 0.85rem;">
+                Largura Alvo no Vidro: <span id="poka-largura-val" class="amber">8.25</span> mm
+            </div>
 
-        <input type="number" step="0.01" id="input-custom-val" placeholder="Inserir mm real" style="width: 140px; display: none;">
-        
-        <button id="btn-calibrar">Injetar Calibração</button>
+            <div style="background: #020617; padding: 20px; border-radius: 6px; display: flex; justify-content: center; align-items: center; min-height: 100px;">
+                <div id="poka-silhouette" style="background: rgba(56, 189, 248, 0.2); border: 2px solid #38bdf8; transition: all 0.05s ease; box-shadow: 0 0 15px rgba(56,189,248,0.3);"></div>
+            </div>
+            
+            <div style="margin-top: 15px; text-align: center;">
+                <button id="poka-btn-confirmar" style="background: #4ade80; color: #020617; width: 100%;">🔒 Confirmar Encaixe Perfeito & Calibrar Tela</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3 class="cyan">> MEDIDOR DE ANEL INTEGRAÇÃO</h3>
+            <p style="font-size:0.8rem; color:#94a3b8; margin-bottom: 10px;">
+                Ajuste o tamanho até que o círculo coincida com o interior do seu anel físico.
+            </p>
+            <div style="margin-bottom: 15px; display: flex; gap: 10px;">
+                <select id="select-pais">
+                    <option value="BR">Brasil (BR)</option>
+                    <option value="US">Estados Unidos (US)</option>
+                    <option value="EU">Europa (EU)</option>
+                    <option value="AS">Ásia (AS)</option>
+                </select>
+                <input type="range" id="slider-ring" min="14.0" max="20.0" step="0.1" value="16.8" style="flex: 1;">
+            </div>
+            <div style="text-align: center; margin-bottom: 15px;">
+                Diâmetro: <span id="ring-diam" class="amber">16.80</span> mm | Tamanho Estimado: <span id="ring-size-num" class="green">-</span>
+            </div>
+            <div style="display: flex; justify-content: center; align-items: center; min-height: 120px; background: #020617; border-radius: 6px;">
+                <div id="interactive-ring"></div>
+            </div>
+        </div>
+
     </div>
-</div>
-
-<div class="section">
-    <h3 class="cyan">> MÓDULO III: CALIBRAÇÃO POKA-YOKE (CONECTORES METÁLICOS)</h3>
-    <p style="font-size:0.8rem; color:#94a3b8; margin-bottom: 15px;">
-        Coloque o plugue metálico do seu carregador em cima do desenho abaixo. Ajuste o slider até que a silhueta azul fique **exatamente do mesmo tamanho** que o metal do seu cabo.
-    </p>
-    
-    <div style="margin-bottom: 15px;">
-        <label>Selecione o seu Cabo Comercial:</label>
-        <select id="poka-select-usb">
-            <option value="8.25" data-tipo="C">USB Tipo-C (Padrão Novo)</option>
-            <option value="6.70" data-tipo="L">iPhone Lightning (Clássico)</option>
-            <option value="6.85" data-tipo="V8">Micro-USB V8 (Trapezoidal)</option>
-        </select>
-    </div>
-
-    <input type="range" id="poka-slider" min="5.0" max="12.0" step="0.05" value="8.25" style="width: 100%;">
-    
-    <div style="margin: 10px 0; font-size: 0.85rem;">
-        Largura Alvo no Vidro: <span id="poka-largura-val" class="amber">8.25</span> mm
-    </div>
-
-    <div style="background: #020617; padding: 20px; border-radius: 6px; display: flex; justify-content: center; align-items: center; min-height: 100px;">
-        <div id="poka-silhouette" style="background: rgba(56, 189, 248, 0.2); border: 2px solid #38bdf8; transition: all 0.05s ease; box-shadow: 0 0 15px rgba(56,189,248,0.3);"></div>
-    </div>
-    
-    <div style="margin-top: 15px; text-align: center;">
-        <button id="poka-btn-confirmar" style="background: #4ade80; color: #020617; width: 100%;">🔒 Confirmar Encaixe Perfeito & Calibrar Tela</button>
-    </div>
-</div>
-
 
     <script type="module">
         import { HardwareIntelligence } from './hardware.js';
@@ -123,7 +146,6 @@
             const selectObjeto = document.getElementById('select-objeto');
             const inputCustomVal = document.getElementById('input-custom-val');
 
-            // Monitora a troca do select para exibir/ocultar o campo de texto customizado
             if (selectObjeto && inputCustomVal) {
                 selectObjeto.addEventListener('change', function() {
                     inputCustomVal.style.display = (this.value === 'custom') ? 'inline-block' : 'none';
@@ -166,7 +188,6 @@
                 const opcaoSelecionada = pokaSelect.options[pokaSelect.selectedIndex];
                 const tipoCabo = opcaoSelecionada.getAttribute('data-tipo');
 
-                // Utiliza a inteligência de hardware + o fator ativo no motor de metrologia
                 let pxPorMmReal = HardwareIntelligence.profile.pxPerMmLg * MetrologyEngine.fatorCorrecao;
                 let larguraPx = larguraMm * pxPorMmReal;
 
@@ -207,15 +228,12 @@
 
                     if (larguraAjustadaUsuario === 0 || isNaN(larguraAjustadaUsuario)) return;
 
-                    // Processa a re-calibração cruzada usando o desvio linear
                     let razaoDeErro = larguraAjustadaUsuario / larguraNominalMundoReal;
                     MetrologyEngine.fatorCorrecao = MetrologyEngine.fatorCorrecao * razaoDeErro;
 
-                    // Dispara a re-estilização física dos containers
                     MetrologyEngine.aplicarEscalaFisica();
                     atualizarAnel();
 
-                    // Reseta o slider para a nova base nominal estável
                     pokaSlider.value = larguraNominalMundoReal;
                     atualizarSilhuetaPokaYoke();
 
@@ -223,7 +241,6 @@
                 });
             }
 
-            // Inicializa a silhueta USB
             setTimeout(atualizarSilhuetaPokaYoke, 100);
 
             // =========================================================================
@@ -242,7 +259,7 @@
             // 5. OUVINTES DE EVENTOS - TOQUE E ARRASTO DO PAQUÍMETRO
             // =========================================================================
             const svgEl = document.getElementById('paquimetro');
-            const cursorMovel = document.getElementById('cursor-moved-temp') || svgEl.querySelector('#cursor-movel');
+            const cursorMovel = svgEl.querySelector('#cursor-movel');
 
             function localSVG(e) {
                 const p = svgEl.createSVGPoint();
@@ -265,14 +282,18 @@
                 let deltaX = pt.x - MetrologyEngine.xInicialLocal;
                 let novaPos = MetrologyEngine.xInicialCursor + deltaX;
                 
+                let limiteMaxPx = 60 * MetrologyEngine.viewBoxPxPerMm; // 60mm limite
                 if (novaPos < 0) novaPos = 0;
-                if (novaPos > MetrologyEngine.limiteMaxPx) novaPos = MetrologyEngine.limiteMaxPx;
+                if (novaPos > limiteMaxPx) novaPos = limiteMaxPx;
 
                 let mmBruto = novaPos / MetrologyEngine.viewBoxPxPerMm;
                 MetrologyEngine.mmPrecisoGlobal = Math.round(mmBruto / 0.05) * 0.05;
                 MetrologyEngine.posicaoAtualPx = MetrologyEngine.mmPrecisoGlobal * MetrologyEngine.viewBoxPxPerMm;
 
-                cursorMovel.setAttribute('transform', `translate(${MetrologyEngine.posicaoAtualPx}, 0)`);
+                const cursorActual = document.getElementById('cursor-movel');
+                if (cursorActual) {
+                    cursorActual.setAttribute('transform', `translate(${MetrologyEngine.posicaoAtualPx}, 0)`);
+                }
                 document.getElementById('leitura-mm').textContent = MetrologyEngine.mmPrecisoGlobal.toFixed(2).replace('.', ',');
             };
 
@@ -284,6 +305,5 @@
             window.addEventListener('touchend', () => MetrologyEngine.arrastando = false);
         });
     </script>
-
 </body>
 </html>
