@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Painel Metrológico</title>
+    <style>
+        body { font-family: monospace; background: #0f172a; color: #cbd5e1; padding: 20px; margin:0; display:flex; flex-direction:column; align-items:center; }
+        .container { width: 100%; max-width: 950px; background: #1e293b; padding: 20px; border-radius: 8px; box-sizing: border-box; }
+        .section { background: #020617; border: 1px solid #334155; padding: 15px; border-radius: 6px; margin-bottom: 15px; }
+        .svg-wrapper { width: 100%; touch-action: none; user-select: none; background: #000; border-radius: 4px; margin: 10px 0; }
+        svg { width: 100%; height: auto; display: block; }
+        .cyan { color: #38bdf8; } .green { color: #4ade80; } .amber { color: #f59e0b; }
+        select, input, button { background: #1e293b; border: 1px solid #38bdf8; color: #fff; padding: 8px; border-radius: 4px; font-family: monospace; }
+        button { background: #0284c7; border: none; font-weight: bold; cursor: pointer; }
+        #interactive-ring { border: 2px solid #f59e0b; border-radius: 50%; width: 50px; height: 50px; margin: 20px auto; box-shadow: 0 0 15px rgba(245,158,11,0.5); }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="section">
+            <h3 class="cyan">> DETECTOR DE AMBIENTE</h3>
+            <div>Aparelho: <span id="env-device" class="amber">-</span> | DPR: <span id="env-dpr">-</span></div>
+            <div>Fator de Correção Ativo: <span id="env-fator" class="green">-</span></div>
+        </div>
+
+        <div class="section">
+            <h3 class="cyan">> PAQUÍMETRO DIGITAL (0,05mm)</h3>
+            <div style="font-size: 1.5rem; text-align: center; margin-bottom: 10px;">Leitura: <span id="leitura-mm" class="cyan">0,00</span> mm</div>
+            <div id="wrapper-paquimetro" class="svg-wrapper">
+                <svg id="paquimetro" viewBox="0 0 950 260"></svg>
+            </div>
+        </div>
+
+<div class="section">
+    <h3 class="cyan">> CALIBRAÇÃO POR OBJETOS DO COTIDIANO</h3>
+    <select id="select-objeto">
+        <option value="8.25">Plugue USB Tipo-C (Largura: 8.25 mm)</option>
+        <option value="6.70">Plugue iPhone Lightning (Largura: 6.70 mm)</option>
+        <option value="6.85">Plugue Micro-USB V8 (Largura da Base: 6.85 mm)</option>
+        
+        <option value="8.30">Corpo Caneta BIC Sextavada (8.30 mm)</option>
+        <option value="1.00">Ponta Caneta BIC Padrão (1.00 mm)</option>
+        <option value="7.00">Lápis Sextavado Faber-Castell (7.00 mm)</option>
+        <option value="15.00">Lápis de Pedreiro (Largura: 15.00 mm)</option>
+    </select>
+    <button id="btn-calibrar">Injetar Calibração</button>
+</div>
+
+        <div class="section">
+            <h3 class="cyan">> MEDIDOR DE ALIANÇA E CIRCUNFERÊNCIA</h3>
+            <select id="select-pais"><option value="BR">Brasil (ABNT)</option><option value="US">EUA</option></select>
+            <input type="range" id="slider-ring" min="14" max="22" step="0.1" value="16.2" style="width: 100%;">
+            <div style="margin: 10px 0;">Diâmetro: <span id="ring-diam" class="amber">-</span>mm | Aro Equivalente: <span id="ring-size-num" class="green">-</span></div>
+            <div id="interactive-ring"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { HardwareIntelligence } from './hardware.js';
+        import { MetrologyEngine } from './metrology.js';
+        import { RingEngine } from './ring.js';
+
+        window.addEventListener('DOMContentLoaded', () => {
+            // 1. Inicializa Detectores e Vincula a UI
+            const perfil = HardwareIntelligence.mapearAmbiente();
+            document.getElementById('env-device').textContent = perfil.device;
+            document.getElementById('env-dpr').textContent = perfil.dpr.toFixed(2);
+
+            MetrologyEngine.vincularElementos('wrapper-paquimetro', 'paquimetro', 'leitura-mm', 'env-fator');
+            MetrologyEngine.desenharPaquimetro();
+            MetrologyEngine.aplicarEscalaFisica();
+
+            // Sincroniza Anel Inicial
+            atualizarAnel();
+
+            // 2. Ouvintes de Eventos da Calibração
+            document.getElementById('btn-calibrar').addEventListener('click', () => {
+                let ref = parseFloat(document.getElementById('select-objeto').value);
+                MetrologyEngine.calibrarPorObjeto(ref);
+                atualizarAnel();
+            });
+
+            // Ouvintes do Slider do Anel
+            document.getElementById('slider-ring').addEventListener('input', atualizarAnel);
+            document.getElementById('select-pais').addEventListener('change', atualizarAnel);
+
+            function atualizarAnel() {
+                let diam = parseFloat(document.getElementById('slider-ring').value);
+                let pais = document.getElementById('select-pais').value;
+                RingEngine.atualizarMedidas(diam, pais, 'ring-diam', 'ring-size-num', 'interactive-ring');
+            }
+
+            // 3. Ouvintes de Toque e Arrasto do Paquímetro (Encapsulados)
+            const svgEl = document.getElementById('paquimetro');
+            const cursorMovel = document.getElementById('cursor-moved-temp') || svgEl.querySelector('#cursor-movel');
+
+            function localSVG(e) {
+                const p = svgEl.createSVGPoint();
+                p.x = e.touches ? e.touches[0].clientX : e.clientX;
+                p.y = e.touches ? e.touches[0].clientY : e.clientY;
+                return p.matrixTransform(svgEl.getScreenCTM().inverse());
+            }
+
+            const startDrag = (e) => {
+                MetrologyEngine.arrastando = true;
+                let pt = localSVG(e);
+                MetrologyEngine.xInicialLocal = pt.x;
+                MetrologyEngine.xInicialCursor = MetrologyEngine.posicaoAtualPx;
+            };
+
+            const moveDrag = (e) => {
+                if (!MetrologyEngine.arrastando) return;
+                if(e.cancelable) e.preventDefault();
+                let pt = localSVG(e);
+                let deltaX = pt.x - MetrologyEngine.xInicialLocal;
+                let novaPos = MetrologyEngine.xInicialCursor + deltaX;
+                
+                if (novaPos < 0) novaPos = 0;
+                if (novaPos > MetrologyEngine.limiteMaxPx) novaPos = MetrologyEngine.limiteMaxPx;
+
+                let mmBruto = novaPos / MetrologyEngine.viewBoxPxPerMm;
+                MetrologyEngine.mmPrecisoGlobal = Math.round(mmBruto / 0.05) * 0.05;
+                MetrologyEngine.posicaoAtualPx = MetrologyEngine.mmPrecisoGlobal * MetrologyEngine.viewBoxPxPerMm;
+
+                cursorMovel.setAttribute('transform', `translate(${MetrologyEngine.posicaoAtualPx}, 0)`);
+                document.getElementById('leitura-mm').textContent = MetrologyEngine.mmPrecisoGlobal.toFixed(2).replace('.', ',');
+            };
+
+            svgEl.addEventListener('mousedown', startDrag);
+            window.addEventListener('mousemove', moveDrag);
+            window.addEventListener('mouseup', () => MetrologyEngine.arrastando = false);
+            svgEl.addEventListener('touchstart', startDrag, { passive: true });
+            window.addEventListener('touchmove', moveDrag, { passive: false });
+            window.addEventListener('touchend', () => MetrologyEngine.arrastando = false);
+        });
+    </script>
+</body>
+</html>
