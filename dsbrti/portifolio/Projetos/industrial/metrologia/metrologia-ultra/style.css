@@ -1,54 +1,80 @@
 /* =========================================================================
-   SISTEMA DE DESIGN - PAINEL METROLÓGICO (DESKTOP & MOBILE FIRST)
+   SUÍTE DE DESENHO TÉCNICO - ECOSSISTEMA DE ENGENHARIA RESPONSIVO
    ========================================================================= */
 
 :root {
-    --bg-main: #0f172a;
+    --bg-main: #0b0f19;
     --bg-card: #1e293b;
     --bg-dark: #020617;
     --border-color: #334155;
     
-    /* Cores de Feedback de Engenharia */
+    /* Paleta de Engenharia */
     --cyan: #38bdf8;
     --green: #4ade80;
     --amber: #f59e0b;
-    --text-muted: #94a3b8;
-    --text-light: #cbd5e1;
+    --magenta: #f43f5e;
+    --text-muted: #64748b;
+    --text-light: #e2e8f0;
 }
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
     font-family: 'Courier New', Courier, monospace;
     background-color: var(--bg-main);
     color: var(--text-light);
-    padding: 5vw 20px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
-    -webkit-font-smoothing: antialiased;
 }
 
 .container {
     width: 100%;
-    max-width: 1100px;
+    max-width: 1200px;
     background: var(--bg-card);
-    padding: 24px;
+    padding: 25px;
     border-radius: 12px;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
 }
 
-/* Grid Responsiva de Painéis */
-.grid-layout {
+/* Sistema de Abas (Navegação da Suíte) */
+.tabs-nav {
+    display: flex;
+    gap: 8px;
+    border-bottom: 2px solid var(--border-color);
+    margin-bottom: 20px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+}
+
+.tab-btn {
+    background: var(--bg-dark);
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+    border-bottom: none;
+    padding: 12px 20px;
+    border-radius: 6px 6px 0 0;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tab-btn.active {
+    background: var(--cyan);
+    color: var(--bg-dark);
+    border-color: var(--cyan);
+}
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* Grid de Layout */
+.grid-2 {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     gap: 20px;
-    margin-top: 20px;
 }
 
 .section {
@@ -56,103 +82,67 @@ body {
     border: 1px solid var(--border-color);
     padding: 20px;
     border-radius: 8px;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    margin-bottom: 20px;
 }
 
-/* O Painel do Paquímetro ganha destaque ocupando largura total */
-.section.full-width {
-    grid-column: 1 / -1;
+.section-title {
+    color: var(--cyan);
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    border-left: 4px solid var(--cyan);
+    padding-left: 10px;
 }
 
-/* Tipografia Avançada */
-h3.cyan { color: var(--cyan); margin-bottom: 12px; font-size: 1.1rem; letter-spacing: 0.5px; }
-.amber { color: var(--amber); font-weight: bold; }
-.green { color: var(--green); font-weight: bold; }
-.text-small { font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 12px; }
-
-/* Contêineres de Exibição SVG/Gráficos */
-.svg-wrapper {
+/* Área de Desenho / Prancheta */
+.prancheta {
     width: 100%;
-    overflow-x: auto; /* Garante rolagem isolada em telas minúsculas sem quebrar o layout */
-    touch-action: none;
-    user-select: none;
     background: #000;
-    border-radius: 6px;
-    margin: 15px 0;
     border: 1px solid #1e293b;
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
 }
 
-svg {
-    width: 100%;
-    min-width: 600px; /* Impede que o paquímetro colapse excessivamente em telas menores que 600px */
-    height: auto;
-    display: block;
-}
-
-/* Elementos de Controle (Inputs, Selects, Buttons) */
-.input-group {
+/* Inputs de Engenharia */
+.control-row {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    width: 100%;
+    gap: 12px;
+    margin-bottom: 15px;
+    align-items: center;
 }
 
-select, input[type="number"], input[type="range"], button {
+select, input, button {
     background: var(--bg-card);
-    border: 1px solid var(--cyan);
+    border: 1px solid var(--border-color);
     color: #fff;
     padding: 10px 14px;
     border-radius: 6px;
     font-family: inherit;
     font-size: 0.9rem;
-    outline: none;
-    transition: all 0.2s ease;
 }
 
-select { cursor: pointer; flex: 1; min-width: 150px; }
-input[type="number"] { width: 110px; }
-input[type="range"] { width: 100%; accent-color: var(--cyan); cursor: pointer; }
+select:focus, input:focus { border-color: var(--cyan); outline: none; }
 
-button {
-    background: #0284c7;
-    border: none;
-    font-weight: bold;
-    cursor: pointer;
-    white-space: nowrap;
-}
+button.primary { background: #0284c7; border: none; font-weight: bold; cursor: pointer; }
+button.primary:hover { background: #0369a1; }
 
-button:hover { background: #0369a1; transform: translateY(-1px); }
-button:active { transform: translateY(0); }
-
-/* Áreas de Amostragem Visual */
-.display-box {
-    background: var(--bg-dark);
-    padding: 15px;
+/* Estatísticas e Resultados */
+.badge-panel {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+    background: var(--bg-card);
+    padding: 12px;
     border-radius: 6px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 130px;
     margin-top: 10px;
-    border: 1px dashed var(--border-color);
 }
 
-#interactive-ring {
-    border: 2px solid var(--amber);
-    border-radius: 50%;
-    box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
-    transition: width 0.1s ease, height 0.1s ease;
-}
+.badge { font-size: 0.85rem; }
+.badge span { display: block; font-size: 1.2rem; font-weight: bold; margin-top: 2px; }
 
-/* =========================================================================
-   MEDIA QUERIES (OTIMIZAÇÃO ULTRA)
-   ========================================================================= */
-@media (max-width: 600px) {
+/* Responsividade de Tela Média/Pequena */
+@media (max-width: 768px) {
+    .grid-2 { grid-template-columns: 1fr; }
     body { padding: 10px; }
-    .container { padding: 15px; }
-    .input-group { flex-direction: column; align-items: stretch; }
-    select, input[type="number"], button { width: 100% !important; }
 }

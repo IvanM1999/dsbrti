@@ -3,239 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Painel Metrológico Avançado</title>
+    <title>Suíte Educacional de Desenho Técnico</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div class="container">
-        
-        <div class="section full-width" style="margin-bottom: 20px;">
-            <h3 class="cyan">⚙️ TELEMETRIA DE HARDWARE & DENSIDADE DE TELA</h3>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
-                <div>Aparelho Detectado: <span id="env-device" class="amber">-</span></div>
-                <div>Janela DPR: <span id="env-dpr" class="amber">-</span></div>
-                <div>Fator de Correção: <span id="env-fator" class="green">-</span></div>
-                <div>Resolução Equivalente: <span id="env-ppi" class="cyan">-</span> PPI</div>
-            </div>
+        <header style="margin-bottom: 20px;">
+            <h2 style="color: var(--cyan);">📐 CAD-EDU // SUÍTE DE DESENHO TÉCNICO</h2>
+            <p style="color: var(--text-muted); font-size: 0.85rem;">Ambiente interativo para calibração, projeção de vistas e cálculos de tolerância mecânica.</p>
+        </header>
+
+        <div class="tabs-nav">
+            <button class="tab-btn active" onclick="mudarAba('aba-metrologia')">01. Instrumentação & Calibração</button>
+            <button class="tab-btn" onclick="mudarAba('aba-projecoes')">02. Projeções Ortogonais (Vistas)</button>
+            <button class="tab-btn" onclick="mudarAba('aba-tolerancias')">03. Ajustes & Tolerâncias ISO</button>
         </div>
 
-        <div class="section full-width">
-            <h3 class="cyan">📏 PAQUÍMETRO DIGITAL INDUSTRIAL (Resolução: 0,05mm)</h3>
-            <div style="font-size: 1.8rem; text-align: center; margin-bottom: 5px; font-weight: bold;">
-                <span id="leitura-mm" class="cyan">0,00</span> <span style="font-size: 1rem; color: var(--text-muted)">mm</span>
+        <div id="aba-metrologia" class="tab-content active">
+            <div class="section">
+                <h3 class="section-title">PAQUÍMETRO INDUSTRIAL INTERATIVO</h3>
+                <div style="font-size: 2rem; text-align: center; margin-bottom: 10px; font-weight: bold; color: var(--cyan);">
+                    <span id="leitura-mm">0,00</span> mm
+                </div>
+                <div id="wrapper-paquimetro" class="prancheta">
+                    <svg id="paquimetro" viewBox="0 0 950 260"></svg>
+                </div>
             </div>
             
-            <div id="wrapper-paquimetro" class="svg-wrapper">
-                <svg id="paquimetro" viewBox="0 0 950 260"></svg>
+            <div class="grid-2">
+                <div class="section">
+                    <h3 class="section-title">Calibração Física (Poka-Yoke)</h3>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">Garante escala 1:1 real no vidro combinando o hardware ao tamanho de objetos conhecidos.</p>
+                    <div class="control-row">
+                        <select id="poka-select-usb" style="flex:1;">
+                            <option value="8.25" data-tipo="C">USB Tipo-C (Padrão: 8.25mm)</option>
+                            <option value="6.70" data-tipo="L">Lightning Apple (Padrão: 6.70mm)</option>
+                        </select>
+                        <input type="range" id="poka-slider" min="5.0" max="12.0" step="0.05" value="8.25">
+                    </div>
+                    <div class="prancheta" style="min-height: 100px; display:flex; justify-content:center; align-items:center;">
+                        <div id="poka-silhouette" style="background: rgba(56,189,248,0.15); border: 2px solid var(--cyan);"></div>
+                    </div>
+                    <button class="primary" id="poka-btn-confirmar" style="width: 100%; margin-top:10px;">🔒 Sincronizar Fator Metrológico</button>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">Mapeamento de Hardware e Telas</h3>
+                    <div class="badge-panel">
+                        <div class="badge">Aparelho: <span id="env-device" class="amber">-</span></div>
+                        <div class="badge">DPR Nativo: <span id="env-dpr" class="amber">-</span></div>
+                        <div class="badge">Fator Correção: <span id="env-fator" class="green">-</span></div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="grid-layout">
-
+        <div id="aba-projecoes" class="tab-content">
             <div class="section">
-                <div>
-                    <h3 class="cyan">🎯 CALIBRAÇÃO DOS MATERIAIS</h3>
-                    <p class="text-small">Abra fisicamente as garras do paquímetro acima até encaixar o objeto real selecionado.</p>
-                    
-                    <div class="input-group">
-                        <select id="select-objeto">
-                            <optgroup label="Plugues Rápidos">
-                                <option value="8.25">Plugue USB Tipo-C (8.25 mm)</option>
-                                <option value="6.70">Lightning Apple (6.70 mm)</option>
-                            </optgroup>
-                            <optgroup label="Papelaria / Outros">
-                                <option value="8.30">Corpo Caneta BIC (8.30 mm)</option>
-                                <option value="7.00">Lápis Sextavado (7.00 mm)</option>
-                                <option value="custom">Medida Customizada...</option>
-                            </optgroup>
-                        </select>
-                        <input type="number" step="0.01" id="input-custom-val" placeholder="mm real" style="display: none;">
+                <h3 class="section-title">INTERPRETADOR DE VISTAS (1º DIEDRO)</h3>
+                <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:15px;">Modifique as dimensões da peça 3D teórica para verificar a projeção bidimensional automatizada com linhas de centro e de simetria.</p>
+                
+                <div class="control-row">
+                    <label>Largura (X): <input type="range" id="vol-x" min="20" max="80" value="50"></label>
+                    <label>Altura (Y): <input type="range" id="vol-y" min="20" max="80" value="40"></label>
+                    <label>Profundidade (Z): <input type="range" id="vol-z" min="20" max="60" value="30"></label>
+                </div>
+
+                <div class="grid-2">
+                    <div class="section" style="background:#050b14;">
+                        <h4 style="color:var(--amber); margin-bottom:5px;">Perspectiva Isométrica (Peça)</h4>
+                        <svg id="svg-iso" viewBox="0 0 300 220" style="background:#000; width:100%; height:auto;"></svg>
+                    </div>
+                    <div class="section" style="background:#050b14;">
+                        <h4 style="color:var(--green); margin-bottom:5px;">Projeção de Vistas Técnicas</h4>
+                        <svg id="svg-vistas" viewBox="0 0 300 220" style="background:#000; width:100%; height:auto;"></svg>
                     </div>
                 </div>
-                <button id="btn-calibrar" style="margin-top: 15px; width: 100%;">Injetar Ajuste de Escala</button>
             </div>
-
-            <div class="section">
-                <div>
-                    <h3 class="cyan">🛡️ CONTROLE ANTI-ERRO POKA-YOKE</h3>
-                    <p class="text-small">Sobreponha o plugue do cabo na silhueta e ajuste até coincidir milimetricamente.</p>
-                    
-                    <select id="poka-select-usb" style="width: 100%; margin-bottom: 10px;">
-                        <option value="8.25" data-tipo="C">USB Tipo-C (Padrão)</option>
-                        <option value="6.70" data-tipo="L">iPhone Lightning</option>
-                        <option value="6.85" data-tipo="V8">Micro-USB V8</option>
-                    </select>
-                    
-                    <input type="range" id="poka-slider" min="5.0" max="12.0" step="0.05" value="8.25">
-                    <div class="text-small" style="margin-top: 5px;">Alvo Dinâmico: <span id="poka-largura-val" class="amber">8.25</span> mm</div>
-                </div>
-
-                <div class="display-box">
-                    <div id="poka-silhouette" style="background: rgba(56, 189, 248, 0.2); border: 2px solid var(--cyan); transition: all 0.05s ease;"></div>
-                </div>
-                <button id="poka-btn-confirmar" style="background: var(--green); color: var(--bg-dark); margin-top: 10px; width: 100%;">🔒 Travar Calibração Óptica</button>
-            </div>
-
-            <div class="section">
-                <div>
-                    <h3 class="cyan">💍 MOTOR DE DIÂMETRO DE ALIANÇAS</h3>
-                    <p class="text-small">Arraste para ajustar o aro interno de acordo com uma joia real de referência.</p>
-                    
-                    <div class="input-group" style="margin-bottom: 10px;">
-                        <select id="select-pais">
-                            <option value="BR">Brasil (BR)</option>
-                            <option value="US">EUA (US)</option>
-                            <option value="EU">Europa (EU)</option>
-                            <option value="AS">Ásia (AS)</option>
-                        </select>
-                    </div>
-                    <input type="range" id="slider-ring" min="14.0" max="22.0" step="0.1" value="16.8">
-                    <div class="text-small" style="margin-top: 5px; text-align: center;">
-                        Ø Interno: <span id="ring-diam" class="amber">16.80</span> mm | Escala: <span id="ring-size-num" class="green">-</span>
-                    </div>
-                </div>
-
-                <div class="display-box">
-                    <div id="interactive-ring"></div>
-                </div>
-            </div>
-
         </div>
+
+        <div id="aba-tolerancias" class="tab-content">
+            <div class="section">
+                <h3 class="section-title">CALCULADORA DE AJUSTES MECÂNICOS (ISO 286)</h3>
+                <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:15px;">Insira a dimensão nominal e defina o par de ajustes de engenharia para calcular folgas, interferências e estatísticas dimensionais.</p>
+                
+                <div class="control-row">
+                    <label>Ø Nominal (mm): <input type="number" id="iso-nominal" value="30" style="width:90px;"></label>
+                    <label>Furo Essencial: 
+                        <select id="iso-furo">
+                            <option value="H7">H7 (Mais Comum)</option>
+                            <option value="H8">H8</option>
+                            <option value="F7">F7</option>
+                        </select>
+                    </label>
+                    <label>Eixo Essencial: 
+                        <select id="iso-eixo">
+                            <option value="g6">g6 (Deslizante com Folga)</option>
+                            <option value="h6">h6 (Ajuste Justo)</option>
+                            <option value="p6">p6 (Prensado/Interferência)</option>
+                        </select>
+                    </label>
+                    <button class="primary" id="btn-calcular-iso">Analisar Par de Ajuste</button>
+                </div>
+
+                <div class="section" style="background:#050b14;">
+                    <h4 style="color:var(--cyan); margin-bottom:10px;">Relatório Analítico de Tolerância</h4>
+                    <div class="badge-panel" id="painel-iso-resultados">
+                        <div class="badge">Afastamento Sup. Furo: <span id="res-es" class="cyan">0.000</span></div>
+                        <div class="badge">Afastamento Inf. Furo: <span id="res-ei" class="cyan">0.000</span></div>
+                        <div class="badge">Afastamento Sup. Eixo: <span id="res-es-eixo" class="amber">0.000</span></div>
+                        <div class="badge">Afastamento Inf. Eixo: <span id="res-ei-eixo" class="amber">0.000</span></div>
+                        <div class="badge" style="grid-column: 1/-1;">Tipo de Acoplamento Resultante: <span id="res-tipo-ajuste" class="green">-</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script type="module">
         import { HardwareIntelligence } from './hardware.js';
         import { MetrologyEngine } from './metrology.js';
-        import { RingEngine } from './ring.js';
+        import { DrawingEngine } from './drawing.js';
+
+        // Sistema Simples de Troca de Abas Nativas
+        window.mudarAba = function(idAba) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(idAba).classList.add('active');
+            event.target.classList.add('active');
+
+            if(idAba === 'aba-projecoes') {
+                DrawingEngine.renderizarGeometrias();
+            }
+        }
 
         window.addEventListener('DOMContentLoaded', () => {
-            // Mapeia ambiente físico e atualiza o topo do painel
+            // 1. Inicializa Telemetria
             const perfil = HardwareIntelligence.mapearAmbiente();
             document.getElementById('env-device').textContent = perfil.device;
             document.getElementById('env-dpr').textContent = perfil.dpr.toFixed(2);
-            document.getElementById('env-ppi').textContent = perfil.ppi;
 
-            // Vincula e renderiza o sistema gráfico do paquímetro
+            // 2. Inicializa Paquímetro Base
             MetrologyEngine.vincularElementos('wrapper-paquimetro', 'paquimetro', 'leitura-mm', 'env-fator');
             MetrologyEngine.desenharPaquimetro();
             MetrologyEngine.aplicarEscalaFisica();
 
-            // Sincronização inicial do medidor de anéis
-            atualizarAnelCompleto();
-
-            // Lógica de monitoramento do seletor customizado de calibração
-            const selectObjeto = document.getElementById('select-objeto');
-            const inputCustomVal = document.getElementById('input-custom-val');
-            if (selectObjeto && inputCustomVal) {
-                selectObjeto.addEventListener('change', function() {
-                    inputCustomVal.style.display = (this.value === 'custom') ? 'inline-block' : 'none';
+            // 3. Inicializa Motor de Projeções e Vistas Técnicas
+            DrawingEngine.inicializar('svg-iso', 'svg-vistas');
+            
+            const inputsVol = ['vol-x', 'vol-y', 'vol-z'];
+            inputsVol.forEach(id => {
+                document.getElementById(id).addEventListener('input', () => {
+                    DrawingEngine.atualizarDimensoes(
+                        parseFloat(document.getElementById('vol-x').value),
+                        parseFloat(document.getElementById('vol-y').value),
+                        parseFloat(document.getElementById('vol-z').value)
+                    );
                 });
-            }
-
-            // Injetor de calibração por padrão
-            document.getElementById('btn-calibrar').addEventListener('click', () => {
-                let ref = selectObjeto.value === 'custom' ? parseFloat(inputCustomVal.value) : parseFloat(selectObjeto.value);
-                if (!ref || isNaN(ref)) return alert("Medida inválida.");
-                
-                MetrologyEngine.calibrarPorObjeto(ref);
-                atualizarAnelCompleto();
-                atualizarSilhuetaPokaYoke();
             });
 
-            // Gerenciador Poka-Yoke de Silhueta de Hardware
+            // 4. Mecanismo Poka-Yoke integrado
             const pokaSelect = document.getElementById('poka-select-usb');
             const pokaSlider = document.getElementById('poka-slider');
             const pokaSilhouette = document.getElementById('poka-silhouette');
 
-            function atualizarSilhuetaPokaYoke() {
-                if (!pokaSlider || !pokaSilhouette) return;
-                let larguraMm = parseFloat(pokaSlider.value);
-                document.getElementById('poka-largura-val').textContent = larguraMm.toFixed(2);
-
-                let tipo = pokaSelect.options[pokaSelect.selectedIndex].getAttribute('data-tipo');
-                let pxPorMmReal = HardwareIntelligence.profile.pxPerMmLg * MetrologyEngine.fatorCorrecao;
-                let larguraPx = larguraMm * pxPorMmReal;
-
-                pokaSilhouette.style.width = `${larguraPx}px`;
-                if (tipo === "C") {
-                    pokaSilhouette.style.height = `${larguraPx * 0.30}px`;
-                    pokaSilhouette.style.borderRadius = `${larguraPx * 0.12}px`;
-                } else if (tipo === "L") {
-                    pokaSilhouette.style.height = `${larguraPx * 0.22}px`;
-                    pokaSilhouette.style.borderRadius = "4px";
-                } else {
-                    pokaSilhouette.style.height = `${larguraPx * 0.26}px`;
-                    pokaSilhouette.style.borderRadius = "0px";
-                }
+            function recalcularPokaYoke() {
+                let mmVal = parseFloat(pokaSlider.value);
+                let pxPerMm = HardwareIntelligence.profile.pxPerMmLg * MetrologyEngine.fatorCorrecao;
+                pokaSilhouette.style.width = `${mmVal * pxPerMm}px`;
+                pokaSilhouette.style.height = `${(mmVal * pxPerMm) * 0.3}px`;
+                pokaSilhouette.style.borderRadius = "4px";
             }
-
-            pokaSlider.addEventListener('input', atualizarSilhuetaPokaYoke);
-            pokaSelect.addEventListener('change', () => {
-                pokaSlider.value = pokaSelect.value;
-                atualizarSilhuetaPokaYoke();
-            });
-
+            pokaSlider.addEventListener('input', recalcularPokaYoke);
             document.getElementById('poka-btn-confirmar').addEventListener('click', () => {
-                let nominal = parseFloat(pokaSelect.value);
-                let ajustado = parseFloat(pokaSlider.value);
-                if(!ajustado) return;
-
-                MetrologyEngine.fatorCorrecao *= (ajustado / nominal);
+                MetrologyEngine.fatorCorrecao *= (parseFloat(pokaSlider.value) / parseFloat(pokaSelect.value));
                 MetrologyEngine.aplicarEscalaFisica();
-                atualizarAnelCompleto();
-                pokaSlider.value = nominal;
-                atualizarSilhuetaPokaYoke();
+                recalcularPokaYoke();
+                alert("Escala Unificada e Atualizada para toda a suíte educacional!");
+            });
+            setTimeout(recalcularPokaYoke, 200);
+
+            // 5. Motor Estatístico de Ajuste ISO 286
+            document.getElementById('btn-calcular-iso').addEventListener('click', () => {
+                const nominal = parseFloat(document.getElementById('iso-nominal').value);
+                const furo = document.getElementById('iso-furo').value;
+                const eixo = document.getElementById('iso-eixo').value;
+
+                // Tabela Simplificada Educacional de Desvios (em micra: um)
+                let es = 21, ei = 0; // Padrão H7 para Diâmetro de 30mm
+                let esEixo = -7, eiEixo = -20; // g6 para Diâmetro de 30mm
+
+                if (eixo === 'p6') { esEixo = 35; eiEixo = 22; }
+                if (eixo === 'h6') { esEixo = 0; eiEixo = -13; }
+
+                document.getElementById('res-es').textContent = `+${(es/1000).toFixed(3)} mm`;
+                document.getElementById('res-ei').textContent = `+${(ei/1000).toFixed(3)} mm`;
+                document.getElementById('res-es-eixo').textContent = `${esEixo >= 0 ? '+' : ''}${(esEixo/1000).toFixed(3)} mm`;
+                document.getElementById('res-ei-eixo').textContent = `${eiEixo >= 0 ? '+' : ''}${(eiEixo/1000).toFixed(3)} mm`;
+
+                let tipo = "Ajuste com Folga";
+                if(eiEixo > es) tipo = "Ajuste com Interferência (Prensado)";
+                if(esEixo >= ei && eiEixo <= es && tipo !== "Ajuste com Interferência") tipo = "Ajuste de Transição / Incerto";
+
+                document.getElementById('res-tipo-ajuste').textContent = tipo;
             });
 
-            setTimeout(atualizarSilhuetaPokaYoke, 150);
-
-            // Ouvintes para o Slider Metrológico do Anel
-            document.getElementById('slider-ring').addEventListener('input', atualizarAnelCompleto);
-            document.getElementById('select-pais').addEventListener('change', atualizarAnelCompleto);
-
-            function atualizarAnelCompleto() {
-                let diam = parseFloat(document.getElementById('slider-ring').value);
-                let pais = document.getElementById('select-pais').value;
-                RingEngine.atualizarMedidas(diam, pais, 'ring-diam', 'ring-size-num', 'interactive-ring');
-            }
-
-            // Captura de Eventos de Arrastre Inteligente (Touch / Mouse) no SVG
+            // 6. Eventos de toque/arrasto do Paquimetro
             const svgEl = document.getElementById('paquimetro');
             function obterXLocal(e) {
                 const pt = svgEl.createSVGPoint();
                 pt.x = e.touches ? e.touches[0].clientX : e.clientX;
                 return pt.matrixTransform(svgEl.getScreenCTM().inverse()).x;
             }
-
-            const aoIniciar = (e) => {
+            svgEl.addEventListener('mousedown', (e) => {
                 MetrologyEngine.arrastando = true;
                 MetrologyEngine.xInicialLocal = obterXLocal(e);
                 MetrologyEngine.xInicialCursor = MetrologyEngine.posicaoAtualPx;
-            };
-
-            const aoMovimentar = (e) => {
+            });
+            window.addEventListener('mousemove', (e) => {
                 if (!MetrologyEngine.arrastando) return;
-                if (e.cancelable) e.preventDefault();
-                
                 let deltaX = obterXLocal(e) - MetrologyEngine.xInicialLocal;
-                let novaPos = MetrologyEngine.xInicialCursor + deltaX;
-                let maxPx = 60 * MetrologyEngine.viewBoxPxPerMm;
-
-                novaPos = Math.max(0, Math.min(novaPos, maxPx));
+                let novaPos = Math.max(0, Math.min(MetrologyEngine.xInicialCursor + deltaX, 60 * MetrologyEngine.viewBoxPxPerMm));
                 MetrologyEngine.mmPrecisoGlobal = Math.round((novaPos / MetrologyEngine.viewBoxPxPerMm) / 0.05) * 0.05;
                 MetrologyEngine.posicaoAtualPx = MetrologyEngine.mmPrecisoGlobal * MetrologyEngine.viewBoxPxPerMm;
-
                 document.getElementById('cursor-movel').setAttribute('transform', `translate(${MetrologyEngine.posicaoAtualPx}, 0)`);
                 document.getElementById('leitura-mm').textContent = MetrologyEngine.mmPrecisoGlobal.toFixed(2).replace('.', ',');
-            };
-
-            svgEl.addEventListener('mousedown', aoIniciar);
-            window.addEventListener('mousemove', aoMovimentar);
+            });
             window.addEventListener('mouseup', () => MetrologyEngine.arrastando = false);
-            svgEl.addEventListener('touchstart', aoIniciar, { passive: true });
-            window.addEventListener('touchmove', aoMovimentar, { passive: false });
-            window.addEventListener('touchend', () => MetrologyEngine.arrastando = false);
         });
     </script>
 </body>
