@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Paquímetro Analógico Pro - Responsivo</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 10px;
+        }
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            text-align: center;
+            box-sizing: border-box;
+        }
+        /* O segredo da responsividade sem quebrar a escala está aqui */
+        .svg-wrapper {
+            width: 100%;
+            position: relative;
+            touch-action: none; /* Bloqueia o scroll nativo ao arrastar */
+            user-select: none;
+        }
+        svg {
+            width: 100%;
+            height: auto;
+            display: block;
+            background: #fdfdfd;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            cursor: grab;
+        }
+        svg:active { cursor: grabbing; }
+        .painel-leitura {
+            margin-top: 15px;
+            padding: 12px;
+            background: #f1f5f9;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            color: #334155;
+        }
+        .valor-destaque {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #2563eb;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Paquímetro Analógico Responsivo (0,05 mm)</h2>
+        
+        <div class="svg-wrapper">
+            <svg id="paquimetro" viewBox="0 0 900 250"></svg>
+        </div>
+
+        <div class="painel-leitura">
+            Medição: <span id="leitura-mm" class="valor-destaque">0,00</span> mm
+        </div>
+    </div>
+
+    <script>
+        const svg = document.getElementById('paquimetro');
+        
+        // --- COORDENADAS INTERNAS FIXAS (Independentes do ecrã) ---
+        const PIXELS_POR_MM = 10;   
+        const RESOLUCAO = 0.05;     
+        const MAX_MM = 60;          
+        const LIMITE_MAX_PX = MAX_MM * PIXELS_POR_MM;
+        const ZERO_X = 90; // Onde começa o zero na régua
+
+        let arrastando = false;
+        let xInicialCursor = 0;
+        let xInicialLocal = 0;
+        let posicaoAtualPx = 0;
+
+        function desenharInstrumento() {
+            // Escala Principal (Fixa)
+            let htmlFixo = `
+                <rect x="20" y="80" width="860" height="60" fill="#cbd5e1" stroke="#94a3b8" stroke-width="2"/>
+                <path d="M 20 80 L 20 230 L 60 230 L 90 140 L 90 80 Z" fill="#cbd5e1" stroke="#94a3b8" stroke-width="2"/>
+            `;
+
+            for (let i = 0; i <= 75; i++) {
+                let x = ZERO_X + (i * PIXELS_POR_MM);
+                let altura = (i % 10 === 0) ? 22 : (i % 5 === 0 ? 16 : 10);
+                htmlFixo += `<line x1="${x}" y1="140" x2="${x}" y2="${140 - altura}" stroke="#1e293b" stroke-width="1.5"/>`;
+                if (i % 10 === 0) {
+                    htmlFixo += `<text x="${x}" y="112" font-size="12" font-family="sans-serif" text-anchor="middle" font-weight="bold" fill="#334155">${i/10}</text>`;
+                }
+            }
+
+            // Cursor Móvel (Nônio)
+            const larguraDivisaoNonioPx = 0.95 * PIXELS_POR_MM; 
+            let htmlMovel = `
+                <g id="cursor-movel" transform="translate(0,0)">
+                    <path d="M 90 80 L 90 230 L 130 230 L 160 140 L 320 140 L 320 80 Z" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2"/>
+                    <rect x="90" y="140" width="230" height="45" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2"/>
+            `;
+
+            for (let i = 0; i <= 20; i++) {
+                let x = ZERO_X + (i * larguraDivisaoNonioPx);
+                let altura = (i % 2 === 0) ? 16 : 10;
+                htmlMovel += `<line x1="${x}" y1="140" x2="${x}" y2="${140 + altura}" stroke="#dc2626" stroke-width="1.5"/>`;
+                if (i % 2 === 0) {
+                    htmlMovel += `<text x="${x}" y="172" font-size="11" fill="#1e293b" font-family="sans-serif" text-anchor="middle" font-weight="bold">${i/2}</text>`;
+                }
+            }
+            htmlMovel += `</g>`;
+
+            svg.innerHTML = htmlFixo + htmlMovel;
+        }
+
+        desenharInstrumento();
+
+        const cursorMovel = document.getElementById('cursor-movel');
+        const leituraMm = document.getElementById('leitura-mm');
+
+        // --- SOLUÇÃO DO ERRO DE ESCALA: CONVERSOR DE COORDENADAS TELA -> SVG ---
+        function obterCoordenadasLocaisSVG(e) {
+            const ponto = svg.createSVGPoint();
+            // Deteta se é toque ou rato
+            if (e.touches && e.touches.length > 0) {
+                ponto.x = e.touches[0].clientX;
+                ponto.y = e.touches[0].clientY;
+            } else {
+                ponto.x = e.clientX;
+                ponto.y = e.clientY;
+            }
+            // Transforma as coordenadas do ecrã do telemóvel na escala exata da viewBox do SVG
+            const matrizInversa = svg.getScreenCTM().inverse();
+            return ponto.matrixTransform(matrizInversa);
+        }
+
+        // --- EVENTOS CORRIGIDOS ---
+        svg.addEventListener('mousedown', iniciarArrasto);
+        window.addEventListener('mousemove', arrastar);
+        window.addEventListener('mouseup', pararArrasto);
+
+        svg.addEventListener('touchstart', iniciarArrasto, { passive: false });
+        window.addEventListener('touchmove', arrastar, { passive: false });
+        window.addEventListener('touchend', pararArrasto);
+
+        function iniciarArrasto(e) {
+            arrastando = true;
+            const pontoLocal = obterCoordenadasLocaisSVG(e);
+            xInicialLocal = pontoLocal.x;
+            xInicialCursor = posicaoAtualPx;
+        }
+
+        function arrastar(e) {
+            if (!arrastando) return;
+            if (e.cancelable) e.preventDefault(); // Impede tremores no telemóvel
+
+            const pontoLocal = obterCoordenadasLocaisSVG(e);
+            const deltaX = pontoLocal.x - xInicialLocal; // Delta calculado puramente no ambiente SVG
+            
+            let novaPosicaoPx = xInicialCursor + deltaX;
+            if (novaPosicaoPx < 0) novaPosicaoPx = 0;
+            if (novaPosicaoPx > LIMITE_MAX_PX) novaPosicaoPx = LIMITE_MAX_PX;
+
+            // Ajuste estrito de resolução
+            let mmBruto = novaPosicaoPx / PIXELS_POR_MM;
+            let mmPreciso = Math.round(mmBruto / RESOLUCAO) * RESOLUCAO;
+
+            posicaoAtualPx = mmPreciso * PIXELS_POR_MM;
+
+            // Renderização e atualização
+            cursorMovel.setAttribute('transform', `translate(${posicaoAtualPx}, 0)`);
+            leituraMm.textContent = mmPreciso.toFixed(2).replace('.', ',');
+        }
+
+        function pararArrasto() {
+            arrastando = false;
+        }
+    </script>
+</body>
+</html>
