@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="ubuntu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Módulo 2 — Motores e HMI/IHM</title>
+  <link rel="stylesheet" href="../../estilos.css" />
+  <link rel="stylesheet" href="curso-clp.css" />
+  <script src="../patches.js" defer></script>
+  <script src="../../tema-inteligente.js"></script>
+</head>
+<body>
+  <nav class="navbar" role="navigation" aria-label="Navegação principal">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">⚙️ Módulo 2</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Início</a></li>
+        <li><a href="modulo-02-hmi-ihm.html" class="active">Módulo 2</a></li>
+        <li><a href="modulo-02-hmi-ihm-pratico.html">Prática</a></li>
+      </ul>
+      <div class="theme-switcher theme-switch">
+        <button data-theme="ubuntu" class="theme-btn active" title="Ubuntu">🦧</button>
+        <button data-theme="fedora" class="theme-btn" title="Fedora">🌿</button>
+        <button data-theme="winxp" class="theme-btn" title="Windows">🪟</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-shell">
+    <section class="lesson-hero">
+      <h1>Módulo 2 — Motores, botões e HMI/IHM</h1>
+      <p>Agora que você já sabe pensar em lógica, vamos colocar uma máquina para “andar de verdade”. O foco aqui é criar um comando simples de motor e depois colocar esse comando em uma tela de operador com HMI/IHM.</p>
+      <div class="lesson-nav">
+        <a href="index.html">Voltar ao curso</a>
+        <a href="modulo-02-hmi-ihm-pratico.html">Prática passo a passo</a>
+      </div>
+    </section>
+
+    <section class="lesson-card">
+      <h3>1. O que é um motor no CLP?</h3>
+      <p>O motor é uma saída. Quando o CLP recebe um comando correto, ele liga a saída que aciona o motor. Em termos práticos, o motor representa a ação da máquina.</p>
+      <div class="callout">
+        <strong>Regra simples:</strong> botão/condição certa = saída ligada = motor funcionando.
+      </div>
+    </section>
+
+    <section class="lesson-card" style="margin-top:1rem;">
+      <h3>2. O que é HMI/IHM?</h3>
+      <p>HMI, ou IHM, é a tela de interface homem-máquina. Ela é usada para o operador interagir com a máquina sem ficar mexendo no painel elétrico. A tela mostra estados, botões e mensagens.</p>
+      <ul>
+        <li>Iniciar motor.</li>
+        <li>Parar motor.</li>
+        <li>Mostrar se o motor está ligado ou desligado.</li>
+        <li>Mostrar alarmes e avisos.</li>
+      </ul>
+    </section>
+
+    <section class="lesson-card" style="margin-top:1rem;">
+      <h3>3. Ligando o motor com lógica de partida e parada</h3>
+      <p>O motor só liga quando a lógica permitir. Em um exemplo simples:</p>
+      <ul>
+        <li>Botão de partida pressionado.</li>
+        <li>Botão de parada não acionado.</li>
+        <li>Proteção sem alarme.</li>
+      </ul>
+      <p>Se tudo estiver correto, a saída do motor liga.</p>
+    </section>
+
+    <section class="lesson-card" style="margin-top:1rem;">
+      <h3>4. Tags recomendadas</h3>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Tag</th><th>Tipo</th><th>Função</th></tr>
+          <tr><td>Botao_Iniciar</td><td>Bool</td><td>Comando de partida</td></tr>
+          <tr><td>Botao_Parar</td><td>Bool</td><td>Comando de parada</td></tr>
+          <tr><td>Sensor_Seguranca</td><td>Bool</td><td>Proteção ativa</td></tr>
+          <tr><td>Motor_Principal</td><td>Bool</td><td>Saída para ligar o motor</td></tr>
+          <tr><td>Estado_Motor</td><td>Bool</td><td>Mostra se o motor está ligado</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <section class="lesson-card" style="margin-top:1rem;">
+      <h3>5. Como a HMI ajuda</h3>
+      <p>A HMI não substitui a lógica do CLP. Ela apenas dá uma cara amigável para o operador. O CLP continua sendo o cérebro, mas a HMI vira a “janela” para ele.</p>
+      <div class="callout success">
+        <strong>Resumo mental:</strong> CLP decide; HMI mostra e envia comandos.
+      </div>
+    </section>
+
+    <section class="summary-box" style="margin-top:1rem;">
+      <h3>Resumo do módulo</h3>
+      <ul>
+        <li>Motor é uma saída do CLP.</li>
+        <li>HMI/IHM é a tela de operação.</li>
+        <li>O operador usa a tela para comandar e acompanhar a máquina.</li>
+        <li>Na prova, lembre-se: o CLP decide, a HMI comunica.</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

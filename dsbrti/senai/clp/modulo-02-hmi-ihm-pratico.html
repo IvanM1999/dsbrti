@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="ubuntu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Módulo 2 — Prática HMI/IHM</title>
+  <link rel="stylesheet" href="../../estilos.css" />
+  <link rel="stylesheet" href="curso-clp.css" />
+  <script src="../patches.js" defer></script>
+  <script src="../../tema-inteligente.js"></script>
+</head>
+<body>
+  <nav class="navbar" role="navigation" aria-label="Navegação principal">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">⚙️ Prática HMI</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Início</a></li>
+        <li><a href="modulo-02-hmi-ihm.html">Módulo 2</a></li>
+        <li><a href="modulo-02-hmi-ihm-pratico.html" class="active">Prática</a></li>
+      </ul>
+      <div class="theme-switcher theme-switch">
+        <button data-theme="ubuntu" class="theme-btn active" title="Ubuntu">🦧</button>
+        <button data-theme="fedora" class="theme-btn" title="Fedora">🌿</button>
+        <button data-theme="winxp" class="theme-btn" title="Windows">🪟</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-shell">
+    <section class="lesson-hero">
+      <h1>Prática — Criando um painel simples de motor com HMI/IHM</h1>
+      <p>Este passo a passo é o tipo de coisa que costuma cair na prova e também no laboratório. Você vai aprender a pensar como se estivesse montando um painel real de operador.</p>
+      <div class="lesson-nav">
+        <a href="modulo-02-hmi-ihm.html">Voltar ao módulo</a>
+        <a href="index.html">Voltar ao curso</a>
+      </div>
+    </section>
+
+    <section class="lesson-card">
+      <h3>1. Objetivo</h3>
+      <p>Criar um comando de motor com botão de partida, botão de parada e uma tela simples para o operador ver o estado do motor.</p>
+    </section>
+
+    <section class="lesson-card" style="margin-top:1rem;">
+      <h3>2. Passo a passo no TIA Portal</h3>
+      <div class="step-list">
+        <div class="step-box"><strong>Passo 1:</strong> Crie as tags do motor: <code>Botao_Iniciar</code>, <code>Botao_Parar</code>, <code>Motor_Principal</code> e <code>Estado_Motor</code>.</div>
+        <div class="step-box"><strong>Passo 2:</strong> Crie uma FC chamada <code>Controle_Motor</code>.</div>
+        <div class="step-box"><strong>Passo 3:</strong> Monte a lógica Ladder: o motor liga quando o botão de partida for acionado e a parada não estiver ativada.</div>
+        <div class="step-box"><strong>Passo 4:</strong> Crie uma tela HMI/IHM e adicione botões visuais para partida e parada.</div>
+        <div class="step-box"><strong>Passo 5:</strong> Ligue os botões da tela às tags do CLP.</div>
+        <div class="step-box"><strong>Passo 6:</strong> Mostre o estado do motor na tela com uma lâmpada ou um texto “Ligado/Desligado”.</div>
+      </div>
+    </section>
+
+    <section class="lesson-card" style="margin-top:1rem;">
+      <h3>3. O que a HMI faz na prática?</h3>
+      <ul>
+        <li>Envia comandos para o CLP.</li>
+        <li>Mostra o estado do processo.</li>
+        <li>Facilita a operação do usuário.</li>
+      </ul>
+    </section>
+
+    <section class="lesson-card" style="margin-top:1rem;">
+      <h3>4. Exercício de prova</h3>
+      <p>Explique a diferença entre CLP e HMI.</p>
+      <div class="callout warning">
+        <strong>Resposta esperada:</strong> o CLP controla a lógica e a HMI permite a interação do operador com a máquina.
+      </div>
+    </section>
+
+    <section class="summary-box" style="margin-top:1rem;">
+      <h3>Resumo da prática</h3>
+      <ul>
+        <li>O motor é uma saída do CLP.</li>
+        <li>A HMI é a interface do operador.</li>
+        <li>O operador manda comandos e acompanha o estado na tela.</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>
