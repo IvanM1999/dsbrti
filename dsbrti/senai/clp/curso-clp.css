@@ -1,0 +1,186 @@
+:root {
+  --lesson-accent: var(--primary, #E95420);
+  --lesson-accent-2: var(--secondary, #77216f);
+  --lesson-surface: rgba(255,255,255,0.06);
+  --lesson-border: rgba(255,255,255,0.12);
+}
+
+body {
+  min-height: 100vh;
+}
+
+.page-shell {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 5rem;
+}
+
+.lesson-hero {
+  padding: 2rem;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, rgba(255,255,255,0.09), rgba(255,255,255,0.03));
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-layer);
+  margin-bottom: 1.5rem;
+}
+
+.lesson-hero h1 {
+  font-size: clamp(1.8rem, 3vw, 2.7rem);
+  margin-bottom: 0.75rem;
+}
+
+.lesson-hero p {
+  color: var(--text-sec);
+  max-width: 760px;
+}
+
+.lesson-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 1rem 0 1.5rem;
+}
+
+.lesson-nav a {
+  background: rgba(255,255,255,0.05);
+  padding: 0.55rem 0.9rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+
+.lesson-nav a:hover {
+  background: var(--bg-hover);
+}
+
+.lesson-card, .lesson-grid > div, .exam-box, .callout, .summary-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.2rem 1.25rem;
+  box-shadow: var(--shadow-stroke), var(--shadow-layer);
+}
+
+.lesson-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.lesson-grid h3, .lesson-card h3, .summary-box h3 {
+  margin-bottom: 0.6rem;
+  color: var(--text);
+}
+
+.lesson-grid ul, .lesson-card ul, .lesson-card ol, .callout ul, .callout ol {
+  padding-left: 1.25rem;
+}
+
+.lesson-grid li, .lesson-card li, .callout li {
+  margin-bottom: 0.4rem;
+  color: var(--text-sec);
+}
+
+.callout {
+  margin: 1.25rem 0;
+  border-left: 4px solid var(--primary);
+  background: rgba(233,84,32,0.12);
+}
+
+.warning {
+  border-left-color: var(--warning);
+  background: rgba(241,196,15,0.12);
+}
+
+.success {
+  border-left-color: var(--secondary);
+  background: rgba(135,207,63,0.12);
+}
+
+.step-list {
+  display: grid;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.step-box {
+  padding: 1rem;
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.step-box strong {
+  color: var(--primary);
+}
+
+.table-wrap {
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 320px;
+}
+
+th, td {
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background: rgba(255,255,255,0.06);
+  color: var(--text);
+}
+
+code, pre {
+  font-family: 'Cascadia Code', 'Fira Code', monospace;
+}
+
+code {
+  background: rgba(0,0,0,0.25);
+  padding: 0.2rem 0.35rem;
+  border-radius: 4px;
+}
+
+pre {
+  background: rgba(0,0,0,0.34);
+  padding: 0.9rem 1rem;
+  border-radius: var(--radius-sm);
+  overflow-x: auto;
+  color: #f8f8f8;
+  line-height: 1.5;
+}
+
+.pill {
+  display: inline-block;
+  margin: 0.2rem 0.25rem 0.2rem 0;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border);
+  color: var(--text-sec);
+  font-size: 0.85rem;
+}
+
+.exam-box {
+  margin-top: 1.5rem;
+}
+
+.exam-box ol {
+  padding-left: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .lesson-hero {
+    padding: 1.25rem;
+  }
+
+  .lesson-nav {
+    flex-direction: column;
+  }
+}

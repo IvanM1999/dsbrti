@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="ubuntu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aula 1 — Pensamento Lógico</title>
+  <link rel="stylesheet" href="../../estilos.css" />
+  <link rel="stylesheet" href="curso-clp.css" />
+  <script src="../patches.js" defer></script>
+  <script src="../../tema-inteligente.js"></script>
+</head>
+<body>
+  <nav class="navbar" role="navigation" aria-label="Navegação principal">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">⚙️ Aula 1</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Início</a></li>
+        <li><a href="aula-01-pensamento-logico.html" class="active">Aula 1</a></li>
+        <li><a href="aula-02-fluxogramas.html">Aula 2</a></li>
+        <li><a href="aula-03-portas-logicas.html">Aula 3</a></li>
+      </ul>
+      <div class="theme-switcher theme-switch">
+        <button data-theme="ubuntu" class="theme-btn active" title="Ubuntu">🦧</button>
+        <button data-theme="fedora" class="theme-btn" title="Fedora">🌿</button>
+        <button data-theme="winxp" class="theme-btn" title="Windows">🪟</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-shell">
+    <section class="lesson-hero">
+      <h1>Aula 1 — Pensamento lógico e o papel do CLP</h1>
+      <p>Começamos pelo básico. Se você não entende o problema, não dá para programar. O CLP é o cérebro da máquina. Ele recebe sinais, pensa e manda ações.</p>
+      <div class="lesson-nav">
+        <a href="index.html">Voltar ao curso</a>
+        <a href="aula-02-fluxogramas.html">Próxima aula</a>
+      </div>
+    </section>
+
+    <section class="lesson-card">
+      <h3>1. O que é um CLP?</h3>
+      <p>O CLP, ou Controlador Lógico Programável, é um equipamento usado para controlar máquinas. Ele lê sinais de sensores e botões, faz a lógica e aciona motores, válvulas, sirenes e lâmpadas.</p>
+      <div class="callout">
+        <strong>Forma simples de pensar:</strong> entrada = o que a máquina “percebe”; saída = o que a máquina “faz”.
+      </div>
+    </section>
+
+    <section class="lesson-card" style="margin-top:1rem;">
+      <h3>2. Entradas e saídas</h3>
+      <ul>
+        <li><strong>Entrada:</strong> botão, sensor, chave, alarme.</li>
+        <li><strong>Saída:</strong> motor, válvula, lâmpada, relé, sirene.</li>
+      </ul>
+      <p>Exemplo: se o operador aperta o botão e a grade está fechada, então a válvula liga.</p>
+    </section>
+
+    <section class="lesson-card" style="margin-top:1rem;">
+      <h3>3. Como pensar em lógica</h3>
+      <p>Na automação, quase tudo vira uma frase do tipo:</p>
+      <pre>Se X acontecer e Y acontecer, então Z acontece.</pre>
+      <p>Exemplo:</p>
+      <pre>Se o botão iniciar for pressionado e o sensor de segurança estiver ativo, então o motor liga.</pre>
+      <div class="callout warning">
+        <strong>Na prova:</strong> lembre-se de separar o problema em: condição, ação e exceção.
+      </div>
+    </section>
+
+    <section class="lesson-card" style="margin-top:1rem;">
+      <h3>4. Exemplo prático de máquina</h3>
+      <div class="step-list">
+        <div class="step-box"><strong>Passo 1:</strong> O operador aperta o botão de iniciar.</div>
+        <div class="step-box"><strong>Passo 2:</strong> O sensor confirma que a proteção está fechada.</div>
+        <div class="step-box"><strong>Passo 3:</strong> O CLP liga a saída.</div>
+      </div>
+    </section>
+
+    <section class="lesson-card" style="margin-top:1rem;">
+      <h3>5. Exercício rápido</h3>
+      <ol>
+        <li>Qual é a entrada?</li>
+        <li>Qual é a saída?</li>
+        <li>Qual é a condição?</li>
+      </ol>
+      <p>Resposta esperada: entrada = botão e sensor; saída = motor; condição = tudo certo para ligar.</p>
+    </section>
+
+    <section class="summary-box" style="margin-top:1rem;">
+      <h3>Resumo da aula</h3>
+      <ul>
+        <li>CLP = cérebro da máquina.</li>
+        <li>Entrada = percebimento do ambiente.</li>
+        <li>Saída = ação da máquina.</li>
+        <li>A lógica é sempre: se acontece isso, então faz isso.</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

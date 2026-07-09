@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="ubuntu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aula 5 — TIA Portal</title>
+  <link rel="stylesheet" href="../../estilos.css" />
+  <link rel="stylesheet" href="curso-clp.css" />
+  <script src="../patches.js" defer></script>
+  <script src="../../tema-inteligente.js"></script>
+</head>
+<body>
+  <nav class="navbar" role="navigation" aria-label="Navegação principal">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">⚙️ Aula 5</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Início</a></li>
+        <li><a href="aula-01-pensamento-logico.html">Aula 1</a></li>
+        <li><a href="aula-02-fluxogramas.html">Aula 2</a></li>
+        <li><a href="aula-03-portas-logicas.html">Aula 3</a></li>
+        <li><a href="aula-04-ladder-e-reles.html">Aula 4</a></li>
+        <li><a href="aula-05-tia-portal-tags-e-fc.html" class="active">Aula 5</a></li>
+      </ul>
+      <div class="theme-switcher theme-switch">
+        <button data-theme="ubuntu" class="theme-btn active" title="Ubuntu">🦧</button>
+        <button data-theme="fedora" class="theme-btn" title="Fedora">🌿</button>
+        <button data-theme="winxp" class="theme-btn" title="Windows">🪟</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-shell">
+    <section class="lesson-hero">
+      <h1>Aula 5 — TIA Portal: criar tags, FC e Main</h1>
+      <p>Chegou a hora de passar da teoria para a prática. No TIA Portal, você cria a estrutura do programa e organiza os blocos.</p>
+      <div class="lesson-nav">
+        <a href="aula-04-ladder-e-reles.html">Aula anterior</a>
+        <a href="aula-06-exercicio-prensa.html">Próxima aula</a>
+      </div>
+    </section>
+
+    <section class="lesson-card">
+      <h3>1. O que são tags?</h3>
+      <p>Tags são apelidos para os sinais do CLP. Em vez de lembrar de endereços, você usa nomes claros.</p>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Nome</th><th>Tipo</th><th>Endereço</th><th>Função</th></tr>
+          <tr><td>Botao_Iniciar</td><td>Bool</td><td>%I0.0</td><td>Botão de partida</td></tr>
+          <tr><td>Sensor_Grade</td><td>Bool</td><td>%I0.1</td><td>Proteção fechada</td></tr>
+          <tr><td>Valvula_Prensa</td><td>Bool</td><td>%Q0.0</td><td>Saída da prensa</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <section class="lesson-card" style="margin-top:1rem;">
+      <h3>2. Como criar uma FC</h3>
+      <ol>
+        <li>Abra o Project Tree.</li>
+        <li>Entre em Program blocks.</li>
+        <li>Crie um novo bloco do tipo FC.</li>
+        <li>Dê o nome <code>Controle_Da_Prensa</code>.</li>
+      </ol>
+    </section>
+
+    <section class="lesson-card" style="margin-top:1rem;">
+      <h3>3. Como usar o Main</h3>
+      <p>O Main é o bloco que o CLP executa automaticamente. Você deve chamar a FC dentro dele.</p>
+      <div class="callout success">
+        <strong>Passo final:</strong> arraste a FC para dentro do Main para que ela seja executada.
+      </div>
+    </section>
+
+    <section class="summary-box" style="margin-top:1rem;">
+      <h3>Resumo da aula</h3>
+      <ul>
+        <li>Tags organizam os sinais.</li>
+        <li>FC guarda a lógica.</li>
+        <li>Main executa a lógica.</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

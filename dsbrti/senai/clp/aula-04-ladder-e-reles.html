@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="ubuntu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aula 4 — Ladder e Relés</title>
+  <link rel="stylesheet" href="../../estilos.css" />
+  <link rel="stylesheet" href="curso-clp.css" />
+  <script src="../patches.js" defer></script>
+  <script src="../../tema-inteligente.js"></script>
+</head>
+<body>
+  <nav class="navbar" role="navigation" aria-label="Navegação principal">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">⚙️ Aula 4</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Início</a></li>
+        <li><a href="aula-01-pensamento-logico.html">Aula 1</a></li>
+        <li><a href="aula-02-fluxogramas.html">Aula 2</a></li>
+        <li><a href="aula-03-portas-logicas.html">Aula 3</a></li>
+        <li><a href="aula-04-ladder-e-reles.html" class="active">Aula 4</a></li>
+      </ul>
+      <div class="theme-switcher theme-switch">
+        <button data-theme="ubuntu" class="theme-btn active" title="Ubuntu">🦧</button>
+        <button data-theme="fedora" class="theme-btn" title="Fedora">🌿</button>
+        <button data-theme="winxp" class="theme-btn" title="Windows">🪟</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-shell">
+    <section class="lesson-hero">
+      <h1>Aula 4 — Ladder: a linguagem do CLP</h1>
+      <p>Agora a lógica deixa de ser abstrata e vira um desenho parecido com um circuito elétrico. Essa é a linguagem Ladder.</p>
+      <div class="lesson-nav">
+        <a href="aula-03-portas-logicas.html">Aula anterior</a>
+        <a href="aula-05-tia-portal-tags-e-fc.html">Próxima aula</a>
+      </div>
+    </section>
+
+    <section class="lesson-card">
+      <h3>1. O que é Ladder?</h3>
+      <p>Ladder é uma linguagem visual. A corrente “anda” da esquerda para a direita. Se o caminho estiver livre, a bobina liga.</p>
+      <div class="callout">
+        <strong>Regra:</strong> contatos abrem/fecham o caminho; bobina representa a saída.
+      </div>
+    </section>
+
+    <section class="lesson-card" style="margin-top:1rem;">
+      <h3>2. Símbolos básicos</h3>
+      <ul>
+        <li><strong>[ ]</strong> = contato aberto.</li>
+        <li><strong>[/]</strong> = contato fechado.</li>
+        <li><strong>( )</strong> = bobina.</li>
+      </ul>
+    </section>
+
+    <section class="lesson-card" style="margin-top:1rem;">
+      <h3>3. Como montar a lógica</h3>
+      <pre>Botão iniciar -> grade fechada -> saída motor</pre>
+      <p>Se o botão estiver pressionado e a grade estiver fechada, o motor liga.</p>
+    </section>
+
+    <section class="summary-box" style="margin-top:1rem;">
+      <h3>Resumo da aula</h3>
+      <ul>
+        <li>Ladder é a linguagem visual do CLP.</li>
+        <li>Contatos controlam o caminho.</li>
+        <li>Bobina é a ação final.</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

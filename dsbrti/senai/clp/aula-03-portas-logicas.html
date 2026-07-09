@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="ubuntu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aula 3 — Portas Lógicas</title>
+  <link rel="stylesheet" href="../../estilos.css" />
+  <link rel="stylesheet" href="curso-clp.css" />
+  <script src="../patches.js" defer></script>
+  <script src="../../tema-inteligente.js"></script>
+</head>
+<body>
+  <nav class="navbar" role="navigation" aria-label="Navegação principal">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">⚙️ Aula 3</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Início</a></li>
+        <li><a href="aula-01-pensamento-logico.html">Aula 1</a></li>
+        <li><a href="aula-02-fluxogramas.html">Aula 2</a></li>
+        <li><a href="aula-03-portas-logicas.html" class="active">Aula 3</a></li>
+      </ul>
+      <div class="theme-switcher theme-switch">
+        <button data-theme="ubuntu" class="theme-btn active" title="Ubuntu">🦧</button>
+        <button data-theme="fedora" class="theme-btn" title="Fedora">🌿</button>
+        <button data-theme="winxp" class="theme-btn" title="Windows">🪟</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-shell">
+    <section class="lesson-hero">
+      <h1>Aula 3 — Portas lógicas: AND, OR e NOT</h1>
+      <p>As portas lógicas são a linguagem da decisão. Elas aparecem em circuitos e também na lógica de programação de CLP.</p>
+      <div class="lesson-nav">
+        <a href="aula-02-fluxogramas.html">Aula anterior</a>
+        <a href="aula-04-ladder-e-reles.html">Próxima aula</a>
+      </div>
+    </section>
+
+    <section class="lesson-card">
+      <h3>1. AND</h3>
+      <p>Para o resultado ligar, as duas condições precisam estar verdadeiras.</p>
+      <pre>A e B = Saída</pre>
+      <div class="table-wrap">
+        <table>
+          <tr><th>A</th><th>B</th><th>Saída</th></tr>
+          <tr><td>0</td><td>0</td><td>0</td></tr>
+          <tr><td>1</td><td>0</td><td>0</td></tr>
+          <tr><td>0</td><td>1</td><td>0</td></tr>
+          <tr><td>1</td><td>1</td><td>1</td></tr>
+        </table>
+      </div>
+      <p>Exemplo: botão iniciar AND grade fechada.</p>
+    </section>
+
+    <section class="lesson-card" style="margin-top:1rem;">
+      <h3>2. OR</h3>
+      <p>Se qualquer uma das condições estiver verdadeira, o resultado pode acontecer.</p>
+      <pre>A ou B = Saída</pre>
+      <div class="table-wrap">
+        <table>
+          <tr><th>A</th><th>B</th><th>Saída</th></tr>
+          <tr><td>0</td><td>0</td><td>0</td></tr>
+          <tr><td>1</td><td>0</td><td>1</td></tr>
+          <tr><td>0</td><td>1</td><td>1</td></tr>
+          <tr><td>1</td><td>1</td><td>1</td></tr>
+        </table>
+      </div>
+      <p>Exemplo: abrir a porta OR apertar emergência.</p>
+    </section>
+
+    <section class="lesson-card" style="margin-top:1rem;">
+      <h3>3. NOT</h3>
+      <p>O NOT inverte o valor. Se a condição é verdadeira, o resultado vira falso.</p>
+      <pre>Não A = Saída</pre>
+      <div class="table-wrap">
+        <table>
+          <tr><th>A</th><th>Saída</th></tr>
+          <tr><td>0</td><td>1</td></tr>
+          <tr><td>1</td><td>0</td></tr>
+        </table>
+      </div>
+      <p>Exemplo: se o sensor de fim de curso não estiver acionado, a máquina pode continuar.</p>
+    </section>
+
+    <section class="summary-box" style="margin-top:1rem;">
+      <h3>Resumo da aula</h3>
+      <ul>
+        <li>AND = precisa de tudo verdadeiro.</li>
+        <li>OR = basta uma condição verdadeira.</li>
+        <li>NOT = inverte o sinal.</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>
