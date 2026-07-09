@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="ubuntu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Beta CLP — Módulo 6</title>
+  <link rel="stylesheet" href="../../estilos.css" />
+  <link rel="stylesheet" href="estilo-beta-clp.css" />
+  <script src="../patches.js" defer></script>
+  <script src="../../tema-inteligente.js"></script>
+  <script src="beta-clp.js" defer></script>
+</head>
+<body>
+  <nav class="navbar" role="navigation" aria-label="Navegação principal">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">🎮 Beta CLP</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Início</a></li>
+        <li><a href="modulo-05-tia-portal-tags-fc-main.html">Módulo 5</a></li>
+        <li><a href="modulo-06-motores-e-hmi.html" class="active">Módulo 6</a></li>
+      </ul>
+      <div class="theme-switcher theme-switch">
+        <button data-theme="ubuntu" class="theme-btn active" title="Ubuntu">🦧</button>
+        <button data-theme="fedora" class="theme-btn" title="Fedora">🌿</button>
+        <button data-theme="winxp" class="theme-btn" title="Windows">🪟</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-shell">
+    <section class="lesson-hero">
+      <span class="badge-level">Missão 6 · Motores e HMI/IHM</span>
+      <h1>Comando de motor e interface para operador</h1>
+      <p>Este é o módulo mais prático. Você aprende a ligar um motor com lógica e a mostrar esse estado em uma tela de operação.</p>
+      <div class="lesson-nav">
+        <a href="modulo-05-tia-portal-tags-fc-main.html">Anterior</a>
+        <a href="modulo-07-revisao-e-simulado.html">Próximo módulo</a>
+      </div>
+    </section>
+
+    <section class="mission-card" data-mission-id="m6">
+      <div class="mission-head">
+        <div>
+          <span class="badge-level">Objetivo</span>
+          <h3>Controlar um motor e mostrar o estado na HMI</h3>
+        </div>
+        <div class="xp-pill">+180 XP</div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-bar"><span class="progress-fill"></span></div>
+        <span class="progress-label">0% concluído</span>
+      </div>
+      <ul class="checklist">
+        <li><label><input type="checkbox" data-progress-item>Sei o papel do motor numa máquina.</label></li>
+        <li><label><input type="checkbox" data-progress-item>Entendo a função da HMI/IHM.</label></li>
+        <li><label><input type="checkbox" data-progress-item>Consigo listar os comandos básicos de operação.</label></li>
+      </ul>
+    </section>
+
+    <section class="lesson-card">
+      <h3>1. O motor como saída</h3>
+      <p>O motor é uma saída do CLP. Quando a lógica for verdadeira, a saída é acionada e o motor liga.</p>
+    </section>
+
+    <section class="lesson-card" style="margin-top:1rem;">
+      <h3>2. A HMI/IHM</h3>
+      <p>A HMI é a tela do operador. Ela mostra estado, recebe comandos e ajuda na interação com a máquina.</p>
+    </section>
+
+    <section class="lesson-card" style="margin-top:1rem;">
+      <h3>3. Comandos básicos</h3>
+      <ul>
+        <li>Partida</li>
+        <li>Parada</li>
+        <li>Monitoramento do estado</li>
+        <li>Alarme</li>
+      </ul>
+    </section>
+
+    <section class="challenge-box">
+      <h3>Desafio da missão</h3>
+      <p>Explique a diferença entre o que o CLP faz e o que a HMI faz.</p>
+    </section>
+
+    <section class="summary-box">
+      <h3>Resumo para prova</h3>
+      <ul>
+        <li>Motor = ação física.</li>
+        <li>HMI = interface do operador.</li>
+        <li>CLP = decisão e controle.</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

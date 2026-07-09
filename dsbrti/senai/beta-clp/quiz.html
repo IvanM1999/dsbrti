@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="ubuntu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Beta CLP — Quiz Premium</title>
+  <link rel="stylesheet" href="../../estilos.css" />
+  <link rel="stylesheet" href="estilo-beta-clp.css" />
+  <script src="../patches.js" defer></script>
+  <script src="../../tema-inteligente.js"></script>
+  <script src="beta-clp.js" defer></script>
+</head>
+<body>
+  <nav class="navbar" role="navigation" aria-label="Navegação principal">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">🎮 Beta CLP</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Início</a></li>
+        <li><a href="quiz.html" class="active">Quiz</a></li>
+      </ul>
+      <div class="theme-switcher theme-switch">
+        <button data-theme="ubuntu" class="theme-btn active" title="Ubuntu">🦧</button>
+        <button data-theme="fedora" class="theme-btn" title="Fedora">🌿</button>
+        <button data-theme="winxp" class="theme-btn" title="Windows">🪟</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-shell">
+    <section class="lesson-hero">
+      <span class="badge-level">Modo desafio</span>
+      <h1>Quiz de revisão premium</h1>
+      <p>Teste sua compreensão com questões rápidas, claras e voltadas para o que é mais importante na prova.</p>
+    </section>
+
+    <section class="lesson-card">
+      <h3>1. O que é um CLP?</h3>
+      <div class="quiz-options">
+        <label><input type="radio" name="q1" value="a"> Um software de edição de imagem.</label>
+        <label><input type="radio" name="q1" value="b"> Um controlador lógico programável.</label>
+        <label><input type="radio" name="q1" value="c"> Um tipo de motor.</label>
+      </div>
+      <p id="q1-feedback" class="feedback"></p>
+    </section>
+
+    <section class="lesson-card" style="margin-top:1rem;">
+      <h3>2. Qual é a função da HMI/IHM?</h3>
+      <div class="quiz-options">
+        <label><input type="radio" name="q2" value="a"> Mostrar e receber comandos do operador.</label>
+        <label><input type="radio" name="q2" value="b"> Substituir o CLP.</label>
+        <label><input type="radio" name="q2" value="c"> Ligar o motor sozinho.</label>
+      </div>
+      <p id="q2-feedback" class="feedback"></p>
+    </section>
+
+    <section class="lesson-card" style="margin-top:1rem;">
+      <h3>3. Em Ladder, a bobina representa:</h3>
+      <div class="quiz-options">
+        <label><input type="radio" name="q3" value="a"> Uma entrada.</label>
+        <label><input type="radio" name="q3" value="b"> Uma saída ou ação.</label>
+        <label><input type="radio" name="q3" value="c"> Um sensor.</label>
+      </div>
+      <p id="q3-feedback" class="feedback"></p>
+    </section>
+  </main>
+</body>
+</html>

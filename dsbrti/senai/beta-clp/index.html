@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="estilo-beta-clp.css" />
   <script src="../patches.js" defer></script>
   <script src="../../tema-inteligente.js"></script>
+  <script src="beta-clp.js" defer></script>
 </head>
 <body>
   <nav class="navbar" role="navigation" aria-label="Navegação principal">
@@ -15,6 +16,7 @@
       <a href="index.html" class="nav-brand">🎮 Beta CLP</a>
       <ul class="nav-links">
         <li><a href="index.html" class="active">Início</a></li>
+        <li><a href="quiz.html">Quiz</a></li>
         <li><a href="../clp/index.html">Curso Base</a></li>
         <li><a href="guia-de-estrategia.md">Estratégia</a></li>
       </ul>
@@ -33,19 +35,94 @@
         <h1>Beta CLP: aprender automação sem medo</h1>
         <p>Esta versão transforma o conteúdo de CLP em uma jornada mais envolvente para alunos iniciantes, com linguagem clara, desafios curtos, progresso visual e foco em prova.</p>
         <div class="hero-actions">
-          <a href="../clp/index.html" class="text-link">Ir para o curso base</a>
+          <a href="quiz.html" class="text-link">Começar quiz</a>
+          <a href="../clp/index.html" class="text-link secondary">Ir para o curso base</a>
           <a href="guia-de-estrategia.md" class="text-link secondary">Ver estratégia</a>
         </div>
       </div>
       <div class="hero-panel">
         <h3>Progresso da jornada</h3>
-        <div class="xp-bar"><span style="width: 24%"></span></div>
+        <div class="xp-bar"><span style="width: 68%"></span></div>
+        <div class="hero-stats">
+          <div><strong>7</strong><span>Módulos</span></div>
+          <div><strong>4</strong><span>Desafios</span></div>
+          <div><strong>1</strong><span>Quiz</span></div>
+        </div>
         <ul>
           <li>Missão 1: entender o CLP e o problema</li>
           <li>Missão 2: montar fluxogramas</li>
           <li>Missão 3: aprender Ladder e portas lógicas</li>
           <li>Missão 4: criar uma interface HMI/IHM simples</li>
         </ul>
+      </div>
+    </section>
+
+    <section class="advanced-dashboard" aria-label="Painel de evolução do aluno">
+      <article class="advanced-card main-card">
+        <div class="dashboard-head">
+          <div>
+            <span class="badge-level">Sistema premium</span>
+            <h3>🧭 Painel de evolução</h3>
+          </div>
+          <div class="xp-chip" id="xp-chip">120 XP</div>
+        </div>
+        <div class="xp-bar"><span id="xp-bar-fill" style="width: 33%"></span></div>
+        <div class="dashboard-stats">
+          <div><strong id="level-value">Nível 1</strong><span>Nível</span></div>
+          <div><strong id="streak-value">1 dia</strong><span>Sequência</span></div>
+          <div><strong id="next-badge">0/3</strong><span>Badges</span></div>
+        </div>
+      </article>
+
+      <article class="advanced-card">
+        <h3>🎖️ Badges</h3>
+        <div class="badge-list" id="badge-list">
+          <div class="badge-item unlocked">
+            <strong>Primeiro passo</strong>
+            <span>Complete o primeiro bloco</span>
+          </div>
+          <div class="badge-item">
+            <strong>Pensador lógico</strong>
+            <span>Complete dois blocos</span>
+          </div>
+          <div class="badge-item">
+            <strong>Mestre do CLP</strong>
+            <span>Complete todos os blocos</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="advanced-card">
+        <h3>🏅 Ranking de avanço</h3>
+        <ol class="ranking-list">
+          <li class="ranking-entry highlight"><span>Você</span><strong id="ranking-position">#3</strong></li>
+          <li class="ranking-entry"><span>Ana</span><strong>#2</strong></li>
+          <li class="ranking-entry"><span>Joaquim</span><strong>#1</strong></li>
+        </ol>
+      </article>
+    </section>
+
+    <section class="advanced-card study-card" aria-label="Blocos de estudo">
+      <div class="study-header">
+        <div>
+          <h3>🧱 Blocos de estudo</h3>
+          <p>Marque cada bloco para ganhar XP e desbloquear novas conquistas.</p>
+        </div>
+        <span class="study-tip">+80 XP por bloco</span>
+      </div>
+      <div class="study-block-list">
+        <label class="study-block">
+          <input type="checkbox" data-block="fundamentos" />
+          <span><strong>Bloco 1</strong> · Fundamentos do CLP</span>
+        </label>
+        <label class="study-block">
+          <input type="checkbox" data-block="logica" />
+          <span><strong>Bloco 2</strong> · Pensamento lógico e entradas/saídas</span>
+        </label>
+        <label class="study-block">
+          <input type="checkbox" data-block="hmi" />
+          <span><strong>Bloco 3</strong> · Ladder, relés e HMI/IHM</span>
+        </label>
       </div>
     </section>
 
@@ -75,14 +152,18 @@
     </section>
 
     <section class="lesson-card" style="margin-top:1.25rem;">
-      <h3>🛣️ Próximos passos do projeto</h3>
-      <ol>
-        <li>Refinar o tom de voz para ficar mais acessível e profissional.</li>
-        <li>Transformar cada aula em missão com objetivo, desafio e recompensa.</li>
-        <li>Adicionar quizzes e exercícios focados no conteúdo dos PPTs do professor.</li>
-        <li>Montar a versão final com navegação mais fluida entre teoria e prática.</li>
-      </ol>
+      <h3>🗺️ Módulos da jornada beta</h3>
+      <ul>
+        <li><a href="modulo-01-introducao-ao-clp.html">Módulo 1 — Introdução ao CLP</a></li>
+        <li><a href="modulo-02-pensamento-logico-e-entradas-saidas.html">Módulo 2 — Pensamento lógico e entradas/saídas</a></li>
+        <li><a href="modulo-03-fluxogramas-e-portas-logicas.html">Módulo 3 — Fluxogramas e portas lógicas</a></li>
+        <li><a href="modulo-04-ladder-e-reles.html">Módulo 4 — Ladder e relés</a></li>
+        <li><a href="modulo-05-tia-portal-tags-fc-main.html">Módulo 5 — TIA Portal, tags, FC e Main</a></li>
+        <li><a href="modulo-06-motores-e-hmi.html">Módulo 6 — Motores e HMI/IHM</a></li>
+        <li><a href="modulo-07-revisao-e-simulado.html">Módulo 7 — Revisão para prova</a></li>
+      </ul>
     </section>
+
   </main>
 </body>
 </html>
