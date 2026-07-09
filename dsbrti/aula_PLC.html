@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial para Iniciantes: Programando uma Prensa no TIA Portal</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f7f6;
+        }
+        h1 {
+            color: #005A9C;
+            text-align: center;
+            font-size: 2.5em;
+        }
+        h2 {
+            color: #0073CF;
+            border-bottom: 2px solid #0073CF;
+            padding-bottom: 5px;
+            margin-top: 40px;
+        }
+        h3 {
+            color: #004a80;
+        }
+        p {
+            font-size: 1.1em;
+        }
+        .step-box {
+            background-color: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-left: 6px solid #005A9C;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #e6f2ff;
+            color: #005A9C;
+        }
+        .highlight {
+            font-weight: bold;
+            color: #d9534f;
+        }
+        .tip {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-left: 5px solid #5bc0de;
+            margin: 15px 0;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Guia Definitivo: Programando sua Primeira Prensa no TIA Portal</h1>
+    <p>Bem-vindo! Se você é totalmente leigo e nunca mexeu no software da Siemens, não se preocupe. Este guia foi feito para pegar na sua mão e mostrar clique por clique como transformar a lógica da nossa apostila em um programa de verdade.</p>
+
+    <div class="step-box">
+        <h2>Passo 1: O que a máquina precisa fazer? (Entendendo o problema)</h2>
+        <p>Antes de clicar em qualquer lugar, precisamos saber o que vai entrar de sinal no nosso CLP e o que vai sair. Pense no CLP como o cérebro da máquina.</p>
+        <ul>
+            <li><strong>Sinais que entram (Entradas / Inputs):</strong> Botões que o operador aperta e sensores que detectam coisas.</li>
+            <li><strong>Sinais que saem (Saídas / Outputs):</strong> O que faz a máquina se mexer, neste caso, a válvula que empurra o cilindro da prensa para baixo.</li>
+        </ul>
+        <p>A prensa só pode descer se o operador apertar o botão <strong>E</strong> a grade estiver fechada. Ela deve subir se bater no fim de curso, se a grade abrir ou se apertarem a emergência.</p>
+    </div>
+
+    <div class="step-box">
+        <h2>Passo 2: Dando "Apelidos" aos Fios (Criando as PLC Tags)</h2>
+        <p>O CLP não entende nomes como "Botão" ou "Sensor". Ele entende endereços elétricos como <code>%I0.1</code>. Para não termos que decorar esses códigos, nós criamos as "Tags" (etiquetas), que são apelidos amigáveis.</p>
+        <ol>
+            <li>No menu do lado esquerdo do TIA Portal (chamado <em>Project tree</em>), procure pela pasta do seu CLP (geralmente tem um ícone verde escrito <strong>PLC_1</strong>).</li>
+            <li>Clique na setinha ao lado dele para expandir as opções.</li>
+            <li>Abra a pasta <strong>PLC tags</strong> e dê um clique duplo em <strong>Show all tags</strong> (Mostrar todas as tags).</li>
+            <li>Vai abrir uma tabela vazia no centro da tela. Preencha exatamente assim:</li>
+        </ol>
+
+        <table>
+            <tr>
+                <th>Name (O apelido)</th>
+                <th>Data Type (O tipo)</th>
+                <th>Address (O pino do CLP)</th>
+                <th>Para que serve?</th>
+            </tr>
+            <tr>
+                <td>Botao_Emergencia</td>
+                <td>Bool (Liga/Desliga)</td>
+                <td>%I0.1</td>
+                <td>Botão vermelho de parar tudo.</td>
+            </tr>
+            <tr>
+                <td>Botao_S3_Iniciar</td>
+                <td>Bool</td>
+                <td>%I0.3</td>
+                <td>Botão verde que o operador aperta para descer a prensa.</td>
+            </tr>
+            <tr>
+                <td>Sensor_B1_Grade</td>
+                <td>Bool</td>
+                <td>%I0.4</td>
+                <td>Avisa se a grade de proteção está fechada.</td>
+            </tr>
+            <tr>
+                <td>Sensor_B2_Cilindro</td>
+                <td>Bool</td>
+                <td>%I0.5</td>
+                <td>Avisa que a prensa chegou lá embaixo (fim de curso).</td>
+            </tr>
+            <tr>
+                <td>Valvula_M0_Prensa</td>
+                <td>Bool</td>
+                <td>%Q0.0 (Note que é Q, de Saída)</td>
+                <td>O atuador que empurra a prensa pra baixo.</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="step-box">
+        <h2>Passo 3: Criando a "Folha de Papel" para programar (Criando uma FC)</h2>
+        <p>Nunca devemos jogar tudo de qualquer jeito no bloco principal do CLP. Vamos criar uma "pastinha" (Função) só para a lógica da prensa.</p>
+        <ol>
+            <li>Volte no menu do lado esquerdo (<em>Project tree</em>).</li>
+            <li>Expanda a pasta <strong>Program blocks</strong> (Blocos de programa).</li>
+            <li>Dê um clique duplo em <strong>Add new block</strong> (Adicionar novo bloco).</li>
+            <li>Uma janela vai pular na tela. Clique no botão azul escrito <strong>FC (Function)</strong>.</li>
+            <li>Na caixinha "Name", digite <code>Controle_Da_Prensa</code>.</li>
+            <li>Confirme se em "Language" está escrito <strong>LAD</strong> (Linguagem Ladder).</li>
+            <li>Clique em <strong>OK</strong>. Uma tela em branco com uma linha verde (Network 1) vai aparecer.</li>
+        </ol>
+    </div>
+
+    <div class="step-box">
+        <h2>Passo 4: Desenhando a Lógica (O Código Ladder)</h2>
+        <p>A linguagem Ladder parece um esquema elétrico. A energia vem da esquerda e precisa chegar até a direita para ligar a prensa. Vamos colocar os obstáculos (contatos) no caminho.</p>
+        <div class="tip">
+            <strong>Dica de Ouro:</strong> <br>
+            - Contato Aberto <strong>[ ]</strong>: Só deixa a energia passar se o sensor/botão for ativado.<br>
+            - Contato Fechado <strong>[/]</strong>: Deixa a energia passar o tempo todo, e <em>CORTA</em> a energia se o sensor for ativado.<br>
+            - Bobina <strong>( )</strong>: É a máquina que queremos ligar. Fica sempre no final, na direita.
+        </div>
+        
+        <h3>Desenhando a Linha:</h3>
+        <ol>
+            <li>Olhe para a parte superior da tela. Você verá símbolos de <strong>[ ]</strong>, <strong>[/]</strong> e <strong>( )</strong>.</li>
+            <li>Clique no símbolo do <strong>Contato Aberto [ ]</strong> e arraste para a linha verde. Digite em cima dele: <code>Botao_S3_Iniciar</code> e dê Enter.</li>
+            <li>Arraste outro <strong>Contato Aberto [ ]</strong> e coloque do lado direito dele. Digite: <code>Sensor_B1_Grade</code>. (Isso obriga a grade estar fechada).</li>
+            <li>Arraste um <strong>Contato Fechado [/]</strong> e coloque do lado direito. Digite: <code>Sensor_B2_Cilindro</code>. (Isso deixa a energia passar até a prensa bater no fundo. Quando bater, o contato abre e desliga tudo).</li>
+            <li>Arraste um <strong>Contato Aberto [ ]</strong> e coloque do lado direito. Digite: <code>Botao_Emergencia</code>. (Como o botão físico já é do tipo fechado na fábrica, no software usamos o aberto. Se baterem na emergência na vida real, o sinal some e a energia do software corta).</li>
+            <li>Por fim, arraste uma <strong>Bobina ( )</strong> para o final da linha. Digite: <code>Valvula_M0_Prensa</code>.</li>
+        </ol>
+
+        <h3>Fazendo o "Selo" (Para o operador não precisar ficar segurando o botão):</h3>
+        <ol>
+            <li>Clique na linha verde bem ANTES do <code>Botao_S3_Iniciar</code>.</li>
+            <li>Na barra superior, clique no botão <strong>Open Branch</strong> (uma setinha preta apontando para baixo). Uma perninha vai nascer para baixo.</li>
+            <li>Arraste um <strong>Contato Aberto [ ]</strong> para essa linha de baixo. Digite o nome da própria saída: <code>Valvula_M0_Prensa</code>.</li>
+            <li>Clique no final dessa linha de baixo, e depois clique no botão <strong>Close Branch</strong> (uma setinha apontando para cima). Feche a linha conectando logo APÓS o <code>Botao_S3_Iniciar</code>.</li>
+            <li><span class="highlight">Pronto! Agora, se a prensa ligar, a energia passa por baixo, pelo próprio contato dela, e o operador pode soltar o botão S3.</span></li>
+        </ol>
+    </div>
+
+    <div class="step-box">
+        <h2>Passo 5: Avisando o Cérebro Principal (Chamando a FC no Main)</h2>
+        <p>Se você não fizer isso, o CLP vai ignorar tudo o que você fez! O CLP só lê automaticamente um bloco chamado <strong>Main [OB1]</strong>.</p>
+        <ol>
+            <li>No menu esquerdo, dentro de <strong>Program blocks</strong>, dê um duplo clique no bloco verde <strong>Main [OB1]</strong>.</li>
+            <li>Ele vai abrir vazio.</li>
+            <li>Vá novamente no menu esquerdo, clique em cima da sua FC <code>Controle_Da_Prensa</code> (não dê duplo clique, apenas segure o clique).</li>
+            <li>Arraste-a para dentro da linha verde (Network 1) do Main [OB1] e solte.</li>
+            <li>Ela vai aparecer como uma caixinha quadrada. Agora o CLP sabe que precisa executar a sua lógica da prensa!</li>
+        </ol>
+    </div>
+
+    <div class="step-box">
+        <h2>Passo 6: Mandar para a Máquina e Testar</h2>
+        <ol>
+            <li>Na barra lá em cima, clique no ícone de <strong>Compile</strong> (um papelzinho com uns números 0 e 1 e uma setinha). O TIA Portal vai verificar se você não digitou nenhum nome errado. A barrinha de baixo tem que ficar verde.</li>
+            <li>Clique no ícone <strong>Download to device</strong> (um computadorzinho com uma seta azul apontando para um CLP).</li>
+            <li>Uma janela vai abrir para procurar o CLP na rede. Siga clicando em <strong>Load</strong> (Carregar) até terminar.</li>
+            <li>Para ver o programa funcionando na tela do computador, clique no ícone do óculos (<strong>Monitoring on/off</strong>) lá em cima. Tudo o que tiver energia elétrica passando vai ficar com a linha verde brilhante!</li>
+        </ol>
+    </div>
+
+</body>
+</html>
