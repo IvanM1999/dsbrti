@@ -108,6 +108,20 @@
     </section>
 
     <section class="curriculo-section" style="margin-top: 3rem;">
+      <div class="card" style="margin-bottom: 1.5rem; padding: 1.5rem;">
+        <h2 style="margin-bottom: 0.5rem;">🎓 Cursos integrados</h2>
+        <p style="margin-bottom: 1rem; color: var(--text-sec);">Escolha o caminho de aprendizagem e o sistema exibirá automaticamente o curso atual em toda a plataforma.</p>
+        <div class="dashboard" style="margin-top: 1rem; gap: 1rem;">
+          <button class="text-link" data-course-option="clp-base" type="button" style="justify-content: flex-start;">Curso CLP Base</button>
+          <button class="text-link" data-course-option="clp-beta" type="button" style="justify-content: flex-start;">Curso CLP Beta Premium</button>
+        </div>
+        <div style="margin-top: 1rem; padding: 0.9rem 1rem; border-radius: var(--radius); background: rgba(255,255,255,0.04); border: 1px solid var(--border);">
+          <strong data-current-course-badge>Curso atual: Curso CLP Base</strong>
+          <p style="margin-top: 0.35rem; color: var(--text-sec);" data-current-course-description>...</p>
+          <a href="senai/clp/index.html" class="text-link" data-current-course-link style="margin-top: 0.7rem;">Abrir Curso CLP Base</a>
+        </div>
+      </div>
+
       <h2>🚀 Hub de Projetos & Extensão Acadêmica</h2>
       <p style="margin-bottom: 1.5rem;">Sistemas públicos desenvolvidos com foco em acessibilidade, triagem automatizada
         e utilidade social:</p>
@@ -190,6 +204,7 @@
 
   <!-- Scripts de Controle de Escopo Limpo -->
   <script src="senai/core.js"></script>
+  <script src="curso-atual.js"></script>
 
   <!-- Camada protetiva e inicialização limpa -->
   <script>
