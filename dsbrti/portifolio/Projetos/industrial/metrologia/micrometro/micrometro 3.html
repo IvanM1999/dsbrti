@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Micrômetro Mitutoyo Profissional</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --panel-bg: #1e293b;
+            --accent: #10b981;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 900px;
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Topbar do Aplicativo */
+        .app-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .app-title h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+
+        .app-title p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Área Principal do Micrômetro */
+        .viewer-section {
+            padding: 30px 20px;
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        canvas {
+            display: block;
+            border-radius: 8px;
+            cursor: grab;
+        }
+
+        canvas:active {
+            cursor: grabbing;
+        }
+
+        /* Painel de Controle e Leitura */
+        .dashboard {
+            padding: 20px;
+            background: #111827;
+            border-top: 1px solid var(--border);
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Display Digital de Medição */
+        .display-container {
+            background: #030712;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .display-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
+
+        .display-value {
+            font-size: 2.25rem;
+            font-weight: 800;
+            font-family: 'Courier New', Courier, monospace;
+            color: var(--accent);
+            text-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+        }
+
+        /* Controles de Ajuste */
+        .controls-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .slider-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        input[type="range"] {
+            flex-grow: 1;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            outline: none;
+            accent-color: var(--accent);
+            cursor: pointer;
+        }
+
+        .btn-group {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 6px;
+        }
+
+        .btn {
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 8px 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background: var(--border);
+            border-color: var(--text-muted);
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="app-header">
+            <div class="app-title">
+                <h1>Micrômetro Mitutoyo Virtual</h1>
+                <p>Resolução: 0.001mm | Faixa: 0 - 25mm (Arraste o tambor para girar)</p>
+            </div>
+        </div>
+
+        <div class="viewer-section">
+            <canvas id="microCanvas" width="800" height="240"></canvas>
+        </div>
+
+        <div class="dashboard">
+            <div class="display-container">
+                <div class="display-label">Leitura Atual</div>
+                <div class="display-value" id="valDigital">0.000 mm</div>
+            </div>
+
+            <div class="controls-container">
+                <div class="slider-row">
+                    <span style="font-size: 0.85rem; color: var(--text-muted); min-width: 40px;">Curso:</span>
+                    <input type="range" id="sliderMedida" min="0" max="25" step="0.001" value="0">
+                </div>
+                
+                <div class="btn-group">
+                    <button class="btn" onclick="passo(-0.1)">-0.1</button>
+                    <button class="btn" onclick="passo(-0.01)">-0.01</button>
+                    <button class="btn" onclick="passo(-0.001)">-0.001</button>
+                    <button class="btn" onclick="passo(0.001)">+0.001</button>
+                    <button class="btn" onclick="passo(0.01)">+0.01</button>
+                    <button class="btn" onclick="passo(0.1)">+0.1</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('microCanvas');
+        const ctx = canvas.getContext('2d');
+        const slider = document.getElementById('sliderMedida');
+        const valDigital = document.getElementById('valDigital');
+
+        let valorAtual = 0.000;
+
+        // --- SISTEMA DE ARRASTAR COM MOUSE/TOQUE ---
+        let isDragging = false;
+        let lastY = 0;
+
+        canvas.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            lastY = e.clientY;
+        });
+
+        window.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const deltaY = e.clientY - lastY;
+            lastY = e.clientY;
+            
+            // Sensibilidade do arraste (arrastar para cima/baixo gira o tambor)
+            let novoValor = valorAtual + (deltaY * 0.001);
+            setValor(novoValor);
+        });
+
+        // Touch para celular
+        canvas.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            lastY = e.touches[0].clientY;
+        });
+
+        window.addEventListener('touchend', () => {
+            isDragging = false;
+        });
+
+        window.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            const deltaY = e.touches[0].clientY - lastY;
+            lastY = e.touches[0].clientY;
+            let novoValor = valorAtual + (deltaY * 0.001);
+            setValor(novoValor);
+        });
+
+        // Slider Listener
+        slider.addEventListener('input', (e) => {
+            setValor(parseFloat(e.target.value));
+        });
+
+        function passo(inc) {
+            setValor(valorAtual + inc);
+        }
+
+        function setValor(val) {
+            valorAtual = Math.max(0, Math.min(25, val));
+            slider.value = valorAtual;
+            valDigital.innerText = valorAtual.toFixed(3) + " mm";
+            desenhar();
+        }
+
+        // --- MECÂNICA DE RENDERIZAÇÃO REALISTA ---
+        function desenhar() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const W = canvas.width;
+            const H = canvas.height;
+            const CY = H / 2; // Centro Vertical
+
+            // Cálculo das sub-leituras do micrômetro
+            const valorNoTambor = (valorAtual % 0.5); 
+            const divisaoTambor = Math.floor((valorNoTambor + 0.0001) / 0.01);
+
+            // --- 1. RENDERIZAR BAINHA FIXA (SLEEVE) ---
+            const sleeveW = 400;
+            const sleeveX = 100;
+            const sleeveH = 90;
+            const sleeveY = CY - sleeveH / 2;
+
+            // Gradiente metálico cromado da Bainha
+            let gradSleeve = ctx.createLinearGradient(0, sleeveY, 0, sleeveY + sleeveH);
+            gradSleeve.addColorStop(0, '#e2e8f0');
+            gradSleeve.addColorStop(0.3, '#ffffff');
+            gradSleeve.addColorStop(0.7, '#cbd5e1');
+            gradSleeve.addColorStop(1, '#94a3b8');
+
+            ctx.fillStyle = gradSleeve;
+            ctx.fillRect(sleeveX, sleeveY, sleeveW, sleeveH);
+            ctx.strokeStyle = '#475569';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(sleeveX, sleeveY, sleeveW, sleeveH);
+
+            // Linha de Fé (Horizontal Central)
+            ctx.strokeStyle = '#0f172a';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(sleeveX, CY);
+            ctx.lineTo(sleeveX + sleeveW, CY);
+            ctx.stroke();
+
+            // --- 2. ESCALAS NA BAINHA (Métrico e Meio Métrico) ---
+            const mmPx = 11; // Proporção de pixels por milímetro no zoom
+            ctx.fillStyle = '#0f172a';
+            ctx.font = 'bold 12px Consolas, monospace';
+            ctx.textAlign = 'center';
+
+            for (let i = 0; i <= 25; i++) {
+                let posX = sleeveX + 30 + (i * mmPx);
+
+                // Traços inferiores (Milímetros inteiros: 0, 1, 2, 3...)
+                ctx.beginPath();
+                ctx.moveTo(posX, CY);
+                ctx.lineTo(posX, CY + 15);
+                ctx.stroke();
+
+                if (i % 5 === 0) {
+                    ctx.fillText(i, posX, CY + 28);
+                }
+
+                // Traços superiores (Meios milímetros: 0.5, 1.5...)
+                if (i < 25) {
+                    ctx.beginPath();
+                    ctx.moveTo(posX + (mmPx / 2), CY);
+                    ctx.lineTo(posX + (mmPx / 2), CY - 10);
+                    ctx.stroke();
+                }
+            }
+
+            // --- 3. LINHAS DO NÔNIO (VERNIER DE 0.001) ---
+            // Linhas horizontais superiores paralelas à linha de fé
+            ctx.lineWidth = 1;
+            ctx.textAlign = 'left';
+            ctx.font = '9px Consolas, monospace';
+            for (let v = 0; v <= 9; v += 2) {
+                let posY = CY - 18 - (v * 2.5);
+                ctx.beginPath();
+                ctx.moveTo(sleeveX + 20, posY);
+                ctx.lineTo(sleeveX + 280, posY);
+                ctx.stroke();
+                ctx.fillText(v, sleeveX + 285, posY + 3);
+            }
+
+            // --- 4. TAMBOR GIRATÓRIO (THIMBLE) ---
+            // Ele avança lateralmente de forma proporcional à medida
+            const tamborX = sleeveX + 30 + (valorAtual * mmPx);
+            const tamborW = 240;
+            const tamborH = 104;
+            const tamborY = CY - tamborH / 2;
+
+            // Borda Chanfrada Esquerda do Tambor
+            const chanfroW = 20;
+
+            // Corpo Principal do Tambor (Cromado fosco com ranhuras no fim)
+            let gradTambor = ctx.createLinearGradient(0, tamborY, 0, tamborY + tamborH);
+            gradTambor.addColorStop(0, '#94a3b8');
+            gradTambor.addColorStop(0.2, '#f8fafc');
+            gradTambor.addColorStop(0.5, '#cbd5e1');
+            gradTambor.addColorStop(0.8, '#cbd5e1');
+            gradTambor.addColorStop(1, '#64748b');
+
+            ctx.fillStyle = gradTambor;
+            ctx.fillRect(tamborX, tamborY, tamborW, tamborH);
+
+            // Borda Chanfrada (Metálica brilhante)
+            let gradChanfro = ctx.createLinearGradient(0, tamborY, 0, tamborY + tamborH);
+            gradChanfro.addColorStop(0, '#cbd5e1');
+            gradChanfro.addColorStop(0.3, '#ffffff');
+            gradChanfro.addColorStop(0.7, '#94a3b8');
+            gradChanfro.addColorStop(1, '#475569');
+
+            ctx.fillStyle = gradChanfro;
+            ctx.beginPath();
+            ctx.moveTo(tamborX, tamborY);
+            ctx.lineTo(tamborX - chanfroW, tamborY + 6);
+            ctx.lineTo(tamborX - chanfroW, tamborY + tamborH - 6);
+            ctx.lineTo(tamborX, tamborY + tamborH);
+            ctx.closePath();
+            ctx.fill();
+
+            // Contornos do Tambor
+            ctx.strokeStyle = '#334155';
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(tamborX, tamborY, tamborW, tamborH);
+            ctx.beginPath();
+            ctx.moveTo(tamborX - chanfroW, tamborY + 6);
+            ctx.lineTo(tamborX - chanfroW, tamborY + tamborH - 6);
+            ctx.stroke();
+
+            // Textura Recartilhada (Fim do Tambor)
+            ctx.fillStyle = '#475569';
+            ctx.fillRect(tamborX + tamborW - 60, tamborY + 2, 58, tamborH - 4);
+
+            // --- 5. GRADUAÇÕES DA ESCALA DO TAMBOR (0 a 50) ---
+            // As linhas dobram verticalmente simulando uma superfície cilíndrica (efeito 3D)
+            ctx.strokeStyle = '#0f172a';
+            ctx.fillStyle = '#0f172a';
+            ctx.font = 'bold 11px Arial';
+            ctx.textAlign = 'right';
+
+            const variacaoDivisao = (valorNoTambor / 0.01); 
+            const espacamentoY = 3.6; // Escala vertical dos traços do tambor
+
+            for (let t = -12; t <= 12; t++) {
+                let linhaAlvo = Math.round(variacaoDivisao) - t;
+                let linhaValida = (linhaAlvo + 50) % 50;
+
+                // Cálculo não-linear (efeito 3D cilíndrico)
+                let offsetY = t * espacamentoY + ((variacaoDivisao % 1) * espacamentoY);
+                let angulo = (offsetY / (tamborH / 2)) * (Math.PI / 2); // Ângulo cilíndrico
+                
+                if (Math.abs(angulo) < 1.3) { // Corta as linhas na curvatura extrema do cilindro
+                    let distY = CY - (tamborH / 2) * Math.sin(angulo);
+
+                    // Traço de medição na borda chanfrada
+                    ctx.beginPath();
+                    ctx.moveTo(tamborX, distY);
+                    ctx.lineTo(tamborX - 10, distY);
+                    ctx.stroke();
+
+                    // Números da escala a cada 5 centésimos
+                    if (linhaValida % 5 === 0) {
+                        ctx.fillText(linhaValida.toString().padStart(2, '0'), tamborX - 12, distY + 4);
+                    }
+                }
+            }
+        }
+
+        // Inicializa o simulador em 0.000mm
+        setValor(0);
+    </script>
+</body>
+</html>
