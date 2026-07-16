@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial para Iniciantes: Simulando e Testando a Prensa no TIA Portal</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 950px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f7f6;
+        }
+        h1 {
+            color: #8E44AD;
+            text-align: center;
+            font-size: 2.5em;
+        }
+        h2 {
+            color: #9B59B6;
+            border-bottom: 2px solid #9B59B6;
+            padding-bottom: 5px;
+            margin-top: 40px;
+        }
+        h3 {
+            color: #6C3483;
+        }
+        p {
+            font-size: 1.1em;
+        }
+        .step-box {
+            background-color: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-left: 6px solid #8E44AD;
+        }
+        ol li {
+            margin-bottom: 10px;
+        }
+        .highlight {
+            font-weight: bold;
+            color: #C0392B;
+        }
+        .tip {
+            background-color: #F4ECF7;
+            padding: 15px;
+            border-left: 5px solid #8E44AD;
+            margin: 15px 0;
+            font-style: italic;
+        }
+        .button-sim {
+            background-color: #eee;
+            border: 1px solid #ccc;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Guia Definitivo: Simulação e Testes (PLCSIM)</h1>
+    <p>Você escreveu o código da Prensa Hidráulica, mas como saber se ele funciona sem ter a máquina ligada ao computador? É aqui que entra o <strong>S7-PLCSIM</strong>, um programa que vem junto com o TIA Portal e finge ser um CLP real dentro do seu computador.</p>
+
+    <div class="step-box">
+        <h2>Passo 1: Ligando a Máquina Virtual</h2>
+        <p>Antes de testar, precisamos enviar o nosso código para esse "CLP fantasma".</p>
+        <ol>
+            <li>Na parte superior do TIA Portal, clique no nome da sua pasta principal do projeto (ex: <strong>PLC_1</strong>).</li>
+            <li>Na barra de ferramentas lá em cima, procure um ícone de um <strong>computador pequeno com um símbolo de "Play" azul</strong>. Este é o botão <em>Start Simulation</em>.</li>
+            <li>Vai aparecer um aviso a dizer que outras janelas online serão fechadas. Clique em <strong>OK</strong>.</li>
+            <li>O TIA Portal vai abrir uma nova janela pequenina, que se parece com a frente de um CLP. É o seu PLCSIM! Deixe-o quietinho no canto do ecrã.</li>
+            <li>Uma janela de <em>Download</em> vai aparecer no TIA Portal. Clique em <strong>Load</strong> (Carregar).</li>
+            <li>Na última janela, onde diz "Action" (Ação), mude a opção para <strong>Start Module</strong> (Iniciar o CLP) e clique em <strong>Finish</strong>.</li>
+        </ol>
+        <p><span class="highlight">Pronto!</span> O seu CLP virtual está ligado e com o seu programa da prensa lá dentro.</p>
+    </div>
+
+    <div class="step-box">
+        <h2>Passo 2: Colocando os Óculos de Raio-X (Monitoring)</h2>
+        <p>Agora precisamos ver a "eletricidade" virtual a passar pelo nosso código Ladder.</p>
+        <ol>
+            <li>Abra o bloco da sua prensa (a sua <code>FC_Controle_Prensa</code>).</li>
+            <li>Na barra superior de ferramentas, procure um ícone que parece um <strong>par de óculos com um pequeno triângulo verde de Play</strong> (<em>Monitoring On/Off</em>). Clique nele!</li>
+            <li>A mágica acontece: as linhas do seu programa vão ficar a verde ou a azul.
+                <ul>
+                    <li><span style="color: #27AE60; font-weight: bold;">Linha Verde:</span> Significa que a energia está a passar por ali (Sinal 1).</li>
+                    <li><span style="color: #2980B9; font-weight: bold;">Linha Azul (tracejada):</span> Significa que não há energia naquele ponto (Sinal 0).</li>
+                </ul>
+            </li>
+        </ol>
+    </div>
+
+    <div class="step-box">
+        <h2>Passo 3: Como "Apertar Botões" com o Rato (Modify to 1)</h2>
+        <p>Como não temos os botões físicos da prensa para apertar, vamos usar o rato para enganar o CLP e dizer-lhe que os sensores foram ativados.</p>
+        
+        <div class="tip">
+            <strong>Diferença entre Modify e Force:</strong><br>
+            Para botões e sensores virtuais normais, usamos o comando <strong>Modify (Modificar)</strong>. A opção <em>Force (Forçar)</em> é usada apenas em casos extremos de manutenção para "obrigar" uma saída física do CLP real a ligar, ignorando totalmente a segurança do programa. Como somos iniciantes e estamos no simulador, use <strong>SEMPRE</strong> o Modify!
+        </div>
+
+        <ol>
+            <li><strong>Para Ligar (Apertar o botão):</strong> Clique com o <em>botão direito do rato</em> em cima do contato que quer ativar no Ladder (ex: <code>Botao_S3_Iniciar</code>).</li>
+            <li>No menu que aparecer, vá a <span class="button-sim">Modify</span> e depois clique em <span class="button-sim">Modify to 1</span>. Vai ver a energia (linha verde) a passar por ele!</li>
+            <li><strong>Para Desligar (Soltar o botão):</strong> Como o botão S3 é de carregar e soltar (pulso), não o pode deixar ligado para sempre! Clique novamente com o botão direito nele, vá a <span class="button-sim">Modify</span> e clique em <span class="button-sim">Modify to 0</span>.</li>
+        </ol>
+    </div>
+
+    <div class="step-box">
+        <h2>Passo 4: O Teste Prático da Nossa Prensa</h2>
+        <p>Vamos seguir o fluxograma e testar todas as seguranças que programámos:</p>
+
+        <h3>Cenário 1: Ligando a Prensa normalmente</h3>
+        <ol>
+            <li>Primeiro, ligue a energia principal: Faça <em>Modify to 1</em> no <code>Botao_Emergencia</code> (lembre-se, ele é fisicamente fechado, a energia tem de estar a passar o tempo todo).</li>
+            <li>Feche a grade de segurança: Faça <em>Modify to 1</em> no <code>Sensor_B1_Grade</code>. A energia agora está presa logo antes do botão de iniciar.</li>
+            <li>Aperte o botão: Faça <em>Modify to 1</em> no <code>Botao_S3_Iniciar</code>.</li>
+            <li><strong>Veja o que acontece:</strong> A energia vai até ao final e a bobina da <code>Valvula_M0_Prensa</code> fica verde (Ligou!).</li>
+            <li>Solte o botão: Faça <em>Modify to 0</em> no <code>Botao_S3_Iniciar</code>. A válvula deve <strong>continuar ligada</strong> porque a energia vai passar por baixo, pelo selo!</li>
+        </ol>
+
+        <h3>Cenário 2: Fim do curso da Prensa</h3>
+        <ol>
+            <li>Com a prensa a descer (válvula verde), simule que ela chegou ao fundo.</li>
+            <li>Faça <em>Modify to 1</em> no contato <code>Sensor_B2_Cilindro</code>.</li>
+            <li>Como ele é um contato fechado <code>[/]</code>, ao receber o sinal 1, ele <strong>Abre</strong>. A linha verde quebra e a Válvula desliga! (Teste aprovado).</li>
+            <li>Faça <em>Modify to 0</em> no Sensor B2 para simular que a prensa já subiu de novo.</li>
+        </ol>
+
+        <h3>Cenário 3: O Teste do Desespero (Emergência)</h3>
+        <ol>
+            <li>Ligue a prensa novamente (Modify to 1 no S3 e depois Modify to 0).</li>
+            <li>Enquanto a válvula estiver verde, simule que alguém abriu a grade da frente! Faça <em>Modify to 0</em> no <code>Sensor_B1_Grade</code>.</li>
+            <li>A válvula tem de desligar instantaneamente. Se desligou, parabéns! O seu código é seguro e você já é capaz de testar e simular máquinas antes de as montar no mundo real!</li>
+        </ol>
+    </div>
+
+</body>
+</html>
