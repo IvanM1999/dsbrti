@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Simulador de Micrômetro | DestinyServicesBR</title>
+    <style>
+        :root {
+            --bg-body: #f8fafc;
+            --panel-bg: #ffffff;
+            --destiny-blue: #0f172a;
+            --accent: #dc2626;
+            --border-color: #cbd5e1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-header {
+            background: var(--destiny-blue);
+            color: #ffffff;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #f59e0b;
+        }
+
+        .app-header h1 {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .app-header span {
+            font-size: 0.8rem;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+
+        /* Container do canvas que permite responsividade fluida */
+        .canvas-container {
+            width: 100%;
+            background: #ffffff;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        canvas {
+            width: 100%;
+            max-width: 760px;
+            height: auto;
+            aspect-ratio: 76 / 23; /* Mantém a proporção exata ao redimensionar */
+            display: block;
+            background: #ffffff;
+            cursor: ew-resize;
+            touch-action: none; /* Previne scroll acidental no mobile */
+        }
+
+        .control-panel {
+            background: #f1f5f9;
+            padding: 15px 20px;
+            display: grid;
+            grid-template-columns: 1.3fr 1fr;
+            gap: 20px;
+            align-items: center;
+        }
+
+        @media (max-width: 650px) {
+            .control-panel {
+                grid-template-columns: 1fr;
+                gap: 15px;
+                padding: 12px;
+            }
+        }
+
+        .btn-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .btn-row {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 4px;
+        }
+
+        .btn-step {
+            background: #ffffff;
+            border: 1px solid #94a3b8;
+            color: #1e293b;
+            padding: 10px 0;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.1s;
+        }
+
+        .btn-step:hover {
+            background: #e2e8f0;
+            border-color: #64748b;
+        }
+
+        .btn-step:active {
+            transform: scale(0.95);
+        }
+
+        .response-box {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .display-text {
+            font-size: 2rem;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            color: #0f172a;
+        }
+
+        .display-text.hidden {
+            color: #94a3b8;
+        }
+
+        .btn-toggle {
+            background: #f59e0b;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            max-width: 200px;
+        }
+
+        .btn-toggle:hover {
+            background: #d97706;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="app-header">
+            <h1>DestinyServicesBR</h1>
+            <span>Micrômetro Centesimal (0-25 mm)</span>
+        </div>
+
+        <div class="canvas-container">
+            <canvas id="micrometerCanvas" width="760" height="230"></canvas>
+        </div>
+
+        <div class="control-panel">
+            <div class="btn-grid">
+                <div class="btn-row">
+                    <button class="btn-step" onclick="adjust(-1.00)">-1.0</button>
+                    <button class="btn-step" onclick="adjust(-0.50)">-0.5</button>
+                    <button class="btn-step" onclick="adjust(-0.10)">-0.1</button>
+                    <button class="btn-step" onclick="adjust(-0.05)">-0.05</button>
+                    <button class="btn-step" onclick="adjust(-0.01)">-0.01</button>
+                    <button class="btn-step" onclick="adjust(-0.005)">-0.005</button>
+                </div>
+                <div class="btn-row">
+                    <button class="btn-step" onclick="adjust(1.00)">+1.0</button>
+                    <button class="btn-step" onclick="adjust(0.50)">+0.5</button>
+                    <button class="btn-step" onclick="adjust(0.10)">+0.1</button>
+                    <button class="btn-step" onclick="adjust(0.05)">+0.05</button>
+                    <button class="btn-step" onclick="adjust(0.01)">+0.01</button>
+                    <button class="btn-step" onclick="adjust(0.005)">+0.005</button>
+                </div>
+            </div>
+
+            <div class="response-box">
+                <div id="readout" class="display-text">0.00 mm</div>
+                <button id="toggleBtn" class="btn-toggle" onclick="toggleView()">Ocultar Resposta</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('micrometerCanvas');
+        const ctx = canvas.getContext('2d');
+        const readout = document.getElementById('readout');
+        const toggleBtn = document.getElementById('toggleBtn');
+
+        let value = 0.00;
+        let isHidden = false;
+
+        let isDragging = false;
+        let startX = 0;
+
+        // Função auxiliar para obter coordenadas de toque/mouse relativas ao tamanho responsivo do canvas
+        function getCanvasX(e) {
+            const rect = canvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            // Mapeia a posição física da tela para a resolução lógica interna do Canvas (760px)
+            return (clientX - rect.left) * (canvas.width / rect.width);
+        }
+
+        canvas.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = getCanvasX(e);
+        });
+
+        window.addEventListener('mouseup', () => isDragging = false);
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const currentX = getCanvasX(e);
+            const deltaX = currentX - startX;
+            startX = currentX;
+            // Sensibilidade do arraste lateral calibrada
+            adjust(deltaX * 0.008);
+        });
+
+        canvas.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            startX = getCanvasX(e);
+        });
+        window.addEventListener('touchend', () => isDragging = false);
+        window.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            const currentX = getCanvasX(e);
+            const deltaX = currentX - startX;
+            startX = currentX;
+            adjust(deltaX * 0.008);
+        });
+
+        function adjust(amount) {
+            value = Math.max(0, Math.min(25, value + amount));
+            updateUI();
+        }
+
+        function toggleView() {
+            isHidden = !isHidden;
+            if (isHidden) {
+                readout.innerText = "??.?? mm";
+                readout.classList.add('hidden');
+                toggleBtn.innerText = "Mostrar Resposta";
+            } else {
+                readout.classList.remove('hidden');
+                toggleBtn.innerText = "Ocultar Resposta";
+                updateUI();
+            }
+        }
+
+        function updateUI() {
+            if (!isHidden) {
+                readout.innerText = value.toFixed(2) + " mm";
+            }
+            draw();
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const CY = 105; // Linha de centro de simetria do micrômetro
+            const scalePX = 7.0; // Fator de escala ideal: 7 pixels equivalem a 1 mm real
+
+            // 1. CONFIGURAÇÕES GEOMÉTRICAS DOS LIMITES (CALIBRAÇÃO DE FÁBRICA)
+            const anvilFaceX = 145;  // Face estática de medição do batente esquerdo
+            const zeroSleeveX = 320; // Posição física exata da linha do zero "0" na Bainha Fixa
+
+            // --- 2. NOVO ARCO EM "C" EXTRA ESPESSO E ROBUSTO (PADRÃO MITUTOYO) ---
+            ctx.fillStyle = '#2d3748'; // Cinza escuro industrial fosco
+            ctx.strokeStyle = '#1a202c';
+            ctx.lineWidth = 3;
+
+            ctx.beginPath();
+            // Começa no suporte cilíndrico do batente fixo
+            ctx.moveTo(anvilFaceX - 30, CY - 22);
+            ctx.lineTo(anvilFaceX, CY - 22);
+            ctx.lineTo(anvilFaceX, CY + 22);
+            
+            // Perfil interno do arco espessado
+            ctx.bezierCurveTo(anvilFaceX, CY + 105, zeroSleeveX - 25, CY + 105, zeroSleeveX - 25, CY + 22);
+            ctx.lineTo(zeroSleeveX, CY + 22);
+            ctx.lineTo(zeroSleeveX, CY - 22);
+            ctx.lineTo(zeroSleeveX - 30, CY - 22);
+            
+            // Perfil externo bem largo, gerando um arco pesado e anatômico
+            ctx.bezierCurveTo(zeroSleeveX - 30, CY + 130, anvilFaceX - 30, CY + 130, anvilFaceX - 30, CY - 22);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+
+            // Placa Antitérmica e de Identificação Centralizada
+            ctx.fillStyle = '#0f172a';
+            ctx.beginPath();
+            ctx.roundRect(185, CY + 65, 105, 26, 5);
+            ctx.fill();
+
+            // Gravações Industriais na Plaqueta
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 9px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText("DESTINY", 237, CY + 76);
+            ctx.fillStyle = '#f59e0b';
+            ctx.font = '8px Arial';
+            ctx.fillText("0-25mm   0.01mm", 237, CY + 86);
+
+            // Batente Fixo Esquerdo (Anvil)
+            ctx.fillStyle = '#cbd5e1';
+            ctx.fillRect(anvilFaceX - 15, CY - 8, 15, 16);
+            ctx.fillStyle = '#475569'; // Face de contato de carboneto
+            ctx.fillRect(anvilFaceX - 2, CY - 8, 2, 16);
+
+            // --- 3. HASTE MÓVEL (SPINDLE) COMPLETAMENTE SINCRONIZADA ---
+            // O fuso avança para a ESQUERDA à medida que o valor diminui.
+            // Em 0.00mm, a ponta móvel encosta perfeitamente no batente (em anvilFaceX = 145).
+            const spindleX = anvilFaceX + (value * scalePX);
+            ctx.fillStyle = '#e2e8f0';
+            // A haste se estende para a direita adentrando o corpo do tambor
+            ctx.fillRect(spindleX, CY - 8, 180, 16);
+            ctx.fillStyle = '#475569'; // Face de contato do fuso
+            ctx.fillRect(spindleX, CY - 8, 2, 16);
+
+            // --- 4. BAINHA FIXA (SLEEVE) ---
+            const sleeveX = zeroSleeveX;
+            const sleeveY = CY - 25;
+            const sleeveW = 240;
+            const sleeveH = 50;
+
+            ctx.fillStyle = '#f8fafc';
+            ctx.fillRect(sleeveX, sleeveY, sleeveW, sleeveH);
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(sleeveX, sleeveY, sleeveW, sleeveH);
+
+            // Linha de Fé Horizontal Principal
+            ctx.beginPath();
+            ctx.moveTo(sleeveX, CY);
+            ctx.lineTo(sleeveX + sleeveW, CY);
+            ctx.stroke();
+
+            // --- 5. GRAVAÇÃO DAS ESCALAS DA BAINHA ---
+            ctx.fillStyle = '#000000';
+            ctx.font = 'bold 9px Arial';
+            ctx.textAlign = 'center';
+
+            for (let i = 0; i <= 25; i++) {
+                let posX = zeroSleeveX + (i * scalePX);
+
+                // Milímetros Inteiros (Traços Superiores)
+                ctx.beginPath();
+                ctx.moveTo(posX, CY);
+                ctx.lineTo(posX, CY - 10);
+                ctx.stroke();
+
+                if (i % 5 === 0) {
+                    ctx.fillText(i.toString(), posX, CY - 14);
+                }
+
+                // Meios Milímetros (Traços Inferiores)
+                if (i < 25) {
+                    let meioX = posX + (scalePX / 2);
+                    ctx.beginPath();
+                    ctx.moveTo(meioX, CY);
+                    ctx.lineTo(meioX, CY + 8);
+                    ctx.stroke();
+                }
+            }
+
+            // --- 6. TAMBOR MÓVEL (THIMBLE) ---
+            // A borda chanfrada avança encobrindo a bainha.
+            // Quando a medida é 0.00mm, a borda do chanfro bate precisamente em zeroSleeveX (320).
+            const thimbleX = zeroSleeveX + (value * scalePX);
+            const thimbleW = 160;
+            const thimbleH = 64;
+            const thimbleY = CY - thimbleH / 2;
+            const bevelW = 15; // Largura do chanfro cônico
+
+            // Corpo Cilíndrico Metálico
+            ctx.fillStyle = '#cbd5e1';
+            ctx.fillRect(thimbleX, thimbleY, thimbleW, thimbleH);
+
+            // Chanfro Esquerdo Angular
+            ctx.fillStyle = '#e2e8f0';
+            ctx.beginPath();
+            ctx.moveTo(thimbleX, thimbleY);
+            ctx.lineTo(thimbleX - bevelW, thimbleY + 4);
+            ctx.lineTo(thimbleX - bevelW, thimbleY + thimbleH - 4);
+            ctx.lineTo(thimbleX, thimbleY + thimbleH);
+            ctx.closePath();
+            ctx.fill();
+
+            // Contornos Técnicos do Tambor
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 1.2;
+            ctx.strokeRect(thimbleX, thimbleY, thimbleW, thimbleH);
+            
+            ctx.beginPath();
+            ctx.moveTo(thimbleX - bevelW, thimbleY + 4);
+            ctx.lineTo(thimbleX - bevelW, thimbleY + thimbleH - 4);
+            ctx.stroke();
+
+            // Recartilhado Traseiro de Aço Carbono
+            ctx.fillStyle = '#475569';
+            ctx.fillRect(thimbleX + thimbleW - 25, thimbleY + 1, 24, thimbleH - 2);
+
+            // --- 7. ESCALA VERMELHA/PRETA DO TAMBOR (0 A 50) ---
+            ctx.textAlign = 'right';
+            ctx.font = 'bold 9px Arial';
+
+            const thimbleVal = value % 0.5;
+            const rotation = thimbleVal / 0.01; // Mapeamento circular de 0 a 49
+
+            const stepY = 2.6; // Densidade do passo dos traços centesimais
+
+            for (let t = -12; t <= 12; t++) {
+                let targetDivision = Math.round(rotation) - t;
+                let actualDivision = (targetDivision + 50) % 50;
+
+                // Modelagem tridimensional cilíndrica (efeito de curvatura)
+                let deltaY = t * stepY + ((rotation % 1) * stepY);
+                let angle = (deltaY / (thimbleH / 2)) * (Math.PI / 2);
+
+                if (Math.abs(angle) < 1.35) {
+                    let posY = CY - (thimbleH / 2) * Math.sin(angle);
+
+                    // Traço de graduação de medição
+                    ctx.strokeStyle = '#000000';
+                    ctx.beginPath();
+                    ctx.moveTo(thimbleX - bevelW, posY);
+                    ctx.lineTo(thimbleX - bevelW + 6, posY);
+                    ctx.stroke();
+
+                    // Gravação dos numerais centesimais (Cores idênticas às de ensino do Stefanelli)
+                    if (actualDivision % 5 === 0) {
+                        ctx.fillStyle = (actualDivision === 0) ? '#dc2626' : '#000000'; // Destaque em vermelho para o zero
+                        ctx.fillText(actualDivision.toString(), thimbleX - bevelW - 3, posY + 3);
+                    }
+                }
+            }
+        }
+
+        // Inicializa zerado e ajustado perfeitamente de fábrica
+        updateUI();
+    </script>
+</body>
+</html>
