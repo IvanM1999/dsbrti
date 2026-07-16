@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Simulador de Micrômetro | DestinyServicesBR</title>
     <style>
         :root {
@@ -22,93 +22,93 @@
             -webkit-user-select: none;
         }
 
-        body {
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Evita scrolls indesejados ao arrastar o dedo */
             background-color: var(--bg-body);
+        }
+
+        body {
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
-            padding: 10px;
+            padding: 8px;
         }
 
         .app-container {
             width: 100%;
+            height: 100%;
             max-width: 800px;
+            max-height: 600px;
             background: var(--panel-bg);
             border: 1px solid var(--border-color);
             border-radius: 8px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
 
         .app-header {
             background: var(--destiny-blue);
             color: #ffffff;
-            padding: 12px 20px;
+            padding: 10px 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 3px solid #f59e0b;
+            flex-shrink: 0;
         }
 
         .app-header h1 {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: bold;
         }
 
         .app-header span {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             background: rgba(255, 255, 255, 0.15);
-            padding: 3px 8px;
+            padding: 2px 6px;
             border-radius: 4px;
         }
 
         .canvas-container {
+            flex: 1;
             width: 100%;
             background: #ffffff;
-            padding: 15px;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 10px;
             border-bottom: 1px solid var(--border-color);
             overflow: hidden;
         }
 
         canvas {
             width: 100%;
-            max-width: 760px;
-            height: auto;
-            aspect-ratio: 76 / 23;
+            height: 100%;
+            max-height: 230px;
+            object-fit: contain; /* Garante que o desenho do micrômetro nunca deformará */
             display: block;
-            background: #ffffff;
             cursor: ew-resize;
             touch-action: none;
         }
 
         .control-panel {
             background: #f1f5f9;
-            padding: 15px 20px;
+            padding: 12px 16px;
             display: grid;
             grid-template-columns: 1.3fr 1fr;
-            gap: 20px;
+            gap: 15px;
             align-items: center;
-        }
-
-        @media (max-width: 650px) {
-            .control-panel {
-                grid-template-columns: 1fr;
-                gap: 15px;
-                padding: 12px;
-            }
+            flex-shrink: 0;
         }
 
         .btn-grid {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
         }
 
         .btn-row {
@@ -121,13 +121,14 @@
             background: #ffffff;
             border: 1px solid #94a3b8;
             color: #1e293b;
-            padding: 10px 0;
+            padding: 8px 0;
             font-size: 0.75rem;
             font-weight: bold;
             border-radius: 4px;
             cursor: pointer;
             text-align: center;
             transition: all 0.1s;
+            touch-action: manipulation;
         }
 
         .btn-step:hover {
@@ -143,15 +144,15 @@
             background: #ffffff;
             border: 1px solid var(--border-color);
             border-radius: 6px;
-            padding: 12px;
+            padding: 8px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .display-text {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-family: 'Courier New', Courier, monospace;
             font-weight: bold;
             color: #0f172a;
@@ -165,17 +166,85 @@
             background: #f59e0b;
             color: white;
             border: none;
-            padding: 8px 16px;
+            padding: 6px 12px;
             border-radius: 4px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: bold;
             cursor: pointer;
             width: 100%;
-            max-width: 200px;
+            max-width: 180px;
         }
 
         .btn-toggle:hover {
             background: #d97706;
+        }
+
+        /* --- ADAPTAÇÃO PARA PORTRAIT (TELAS DE CELULAR VERTICAIS) --- */
+        @media (max-width: 650px) {
+            body {
+                padding: 0;
+            }
+            .app-container {
+                border-radius: 0;
+                border: none;
+                max-height: 100%;
+            }
+            .control-panel {
+                grid-template-columns: 1fr;
+                gap: 12px;
+                padding: 12px;
+            }
+            .btn-step {
+                padding: 10px 0; /* Botões ligeiramente maiores para toque com dedos em pé */
+                font-size: 0.7rem;
+            }
+        }
+
+        /* --- ADAPTAÇÃO PARA PAISAGEM / ROTAÇÃO DE TELA (CELULAR DEITADO) --- */
+        @media (max-height: 380px) and (orientation: landscape) {
+            body {
+                padding: 0;
+            }
+            .app-container {
+                border-radius: 0;
+                border: none;
+                max-height: 100%;
+            }
+            .app-header {
+                padding: 4px 16px;
+            }
+            .app-header h1 {
+                font-size: 0.85rem;
+            }
+            .canvas-container {
+                padding: 4px;
+            }
+            .control-panel {
+                grid-template-columns: 1.5fr 1fr;
+                padding: 6px 12px;
+                gap: 10px;
+            }
+            .btn-grid {
+                gap: 4px;
+            }
+            .btn-step {
+                padding: 6px 0;
+                font-size: 0.65rem;
+            }
+            .response-box {
+                padding: 4px;
+                flex-direction: row;
+                justify-content: space-around;
+                gap: 4px;
+            }
+            .display-text {
+                font-size: 1.3rem;
+            }
+            .btn-toggle {
+                padding: 4px 8px;
+                font-size: 0.7rem;
+                max-width: 110px;
+            }
         }
     </style>
 </head>
@@ -188,7 +257,7 @@
         </div>
 
         <div class="canvas-container">
-            <canvas id="micrometerCanvas" width="760" height="230"></canvas>
+            <canvas id="micrometerCanvas"></canvas>
         </div>
 
         <div class="control-panel">
@@ -230,6 +299,23 @@
         let isDragging = false;
         let startX = 0;
 
+        // --- SISTEMA DE REDIMENSIONAMENTO DINÂMICO DO CANVAS ---
+        function resizeCanvas() {
+            // Mantém a proporção fixa de 760x230 do seu layout original para não deformar o desenho
+            const baseWidth = 760;
+            const baseHeight = 230;
+            
+            canvas.width = baseWidth;
+            canvas.height = baseHeight;
+            
+            draw();
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('orientationchange', () => {
+            setTimeout(resizeCanvas, 100); // Aguarda a rotação estabilizar
+        });
+
         function getCanvasX(e) {
             const rect = canvas.getBoundingClientRect();
             const clientX = e.touches ? e.touches[0].clientX : e.clientX;
@@ -254,7 +340,8 @@
         canvas.addEventListener('touchstart', (e) => {
             isDragging = true;
             startX = getCanvasX(e);
-        });
+        }, { passive: true });
+        
         window.addEventListener('touchend', () => isDragging = false);
         window.addEventListener('touchmove', (e) => {
             if (!isDragging) return;
@@ -262,7 +349,7 @@
             const deltaX = currentX - startX;
             startX = currentX;
             adjust(deltaX * 0.008);
-        });
+        }, { passive: true });
 
         function adjust(amount) {
             value = Math.max(0, Math.min(25, value + amount));
@@ -293,70 +380,67 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             const CY = 115; // Altura centralizada
-            const scalePX = 8.0; // Fator de escala (8px = 1mm)
+            const scalePX = 8.0; // Fator de escala original (8px = 1mm)
             
-            // --- AJUSTE DE POSIÇÃO CALIBRADO ---
-            const anvilFaceX = 125; // O ponto real de medição ZERO agora ocorre mais para a direita
-            const zeroSleeveX = 325; // Sincroniza o tambor de medição com o novo zero do fuso
+            const anvilFaceX = 110; 
+            const zeroSleeveX = 320; 
 
-            // --- 1. ARCO DE METRO SÓLIDO (C-FRAME) - Posicionado elegantemente à esquerda ---
+            // --- 1. ARCO DE METRO SÓLIDO (C-FRAME) ---
             ctx.fillStyle = '#1e293b';
             ctx.strokeStyle = '#0f172a';
             ctx.lineWidth = 4;
             ctx.beginPath();
             
-            // Perfil Externo do Arco (Curvatura compacta à esquerda)
-            ctx.moveTo(315, CY - 22);
-            ctx.lineTo(315, CY + 26);
-            ctx.bezierCurveTo(315, CY + 110, 75, CY + 110, 75, CY + 26); // Barriga externa compactada
-            ctx.lineTo(75, CY - 22); // Face extrema externa esquerda
-            ctx.lineTo(95, CY - 22); // Parede interna do arco de suporte do batente
-            ctx.lineTo(95, CY + 15);
+            // Perfil Externo do Arco
+            ctx.moveTo(310, CY - 22);
+            ctx.lineTo(310, CY + 26);
+            ctx.bezierCurveTo(310, CY + 110, 70, CY + 110, 70, CY + 26);
+            ctx.lineTo(70, CY - 22);
+            ctx.lineTo(90, CY - 22);
+            ctx.lineTo(90, CY + 15);
             
             // Perfil Interno
-            ctx.bezierCurveTo(95, CY + 80, 295, CY + 80, 295, CY - 22);
+            ctx.bezierCurveTo(90, CY + 80, 290, CY + 80, 290, CY - 22);
             ctx.closePath();
             ctx.fill();
             ctx.stroke();
 
-            // Placa Isolante Térmica (Alinhada perfeitamente na base do arco compacto)
+            // Placa Isolante Térmica
             ctx.fillStyle = '#0f172a';
             ctx.beginPath();
-            ctx.roundRect(125, CY + 50, 110, 30, 6);
+            ctx.roundRect(120, CY + 50, 110, 30, 6);
             ctx.fill();
 
             // Identificação Industrial na Placa
             ctx.fillStyle = '#ffffff';
             ctx.font = 'bold 10px Arial';
             ctx.textAlign = 'center';
-            ctx.fillText("DESTINY", 180, CY + 62);
+            ctx.fillText("DESTINY", 175, CY + 62);
             ctx.fillStyle = '#f59e0b';
             ctx.font = 'bold 8px Arial';
-            ctx.fillText("0-25mm  0.01mm", 180, CY + 74);
+            ctx.fillText("0-25mm  0.01mm", 175, CY + 74);
 
-            // Batente Fixo Esquerdo (Anvil) - Projetado para a direita para sair de dentro do arco
-            // O corpo de aço avança de dentro do arco (95px) até o ponto zero calibrado (125px)
-            ctx.fillStyle = '#cbd5e1'; 
-            ctx.fillRect(95, CY - 8, 30, 16); // Avança até a face de contato
-            ctx.fillStyle = '#475569'; // Pastilha de carboneto do batente
-            ctx.fillRect(122, CY - 8, 3, 16);
+            // Batente Fixo Esquerdo (Anvil)
+            ctx.fillStyle = '#cbd5e1';
+            ctx.fillRect(90, CY - 8, 20, 16);
+            ctx.fillStyle = '#475569';
+            ctx.fillRect(anvilFaceX - 3, CY - 8, 3, 16);
 
             // --- 2. HASTE MÓVEL (SPINDLE) ---
-            // Começa exatamente no ponto de toque zero (125px) e avança conforme o valor do micrômetro
             const spindleX = anvilFaceX + (value * scalePX);
             ctx.fillStyle = '#e2e8f0';
             ctx.fillRect(spindleX, CY - 8, 250, 16); 
-            ctx.fillStyle = '#475569'; // Face de carboneto móvel
+            ctx.fillStyle = '#475569';
             ctx.fillRect(spindleX, CY - 8, 3, 16);
 
             // Trava da Haste
             ctx.fillStyle = '#64748b';
             ctx.beginPath();
-            ctx.arc(270, CY - 18, 6, 0, Math.PI * 2);
+            ctx.arc(265, CY - 18, 6, 0, Math.PI * 2);
             ctx.fill();
 
             // --- 3. BAINHA FIXA (SLEEVE) ---
-            const sleeveX = 310;
+            const sleeveX = 305;
             const sleeveW = 235;
             const sleeveH = 44;
             const sleeveY = CY - 22;
@@ -441,11 +525,11 @@
             ctx.lineTo(thimbleLeft + bevelW, CY + 28);
             ctx.stroke();
 
-            // Recartilhado (Fricção Recoberta)
+            // Recartilhado
             ctx.fillStyle = '#475569';
             ctx.fillRect(thimbleLeft + bevelW + thimbleW - 25, thimbleY + 1, 24, thimbleH - 2);
 
-            // Catraca / Fricção Traseira (Fim do Tambor)
+            // Catraca / Fricção Traseira
             ctx.fillStyle = '#94a3b8';
             ctx.fillRect(thimbleLeft + bevelW + thimbleW, CY - 18, 40, 36);
             ctx.strokeStyle = '#000000';
@@ -483,6 +567,8 @@
             }
         }
 
+        // Inicializa o tamanho e UI
+        resizeCanvas();
         updateUI();
     </script>
 </body>
