@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Paquímetro Autocalibrável de Alta Precisão</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f1f5f9;
+            margin: 0;
+            padding: 15px;
+        }
+        .container {
+            width: 100%;
+            max-width: 950px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            box-sizing: border-box;
+        }
+        
+        /* Painel de Calibração */
+        .painel-calibracao {
+            background: #fffbeb;
+            border: 1px solid #fef3c7;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .linha-guia-real {
+            height: 4px;
+            background: #d97706;
+            margin: 10px auto;
+            transition: width 0.1s ease;
+        }
+
+        .svg-wrapper {
+            width: 100%;
+            touch-action: none;
+            user-select: none;
+            margin: 0 auto;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            background: #fafafa;
+        }
+        svg {
+            width: 100%;
+            height: auto;
+            display: block;
+            cursor: grab;
+        }
+        svg:active { cursor: grabbing; }
+        .painel-leitura {
+            margin-top: 15px;
+            padding: 15px;
+            background: #e2e8f0;
+            border-radius: 8px;
+            font-size: 1.3rem;
+            color: #1e293b;
+        }
+        .valor-destaque {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #2563eb;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Paquímetro Virtual com Calibrador Físico</h2>
+        
+        <div class="painel-calibracao">
+            <strong>🔧 Ajuste de Tela (Calibração 1:1)</strong><br>
+            Coloque uma régua física na tela e ajuste o controle abaixo até que a linha laranja meça <b>exatamente 50 mm (5 cm)</b>:
+            <br>
+            <input type="range" id="slider-calibracao" min="150" max="450" value="265" style="width: 80%; margin-top:10px;">
+            <div id="linha-ajuste" class="linha-guia-real" style="width: 265px;"></div>
+        </div>
+        
+        <div id="wrapper" class="svg-wrapper">
+            <svg id="paquimetro" viewBox="0 0 950 260"></svg>
+        </div>
+
+        <div class="painel-leitura">
+            Leitura Real: <span id="leitura-mm" class="valor-destaque">0,00</span> mm
+        </div>
+    </div>
+
+    <script>
+        const svg = document.getElementById('paquimetro');
+        const wrapper = document.getElementById('wrapper');
+        const slider = document.getElementById('slider-calibracao');
+        const linhaAjuste = document.getElementById('linha-ajuste');
+        
+        // Configurações internas estáveis do SVG
+        const VIEWBOX_PIXELS_POR_MM = 10; 
+        const RESOLUCAO = 0.05;     
+        const MAX_MM = 55; 
+        const LIMITE_MAX_PX = MAX_MM * VIEWBOX_PIXELS_POR_MM;
+        const ZERO_ABSOLUTO_X = 150; 
+
+        let arrastando = false;
+        let xInicialCursor = 0;
+        let xInicialLocal = 0;
+        let posicaoAtualPx = 0;
+
+        // --- SISTEMA DINÂMICO DE AJUSTE DE DPI ---
+        function aplicarDpiFisico() {
+            let pixelsPara50mm = parseFloat(slider.value);
+            linhaAjuste.style.width = pixelsPara50mm + 'px';
+            
+            // Reajusta a largura do wrapper do paquímetro para corresponder perfeitamente à proporção física real
+            let larguraIdealContainerMms = (950 / (pixelsPara50mm / 50)); 
+            wrapper.style.width = larguraIdealContainerMms + 'mm';
+        }
+
+        slider.addEventListener('input', aplicarDpiFisico);
+        // Inicializa aplicando o valor padrão calibrado
+        aplicarDpiFisico();
+
+        function desenharInstrumento() {
+            let htmlFixo = `
+                <rect x="20" y="80" width="910" height="60" fill="#cbd5e1" stroke="#94a3b8" stroke-width="2"/>
+                <path d="M 50 80 L 50 240 L 110 240 L 150 140 L 150 80 Z" fill="#cbd5e1" stroke="#94a3b8" stroke-width="2"/>
+            `;
+
+            for (let i = 0; i <= 60; i++) {
+                let x = ZERO_ABSOLUTO_X + (i * VIEWBOX_PIXELS_POR_MM);
+                let altura = (i % 10 === 0) ? 22 : (i % 5 === 0 ? 16 : 10);
+                htmlFixo += `<line x1="${x}" y1="140" x2="${x}" y2="${140 - altura}" stroke="#1e293b" stroke-width="1.5"/>`;
+                
+                if (i % 10 === 0) {
+                    htmlFixo += `<text x="${x}" y="112" font-size="12" font-family="sans-serif" text-anchor="middle" font-weight="bold" fill="#334155">${i/10}</text>`;
+                }
+            }
+
+            const larguraDivisaoNonioPx = 0.95 * VIEWBOX_PIXELS_POR_MM; 
+            let htmlMovel = `
+                <g id="cursor-movel" transform="translate(0,0)">
+                    <path d="M ${ZERO_ABSOLUTO_X} 80 L ${ZERO_ABSOLUTO_X} 140 L ${ZERO_ABSOLUTO_X + 40} 240 L ${ZERO_ABSOLUTO_X + 80} 240 L ${ZERO_ABSOLUTO_X + 80} 140 L 450 140 L 450 80 Z" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2"/>
+                    <rect x="${ZERO_ABSOLUTO_X}" y="140" width="220" height="45" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2"/>
+            `;
+
+            for (let i = 0; i <= 20; i++) {
+                let x = ZERO_ABSOLUTO_X + (i * larguraDivisaoNonioPx);
+                let altura = (i % 2 === 0) ? 18 : 11;
+                htmlMovel += `<line x1="${x}" y1="140" x2="${x}" y2="${140 + altura}" stroke="#dc2626" stroke-width="1.5"/>`;
+                if (i % 2 === 0) {
+                    htmlMovel += `<text x="${x}" y="174" font-size="11" fill="#1e293b" font-family="sans-serif" text-anchor="middle" font-weight="bold">${i/2}</text>`;
+                }
+            }
+            htmlMovel += `</g>`;
+
+            svg.innerHTML = htmlFixo + htmlMovel;
+        }
+
+        desenharInstrumento();
+
+        const cursorMovel = document.getElementById('cursor-movel');
+        const leituraMm = document.getElementById('leitura-mm');
+
+        function obterCoordenadasLocaisSVG(e) {
+            const ponto = svg.createSVGPoint();
+            if (e.touches && e.touches.length > 0) {
+                ponto.x = e.touches[0].clientX;
+                ponto.y = e.touches[0].clientY;
+            } else {
+                ponto.x = e.clientX;
+                ponto.y = e.clientY;
+            }
+            return ponto.matrixTransform(svg.getScreenCTM().inverse());
+        }
+
+        svg.addEventListener('mousedown', iniciarArrasto);
+        window.addEventListener('mousemove', arrastar);
+        window.addEventListener('mouseup', pararArrasto);
+
+        svg.addEventListener('touchstart', iniciarArrasto, { passive: false });
+        window.addEventListener('touchmove', arrastar, { passive: false });
+        window.addEventListener('touchend', pararArrasto);
+
+        function iniciarArrasto(e) {
+            arrastando = true;
+            const pontoLocal = obterCoordenadasLocaisSVG(e);
+            xInicialLocal = pontoLocal.x;
+            xInicialCursor = posicaoAtualPx;
+        }
+
+        function arrastar(e) {
+            if (!arrastando) return;
+            if (e.cancelable) e.preventDefault();
+
+            const pontoLocal = obterCoordenadasLocaisSVG(e);
+            const deltaX = pontoLocal.x - xInicialLocal;
+            
+            let novaPosicaoPx = xInicialCursor + deltaX;
+            if (novaPosicaoPx < 0) novaPosicaoPx = 0;
+            if (novaPosicaoPx > LIMITE_MAX_PX) novaPosicaoPx = LIMITE_MAX_PX;
+
+            let mmBruto = novaPosicaoPx / VIEWBOX_PIXELS_POR_MM;
+            let mmPreciso = Math.round(mmBruto / RESOLUCAO) * RESOLUCAO;
+
+            posicaoAtualPx = mmPreciso * VIEWBOX_PIXELS_POR_MM;
+
+            cursorMovel.setAttribute('transform', `translate(${posicaoAtualPx}, 0)`);
+            leituraMm.textContent = mmPreciso.toFixed(2).replace('.', ',');
+        }
+
+        function pararArrasto() {
+            arrastando = false;
+        }
+    </script>
+</body>
+</html>
