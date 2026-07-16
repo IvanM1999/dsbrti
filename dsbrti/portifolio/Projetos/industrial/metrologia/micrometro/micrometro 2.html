@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador Micrômetro Mitutoyo 0.001mm</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #27ae60;
+            --bg-color: #dcdde1;
+            --panel-bg: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: var(--panel-bg);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            padding: 25px;
+            width: 100%;
+            max-width: 850px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .canvas-container {
+            width: 100%;
+            background-color: #f5f6fa;
+            border: 2px solid #b2bec3;
+            border-radius: 6px;
+            overflow: auto;
+        }
+
+        canvas {
+            display: block;
+            margin: 0 auto;
+        }
+
+        .controls {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .control-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            min-width: 130px;
+        }
+
+        input[type="range"] {
+            flex-grow: 1;
+            accent-color: var(--primary-color);
+            height: 8px;
+            cursor: pointer;
+        }
+
+        .btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background: #34495e;
+        }
+
+        .display-panel {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .card {
+            background: #f1f2f6;
+            padding: 10px;
+            border-radius: 6px;
+            border-bottom: 4px solid #b2bec3;
+        }
+
+        .card.total {
+            border-bottom-color: var(--accent-color);
+            background: #e8f8f5;
+        }
+
+        .card span {
+            font-size: 0.75rem;
+            color: #7f8c8d;
+            display: block;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .card strong {
+            font-size: 1.3rem;
+            font-family: 'Courier New', Courier, monospace;
+        }
+    </style>
+</head>
+<body>
+
+    <h2 style="margin-bottom: 15px;">Micrômetro Virtual Mitutoyo (0-25mm / 0.001mm)</h2>
+
+    <div class="container">
+        <div class="canvas-container">
+            <canvas id="mitutoyoCanvas" width="800" height="320"></canvas>
+        </div>
+
+        <div class="display-panel">
+            <div class="card">
+                <span>Bainha (Eixo Fixo)</span>
+                <strong id="lblBainha">0.00 mm</strong>
+            </div>
+            <div class="card">
+                <span>Tambor (Centésimos)</span>
+                <strong id="lblTambor">0.000 mm</strong>
+            </div>
+            <div class="card">
+                <span>Nônio (Milésimos)</span>
+                <strong id="lblNonio">0.000 mm</strong>
+            </div>
+            <div class="card total">
+                <span>Leitura Total</span>
+                <strong id="lblTotal" style="color: var(--accent-color);">0.000 mm</strong>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="control-row">
+                <label for="rangeMedida">Ajuste do Tambor:</label>
+                <input type="range" id="rangeMedida" min="0" max="25" step="0.001" value="0">
+                <span id="rangeVal" style="font-family: monospace; font-weight: bold; min-width: 65px;">0.000</span>
+            </div>
+            <div class="control-row" style="justify-content: center; gap: 10px;">
+                <button class="btn" onclick="ajustarPasso(-0.001)">-0.001</button>
+                <button class="btn" onclick="ajustarPasso(-0.01)">-0.01</button>
+                <button class="btn" onclick="ajustarPasso(-0.1)">-0.1</button>
+                <button class="btn" onclick="ajustarPasso(0.1)">+0.1</button>
+                <button class="btn" onclick="ajustarPasso(0.01)">+0.01</button>
+                <button class="btn" onclick="ajustarPasso(0.001)">+0.001</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('mitutoyoCanvas');
+        const ctx = canvas.getContext('2d');
+        const rangeMedida = document.getElementById('rangeMedida');
+        const rangeVal = document.getElementById('rangeVal');
+
+        // Labels
+        const lblBainha = document.getElementById('lblBainha');
+        const lblTambor = document.getElementById('lblTambor');
+        const lblNonio = document.getElementById('lblNonio');
+        const lblTotal = document.getElementById('lblTotal');
+
+        // Parâmetros de Design do Canvas
+        const X_BAINHA = 250;
+        const Y_CENTRO = 160;
+        const ESCALA_PX = 12; // Pixels por mm na bainha
+
+        function renderizar(valor) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Decomposição matemática exata da leitura do micrômetro
+            const milimetros Inteiros = Math.floor(valor);
+            const restoMilimetro = valor - milimetrosInteiros;
+            
+            let vBainha = milimetrosInteiros;
+            if (restoMilimetro >= 0.5) {
+                vBainha += 0.5;
+            }
+            
+            // O tambor dá uma volta a cada 0.5 mm (50 divisões de 0.01mm)
+            const valorNoTambor = (valor % 0.5); 
+            const divisaoTamborCentesimos = Math.floor((valorNoTambor + 0.0001) / 0.01);
+            
+            // O nônio pega o resto do tambor e mede de 0 a 9 milésimos (0.001)
+            const valorNoNonio = valorNoTambor - (divisaoTamborCentesimos * 0.01);
+            const numeroNonioAlinhado = Math.round(valorNoNonio * 1000);
+
+            // Atualiza o painel de texto
+            lblBainha.innerText = vBainha.toFixed(2) + " mm";
+            lblTambor.innerText = (divisaoTamborCentesimos * 0.01).toFixed(3) + " mm";
+            lblNonio.innerText = (numeroNonioAlinhado * 0.001).toFixed(3) + " mm";
+            lblTotal.innerText = valor.toFixed(3) + " mm";
+            rangeVal.innerText = valor.toFixed(3);
+
+            // --- DESENHO: ARCO DO MICRÔMETRO (VERDE MARTELADO MITUTOYO) ---
+            ctx.fillStyle = '#78909c'; // Tom verde-azulado característico da marca
+            ctx.beginPath();
+            ctx.arc(120, Y_CENTRO, 90, 0.5 * Math.PI, 1.5 * Math.PI);
+            ctx.lineTo(X_BAINHA, Y_CENTRO - 90);
+            ctx.lineTo(X_BAINHA, Y_CENTRO + 90);
+            ctx.closePath();
+            ctx.fill();
+
+            // Recorte interno do arco
+            ctx.fillStyle = '#f5f6fa';
+            ctx.beginPath();
+            ctx.arc(130, Y_CENTRO, 60, 0.5 * Math.PI, 1.5 * Math.PI);
+            ctx.lineTo(X_BAINHA - 20, Y_CENTRO - 60);
+            ctx.lineTo(X_BAINHA - 20, Y_CENTRO + 60);
+            ctx.closePath();
+            ctx.fill();
+
+            // Haste fixa à esquerda (Anvil)
+            ctx.fillStyle = '#b2bec3';
+            ctx.fillRect(40, Y_CENTRO - 15, 20, 30);
+            ctx.fillStyle = '#636e72'; 
+            ctx.fillRect(60, Y_CENTRO - 12, 6, 24);
+
+            // --- HASTE MÓVEL (SPINDLE) ---
+            const deslocamentoHaste = valor * ESCALA_PX;
+            ctx.fillStyle = '#dfe4ea';
+            ctx.fillRect(66 + deslocamentoHaste, Y_CENTRO - 12, 200, 24);
+            ctx.fillStyle = '#636e72'; 
+            ctx.fillRect(66 + deslocamentoHaste, Y_CENTRO - 12, 6, 24); // Ponta de metal duro
+
+            // --- BAINHA FIXA (SLEEVE) ---
+            ctx.fillStyle = '#dcdde1';
+            ctx.fillRect(X_BAINHA, Y_CENTRO - 45, 260, 90);
+            ctx.strokeStyle = '#2c3e50';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(X_BAINHA, Y_CENTRO - 45, 260, 90);
+
+            // Linha de Fé (Referência Horizontal)
+            ctx.beginPath();
+            ctx.moveTo(X_BAINHA, Y_CENTRO);
+            ctx.lineTo(X_BAINHA + 260, Y_CENTRO);
+            ctx.stroke();
+
+            // Escala da Bainha (Traços Superiores e Inferiores)
+            ctx.lineWidth = 1.5;
+            ctx.font = 'bold 11px Arial';
+            ctx.fillStyle = '#2c3e50';
+            ctx.textAlign = 'center';
+
+            for (let i = 0; i <= 25; i++) {
+                let posX = X_BAINHA + 15 + (i * 8.5); // 8.5px por divisão real no desenho
+
+                // Traços superiores (Milímetros inteiros)
+                ctx.beginPath();
+                ctx.moveTo(posX, Y_CENTRO);
+                ctx.lineTo(posX, Y_CENTRO - 15);
+                ctx.stroke();
+
+                if (i % 5 === 0) {
+                    ctx.fillText(i, posX, Y_CENTRO - 20);
+                }
+
+                // Traços inferiores (Meios milímetros)
+                if (i < 25) {
+                    ctx.beginPath();
+                    ctx.moveTo(posX + 4.25, Y_CENTRO);
+                    ctx.lineTo(posX + 4.25, Y_CENTRO + 12);
+                    ctx.stroke();
+                }
+            }
+
+            // ESCALA DO NÔNIO (Traços horizontais superiores na bainha)
+            // No micrômetro real, são as linhas paralelas acima da linha de fé
+            ctx.lineWidth = 1;
+            ctx.textAlign = 'left';
+            ctx.font = '9px Arial';
+            for (let n = 0; n <= 9; n += 2) {
+                let posY = Y_CENTRO - 28 - (n * 1.5);
+                ctx.beginPath();
+                ctx.moveTo(X_BAINHA + 10, posY);
+                ctx.lineTo(X_BAINHA + 180, posY);
+                ctx.stroke();
+                ctx.fillText(n, X_BAINHA + 185, posY + 3);
+            }
+
+            // --- TAMBOR GIRATÓRIO (THIMBLE) ---
+            // O tambor avança horizontalmente conforme o valor aumenta
+            const posX_Tambor = X_BAINHA + 15 + (valor * 8.5); 
+            
+            // Corpo do tambor
+            ctx.fillStyle = '#cbd5e1';
+            ctx.fillRect(posX_Tambor, Y_CENTRO - 52, 160, 104);
+            
+            // Borda Chanfrada (Onde ficam os traços dos centésimos)
+            ctx.fillStyle = '#bdc3c7';
+            ctx.beginPath();
+            ctx.moveTo(posX_Tambor, Y_CENTRO - 52);
+            ctx.lineTo(posX_Tambor - 12, Y_CENTRO - 45);
+            ctx.lineTo(posX_Tambor - 12, Y_CENTRO + 45);
+            ctx.lineTo(posX_Tambor, Y_CENTRO + 52);
+            ctx.closePath();
+            ctx.fill();
+            
+            ctx.strokeStyle = '#2c3e50';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(posX_Tambor, Y_CENTRO - 52, 160, 104);
+
+            // Desenho dos traços do Tambor (0 a 50 centésimos)
+            // A rotação física depende estritamente do 'valorNoTambor'
+            ctx.lineWidth = 1;
+            ctx.font = '11px monospace';
+            ctx.textAlign = 'right';
+            ctx.fillStyle = '#2c3e50';
+
+            const relacaoSubidaUmd = 1.8; // Fator de espacamento vertical dos traços no tambor
+            const variacaoDivisao = (valorNoTambor / 0.01); // Mapeia a rotação em frações de centésimos
+
+            for (let t = -10; t <= 10; t++) {
+                let linhaAlvo = Math.round(variacaoDivisao) - t;
+                let linhaCorreta = (linhaAlvo + 50) % 50;
+                
+                // Deslocamento vertical baseado no giro físico do tambor
+                let distY = Y_CENTRO - (t * relacaoSubidaUmd) - ((variacaoDivisao % 1) * relacaoSubidaUmd);
+
+                if (distY > Y_CENTRO - 44 && distY < Y_CENTRO + 44) {
+                    ctx.beginPath();
+                    ctx.moveTo(posX_Tambor, distY);
+                    ctx.lineTo(posX_Tambor - 8, distY);
+                    ctx.stroke();
+
+                    if (linhaCorreta % 5 === 0) {
+                        ctx.fillText(linhaCorreta.toString().padStart(2, '0'), posX_Tambor - 12, distY + 4);
+                    }
+                }
+            }
+
+            // Trava física do micrômetro (A alavanquinha branca da sua foto)
+            ctx.fillStyle = '#f1f2f6';
+            ctx.beginPath();
+            ctx.arc(X_BAINHA - 25, Y_CENTRO + 45, 8, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.stroke();
+            ctx.fillStyle = '#2c3e50';
+            ctx.fillRect(X_BAINHA - 35, Y_CENTRO + 43, 10, 4);
+        }
+
+        // Função auxiliar para os botões de incremento/passo manual
+        function ajustarPasso(incremento) {
+            let novoValor = parseFloat(rangeMedida.value) + incremento;
+            if (novoValor < 0) novoValor = 0;
+            if (novoValor > 25) novoValor = 25;
+            rangeMedida.value = novoValor;
+            renderizar(novoValor);
+        }
+
+        // Listener do Slider
+        rangeMedida.addEventListener('input', (e) => {
+            renderizar(parseFloat(e.target.value));
+        });
+
+        // Inicialização primária
+        renderizar(0.000);
+    </script>
+</body>
+</html>
