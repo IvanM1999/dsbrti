@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Paquímetro Científico - Calibração</title>
+    <style>
+        body {
+            font-family: monospace; /* Estilo terminal */
+            background-color: #0f172a;
+            color: #38bdf8;
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 950px;
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            box-sizing: border-box;
+        }
+        .svg-wrapper {
+            width: 100%;
+            touch-action: none;
+            user-select: none;
+            background: #020617;
+            border: 2px solid #334155;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        svg { width: 100%; height: auto; display: block; }
+        
+        /* Estilização do Terminal */
+        .terminal {
+            background: #020617;
+            border: 1px solid #0284c7;
+            border-radius: 4px;
+            padding: 15px;
+            text-align: left;
+            font-size: 0.85rem;
+            color: #4ade80;
+            margin-top: 15px;
+        }
+        .terminal h3 { margin: 0 0 10px 0; color: #38bdf8; border-bottom: 1px solid #334155; padding-bottom: 5px;}
+        .param { color: #f43f5e; }
+        .val { color: #e11d48; font-weight: bold; }
+        
+        .painel-leitura {
+            font-size: 1.5rem;
+            color: #fff;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        .input-calibrador {
+            margin-top: 10px;
+            background: #1e293b;
+            border: 1px solid #38bdf8;
+            color: #fff;
+            padding: 5px;
+            border-radius: 4px;
+            width: 80px;
+        }
+        button {
+            background: #0284c7;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="painel-leitura">
+            LEITURA DIGITAL: <span id="leitura-mm" style="color: #38bdf8;">0,00</span> mm
+        </div>
+        
+        <div id="wrapper" class="svg-wrapper">
+            <svg id="paquimetro" viewBox="0 0 950 260"></svg>
+        </div>
+
+        <div class="terminal">
+            <h3>🖥️ TERMINAL DE DIAGNÓSTICO E AJUSTE FÍSICO</h3>
+            <div>[SCREEN PROFILE]: Width: <span id="t-sw">0</span>px | DPR: <span id="t-dpr">0</span></div>
+            <div>[DYNAMIC PPI]: <span id="t-ppi">0</span> | Pixels/mm Lógico: <span id="t-pxmm">0</span></div>
+            <div>[FATOR CORREÇÃO ATUAL]: <span id="t-fator" style="color:#f59e0b;">1.00000</span></div>
+            <hr style="border:0; border-top:1px dashed #334155; margin:10px 0;">
+            <div>[RASTREIO DE EVENTO]: Delta X Toque: <span id="t-deltax">0.00</span>px | Pos. Interna: <span id="t-pospx">0.00</span>px</div>
+            <hr style="border:0; border-top:1px dashed #334155; margin:10px 0;">
+            
+            <div>
+                <strong>🛠️ CALIBRAÇÃO EM TEMPO REAL:</strong><br>
+                Abra o simulador. Meça a abertura física na tela com seu paquímetro real.<br>
+                Digite quanto mediu na vida real (ex: 11.50): 
+                <input type="number" step="0.01" id="input-real" class="input-calibrador"> mm
+                <button onclick="calcularFatorPrecisao()">Injetar Fator</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const svg = document.getElementById('paquimetro');
+        const wrapper = document.getElementById('wrapper');
+        
+        // Dados Teóricos Base do Hardware Moto G73
+        const PPI_FISICO = 405;
+        const DPR_PADRAO = window.devicePixelRatio || 2.75;
+        const MM_PER_INCH = 25.4;
+        
+        // Base matemática pura calculada dinamicamente
+        let pixelsPorMmLonico = (PPI_FISICO / MM_PER_INCH) / DPR_PADRAO; 
+        let fatorCorrecao = 1.055; // Ajuste inicial estimado para compensar o viewport mobile
+
+        // Configuração interna do SVG
+        const VIEWBOX_PIXELS_POR_MM = 10; 
+        const RESOLUCAO = 0.05;     
+        const MAX_MM = 60; 
+        const ZERO_ABSOLUTO_X = 150; 
+
+        let arrastando = false;
+        let xInicialCursor = 0;
+        let xInicialLocal = 0;
+        let posicaoAtualPx = 0;
+        let mmPrecisoGlobal = 0;
+
+        function atualizarPainelTerminal(deltaX = 0) {
+            document.getElementById('t-sw').textContent = window.innerWidth;
+            document.getElementById('t-dpr').textContent = window.devicePixelRatio.toFixed(2);
+            document.getElementById('t-ppi').textContent = PPI_FISICO;
+            document.getElementById('t-pxmm').textContent = pixelsPorMmLonico.toFixed(4);
+            document.getElementById('t-fator').textContent = fatorCorrecao.toFixed(5);
+            document.getElementById('t-deltax').textContent = deltaX.toFixed(2);
+            document.getElementById('t-pospx').textContent = posicaoAtualPx.toFixed(2);
+        }
+
+        function calibrarContainerFisico() {
+            // Ajusta a largura do contêiner para que 1mm interno corresponda a 1mm no vidro do Moto G73
+            let pxPorMmAjustado = pixelsPorMmLonico * fatorCorrecao;
+            let larguraFisicaDesejadaMm = 950 / VIEWBOX_PIXELS_POR_MM; // 95mm
+            
+            // Força o container via CSS baseado no cálculo de pixels controlados
+            let larguraEmPixelsCss = larguraFisicaDesejadaMm * pxPorMmAjustado;
+            wrapper.style.width = larguraEmPixelsCss + 'px';
+            atualizarPainelTerminal();
+        }
+
+        function calcularFatorPrecisao() {
+            let valorVidaReal = parseFloat(document.getElementById('input-real').value);
+            if (!valorVidaReal || mmPrecisoGlobal === 0) return;
+
+            // MATEMÁTICA ABSURDA: Encontra a razão de erro entre o digital e o físico
+            // e aplica o inverso multiplicativo direto no fator de escala do container
+            let erroProporcional = mmPrecisoGlobal / valorVidaReal;
+            fatorCorrecao = fatorCorrecao * erroProporcional;
+
+            calibrarContainerFisico();
+            alert("Fator recalculado e injetado! Nova precisão aplicada.");
+        }
+
+        function desenharInstrumento() {
+            let htmlFixo = `
+                <rect x="20" y="80" width="910" height="60" fill="#cbd5e1" stroke="#94a3b8" stroke-width="2"/>
+                <path d="M 50 80 L 50 240 L 110 240 L 150 140 L 150 80 Z" fill="#cbd5e1" stroke="#94a3b8" stroke-width="2"/>
+            `;
+            for (let i = 0; i <= 60; i++) {
+                let x = ZERO_ABSOLUTO_X + (i * VIEWBOX_PIXELS_POR_MM);
+                let altura = (i % 10 === 0) ? 22 : (i % 5 === 0 ? 16 : 10);
+                htmlFixo += `<line x1="${x}" y1="140" x2="${x}" y2="${140 - altura}" stroke="#1e293b" stroke-width="1.5"/>`;
+                if (i % 10 === 0) {
+                    htmlFixo += `<text x="${x}" y="112" font-size="12" font-family="sans-serif" text-anchor="middle" font-weight="bold" fill="#64748b">${i/10}</text>`;
+                }
+            }
+
+            const larguraDivisaoNonioPx = 0.95 * VIEWBOX_PIXELS_POR_MM; 
+            let htmlMovel = `
+                <g id="cursor-movel" transform="translate(0,0)">
+                    <path d="M ${ZERO_ABSOLUTO_X} 80 L ${ZERO_ABSOLUTO_X} 140 L ${ZERO_ABSOLUTO_X + 40} 240 L ${ZERO_ABSOLUTO_X + 80} 240 L ${ZERO_ABSOLUTO_X + 80} 140 L 450 140 L 450 80 Z" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2"/>
+                    <rect x="${ZERO_ABSOLUTO_X}" y="140" width="220" height="45" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2"/>
+            `;
+            for (let i = 0; i <= 20; i++) {
+                let x = ZERO_ABSOLUTO_X + (i * larguraDivisaoNonioPx);
+                let altura = (i % 2 === 0) ? 18 : 11;
+                htmlMovel += `<line x1="${x}" y1="140" x2="${x}" y2="${140 + altura}" stroke="#dc2626" stroke-width="1.5"/>`;
+                if (i % 2 === 0) {
+                    htmlMovel += `<text x="${x}" y="174" font-size="11" fill="#1e293b" font-family="sans-serif" text-anchor="middle" font-weight="bold">${i/2}</text>`;
+                }
+            }
+            htmlMovel += `</g>`;
+            svg.innerHTML = htmlFixo + htmlMovel;
+        }
+
+        desenharInstrumento();
+        calibrarContainerFisico();
+
+        const cursorMovel = document.getElementById('cursor-movel');
+        const leituraMm = document.getElementById('leitura-mm');
+
+        function obterCoordenadasLocaisSVG(e) {
+            const ponto = svg.createSVGPoint();
+            if (e.touches && e.touches.length > 0) {
+                ponto.x = e.touches[0].clientX;
+                ponto.y = e.touches[0].clientY;
+            } else {
+                ponto.x = e.clientX;
+                ponto.y = e.clientY;
+            }
+            return ponto.matrixTransform(svg.getScreenCTM().inverse());
+        }
+
+        svg.addEventListener('mousedown', iniciarArrasto);
+        window.addEventListener('mousemove', arrastar);
+        window.addEventListener('mouseup', pararArrasto);
+        svg.addEventListener('touchstart', iniciarArrasto, { passive: false });
+        window.addEventListener('touchmove', arrastar, { passive: false });
+        window.addEventListener('touchend', pararArrasto);
+
+        function iniciarArrasto(e) {
+            arrastando = true;
+            const pontoLocal = obterCoordenadasLocaisSVG(e);
+            xInicialLocal = pontoLocal.x;
+            xInicialCursor = posicaoAtualPx;
+        }
+
+        function arrastar(e) {
+            if (!arrastando) return;
+            if (e.cancelable) e.preventDefault();
+
+            const pontoLocal = obterCoordenadasLocaisSVG(e);
+            const deltaX = pontoLocal.x - xInicialLocal;
+            
+            let LIMITE_MAX_PX = MAX_MM * VIEWBOX_PIXELS_POR_MM;
+            let novaPosicaoPx = xInicialCursor + deltaX;
+            if (novaPosicaoPx < 0) novaPosicaoPx = 0;
+            if (novaPosicaoPx > LIMITE_MAX_PX) novaPosicaoPx = LIMITE_MAX_PX;
+
+            let mmBruto = novaPosicaoPx / VIEWBOX_PIXELS_POR_MM;
+            mmPrecisoGlobal = Math.round(mmBruto / RESOLUCAO) * RESOLUCAO;
+
+            posicaoAtualPx = mmPrecisoGlobal * VIEWBOX_PIXELS_POR_MM;
+
+            cursorMovel.setAttribute('transform', `translate(${posicaoAtualPx}, 0)`);
+            leituraMm.textContent = mmPrecisoGlobal.toFixed(2).replace('.', ',');
+            
+            atualizarPainelTerminal(deltaX);
+        }
+
+        function pararArrasto() { arrastando = false; }
+        window.addEventListener('resize', calibrarContainerFisico);
+    </script>
+</body>
+</html>
