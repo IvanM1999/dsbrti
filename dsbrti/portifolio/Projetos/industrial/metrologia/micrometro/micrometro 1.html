@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Micrômetro Virtual</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #16a085;
+            --bg-color: #ecf0f1;
+            --card-bg: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+
+        header p {
+            color: #7f8c8d;
+        }
+
+        .container {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* Canvas Container */
+        .canvas-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            background-color: #f9f9f9;
+            border: 1px solid #dcdde1;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        canvas {
+            display: block;
+            background-color: #f0f3f4;
+        }
+
+        /* Controles */
+        .controls {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        label {
+            font-weight: 600;
+            min-width: 120px;
+        }
+
+        input[type="range"] {
+            flex-grow: 1;
+            height: 8px;
+            border-radius: 5px;
+            outline: none;
+            accent-color: var(--accent-color);
+        }
+
+        /* Painel de Leitura */
+        .readout-panel {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid #e9ecef;
+        }
+
+        .readout-box {
+            text-align: center;
+        }
+
+        .readout-box span {
+            display: block;
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            text-transform: uppercase;
+        }
+
+        .readout-box strong {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .total-readout {
+            color: var(--accent-color) !important;
+        }
+
+        /* Responsividade */
+        @media (max-width: 600px) {
+            .readout-panel {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Simulador de Micrômetro</h1>
+        <p>Resolução: 0.01 mm | Faixa: 0 - 25 mm</p>
+    </header>
+
+    <div class="container">
+        <div class="canvas-container">
+            <canvas id="micrometerCanvas" width="700" height="300"></canvas>
+        </div>
+
+        <div class="readout-panel">
+            <div class="readout-box">
+                <span>Escala Principal (Bainha)</span>
+                <strong id="mainVal">0.00 mm</strong>
+            </div>
+            <div class="readout-box">
+                <span>Tambor Circular</span>
+                <strong id="thimbleVal">0.00 mm</strong>
+            </div>
+            <div class="readout-box">
+                <span>Leitura Total</span>
+                <strong id="totalVal" class="total-readout">0.00 mm</strong>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="micrometerRange">Ajuste Fino:</label>
+                <input type="range" id="micrometerRange" min="0" max="25" step="0.01" value="0">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('micrometerCanvas');
+        const ctx = canvas.getContext('2d');
+        const rangeInput = document.getElementById('micrometerRange');
+
+        // Elementos do Painel de Leitura
+        const mainValEl = document.getElementById('mainVal');
+        const thimbleValEl = document.getElementById('thimbleVal');
+        const totalValEl = document.getElementById('totalVal');
+
+        // Configurações do Desenho (escala em pixels)
+        const startX = 50;  // Posição inicial do corpo
+        const scaleFactor = 10; // 1mm = 10px no canvas
+
+        function drawMicrometer(value) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Valores de medição
+            const integerPart = Math.floor(value); 
+            const decimalPart = value - integerPart; 
+            const thimbleDivisions = Math.round(decimalPart * 100); 
+
+            // Atualiza Painel de Texto
+            const mainValueCalculated = integerPart + (decimalPart >= 0.5 ? 0.5 : 0);
+            const thimbleValueCalculated = (decimalPart >= 0.5 ? decimalPart - 0.5 : decimalPart);
+            
+            mainValEl.innerText = `${mainValueCalculated.toFixed(2)} mm`;
+            thimbleValEl.innerText = `${thimbleValueCalculated.toFixed(2)} mm`;
+            totalValEl.innerText = `${value.toFixed(2)} mm`;
+
+            // --- 1. DESENHO DO ARCO (FRAME) ---
+            ctx.fillStyle = '#7f8c8d'; // Cor cinza fosco do metal do arco
+            ctx.beginPath();
+            ctx.arc(150, 150, 80, 0.5 * Math.PI, 1.5 * Math.PI);
+            ctx.lineTo(250, 70);
+            ctx.lineTo(250, 230);
+            ctx.closePath();
+            ctx.fill();
+
+            // Espaço interno recortado do arco
+            ctx.fillStyle = '#f0f3f4'; 
+            ctx.beginPath();
+            ctx.arc(150, 150, 50, 0.5 * Math.PI, 1.5 * Math.PI);
+            ctx.lineTo(230, 100);
+            ctx.lineTo(230, 200);
+            ctx.closePath();
+            ctx.fill();
+
+            // Batente Esquerdo (Anvil)
+            ctx.fillStyle = '#7f8c8d';
+            ctx.fillRect(60, 135, 15, 30);
+            ctx.fillStyle = '#bdc3c7'; // Ponta de metal duro do batente
+            ctx.fillRect(75, 140, 5, 20);
+
+            // --- 2. HASTE MÓVEL (SPINDLE) ---
+            // A posição da ponta da haste móvel varia com a abertura (25mm a 0mm)
+            // Se o valor medido é 'value' (0 a 25), a folga aberta é de 'value * scaleFactor' pixels.
+            const gap = value * scaleFactor;
+            const spindleX = 80 + gap;
+
+            ctx.fillStyle = '#95a5a6';
+            ctx.fillRect(spindleX, 140, 150, 20); // Corpo da haste móvel
+            ctx.fillStyle = '#bdc3c7';
+            ctx.fillRect(spindleX - 5, 140, 5, 20); // Ponta da haste móvel
+
+            // --- 3. BAINHA / ESCALA PRINCIPAL (SLEEVE) ---
+            const sleeveX = 230;
+            const sleeveY = 125;
+            const sleeveWidth = 200;
+            const sleeveHeight = 50;
+
+            ctx.fillStyle = '#d1d8e0';
+            ctx.fillRect(sleeveX, sleeveY, sleeveWidth, sleeveHeight);
+            ctx.strokeStyle = '#2c3e50';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(sleeveX, sleeveY, sleeveWidth, sleeveHeight);
+
+            // Linha de Referência Horizontal da Bainha
+            ctx.beginPath();
+            ctx.moveTo(sleeveX, sleeveY + 25);
+            ctx.lineTo(sleeveX + sleeveWidth, sleeveY + 25);
+            ctx.stroke();
+
+            // Graduações da Bainha (Passos de 1mm superiores e 0.5mm inferiores)
+            // Usando escala visual reduzida para caber no componente (1mm = 6 pixels no desenho da escala)
+            const tickSpacing = 6; 
+            ctx.lineWidth = 1;
+            ctx.fillStyle = '#2c3e50';
+            ctx.font = '10px Arial';
+            ctx.textAlign = 'center';
+
+            for (let i = 0; i <= 25; i++) {
+                const posX = sleeveX + 15 + (i * tickSpacing);
+
+                // Traço superior (Milímetros inteiros)
+                ctx.beginPath();
+                ctx.moveTo(posX, sleeveY + 25);
+                ctx.lineTo(posX, sleeveY + 10);
+                ctx.stroke();
+
+                // Números da escala (a cada 5 mm)
+                if (i % 5 === 0) {
+                    ctx.fillText(i, posX, sleeveY + 8);
+                }
+
+                // Traço inferior (Meio milímetro: 0.5 mm)
+                if (i < 25) {
+                    ctx.beginPath();
+                    ctx.moveTo(posX + (tickSpacing / 2), sleeveY + 25);
+                    ctx.lineTo(posX + (tickSpacing / 2), sleeveY + 35);
+                    ctx.stroke();
+                }
+            }
+
+            // --- 4. TAMBOR GRADUADO (THIMBLE) ---
+            // O tambor move-se horizontalmente de acordo com a rosca milimétrica.
+            // 1 volta completa (50 divisões) move o tambor em 0.5mm.
+            const thimbleX = sleeveX + 15 + (value * tickSpacing);
+            const thimbleWidth = 110;
+            const thimbleHeight = 64;
+            const thimbleY = sleeveY - 7;
+
+            // Desenha o corpo do Tambor
+            ctx.fillStyle = '#bdc3c7';
+            ctx.fillRect(thimbleX, thimbleY, thimbleWidth, thimbleHeight);
+            ctx.strokeStyle = '#2c3e50';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(thimbleX, thimbleY, thimbleWidth, thimbleHeight);
+
+            // Borda chanfrada esquerda do tambor
+            ctx.fillStyle = '#a5b1c2';
+            ctx.beginPath();
+            ctx.moveTo(thimbleX, thimbleY);
+            ctx.lineTo(thimbleX - 8, thimbleY + 5);
+            ctx.lineTo(thimbleX - 8, thimbleY + thimbleHeight - 5);
+            ctx.lineTo(thimbleX, thimbleY + thimbleHeight);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+
+            // Recartilhado antiderrapante na parte de trás do tambor
+            ctx.fillStyle = '#7f8c8d';
+            ctx.fillRect(thimbleX + thimbleWidth - 40, thimbleY + 1, 38, thimbleHeight - 2);
+
+            // --- 5. GRADUAÇÕES DO TAMBOR (0 a 50) ---
+            // Exibiremos a escala girando verticalmente conforme o valor decimal muda.
+            ctx.lineWidth = 1;
+            ctx.font = '10px Courier New';
+            ctx.textAlign = 'right';
+            ctx.fillStyle = '#2c3e50';
+
+            // Centralizado na linha de referência horizontal (sleeveY + 25)
+            const centerLineY = sleeveY + 25;
+
+            // Cada divisão do tambor equivale a 0.01 mm. O tambor tem 50 divisões (0.5 mm por volta).
+            // Pegamos o resto da divisão por 0.5 mm para saber a rotação exata do tambor.
+            const currentRotationValue = (value % 0.5) / 0.01; // Vai de 0 a 49.99
+
+            // Desenha linhas no tambor
+            for (let i = -5; i <= 5; i++) {
+                // Descobre qual divisão desenhar acima e abaixo da linha central
+                const division = (Math.round(currentRotationValue) - i + 50) % 50;
+                const offset = i * 6 - (currentRotationValue % 1) * 6; // Deslocamento suave em pixels
+
+                const tickY = centerLineY + offset;
+
+                // Garante que só desenha dentro do limite do tambor chanfrado
+                if (tickY > thimbleY + 3 && tickY < thimbleY + thimbleHeight - 3) {
+                    ctx.beginPath();
+                    ctx.moveTo(thimbleX - 2, tickY);
+                    ctx.lineTo(thimbleX - 8, tickY);
+                    ctx.stroke();
+
+                    // Escreve os valores numéricos a cada 5 unidades (ex: 0, 5, 10...)
+                    if (division % 5 === 0) {
+                        ctx.fillText(division, thimbleX - 10, tickY + 3);
+                    }
+                }
+            }
+        }
+
+        // Listener do Input Range
+        rangeInput.addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            drawMicrometer(val);
+        });
+
+        // Inicializa o Desenho em 0.00mm
+        drawMicrometer(0);
+    </script>
+</body>
+</html>
