@@ -1,0 +1,241 @@
+:root {
+    --bg-body: #f8fafc;
+    --panel-bg: #ffffff;
+    --destiny-blue: #0f172a;
+    --accent: #dc2626;
+    --border-color: #cbd5e1;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Evita scrolls indesejados ao arrastar o dedo */
+    background-color: var(--bg-body);
+}
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+}
+
+.app-container {
+    width: 100%;
+    height: 100%;
+    max-width: 800px;
+    max-height: 600px;
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.app-header {
+    background: var(--destiny-blue);
+    color: #ffffff;
+    padding: 10px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid #f59e0b;
+    flex-shrink: 0;
+}
+
+.app-header h1 {
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.app-header span {
+    font-size: 0.75rem;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.canvas-container {
+    flex: 1;
+    width: 100%;
+    background: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid var(--border-color);
+    overflow: hidden;
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+    max-height: 230px;
+    object-fit: contain; /* Garante que o desenho do micrômetro nunca se deforme */
+    display: block;
+    cursor: ew-resize;
+    touch-action: none;
+}
+
+.control-panel {
+    background: #f1f5f9;
+    padding: 12px 16px;
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 15px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.btn-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.btn-row {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 4px;
+}
+
+.btn-step {
+    background: #ffffff;
+    border: 1px solid #94a3b8;
+    color: #1e293b;
+    padding: 8px 0;
+    font-size: 0.75rem;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.1s;
+    touch-action: manipulation;
+}
+
+.btn-step:hover {
+    background: #e2e8f0;
+    border-color: #64748b;
+}
+
+.btn-step:active {
+    transform: scale(0.95);
+}
+
+.response-box {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.display-text {
+    font-size: 1.8rem;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    color: #0f172a;
+}
+
+.display-text.hidden {
+    color: #94a3b8;
+}
+
+.btn-toggle {
+    background: #f59e0b;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    max-width: 180px;
+}
+
+.btn-toggle:hover {
+    background: #d97706;
+}
+
+/* --- ADAPTAÇÃO PARA PORTRAIT (TELAS DE CELULAR EM PÉ) --- */
+@media (max-width: 650px) {
+    body {
+        padding: 0;
+    }
+    .app-container {
+        border-radius: 0;
+        border: none;
+        max-height: 100%;
+    }
+    .control-panel {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 12px;
+    }
+    .btn-step {
+        padding: 10px 0; /* Botões ligeiramente maiores para melhor toque físico */
+        font-size: 0.7rem;
+    }
+}
+
+/* --- ADAPTAÇÃO PARA LANDSCAPE (CELULAR DEITADO / ROTAÇÃO) --- */
+@media (max-height: 380px) and (orientation: landscape) {
+    body {
+        padding: 0;
+    }
+    .app-container {
+        border-radius: 0;
+        border: none;
+        max-height: 100%;
+    }
+    .app-header {
+        padding: 4px 16px;
+    }
+    .app-header h1 {
+        font-size: 0.85rem;
+    }
+    .canvas-container {
+        padding: 4px;
+    }
+    .control-panel {
+        grid-template-columns: 1.5fr 1fr;
+        padding: 6px 12px;
+        gap: 10px;
+    }
+    .btn-grid {
+        gap: 4px;
+    }
+    .btn-step {
+        padding: 6px 0;
+        font-size: 0.65rem;
+    }
+    .response-box {
+        padding: 4px;
+        flex-direction: row;
+        justify-content: space-around;
+        gap: 4px;
+    }
+    .display-text {
+        font-size: 1.3rem;
+    }
+    .btn-toggle {
+        padding: 4px 8px;
+        font-size: 0.7rem;
+        max-width: 110px;
+    }
+}

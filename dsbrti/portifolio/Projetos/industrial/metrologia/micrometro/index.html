@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Simulador de Micrômetro | DestinyServicesBR</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="app-header">
+            <h1>DestinyServicesBR</h1>
+            <span>Micrômetro Centesimal (0-25 mm)</span>
+        </div>
+
+        <div class="canvas-container">
+            <canvas id="micrometerCanvas"></canvas>
+        </div>
+
+        <div class="control-panel">
+            <div class="btn-grid">
+                <div class="btn-row">
+                    <button class="btn-step" onclick="adjust(-1.00)">-1.0</button>
+                    <button class="btn-step" onclick="adjust(-0.50)">-0.5</button>
+                    <button class="btn-step" onclick="adjust(-0.10)">-0.1</button>
+                    <button class="btn-step" onclick="adjust(-0.05)">-0.05</button>
+                    <button class="btn-step" onclick="adjust(-0.01)">-0.01</button>
+                    <button class="btn-step" onclick="adjust(-0.005)">-0.005</button>
+                </div>
+                <div class="btn-row">
+                    <button class="btn-step" onclick="adjust(1.00)">+1.0</button>
+                    <button class="btn-step" onclick="adjust(0.50)">+0.5</button>
+                    <button class="btn-step" onclick="adjust(0.10)">+0.1</button>
+                    <button class="btn-step" onclick="adjust(0.05)">+0.05</button>
+                    <button class="btn-step" onclick="adjust(0.01)">+0.01</button>
+                    <button class="btn-step" onclick="adjust(0.005)">+0.005</button>
+                </div>
+            </div>
+
+            <div class="response-box">
+                <div id="readout" class="display-text">0.00 mm</div>
+                <button id="toggleBtn" class="btn-toggle" onclick="toggleView()">Ocultar Resposta</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
