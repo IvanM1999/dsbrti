@@ -66,7 +66,6 @@
             border-radius: 4px;
         }
 
-        /* Container do canvas que permite responsividade fluida */
         .canvas-container {
             width: 100%;
             background: #ffffff;
@@ -82,11 +81,11 @@
             width: 100%;
             max-width: 760px;
             height: auto;
-            aspect-ratio: 76 / 23; /* Mantém a proporção exata ao redimensionar */
+            aspect-ratio: 76 / 23;
             display: block;
             background: #ffffff;
             cursor: ew-resize;
-            touch-action: none; /* Previne scroll acidental no mobile */
+            touch-action: none;
         }
 
         .control-panel {
@@ -231,11 +230,9 @@
         let isDragging = false;
         let startX = 0;
 
-        // Função auxiliar para obter coordenadas de toque/mouse relativas ao tamanho responsivo do canvas
         function getCanvasX(e) {
             const rect = canvas.getBoundingClientRect();
             const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            // Mapeia a posição física da tela para a resolução lógica interna do Canvas (760px)
             return (clientX - rect.left) * (canvas.width / rect.width);
         }
 
@@ -251,7 +248,6 @@
             const currentX = getCanvasX(e);
             const deltaX = currentX - startX;
             startX = currentX;
-            // Sensibilidade do arraste lateral calibrada
             adjust(deltaX * 0.008);
         });
 
@@ -296,86 +292,88 @@
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            const CY = 105; // Linha de centro de simetria do micrômetro
-            const scalePX = 7.0; // Fator de escala ideal: 7 pixels equivalem a 1 mm real
+            const CY = 115; // Altura centralizada
+            const scalePX = 8.0; // Fator de escala (8px = 1mm)
+            
+            // --- AJUSTE DE POSIÇÃO CALIBRADO ---
+            const anvilFaceX = 125; // O ponto real de medição ZERO agora ocorre mais para a direita
+            const zeroSleeveX = 325; // Sincroniza o tambor de medição com o novo zero do fuso
 
-            // 1. CONFIGURAÇÕES GEOMÉTRICAS DOS LIMITES (CALIBRAÇÃO DE FÁBRICA)
-            const anvilFaceX = 145;  // Face estática de medição do batente esquerdo
-            const zeroSleeveX = 320; // Posição física exata da linha do zero "0" na Bainha Fixa
-
-            // --- 2. NOVO ARCO EM "C" EXTRA ESPESSO E ROBUSTO (PADRÃO MITUTOYO) ---
-            ctx.fillStyle = '#2d3748'; // Cinza escuro industrial fosco
-            ctx.strokeStyle = '#1a202c';
-            ctx.lineWidth = 3;
-
+            // --- 1. ARCO DE METRO SÓLIDO (C-FRAME) - Posicionado elegantemente à esquerda ---
+            ctx.fillStyle = '#1e293b';
+            ctx.strokeStyle = '#0f172a';
+            ctx.lineWidth = 4;
             ctx.beginPath();
-            // Começa no suporte cilíndrico do batente fixo
-            ctx.moveTo(anvilFaceX - 30, CY - 22);
-            ctx.lineTo(anvilFaceX, CY - 22);
-            ctx.lineTo(anvilFaceX, CY + 22);
             
-            // Perfil interno do arco espessado
-            ctx.bezierCurveTo(anvilFaceX, CY + 105, zeroSleeveX - 25, CY + 105, zeroSleeveX - 25, CY + 22);
-            ctx.lineTo(zeroSleeveX, CY + 22);
-            ctx.lineTo(zeroSleeveX, CY - 22);
-            ctx.lineTo(zeroSleeveX - 30, CY - 22);
+            // Perfil Externo do Arco (Curvatura compacta à esquerda)
+            ctx.moveTo(315, CY - 22);
+            ctx.lineTo(315, CY + 26);
+            ctx.bezierCurveTo(315, CY + 110, 75, CY + 110, 75, CY + 26); // Barriga externa compactada
+            ctx.lineTo(75, CY - 22); // Face extrema externa esquerda
+            ctx.lineTo(95, CY - 22); // Parede interna do arco de suporte do batente
+            ctx.lineTo(95, CY + 15);
             
-            // Perfil externo bem largo, gerando um arco pesado e anatômico
-            ctx.bezierCurveTo(zeroSleeveX - 30, CY + 130, anvilFaceX - 30, CY + 130, anvilFaceX - 30, CY - 22);
+            // Perfil Interno
+            ctx.bezierCurveTo(95, CY + 80, 295, CY + 80, 295, CY - 22);
             ctx.closePath();
             ctx.fill();
             ctx.stroke();
 
-            // Placa Antitérmica e de Identificação Centralizada
+            // Placa Isolante Térmica (Alinhada perfeitamente na base do arco compacto)
             ctx.fillStyle = '#0f172a';
             ctx.beginPath();
-            ctx.roundRect(185, CY + 65, 105, 26, 5);
+            ctx.roundRect(125, CY + 50, 110, 30, 6);
             ctx.fill();
 
-            // Gravações Industriais na Plaqueta
+            // Identificação Industrial na Placa
             ctx.fillStyle = '#ffffff';
-            ctx.font = 'bold 9px Arial';
+            ctx.font = 'bold 10px Arial';
             ctx.textAlign = 'center';
-            ctx.fillText("DESTINY", 237, CY + 76);
+            ctx.fillText("DESTINY", 180, CY + 62);
             ctx.fillStyle = '#f59e0b';
-            ctx.font = '8px Arial';
-            ctx.fillText("0-25mm   0.01mm", 237, CY + 86);
+            ctx.font = 'bold 8px Arial';
+            ctx.fillText("0-25mm  0.01mm", 180, CY + 74);
 
-            // Batente Fixo Esquerdo (Anvil)
-            ctx.fillStyle = '#cbd5e1';
-            ctx.fillRect(anvilFaceX - 15, CY - 8, 15, 16);
-            ctx.fillStyle = '#475569'; // Face de contato de carboneto
-            ctx.fillRect(anvilFaceX - 2, CY - 8, 2, 16);
+            // Batente Fixo Esquerdo (Anvil) - Projetado para a direita para sair de dentro do arco
+            // O corpo de aço avança de dentro do arco (95px) até o ponto zero calibrado (125px)
+            ctx.fillStyle = '#cbd5e1'; 
+            ctx.fillRect(95, CY - 8, 30, 16); // Avança até a face de contato
+            ctx.fillStyle = '#475569'; // Pastilha de carboneto do batente
+            ctx.fillRect(122, CY - 8, 3, 16);
 
-            // --- 3. HASTE MÓVEL (SPINDLE) COMPLETAMENTE SINCRONIZADA ---
-            // O fuso avança para a ESQUERDA à medida que o valor diminui.
-            // Em 0.00mm, a ponta móvel encosta perfeitamente no batente (em anvilFaceX = 145).
+            // --- 2. HASTE MÓVEL (SPINDLE) ---
+            // Começa exatamente no ponto de toque zero (125px) e avança conforme o valor do micrômetro
             const spindleX = anvilFaceX + (value * scalePX);
             ctx.fillStyle = '#e2e8f0';
-            // A haste se estende para a direita adentrando o corpo do tambor
-            ctx.fillRect(spindleX, CY - 8, 180, 16);
-            ctx.fillStyle = '#475569'; // Face de contato do fuso
-            ctx.fillRect(spindleX, CY - 8, 2, 16);
+            ctx.fillRect(spindleX, CY - 8, 250, 16); 
+            ctx.fillStyle = '#475569'; // Face de carboneto móvel
+            ctx.fillRect(spindleX, CY - 8, 3, 16);
 
-            // --- 4. BAINHA FIXA (SLEEVE) ---
-            const sleeveX = zeroSleeveX;
-            const sleeveY = CY - 25;
-            const sleeveW = 240;
-            const sleeveH = 50;
+            // Trava da Haste
+            ctx.fillStyle = '#64748b';
+            ctx.beginPath();
+            ctx.arc(270, CY - 18, 6, 0, Math.PI * 2);
+            ctx.fill();
 
-            ctx.fillStyle = '#f8fafc';
+            // --- 3. BAINHA FIXA (SLEEVE) ---
+            const sleeveX = 310;
+            const sleeveW = 235;
+            const sleeveH = 44;
+            const sleeveY = CY - 22;
+
+            ctx.fillStyle = '#f1f5f9';
             ctx.fillRect(sleeveX, sleeveY, sleeveW, sleeveH);
-            ctx.strokeStyle = '#000000';
-            ctx.lineWidth = 1;
+            ctx.strokeStyle = '#475569';
+            ctx.lineWidth = 1.5;
             ctx.strokeRect(sleeveX, sleeveY, sleeveW, sleeveH);
 
-            // Linha de Fé Horizontal Principal
+            // Linha de Fé Horizontal
             ctx.beginPath();
             ctx.moveTo(sleeveX, CY);
             ctx.lineTo(sleeveX + sleeveW, CY);
             ctx.stroke();
 
-            // --- 5. GRAVAÇÃO DAS ESCALAS DA BAINHA ---
+            // Gravação de Escalas na Bainha Fixa
             ctx.fillStyle = '#000000';
             ctx.font = 'bold 9px Arial';
             ctx.textAlign = 'center';
@@ -383,100 +381,108 @@
             for (let i = 0; i <= 25; i++) {
                 let posX = zeroSleeveX + (i * scalePX);
 
-                // Milímetros Inteiros (Traços Superiores)
-                ctx.beginPath();
-                ctx.moveTo(posX, CY);
-                ctx.lineTo(posX, CY - 10);
-                ctx.stroke();
-
-                if (i % 5 === 0) {
-                    ctx.fillText(i.toString(), posX, CY - 14);
-                }
-
-                // Meios Milímetros (Traços Inferiores)
-                if (i < 25) {
-                    let meioX = posX + (scalePX / 2);
+                if (posX < sleeveX + sleeveW) {
+                    // Milímetros Inteiros (Linhas Superiores)
                     ctx.beginPath();
-                    ctx.moveTo(meioX, CY);
-                    ctx.lineTo(meioX, CY + 8);
+                    ctx.moveTo(posX, CY);
+                    ctx.lineTo(posX, CY - 8);
                     ctx.stroke();
+
+                    if (i % 5 === 0) {
+                        ctx.fillText(i.toString(), posX, CY - 11);
+                    }
+
+                    // Meios Milímetros (Linhas Inferiores)
+                    if (i < 25) {
+                        let meioX = posX + (scalePX / 2);
+                        ctx.beginPath();
+                        ctx.moveTo(meioX, CY);
+                        ctx.lineTo(meioX, CY + 6);
+                        ctx.stroke();
+                    }
                 }
             }
 
-            // --- 6. TAMBOR MÓVEL (THIMBLE) ---
-            // A borda chanfrada avança encobrindo a bainha.
-            // Quando a medida é 0.00mm, a borda do chanfro bate precisamente em zeroSleeveX (320).
-            const thimbleX = zeroSleeveX + (value * scalePX);
-            const thimbleW = 160;
-            const thimbleH = 64;
-            const thimbleY = CY - thimbleH / 2;
-            const bevelW = 15; // Largura do chanfro cônico
+            // --- 4. TAMBOR MÓVEL (THIMBLE) ---
+            const thimbleLeft = zeroSleeveX + (value * scalePX);
+            const bevelW = 15;
+            const thimbleW = 130;
+            const thimbleH = 56;
+            const thimbleY = CY - 28;
 
-            // Corpo Cilíndrico Metálico
+            // Desenha o Chanfro Cônico do Tambor
             ctx.fillStyle = '#cbd5e1';
-            ctx.fillRect(thimbleX, thimbleY, thimbleW, thimbleH);
-
-            // Chanfro Esquerdo Angular
-            ctx.fillStyle = '#e2e8f0';
             ctx.beginPath();
-            ctx.moveTo(thimbleX, thimbleY);
-            ctx.lineTo(thimbleX - bevelW, thimbleY + 4);
-            ctx.lineTo(thimbleX - bevelW, thimbleY + thimbleH - 4);
-            ctx.lineTo(thimbleX, thimbleY + thimbleH);
+            ctx.moveTo(thimbleLeft, CY - 22);
+            ctx.lineTo(thimbleLeft + bevelW, thimbleY);
+            ctx.lineTo(thimbleLeft + bevelW + thimbleW, thimbleY);
+            ctx.lineTo(thimbleLeft + bevelW + thimbleW, CY + 28);
+            ctx.lineTo(thimbleLeft + bevelW, CY + 28);
+            ctx.lineTo(thimbleLeft, CY + 22);
             ctx.closePath();
             ctx.fill();
 
-            // Contornos Técnicos do Tambor
+            // Bordas e Contorno Metálico do Tambor
             ctx.strokeStyle = '#000000';
-            ctx.lineWidth = 1.2;
-            ctx.strokeRect(thimbleX, thimbleY, thimbleW, thimbleH);
-            
+            ctx.lineWidth = 1.5;
             ctx.beginPath();
-            ctx.moveTo(thimbleX - bevelW, thimbleY + 4);
-            ctx.lineTo(thimbleX - bevelW, thimbleY + thimbleH - 4);
+            ctx.moveTo(thimbleLeft, CY - 22);
+            ctx.lineTo(thimbleLeft + bevelW, thimbleY);
+            ctx.lineTo(thimbleLeft + bevelW + thimbleW, thimbleY);
+            ctx.lineTo(thimbleLeft + bevelW + thimbleW, CY + 28);
+            ctx.lineTo(thimbleLeft + bevelW, CY + 28);
+            ctx.lineTo(thimbleLeft, CY + 22);
+            ctx.closePath();
             ctx.stroke();
 
-            // Recartilhado Traseiro de Aço Carbono
-            ctx.fillStyle = '#475569';
-            ctx.fillRect(thimbleX + thimbleW - 25, thimbleY + 1, 24, thimbleH - 2);
+            // Linha divisória do chanfro
+            ctx.beginPath();
+            ctx.moveTo(thimbleLeft + bevelW, thimbleY);
+            ctx.lineTo(thimbleLeft + bevelW, CY + 28);
+            ctx.stroke();
 
-            // --- 7. ESCALA VERMELHA/PRETA DO TAMBOR (0 A 50) ---
+            // Recartilhado (Fricção Recoberta)
+            ctx.fillStyle = '#475569';
+            ctx.fillRect(thimbleLeft + bevelW + thimbleW - 25, thimbleY + 1, 24, thimbleH - 2);
+
+            // Catraca / Fricção Traseira (Fim do Tambor)
+            ctx.fillStyle = '#94a3b8';
+            ctx.fillRect(thimbleLeft + bevelW + thimbleW, CY - 18, 40, 36);
+            ctx.strokeStyle = '#000000';
+            ctx.strokeRect(thimbleLeft + bevelW + thimbleW, CY - 18, 40, 36);
+
+            // --- 5. DIVISÃO CENTESIMAL DO TAMBOR (0 A 50) ---
             ctx.textAlign = 'right';
             ctx.font = 'bold 9px Arial';
 
             const thimbleVal = value % 0.5;
-            const rotation = thimbleVal / 0.01; // Mapeamento circular de 0 a 49
+            const rotation = (thimbleVal / 0.5) * 50;
 
-            const stepY = 2.6; // Densidade do passo dos traços centesimais
-
-            for (let t = -12; t <= 12; t++) {
+            for (let t = -10; t <= 10; t++) {
                 let targetDivision = Math.round(rotation) - t;
                 let actualDivision = (targetDivision + 50) % 50;
 
-                // Modelagem tridimensional cilíndrica (efeito de curvatura)
-                let deltaY = t * stepY + ((rotation % 1) * stepY);
-                let angle = (deltaY / (thimbleH / 2)) * (Math.PI / 2);
+                let deltaDiv = t + (rotation % 1);
+                let angle = (deltaDiv / 10) * (Math.PI / 3.2);
 
-                if (Math.abs(angle) < 1.35) {
-                    let posY = CY - (thimbleH / 2) * Math.sin(angle);
+                if (Math.abs(angle) < Math.PI / 2) {
+                    let posY = CY - 28 * Math.sin(angle);
 
-                    // Traço de graduação de medição
                     ctx.strokeStyle = '#000000';
+                    ctx.lineWidth = 1;
                     ctx.beginPath();
-                    ctx.moveTo(thimbleX - bevelW, posY);
-                    ctx.lineTo(thimbleX - bevelW + 6, posY);
+                    ctx.moveTo(thimbleLeft, posY);
+                    ctx.lineTo(thimbleLeft + 8, posY);
                     ctx.stroke();
 
-                    // Gravação dos numerais centesimais (Cores idênticas às de ensino do Stefanelli)
                     if (actualDivision % 5 === 0) {
-                        ctx.fillStyle = (actualDivision === 0) ? '#dc2626' : '#000000'; // Destaque em vermelho para o zero
-                        ctx.fillText(actualDivision.toString(), thimbleX - bevelW - 3, posY + 3);
+                        ctx.fillStyle = (actualDivision === 0) ? '#dc2626' : '#000000';
+                        ctx.fillText(actualDivision.toString(), thimbleLeft - 3, posY + 3);
                     }
                 }
             }
         }
 
-        // Inicializa zerado e ajustado perfeitamente de fábrica
         updateUI();
     </script>
 </body>
