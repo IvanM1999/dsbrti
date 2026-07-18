@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Master Suite de Metrologia & Engenharia Computacional</title>
+    <style>
+        :root {
+            --bg-main: #0b0f19;
+            --bg-card: #1e293b;
+            --bg-dark: #020617;
+            --border-color: #334155;
+            --cyan: #38bdf8;
+            --green: #4ade80;
+            --amber: #f59e0b;
+            --magenta: #f43f5e;
+            --text-muted: #64748b;
+            --text-light: #e2e8f0;
+        }
+
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            background-color: var(--bg-main);
+            color: var(--text-light);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--bg-card);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+        }
+
+        header {
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .tabs-nav {
+            display: flex;
+            gap: 8px;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .tab-btn {
+            background: var(--bg-dark);
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            border-bottom: none;
+            padding: 12px 20px;
+            border-radius: 6px 6px 0 0;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            background: var(--cyan);
+            color: var(--bg-dark);
+            border-color: var(--cyan);
+        }
+
+        .tab-content { 
+            display: none; 
+        }
+
+        .tab-content.active { 
+            display: block; 
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .section {
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            color: var(--cyan);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--cyan);
+            padding-left: 10px;
+            font-weight: bold;
+        }
+
+        .prancheta {
+            width: 100%;
+            background: #000;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            position: relative;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .svg-wrapper {
+            width: 100%;
+            touch-action: none;
+            background: #020617;
+            border: 2px solid #1e293b;
+            border-radius: 6px;
+            position: relative;
+            overflow-x: auto;
+        }
+
+        svg { 
+            display: block; 
+            width: 100%;
+            height: auto;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            max-height: 240px;
+            cursor: ew-resize;
+            touch-action: none;
+            background: #fff;
+        }
+
+        .control-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        select, input, button {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: #fff;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+
+        select:focus, input:focus { 
+            border-color: var(--cyan); 
+            outline: none; 
+        }
+
+        input[type="range"] {
+            padding: 0;
+            cursor: pointer;
+        }
+
+        button.primary { 
+            background: #0284c7; 
+            border: none; 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: background 0.2s;
+        }
+
+        button.primary:hover { 
+            background: #0369a1; 
+        }
+
+        .badge-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+            background: var(--bg-card);
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+
+        .badge { 
+            font-size: 0.85rem; 
+            color: var(--text-muted);
+        }
+
+        .badge span { 
+            display: block; 
+            font-size: 1.1rem; 
+            font-weight: bold; 
+            margin-top: 2px; 
+        }
+
+        .painel-leitura {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--cyan);
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .ring-tool-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .ring-display {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #020617;
+            border-radius: 6px;
+            height: 220px;
+            position: relative;
+        }
+
+        #interactive-ring {
+            border: 3px solid var(--amber);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
+            transition: width 0.05s ease, height 0.05s ease;
+        }
+
+        .btn-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            width: 100%;
+        }
+
+        .btn-row {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 4px;
+        }
+
+        .btn-step {
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            color: #fff;
+            padding: 8px 0;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+        }
+        .btn-step:hover { background: var(--bg-card); }
+
+        @media (max-width: 768px) {
+            .grid-2, .ring-tool-layout { grid-template-columns: 1fr; }
+            body { padding: 5px; }
+            .container { padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h2 style="color: var(--cyan);">📐 ECOSSISTEMA AVANÇADO DE ENGENHARIA & METROLOGIA</h2>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 5px;">Ambiente integrado de calibração micrométrica, projeção ABNT e análises dimensionais.</p>
+        </header>
+
+        <div class="tabs-nav">
+            <button class="tab-btn active" onclick="mudarAba('aba-hardware')">01. Telemetria e Calibração</button>
+            <button class="tab-btn" onclick="mudarAba('aba-paquimetro')">02. Paquímetro (0,05mm)</button>
+            <button class="tab-btn" onclick="mudarAba('aba-micrometro')">03. Micrômetro (0-25mm)</button>
+            <button class="tab-btn" onclick="mudarAba('aba-projecoes')">04. Projeções Ortogonais</button>
+            <button class="tab-btn" onclick="mudarAba('aba-aliancas')">05. Medidor de Alianças</button>
+            <button class="tab-btn" onclick="mudarAba('aba-tolerancias')">06. Ajustes ISO 286</button>
+        </div>
+
+        <!-- ABA 1: TELEMETRIA -->
+        <div id="aba-hardware" class="tab-content active">
+            <div class="grid-2">
+                <div class="section">
+                    <h3 class="section-title">Varredura de Hardware Ativa</h3>
+                    <div class="badge-panel">
+                        <div class="badge">Aparelho Detectado: <span id="env-device" style="color: var(--amber);">-</span></div>
+                        <div class="badge">DPR Nativo: <span id="env-dpr" style="color: var(--cyan);">-</span></div>
+                        <div class="badge">Fator Escalamento Real: <span id="env-fator" style="color: var(--green);">-</span></div>
+                        <div class="badge">Resolução Lógica: <span id="env-res" style="color: var(--text-light);">-</span></div>
+                    </div>
+                </div>
+                <div class="section">
+                    <h3 class="section-title">Calibração Cruzada Avançada (Poka-Yoke)</h3>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">Para garantir precisão métrica física 1:1 real diretamente no seu vidro.</p>
+                    <div class="control-row">
+                        <select id="poka-select-ref" style="flex:1;">
+                            <option value="8.25">USB Tipo-C Padrão (8.25mm)</option>
+                            <option value="6.70">Lightning Apple (6.70mm)</option>
+                            <option value="8.30">Corpo Caneta BIC Sextavada (8.30mm)</option>
+                            <option value="7.00">Lápis Sextavado Faber-Castell (7.00mm)</option>
+                        </select>
+                        <input type="range" id="poka-slider" min="5.0" max="12.0" step="0.05" value="8.25" style="flex:1;">
+                    </div>
+                    <div class="prancheta" style="min-height: 90px; display:flex; justify-content:center; align-items:center;">
+                        <div id="poka-silhouette" style="background: rgba(56,189,248,0.15); border: 2px solid var(--cyan);"></div>
+                    </div>
+                    <button class="primary" id="poka-btn-confirmar" style="width: 100%; margin-top:10px;">Injetar Matriz Métrica Unificada</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA 2: PAQUÍMETRO -->
+        <div id="aba-paquimetro" class="tab-content">
+            <div class="section">
+                <h3 class="section-title">Paquímetro Analógico Industrial</h3>
+                <div class="painel-leitura"><span id="leitura-mm">0,00</span> mm</div>
+                <div id="wrapper-paquimetro" class="svg-wrapper">
+                    <svg id="paquimetro" viewBox="0 0 950 260"></svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA 3: MICRÔMETRO -->
+        <div id="aba-micrometro" class="tab-content">
+            <div class="section">
+                <h3 class="section-title">Micrômetro Centesimal Externo (0-25 mm)</h3>
+                <div class="svg-wrapper" style="background: #fff; border: none;">
+                    <canvas id="micrometerCanvas"></canvas>
+                </div>
+                <div class="control-row" style="margin-top: 15px; justify-content: space-between;">
+                    <div class="btn-grid" style="max-width: 65%;">
+                        <div class="btn-row">
+                            <button class="btn-step" onclick="adjustMicro(-1.00)">-1.0</button>
+                            <button class="btn-step" onclick="adjustMicro(-0.50)">-0.5</button>
+                            <button class="btn-step" onclick="adjustMicro(-0.10)">-0.1</button>
+                            <button class="btn-step" onclick="adjustMicro(-0.05)">-0.05</button>
+                            <button class="btn-step" onclick="adjustMicro(-0.01)">-0.01</button>
+                            <button class="btn-step" onclick="adjustMicro(-0.005)">-0.005</button>
+                        </div>
+                        <div class="btn-row">
+                            <button class="btn-step" onclick="adjustMicro(1.00)">+1.0</button>
+                            <button class="btn-step" onclick="adjustMicro(0.50)">+0.5</button>
+                            <button class="btn-step" onclick="adjustMicro(0.10)">+0.1</button>
+                            <button class="btn-step" onclick="adjustMicro(0.05)">+0.05</button>
+                            <button class="btn-step" onclick="adjustMicro(0.01)">+0.01</button>
+                            <button class="btn-step" onclick="adjustMicro(0.005)">+0.005</button>
+                        </div>
+                    </div>
+                    <div style="text-align: right; background: var(--bg-dark); padding: 10px; border-radius: 6px; min-width: 30%;">
+                        <div id="microReadout" style="font-size: 1.8rem; font-weight: bold; color: var(--green);">0.00 mm</div>
+                        <button id="toggleMicroBtn" onclick="toggleMicroView()" style="margin-top: 5px; font-size: 0.75rem; padding: 4px 8px;">Ocultar Resposta</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA 4: PROJEÇÕES ORTOGONAIS -->
+        <div id="aba-projecoes" class="tab-content">
+            <div class="section">
+                <h3 class="section-title">Interpretador de Vistas Mecânicas (1º Diedro)</h3>
+                <div class="control-row">
+                    <label>Largura (X): <input type="range" id="vol-x" min="20" max="80" value="50"></label>
+                    <label>Altura (Y): <input type="range" id="vol-y" min="20" max="80" value="40"></label>
+                    <label>Profundidade (Z): <input type="range" id="vol-z" min="20" max="60" value="30"></label>
+                </div>
+                <div class="grid-2">
+                    <div class="section" style="background:#050b14;">
+                        <h4 style="color:var(--amber); margin-bottom:5px; font-size: 0.9rem;">Perspectiva Isométrica Reduzida</h4>
+                        <svg id="svg-iso" viewBox="0 0 300 220" style="background:#000;"></svg>
+                    </div>
+                    <div class="section" style="background:#050b14;">
+                        <h4 style="color:var(--green); margin-bottom:5px; font-size: 0.9rem;">Projeções Ortogonais ABNT</h4>
+                        <svg id="svg-vistas" viewBox="0 0 300 220" style="background:#000;"></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA 5: ALIANÇAS -->
+        <div id="aba-aliancas" class="tab-content">
+            <div class="section">
+                <h3 class="section-title">Medidor Internacional de Anéis & Diâmetro de Aro</h3>
+                <div class="ring-tool-layout">
+                    <div>
+                        <h4 style="margin-bottom:10px; font-size: 0.9rem;">Configuração Regional</h4>
+                        <div class="control-row">
+                            <select id="select-pais" style="width: 100%;">
+                                <option value="BR">Brasil (Padrão ABNT)</option>
+                                <option value="US">EUA / Canadá</option>
+                                <option value="EU">Europa</option>
+                                <option value="AS">Ásia</option>
+                            </select>
+                        </div>
+                        <div class="badge-panel" style="margin-top:20px;">
+                            <div class="badge">Diâmetro Interno: <span id="ring-diam" style="color:var(--amber)">16.20 mm</span></div>
+                            <div class="badge">Tamanho Correspondente: <span id="ring-size-num" style="color:var(--green)">14</span></div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom:10px; font-size: 0.9rem;">Ajuste Físico na Tela</h4>
+                        <input type="range" id="slider-ring" min="14.0" max="20.0" step="0.05" value="16.2" style="width:100%; margin-bottom: 10px;">
+                        <div class="ring-display">
+                            <div id="interactive-ring"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA 6: TOLERÂNCIAS ISO -->
+        <div id="aba-tolerancias" class="tab-content">
+            <div class="section">
+                <h3 class="section-title">Calculadora de Ajustes Mecânicos (ISO 286)</h3>
+                <div class="control-row">
+                    <label>Ø Nominal (mm): <input type="number" id="iso-nominal" value="30" style="width:90px;"></label>
+                    <label>Furo: 
+                        <select id="iso-furo">
+                            <option value="H7">H7</option>
+                            <option value="H8">H8</option>
+                            <option value="F7">F7</option>
+                        </select>
+                    </label>
+                    <label>Eixo: 
+                        <select id="iso-eixo">
+                            <option value="g6">g6 (Deslizante)</option>
+                            <option value="h6">h6 (Justo)</option>
+                            <option value="p6">p6 (Interferência)</option>
+                        </select>
+                    </label>
+                    <button class="primary" id="btn-calcular-iso">Analisar Acoplamento</button>
+                </div>
+                <div class="section" style="background:#050b14; margin-bottom:0;">
+                    <h4 style="color:var(--cyan); margin-bottom:10px; font-size:0.9rem;">Relatório de Tolerância Linear</h4>
+                    <div class="badge-panel">
+                        <div class="badge">Afastamento Sup. Furo: <span id="res-es" style="color: var(--cyan);">0.000</span></div>
+                        <div class="badge">Afastamento Inf. Furo: <span id="res-ei" style="color: var(--cyan);">0.000</span></div>
+                        <div class="badge">Afastamento Sup. Eixo: <span id="res-es-eixo" style="color: var(--amber);">0.000</span></div>
+                        <div class="badge">Afastamento Inf. Eixo: <span id="res-ei-eixo" style="color: var(--amber);">0.000</span></div>
+                        <div class="badge" style="grid-column: 1/-1;">Ajuste Resultante: <span id="res-tipo-ajuste" style="color: var(--green);">-</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- 1. CORE ENGINE DE HARDWARE & SISTEMA UNIFICADO ---
+        const HardwareIntelligence = {
+            profile: { ppi: 96, dpr: 1, pxPerMmLg: 3.77, device: "Genérico" },
+            mapearAmbiente() {
+                this.profile.dpr = window.devicePixelRatio || 1;
+                const ua = navigator.userAgent;
+                if (/Android/i.test(ua) && (screen.width === 1080 || screen.height === 1080)) {
+                    this.profile.ppi = 405;
+                    this.profile.device = "Motorola Moto G73 5G (Perfil Ativo)";
+                } else if (/Android/i.test(ua) || /iPhone/i.test(ua)) {
+                    this.profile.ppi = 320;
+                    this.profile.device = "Mobile Genérico Estimado";
+                } else {
+                    this.profile.ppi = 141;
+                    this.profile.device = "Desktop / Monitor Comum";
+                }
+                this.profile.pxPerMmLg = (this.profile.ppi / 25.4) / this.profile.dpr;
+                return this.profile;
+            }
+        };
+
+        // --- 2. ENGINE METROLÓGICO (PAQUÍMETRO) ---
+        const MetrologyEngine = {
+            fatorCorrecao: 1.638,
+            viewBoxPxPerMm: 10,
+            zeroAbsolutoX: 150,
+            posicaoAtualPx: 0,
+            mmPrecisoGlobal: 0,
+            arrastando: false,
+            xInicialLocal: 0,
+            xInicialCursor: 0,
+            
+            aplicarEscalaFisica() {
+                const perfil = HardwareIntelligence.profile;
+                let pxPorMmReal = perfil.pxPerMmLg * this.fatorCorrecao;
+                let larguraIdealSvgEmMm = 950 / this.viewBoxPxPerMm; 
+                let larguraPixelsCss = larguraIdealSvgEmMm * pxPorMmReal;
+                
+                const wrapper = document.getElementById('wrapper-paquimetro');
+                if (wrapper) wrapper.style.width = `${larguraPixelsCss}px`;
+                document.getElementById('env-fator').textContent = this.fatorCorrecao.toFixed(5);
+            },
+            desenharPaquimetro() {
+                const svg = document.getElementById('paquimetro');
+                if(!svg) return;
+                let htmlFixo = `
+                    <rect x="20" y="80" width="910" height="60" fill="#cbd5e1" stroke="#94a3b8" stroke-width="2"/>
+                    <path d="M 50 80 L 50 240 L 110 240 L 150 140 L 150 80 Z" fill="#cbd5e1" stroke="#94a3b8" stroke-width="2"/>
+                `;
+                for (let i = 0; i <= 60; i++) {
+                    let x = this.zeroAbsolutoX + (i * this.viewBoxPxPerMm);
+                    let altura = (i % 10 === 0) ? 22 : (i % 5 === 0 ? 16 : 10);
+                    htmlFixo += `<line x1="${x}" y1="140" x2="${x}" y2="${140 - altura}" stroke="#1e293b" stroke-width="1.5"/>`;
+                    if (i % 10 === 0) {
+                        htmlFixo += `<text x="${x}" y="112" font-size="12" font-family="sans-serif" text-anchor="middle" font-weight="bold" fill="#475569">${i/10}</text>`;
+                    }
+                }
+                const larguraDivisaoNonioPx = 0.95 * this.viewBoxPxPerMm; 
+                let htmlMovel = `
+                    <g id="cursor-movel" transform="translate(0,0)">
+                        <path d="M ${this.zeroAbsolutoX} 80 L ${this.zeroAbsolutoX} 140 L ${this.zeroAbsolutoX + 40} 240 L ${this.zeroAbsolutoX + 80} 240 L ${this.zeroAbsolutoX + 80} 140 L 450 140 L 450 80 Z" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2"/>
+                        <rect x="${this.zeroAbsolutoX}" y="140" width="220" height="45" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2"/>
+                `;
+                for (let i = 0; i <= 20; i++) {
+                    let x = this.zeroAbsolutoX + (i * larguraDivisaoNonioPx);
+                    let altura = (i % 2 === 0) ? 18 : 11;
+                    htmlMovel += `<line x1="${x}" y1="140" x2="${x}" y2="${140 + altura}" stroke="#dc2626" stroke-width="1.5"/>`;
+                    if (i % 2 === 0) {
+                        htmlMovel += `<text x="${x}" y="174" font-size="11" fill="#1e293b" font-family="sans-serif" text-anchor="middle" font-weight="bold">${i/2}</text>`;
+                    }
+                }
+                htmlMovel += `</g>`;
+                svg.innerHTML = htmlFixo + htmlMovel;
+            }
+        };
+
+        // --- 3. ENGINE DE CONVERSÃO DE ANÉIS ---
+        const RingEngine = {
+            tabelas: {
+                BR: [
+                    { diam: 14.8, size: "10" }, { diam: 15.2, size: "11" }, { diam: 15.5, size: "12" },
+                    { diam: 15.8, size: "13" }, { diam: 16.2, size: "14" }, { diam: 16.5, size: "15" },
+                    { diam: 16.8, size: "16" }, { diam: 17.2, size: "17" }, { diam: 17.5, size: "18" },
+                    { diam: 17.8, size: "19" }, { diam: 18.2, size: "20" }, { diam: 18.5, size: "21" },
+                    { diam: 18.8, size: "22" }, { diam: 19.2, size: "23" }, { diam: 19.5, size: "24" }
+                ],
+                US: [
+                    { diam: 14.8, size: "4" }, { diam: 15.2, size: "4.5" }, { diam: 15.6, size: "5" },
+                    { diam: 16.0, size: "5.5" }, { diam: 16.4, size: "6" }, { diam: 16.9, size: "6.5" },
+                    { diam: 17.3, size: "7" }, { diam: 17.7, size: "7.5" }, { diam: 18.2, size: "8" }
+                ],
+                EU: [
+                    { diam: 14.6, size: "46" }, { diam: 15.3, size: "48" }, { diam: 15.9, size: "50" },
+                    { diam: 16.5, size: "52" }, { diam: 17.2, size: "54" }, { diam: 17.8, size: "56" }
+                ],
+                AS: [
+                    { diam: 14.6, size: "7" }, { diam: 15.0, size: "9" }, { diam: 15.4, size: "11" },
+                    { diam: 15.8, size: "13" }, { diam: 16.3, size: "15" }, { diam: 16.7, size: "17" }
+                ]
+            },
+            atualizarMedidas(diametroMm, pais) {
+                const lista = this.tabelas[pais] || this.tabelas.BR;
+                let melhorAjuste = lista[0];
+                let menorDiferenca = Math.abs(diametroMm - lista[0].diam);
+                for (let i = 1; i < lista.length; i++) {
+                    let diff = Math.abs(diametroMm - lista[i].diam);
+                    if (diff < menorDiferenca) {
+                        menorDiferenca = diff;
+                        melhorAjuste = lista[i];
+                    }
+                }
+                document.getElementById('ring-diam').textContent = diametroMm.toFixed(2) + " mm";
+                document.getElementById('ring-size-num').textContent = melhorAjuste.size;
+                
+                let pxPorMmReal = HardwareIntelligence.profile.pxPerMmLg * MetrologyEngine.fatorCorrecao;
+                let tamanhoPixels = diametroMm * pxPorMmReal;
+                const circulo = document.getElementById('interactive-ring');
+                if (circulo) {
+                    circulo.style.width = `${tamanhoPixels}px`;
+                    circulo.style.height = `${tamanhoPixels}px`;
+                }
+            }
+        };
+
+        // --- 4. ENGINE DE DESENHO TÉCNICO (CAD INTERATIVO) ---
+        const DrawingEngine = {
+            dims: { x: 50, y: 40, z: 30 },
+            renderizarGeometrias() {
+                const svgIso = document.getElementById('svg-iso');
+                const svgVistas = document.getElementById('svg-vistas');
+                if (!svgIso || !svgVistas) return;
+                let dx = this.dims.x; let dy = this.dims.y; let dz = this.dims.z;
+
+                svgIso.innerHTML = `
+                    <path d="M 100 150 L ${100 + dx} 150 L ${100 + dx} ${150 - dy} L 100 ${150 - dy} Z" fill="none" stroke="#38bdf8" stroke-width="2"/>
+                    <path d="M 100 ${150 - dy} L ${100 + dx} ${150 - dy} L ${100 + dx + dz/2} ${150 - dy - dz/2} L ${100 + dz/2} ${150 - dy - dz/2} Z" fill="none" stroke="#4ade80" stroke-width="1.5"/>
+                    <path d="M ${100 + dx} 150 L ${100 + dx + dz/2} ${150 - dz/2} L ${100 + dx + dz/2} ${150 - dy - dz/2} L ${100 + dx} ${150 - dy} Z" fill="none" stroke="#f59e0b" stroke-width="1.5"/>
+                    <text x="10" y="20" fill="#64748b" font-size="10" font-family="monospace">Peça Isométrica (3D)</text>
+                `;
+                svgVistas.innerHTML = `
+                    <line x1="150" y1="10" x2="150" y2="210" stroke="#1e293b" stroke-dasharray="4"/>
+                    <line x1="10" y1="110" x2="290" y2="110" stroke="#1e293b" stroke-dasharray="4"/>
+                    <rect x="${140 - dx}" y="${100 - dy}" width="${dx}" height="${dy}" fill="none" stroke="#38bdf8" stroke-width="2"/>
+                    <rect x="${140 - dx}" y="120" width="${dx}" height="${dz}" fill="none" stroke="#4ade80" stroke-width="2"/>
+                    <rect x="160" y="${100 - dy}" width="${dz}" height="${dy}" fill="none" stroke="#f59e0b" stroke-width="2"/>
+                    <text x="10" y="20" fill="#64748b" font-size="10" font-family="monospace">Vistas Técnicas (ABNT)</text>
+                `;
+            }
+        };
+
+        // --- 5. ENGINE DO MICRÔMETRO (CANVAS 2D) ---
+        const MicrometerEngine = {
+            canvas: null, ctx: null, value: 0.00, isHidden: false, isDragging: false, startX: 0,
+            init() {
+                this.canvas = document.getElementById('micrometerCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.resize();
+                this.attachEvents();
+            },
+            resize() {
+                this.canvas.width = 760;
+                this.canvas.height = 230;
+                this.draw();
+            },
+            attachEvents() {
+                const getX = (e) => {
+                    const rect = this.canvas.getBoundingClientRect();
+                    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                    return (clientX - rect.left) * (this.canvas.width / rect.width);
+                };
+                const start = (e) => { this.isDragging = true; this.startX = getX(e); };
+                const move = (e) => {
+                    if (!this.isDragging) return;
+                    const curX = getX(e);
+                    this.adjust((curX - this.startX) * 0.008);
+                    this.startX = curX;
+                };
+                const end = () => this.isDragging = false;
+
+                this.canvas.addEventListener('mousedown', start);
+                window.addEventListener('mousemove', move);
+                window.addEventListener('mouseup', end);
+                this.canvas.addEventListener('touchstart', start, { passive: true });
+                window.addEventListener('touchmove', move, { passive: true });
+                window.addEventListener('touchend', end);
+            },
+            adjust(amt) {
+                this.value = Math.max(0, Math.min(25, this.value + amt));
+                this.updateUI();
+            },
+            updateUI() {
+                const readout = document.getElementById('microReadout');
+                if (!this.isHidden) readout.innerText = this.value.toFixed(2) + " mm";
+                this.draw();
+            },
+            draw() {
+                let ctx = this.ctx;
+                ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                const CY = 115; const scalePX = 8.0; const anvilFaceX = 110; const zeroSleeveX = 320;
+
+                ctx.fillStyle = '#1e293b'; ctx.strokeStyle = '#0f172a'; ctx.lineWidth = 4;
+                ctx.beginPath(); ctx.moveTo(310, CY - 22); ctx.lineTo(310, CY + 26);
+                ctx.bezierCurveTo(310, CY + 110, 70, CY + 110, 70, CY + 26); ctx.lineTo(70, CY - 22);
+                ctx.lineTo(90, CY - 22); ctx.lineTo(90, CY + 15); ctx.bezierCurveTo(90, CY + 80, 290, CY + 80, 290, CY - 22);
+                ctx.closePath(); ctx.fill(); ctx.stroke();
+
+                ctx.fillStyle = '#0f172a'; ctx.beginPath(); ctx.roundRect(120, CY + 50, 110, 30, 6); ctx.fill();
+                ctx.fillStyle = '#ffffff'; ctx.font = 'bold 10px Arial'; ctx.textAlign = 'center'; ctx.fillText("SUITE MECHANICAL", 175, CY + 62);
+                ctx.fillStyle = '#f59e0b'; ctx.font = 'bold 8px Arial'; ctx.fillText("0-25mm  0.01mm", 175, CY + 74);
+
+                ctx.fillStyle = '#cbd5e1'; ctx.fillRect(90, CY - 8, 20, 16);
+                ctx.fillStyle = '#475569'; ctx.fillRect(anvilFaceX - 3, CY - 8, 3, 16);
+
+                const spindleX = anvilFaceX + (this.value * scalePX);
+                ctx.fillStyle = '#e2e8f0'; ctx.fillRect(spindleX, CY - 8, 250, 16);
+                ctx.fillStyle = '#475569'; ctx.fillRect(spindleX, CY - 8, 3, 16);
+
+                ctx.fillStyle = '#e2e8f0'; ctx.fillRect(305, CY - 22, 235, 44);
+                ctx.strokeStyle = '#475569'; ctx.lineWidth = 1.5; ctx.strokeRect(305, CY - 22, 235, 44);
+                ctx.beginPath(); ctx.moveTo(305, CY); ctx.lineTo(540, CY); ctx.stroke();
+
+                ctx.fillStyle = '#000000'; ctx.font = 'bold 9px Arial'; ctx.textAlign = 'center';
+                for (let i = 0; i <= 25; i++) {
+                    let posX = zeroSleeveX + (i * scalePX);
+                    if (posX < 540) {
+                        ctx.beginPath(); ctx.moveTo(posX, CY); ctx.lineTo(posX, CY - 8); ctx.stroke();
+                        if (i % 5 === 0) ctx.fillText(i.toString(), posX, CY - 11);
+                        if (i < 25) {
+                            let meioX = posX + (scalePX / 2);
+                            ctx.beginPath(); ctx.moveTo(meioX, CY); ctx.lineTo(meioX, CY + 6); ctx.stroke();
+                        }
+                    }
+                }
+
+                const thimbleLeft = zeroSleeveX + (this.value * scalePX);
+                ctx.fillStyle = '#cbd5e1'; ctx.beginPath();
+                ctx.moveTo(thimbleLeft, CY - 22); ctx.lineTo(thimbleLeft + 15, CY - 28);
+                ctx.lineTo(thimbleLeft + 145, CY - 28); ctx.lineTo(thimbleLeft + 145, CY + 28);
+                ctx.lineTo(thimbleLeft + 15, CY + 28); ctx.lineTo(thimbleLeft, CY + 22);
+                ctx.closePath(); ctx.fill(); ctx.stroke();
+
+                ctx.fillStyle = '#475569'; ctx.fillRect(thimbleLeft + 120, CY - 27, 24, 54);
+                ctx.textAlign = 'right'; ctx.font = 'bold 9px Arial';
+                const thimbleVal = this.value % 0.5; const rotation = (thimbleVal / 0.5) * 50;
+
+                for (let t = -10; t <= 10; t++) {
+                    let targetDivision = Math.round(rotation) - t;
+                    let actualDivision = (targetDivision + 50) % 50;
+                    let deltaDiv = t + (rotation % 1); let angle = (deltaDiv / 10) * (Math.PI / 3.2);
+                    if (Math.abs(angle) < Math.PI / 2) {
+                        let posY = CY - 28 * Math.sin(angle);
+                        ctx.strokeStyle = '#000000'; ctx.beginPath(); ctx.moveTo(thimbleLeft, posY); ctx.lineTo(thimbleLeft + 8, posY); ctx.stroke();
+                        if (actualDivision % 5 === 0) {
+                            ctx.fillStyle = (actualDivision === 0) ? '#dc2626' : '#000000';
+                            ctx.fillText(actualDivision.toString(), thimbleLeft - 3, posY + 3);
+                        }
+                    }
+                }
+            }
+        };
+
+        function adjustMicro(val) { MicrometerEngine.adjust(val); }
+        function toggleMicroView() {
+            MicrometerEngine.isHidden = !MicrometerEngine.isHidden;
+            const btn = document.getElementById('toggleMicroBtn');
+            const readout = document.getElementById('microReadout');
+            if(MicrometerEngine.isHidden) {
+                readout.innerText = "??.?? mm";
+                btn.innerText = "Mostrar Resposta";
+            } else {
+                btn.innerText = "Ocultar Resposta";
+                MicrometerEngine.updateUI();
+            }
+        }
+
+        // --- 6. INTERFACE DE CONTROLE DAS ABAS NATIVAS ---
+        window.mudarAba = function(idAba) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(idAba).classList.add('active');
+            event.target.classList.add('active');
+            
+            if(idAba === 'aba-projecoes') DrawingEngine.renderizarGeometrias();
+            if(idAba === 'aba-micrometro') setTimeout(() => MicrometerEngine.resize(), 50);
+        }
+
+        // --- 7. INICIALIZAÇÃO E EVENTOS DE TOQUE / ARRASTO ---
+        window.addEventListener('DOMContentLoaded', () => {
+            const perfil = HardwareIntelligence.mapearAmbiente();
+            document.getElementById('env-device').textContent = perfil.device;
+            document.getElementById('env-dpr').textContent = perfil.dpr.toFixed(2);
+            document.getElementById('env-res').textContent = `${screen.width}x${screen.height}`;
+
+            MetrologyEngine.desenharPaquimetro();
+            MetrologyEngine.aplicarEscalaFisica();
+            MicrometerEngine.init();
+
+            // Sincronização Poka-Yoke de Calibração Lateral
+            const pokaSelect = document.getElementById('poka-select-ref');
+            const pokaSlider = document.getElementById('poka-slider');
+            const pokaSilhouette = document.getElementById('poka-silhouette');
+
+            function recalcularPokaYoke() {
+                let mmVal = parseFloat(pokaSlider.value);
+                let pxPerMm = HardwareIntelligence.profile.pxPerMmLg * MetrologyEngine.fatorCorrecao;
+                pokaSilhouette.style.width = `${mmVal * pxPerMm}px`;
+                pokaSilhouette.style.height = `${(mmVal * pxPerMm) * 0.3}px`;
+                pokaSilhouette.style.borderRadius = "4px";
+            }
+            pokaSlider.addEventListener('input', recalcularPokaYoke);
+            pokaSelect.addEventListener('change', () => {
+                pokaSlider.value = pokaSelect.value;
+                recalcularPokaYoke();
+            });
+
+            document.getElementById('poka-btn-confirmar').addEventListener('click', () => {
+                MetrologyEngine.fatorCorrecao *= (parseFloat(pokaSlider.value) / parseFloat(pokaSelect.value));
+                MetrologyEngine.aplicarEscalaFisica();
+                recalcularPokaYoke();
+                RingEngine.atualizarMedidas(parseFloat(document.getElementById('slider-ring').value), document.getElementById('select-pais').value);
+                alert("Escala mestre recalculada com sucesso em todo o ecossistema!");
+            });
+            setTimeout(recalcularPokaYoke, 200);
+
+            // Listener de Sliders do CAD de Desenho Técnico
+            ['vol-x', 'vol-y', 'vol-z'].forEach(id => {
+                document.getElementById(id).addEventListener('input', () => {
+                    DrawingEngine.dims = {
+                        x: parseFloat(document.getElementById('vol-x').value),
+                        y: parseFloat(document.getElementById('vol-y').value),
+                        z: parseFloat(document.getElementById('vol-z').value)
+                    };
+                    DrawingEngine.renderizarGeometrias();
+                });
+            });
+
+            // Medidor de Alianças Interativo
+            const sliderRing = document.getElementById('slider-ring');
+            const selectPais = document.getElementById('select-pais');
+            sliderRing.addEventListener('input', () => RingEngine.atualizarMedidas(parseFloat(sliderRing.value), selectPais.value));
+            selectPais.addEventListener('change', () => RingEngine.atualizarMedidas(parseFloat(sliderRing.value), selectPais.value));
+            RingEngine.atualizarMedidas(16.2, 'BR');
+
+            // Calculadora Estatística ISO 286
+            document.getElementById('btn-calcular-iso').addEventListener('click', () => {
+                const furo = document.getElementById('iso-furo').value;
+                const eixo = document.getElementById('iso-eixo').value;
+                let es = 21, ei = 0, esEixo = -7, eiEixo = -20; 
+
+                if (eixo === 'p6') { esEixo = 35; eiEixo = 22; }
+                if (eixo === 'h6') { esEixo = 0; eiEixo = -13; }
+                
+                document.getElementById('res-es').textContent = `+${(es/1000).toFixed(3)} mm`;
+                document.getElementById('res-ei').textContent = `+${(ei/1000).toFixed(3)} mm`;
+                document.getElementById('res-es-eixo').textContent = `${esEixo >= 0 ? '+' : ''}${(esEixo/1000).toFixed(3)} mm`;
+                document.getElementById('res-ei-eixo').textContent = `${eiEixo >= 0 ? '+' : ''}${(eiEixo/1000).toFixed(3)} mm`;
+                
+                let tipo = "Ajuste com Folga (Deslizante)";
+                if(eiEixo > es) tipo = "Ajuste com Interferência (Prensado)";
+                if(esEixo >= ei && eiEixo <= es && tipo !== "Ajuste com Interferência") tipo = "Ajuste de Transição / Incerto";
+                document.getElementById('res-tipo-ajuste').textContent = tipo;
+            });
+
+            // Gestos do Paquímetro Analógico
+            const svgEl = document.getElementById('paquimetro');
+            function obterXLocal(e) {
+                const pt = svgEl.createSVGPoint();
+                pt.x = e.touches ? e.touches[0].clientX : e.clientX;
+                return pt.matrixTransform(svgEl.getScreenCTM().inverse()).x;
+            }
+            const trackStart = (e) => {
+                MetrologyEngine.arrastando = true;
+                MetrologyEngine.xInicialLocal = obterXLocal(e);
+                MetrologyEngine.xInicialCursor = MetrologyEngine.posicaoAtualPx;
+            };
+            const trackMove = (e) => {
+                if (!MetrologyEngine.arrastando) return;
+                let deltaX = obterXLocal(e) - MetrologyEngine.xInicialLocal;
+                let novaPos = Math.max(0, Math.min(MetrologyEngine.xInicialCursor + deltaX, 60 * MetrologyEngine.viewBoxPxPerMm));
+                MetrologyEngine.mmPrecisoGlobal = Math.round((novaPos / MetrologyEngine.viewBoxPxPerMm) / 0.05) * 0.05;
+                MetrologyEngine.posicaoAtualPx = MetrologyEngine.mmPrecisoGlobal * MetrologyEngine.viewBoxPxPerMm;
+                document.getElementById('cursor-movel').setAttribute('transform', `translate(${MetrologyEngine.posicaoAtualPx}, 0)`);
+                document.getElementById('leitura-mm').textContent = MetrologyEngine.mmPrecisoGlobal.toFixed(2).replace('.', ',');
+            };
+            
+            svgEl.addEventListener('mousedown', trackStart);
+            window.addEventListener('mousemove', trackMove);
+            window.addEventListener('mouseup', () => MetrologyEngine.arrastando = false);
+            svgEl.addEventListener('touchstart', trackStart, { passive: true });
+            window.addEventListener('touchmove', trackMove, { passive: true });
+            window.addEventListener('touchend', () => MetrologyEngine.arrastando = false);
+        });
+    </script>
+</body>
+</html>
