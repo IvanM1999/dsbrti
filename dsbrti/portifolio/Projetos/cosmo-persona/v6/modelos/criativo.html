@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Currículo - Design Criativo</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-page: #0f172a;
+      --card-bg: #1e293b;
+      --sidebar-bg: #0b1120;
+      --accent-cyan: #38bdf8;
+      --accent-blue: #3b82f6;
+      --text-bright: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-page);
+      color: var(--text-bright);
+      padding: 30px 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* Container Principal (A4 Flexível) */
+    .cv-container {
+      width: 100%;
+      max-width: 850px;
+      background: var(--card-bg);
+      border-radius: 16px;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 270px 1fr;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 1px rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--border-color);
+    }
+
+    /* BARRA LATERAL (Esquerda) */
+    .sidebar {
+      background: var(--sidebar-bg);
+      padding: 35px 25px;
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .profile-photo {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 32px;
+      color: #ffffff;
+      margin: 0 auto;
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+    }
+
+    .sidebar-section h3 {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--accent-cyan);
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .contact-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .contact-list li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      word-break: break-word;
+    }
+
+    .skills-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag {
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      color: var(--accent-cyan);
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-weight: 500;
+    }
+
+    .lang-list p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    /* CONTEÚDO PRINCIPAL (Direita) */
+    .main-content {
+      padding: 40px 35px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.2;
+    }
+
+    header .role-badge {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent-cyan);
+      letter-spacing: 1px;
+    }
+
+    .section-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #ffffff;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border-color);
+    }
+
+    .about-text {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* Itens de Experiência e Educação */
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-left: 20px;
+      border-left: 2px solid rgba(56, 189, 248, 0.3);
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -6px;
+      top: 4px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent-cyan);
+    }
+
+    .job-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .job-company {
+      font-size: 12px;
+      color: var(--accent-cyan);
+      margin-bottom: 4px;
+    }
+
+    .job-date {
+      font-size: 11px;
+      color: #64748b;
+      margin-bottom: 8px;
+    }
+
+    .job-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ESTILOS PARA IMPRESSÃO / SALVAR EM PDF */
+    @media print {
+      body {
+        background: none;
+        padding: 0;
+        color: #000000;
+      }
+      .cv-container {
+        box-shadow: none;
+        border: none;
+        background: #ffffff;
+        color: #000000;
+        grid-template-columns: 240px 1fr;
+      }
+      .sidebar {
+        background: #f8fafc;
+        border-right: 1px solid #cbd5e1;
+      }
+      .main-content {
+        background: #ffffff;
+      }
+      header h1, .job-title, .section-title {
+        color: #0f172a !important;
+      }
+      .about-text, .job-desc, .contact-list, .lang-list p {
+        color: #334155 !important;
+      }
+      .tag {
+        border: 1px solid #0284c7;
+        color: #0284c7;
+        background: none;
+      }
+    }
+
+    /* Responsividade em telas pequenas */
+    @media (max-width: 680px) {
+      .cv-container {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cv-container">
+    
+    <aside class="sidebar">
+      
+      <div class="profile-photo">
+        N
+      </div>
+
+      <div class="sidebar-section">
+        <h3>Contato</h3>
+        <ul class="contact-list">
+          <li>📍 Cidade, Estado</li>
+          <li>📱 (00) 99999-9999</li>
+          <li>✉️ seuemail@exemplo.com</li>
+          <li>🔗 linkedin.com/in/seuusuario</li>
+        </ul>
+      </div>
+
+      <div class="sidebar-section">
+        <h3>Habilidades</h3>
+        <div class="skills-tags">
+          <span class="tag">UI/UX Design</span>
+          <span class="tag">Figma</span>
+          <span class="tag">HTML5 / CSS3</span>
+          <span class="tag">JavaScript</span>
+          <span class="tag">React.js</span>
+          <span class="tag">Tailwind CSS</span>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <h3>Idiomas</h3>
+        <div class="lang-list">
+          <p><strong>Português:</strong> Nativo</p>
+          <p><strong>Inglês:</strong> Intermediário / Avançado</p>
+        </div>
+      </div>
+
+    </aside>
+
+    <main class="main-content">
+      
+      <header>
+        <h1>Seu Nome Completo</h1>
+        <span class="role-badge">UI/UX DESIGNER & FRONT-END DEVELOPER</span>
+      </header>
+
+      <section>
+        <div class="section-title">Sobre Mim</div>
+        <p class="about-text">
+          Profissional focado em transformar requisitos complexos em interfaces simples, elegantes e responsivas. Apaixonado por otimização de experiência do usuário (UX), prototipagem e desenvolvimento web moderno.
+        </p>
+      </section>
+
+      <section>
+        <div class="section-title">Experiência</div>
+        <div class="timeline">
+          
+          <div class="timeline-item">
+            <div class="job-title">UI/UX Designer & Front-End</div>
+            <div class="job-company">Nome da Empresa</div>
+            <div class="job-date">2023 - Presente</div>
+            <p class="job-desc">
+              Criação de protótipos de alta fidelidade, desenvolvimento de telas responsivas e manutenção de componentes do Design System.
+            </p>
+          </div>
+
+          <div class="timeline-item">
+            <div class="job-title">Designer Digital</div>
+            <div class="job-company">Nome da Agência ou Empresa</div>
+            <div class="job-date">2021 - 2023</div>
+            <p class="job-desc">
+              Desenvolvimento de identidade visual, landing pages focadas em conversão e materiais gráficos corporativos.
+            </p>
+          </div>
+
+        </div>
+      </section>
+
+      <section>
+        <div class="section-title">Formação</div>
+        <div class="timeline">
+          
+          <div class="timeline-item">
+            <div class="job-title">Graduação em Design / Tecnologia</div>
+            <div class="job-company">Nome da Instituição de Ensino</div>
+            <div class="job-date">2020 - 2023</div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+</body>
+</html>
