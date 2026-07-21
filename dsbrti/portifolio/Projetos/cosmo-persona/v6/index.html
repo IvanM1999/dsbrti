@@ -14,6 +14,7 @@
       --bg-color: #0f172a;
       --card-bg: #1e293b;
       --accent-blue: #2563eb;
+      --accent-hover: #1d4ed8;
       --accent-cyan: #06b6d4;
       --whatsapp-color: #25d366;
       --whatsapp-hover: #1eaa53;
@@ -33,6 +34,10 @@
       color: var(--text-main);
       min-height: 100vh;
       padding: 40px 20px;
+    }
+
+    body.modal-open {
+      overflow: hidden;
     }
 
     /* Cabeçalho */
@@ -172,6 +177,25 @@
       color: var(--accent-cyan);
     }
 
+    .btn-create {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background-color: var(--accent-blue);
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 12px 16px;
+      border-radius: 10px;
+      transition: background-color 0.2s ease;
+    }
+
+    .btn-create:hover {
+      background-color: var(--accent-hover);
+    }
+
     .btn-whatsapp {
       display: flex;
       align-items: center;
@@ -288,7 +312,7 @@
 
 <header class="header">
   <h1>Modelos de Currículos Web</h1>
-  <p>Escolha o estilo ideal, veja a prévia em tempo real e solicite o seu no WhatsApp.</p>
+  <p>Escolha o estilo ideal, veja a prévia em tempo real e crie o seu currículo profissional.</p>
 </header>
 
 <section class="catalogo">
@@ -297,27 +321,31 @@
   <div class="modelo-card">
     <div class="img-container">
       <span class="badge">Corporativo</span>
-      <img src="prints/curriculo1.png" alt="Currículo Clean">
+      <img src="prints/curriculo1.png" alt="Prévia do Currículo Clean">
     </div>
     <div class="card-body">
       <h3>Profissional Clean</h3>
       <p>Ideal para profissionais de TI, administração e gestão que buscam clareza e sobriedade.</p>
 
       <div class="card-actions">
-        <!-- Botão para abrir o Modal -->
-        <button class="btn-preview" onclick="openPreview('/modelos/clean.html', 'Profissional Clean')">
+        <button class="btn-preview" onclick="openPreview('./modelos/clean.html', 'Profissional Clean')">
           👁️ Visualizar Prévia
         </button>
+
+        <a class="btn-create" href="./formulario.html?modelo=clean">
+          ✍️ Preencher este Modelo
+        </a>
 
         <a 
           class="btn-whatsapp"
           target="_blank"
-          href="https://wa.me/5547984863051?text=Olá%20Ivan!%20Gostei%20do%20modelo:%20Currículo%20Profissional%20Clean"
+          rel="noopener noreferrer"
+          href="https://wa.me/5547984863051?text=Olá!%20Gostaria%20de%20tirar%20dúvidas%20sobre%20o%20modelo:%20Profissional%20Clean"
         >
           <svg viewBox="0 0 24 24">
             <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
           </svg>
-          Quero este modelo
+          Suporte via WhatsApp
         </a>
       </div>
     </div>
@@ -327,7 +355,7 @@
   <div class="modelo-card">
     <div class="img-container">
       <span class="badge">Design</span>
-      <img src="prints/curriculo2.png" alt="Currículo Criativo">
+      <img src="prints/curriculo2.png" alt="Prévia do Currículo Criativo">
     </div>
     <div class="card-body">
       <h3>Design Criativo</h3>
@@ -338,15 +366,20 @@
           👁️ Visualizar Prévia
         </button>
 
+        <a class="btn-create" href="formulario.html?modelo=criativo">
+          ✍️ Preencher este Modelo
+        </a>
+
         <a 
           class="btn-whatsapp"
           target="_blank"
-          href="https://wa.me/5547984863051?text=Olá%20Ivan!%20Gostei%20do%20modelo:%20Currículo%20Criativo"
+          rel="noopener noreferrer"
+          href="https://wa.me/5547984863051?text=Olá!%20Gostaria%20de%20tirar%20dúvidas%20sobre%20o%20modelo:%20Design%20Criativo"
         >
           <svg viewBox="0 0 24 24">
             <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
           </svg>
-          Quero este modelo
+          Suporte via WhatsApp
         </a>
       </div>
     </div>
@@ -356,7 +389,7 @@
   <div class="modelo-card">
     <div class="img-container">
       <span class="badge">Operacional</span>
-      <img src="prints/curriculo3.png" alt="Currículo Técnico">
+      <img src="prints/curriculo3.png" alt="Prévia do Currículo Técnico">
     </div>
     <div class="card-body">
       <h3>Especialista Técnico</h3>
@@ -367,15 +400,20 @@
           👁️ Visualizar Prévia
         </button>
 
+        <a class="btn-create" href="formulario.html?modelo=tecnico">
+          ✍️ Preencher este Modelo
+        </a>
+
         <a 
           class="btn-whatsapp"
           target="_blank"
-          href="https://wa.me/5547984863051?text=Olá%20Ivan!%20Gostei%20do%20modelo:%20Currículo%20Técnico"
+          rel="noopener noreferrer"
+          href="https://wa.me/5547984863051?text=Olá!%20Gostaria%20de%20tirar%20dúvidas%20sobre%20o%20modelo:%20Especialista%20Técnico"
         >
           <svg viewBox="0 0 24 24">
             <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
           </svg>
-          Quero este modelo
+          Suporte via WhatsApp
         </a>
       </div>
     </div>
@@ -384,14 +422,14 @@
 </section>
 
 <!-- ESTRUTURA DO MODAL DE PRÉVIA -->
-<div class="modal-overlay" id="previewModal">
+<div class="modal-overlay" id="previewModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
   <div class="modal-container">
     <div class="modal-header">
       <h3 id="modalTitle">Prévia do Modelo</h3>
-      <button class="btn-close" onclick="closePreview()">&times;</button>
+      <button class="btn-close" onclick="closePreview()" aria-label="Fechar prévia">&times;</button>
     </div>
     <div class="modal-body">
-      <iframe id="previewIframe" src=""></iframe>
+      <iframe id="previewIframe" src="" title="Prévia do Currículo"></iframe>
     </div>
   </div>
 </div>
@@ -405,16 +443,25 @@
     iframe.src = url;
     modalTitle.innerText = "Prévia: " + title;
     modal.classList.add('active');
+    document.body.classList.add('modal-open');
   }
 
   function closePreview() {
     modal.classList.remove('active');
-    iframe.src = ""; // Limpa a URL para interromper o carregamento
+    document.body.classList.remove('modal-open');
+    iframe.src = "";
   }
 
-  // Fechar o modal ao clicar fora da caixa do modelo
+  // Fechar o modal ao clicar fora da caixa
   modal.addEventListener('click', (e) => {
     if (e.target === modal) {
+      closePreview();
+    }
+  });
+
+  // Fechar o modal ao pressionar ESC
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('active')) {
       closePreview();
     }
   });
