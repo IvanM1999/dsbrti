@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modelos de Currículos Web - Destiny Services TI</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --accent-blue: #2563eb;
+      --accent-cyan: #06b6d4;
+      --whatsapp-color: #25d366;
+      --whatsapp-hover: #1eaa53;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    /* Cabeçalho */
+    .header {
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto 50px auto;
+    }
+
+    .header h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #3b82f6, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 12px;
+    }
+
+    .header p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+    }
+
+    /* Catálogo Grid */
+    .catalogo {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Card do Modelo */
+    .modelo-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+    }
+
+    .modelo-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.5), 0 0 15px rgba(37, 99, 235, 0.2);
+    }
+
+    /* Container da Imagem */
+    .img-container {
+      width: 100%;
+      height: 220px;
+      overflow: hidden;
+      position: relative;
+      background-color: #0b1120;
+    }
+
+    .img-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top;
+      transition: transform 0.5s ease;
+    }
+
+    .modelo-card:hover .img-container img {
+      transform: scale(1.05);
+    }
+
+    /* Tag de Categoria */
+    .badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(4px);
+      color: var(--accent-cyan);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Conteúdo do Card */
+    .card-body {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .card-body h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #ffffff;
+    }
+
+    .card-body p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-bottom: 20px;
+      flex-grow: 1;
+    }
+
+    /* Grupo de Ações */
+    .card-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn-preview {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-main);
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 12px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-preview:hover {
+      background-color: rgba(255, 255, 255, 0.15);
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+
+    .btn-whatsapp {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background-color: var(--whatsapp-color);
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 14px 20px;
+      border-radius: 10px;
+      transition: background-color 0.2s ease, transform 0.2s ease;
+      box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2);
+    }
+
+    .btn-whatsapp:hover {
+      background-color: var(--whatsapp-hover);
+      transform: scale(1.02);
+    }
+
+    .btn-whatsapp svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+
+    /* MODAL DE PRÉVIA */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-container {
+      width: 90%;
+      max-width: 900px;
+      height: 85vh;
+      background: var(--card-bg);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+    }
+
+    .modal-header {
+      padding: 16px 24px;
+      background: #0f172a;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .modal-header h3 {
+      font-size: 1.1rem;
+      color: #ffffff;
+    }
+
+    .btn-close {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+      line-height: 1;
+      transition: color 0.2s;
+    }
+
+    .btn-close:hover {
+      color: #ffffff;
+    }
+
+    .modal-body {
+      flex-grow: 1;
+      width: 100%;
+      height: 100%;
+      background: #ffffff;
+    }
+
+    .modal-body iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    @media (max-width: 600px) {
+      .header h1 { font-size: 1.8rem; }
+      body { padding: 20px 12px; }
+      .modal-container { width: 95%; height: 90vh; }
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="header">
+  <h1>Modelos de Currículos Web</h1>
+  <p>Escolha o estilo ideal, veja a prévia em tempo real e solicite o seu no WhatsApp.</p>
+</header>
+
+<section class="catalogo">
+
+  <!-- MODELO 1 -->
+  <div class="modelo-card">
+    <div class="img-container">
+      <span class="badge">Corporativo</span>
+      <img src="prints/curriculo1.png" alt="Currículo Clean">
+    </div>
+    <div class="card-body">
+      <h3>Profissional Clean</h3>
+      <p>Ideal para profissionais de TI, administração e gestão que buscam clareza e sobriedade.</p>
+
+      <div class="card-actions">
+        <!-- Botão para abrir o Modal -->
+        <button class="btn-preview" onclick="openPreview('/modelos/clean.html', 'Profissional Clean')">
+          👁️ Visualizar Prévia
+        </button>
+
+        <a 
+          class="btn-whatsapp"
+          target="_blank"
+          href="https://wa.me/5547984863051?text=Olá%20Ivan!%20Gostei%20do%20modelo:%20Currículo%20Profissional%20Clean"
+        >
+          <svg viewBox="0 0 24 24">
+            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
+          </svg>
+          Quero este modelo
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODELO 2 -->
+  <div class="modelo-card">
+    <div class="img-container">
+      <span class="badge">Design</span>
+      <img src="prints/curriculo2.png" alt="Currículo Criativo">
+    </div>
+    <div class="card-body">
+      <h3>Design Criativo</h3>
+      <p>Layout moderno e estilizado em duas colunas para designers, frontend e criativos.</p>
+
+      <div class="card-actions">
+        <button class="btn-preview" onclick="openPreview('/modelos/criativo.html', 'Design Criativo')">
+          👁️ Visualizar Prévia
+        </button>
+
+        <a 
+          class="btn-whatsapp"
+          target="_blank"
+          href="https://wa.me/5547984863051?text=Olá%20Ivan!%20Gostei%20do%20modelo:%20Currículo%20Criativo"
+        >
+          <svg viewBox="0 0 24 24">
+            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
+          </svg>
+          Quero este modelo
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODELO 3 -->
+  <div class="modelo-card">
+    <div class="img-container">
+      <span class="badge">Operacional</span>
+      <img src="prints/curriculo3.png" alt="Currículo Técnico">
+    </div>
+    <div class="card-body">
+      <h3>Especialista Técnico</h3>
+      <p>Focado em destacar certificações, NRs e experiência operacional (SENAI/Indústria).</p>
+
+      <div class="card-actions">
+        <button class="btn-preview" onclick="openPreview('/modelos/tecnico.html', 'Especialista Técnico')">
+          👁️ Visualizar Prévia
+        </button>
+
+        <a 
+          class="btn-whatsapp"
+          target="_blank"
+          href="https://wa.me/5547984863051?text=Olá%20Ivan!%20Gostei%20do%20modelo:%20Currículo%20Técnico"
+        >
+          <svg viewBox="0 0 24 24">
+            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
+          </svg>
+          Quero este modelo
+        </a>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ESTRUTURA DO MODAL DE PRÉVIA -->
+<div class="modal-overlay" id="previewModal">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h3 id="modalTitle">Prévia do Modelo</h3>
+      <button class="btn-close" onclick="closePreview()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <iframe id="previewIframe" src=""></iframe>
+    </div>
+  </div>
+</div>
+
+<script>
+  const modal = document.getElementById('previewModal');
+  const iframe = document.getElementById('previewIframe');
+  const modalTitle = document.getElementById('modalTitle');
+
+  function openPreview(url, title) {
+    iframe.src = url;
+    modalTitle.innerText = "Prévia: " + title;
+    modal.classList.add('active');
+  }
+
+  function closePreview() {
+    modal.classList.remove('active');
+    iframe.src = ""; // Limpa a URL para interromper o carregamento
+  }
+
+  // Fechar o modal ao clicar fora da caixa do modelo
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      closePreview();
+    }
+  });
+</script>
+
+</body>
+</html>
