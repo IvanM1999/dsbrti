@@ -19,6 +19,7 @@
       --border-color: rgba(255, 255, 255, 0.1);
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
+      --danger-color: #ef4444;
     }
 
     * {
@@ -125,6 +126,25 @@
       position: relative;
     }
 
+    .btn-remove {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: transparent;
+      border: none;
+      color: var(--danger-color);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+
+    .btn-remove:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+
     .btn-add {
       background: transparent;
       border: 1px dashed var(--accent-blue);
@@ -156,7 +176,12 @@
       margin-top: 10px;
     }
 
-    .btn-submit:hover {
+    .btn-submit:disabled {
+      background-color: var(--text-muted);
+      cursor: not-allowed;
+    }
+
+    .btn-submit:hover:not(:disabled) {
       background-color: var(--accent-hover);
     }
 
@@ -186,7 +211,7 @@
           <label for="modelo">Modelo Visual</label>
           <select id="modelo" name="modelo" required>
             <option value="clean">Profissional Clean</option>
-            <option value="criativo" selected>Design Criativo</option>
+            <option value="criativo">Design Criativo</option>
             <option value="tecnico">Especialista Técnico</option>
           </select>
         </div>
@@ -275,17 +300,30 @@
         </div>
       </fieldset>
 
-      <button type="submit" class="btn-submit">🚀 Gerar Visualização do Currículo</button>
+      <button type="submit" id="btnSubmit" class="btn-submit">🚀 Gerar Visualização do Currículo</button>
     </form>
   </div>
 
   <script>
+    // Selecionar o modelo automaticamente se vier parâmetro na URL
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const modeloParam = urlParams.get('modelo');
+      if (modeloParam) {
+        const selectModelo = document.getElementById('modelo');
+        if ([...selectModelo.options].some(opt => opt.value === modeloParam)) {
+          selectModelo.value = modeloParam;
+        }
+      }
+    });
+
     // Função para adicionar novo bloco de experiência
     function addExperiencia() {
       const container = document.getElementById('experiencias-container');
       const newItem = document.createElement('div');
       newItem.className = 'dynamic-item';
       newItem.innerHTML = `
+        <button type="button" class="btn-remove" onclick="removeExperiencia(this)">Remover</button>
         <div class="grid-2">
           <div class="form-group">
             <label>Empresa</label>
@@ -308,12 +346,70 @@
       container.appendChild(newItem);
     }
 
-    // Processamento do formulário
-    document.getElementById('cvForm').addEventListener('submit', function(e) {
+    // Remover bloco de experiência
+    function removeExperiencia(button) {
+      const item = button.closest('.dynamic-item');
+      if (item) {
+        item.remove();
+      }
+    }
+
+    // Processamento do formulário e envio para API
+    document.getElementById('cvForm').addEventListener('submit', async function(e) {
       e.preventDefault();
-      
-      // Aqui você pode enviar os dados para o servidor ou salvar no localStorage
-      alert('Dados coletados com sucesso! O currículo será gerado.');
+
+      const btnSubmit = document.getElementById('btnSubmit');
+      btnSubmit.disabled = true;
+      btnSubmit.innerText = '⏳ Salvando dados...';
+
+      // Coletar dados das experiências
+      const expItems = document.querySelectorAll('#experiencias-container .dynamic-item');
+      const experiencias = Array.from(expItems).map(item => ({
+        empresa: item.querySelector('.exp-empresa')?.value || '',
+        cargo: item.querySelector('.exp-cargo')?.value || '',
+        periodo: item.querySelector('.exp-periodo')?.value || '',
+        descricao: item.querySelector('.exp-descricao')?.value || ''
+      })).filter(exp => exp.empresa || exp.cargo);
+
+      // Tratar array de habilidades
+      const habRaw = document.getElementById('habilidades').value;
+      const habilidades = habRaw ? habRaw.split(',').map(h => h.trim()).filter(Boolean) : [];
+
+      const payload = {
+        modelo: document.getElementById('modelo').value,
+        nome: document.getElementById('nome').value,
+        cargo: document.getElementById('cargo').value,
+        email: document.getElementById('email').value,
+        telefone: document.getElementById('telefone').value,
+        localizacao: document.getElementById('localizacao').value,
+        linkedin: document.getElementById('linkedin').value,
+        resumo: document.getElementById('resumo').value,
+        experiencias,
+        habilidades
+      };
+
+      try {
+        const response = await fetch('/api/curriculos', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          // Redireciona para a visualização do currículo gerado usando o ID retornado
+          window.location.href = `/visualizar.html?id=${result.id}`;
+        } else {
+          alert('Erro ao gerar currículo: ' + (result.message || result.error || 'Erro desconhecido.'));
+        }
+      } catch (err) {
+        console.error('Erro no envio:', err);
+        alert('Falha na comunicação com o servidor. Tente novamente.');
+      } finally {
+        btnSubmit.disabled = false;
+        btnSubmit.innerText = '🚀 Gerar Visualização do Currículo';
+      }
     });
   </script>
 </body>
