@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerador de Currículo - Preenchimento</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --input-bg: #0f172a;
+      --accent-blue: #2563eb;
+      --accent-hover: #1d4ed8;
+      --border-color: rgba(255, 255, 255, 0.1);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .form-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      padding: 35px;
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .form-header {
+      margin-bottom: 30px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 15px;
+    }
+
+    .form-header h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+
+    .form-header p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    fieldset {
+      border: none;
+      margin-bottom: 28px;
+    }
+
+    legend {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #38bdf8;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    input, textarea, select {
+      background-color: var(--input-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px 14px;
+      color: var(--text-main);
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--accent-blue);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 90px;
+    }
+
+    .dynamic-item {
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid var(--border-color);
+      padding: 16px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      position: relative;
+    }
+
+    .btn-add {
+      background: transparent;
+      border: 1px dashed var(--accent-blue);
+      color: #38bdf8;
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+      width: 100%;
+      transition: background 0.2s;
+    }
+
+    .btn-add:hover {
+      background: rgba(37, 99, 235, 0.1);
+    }
+
+    .btn-submit {
+      width: 100%;
+      background-color: var(--accent-blue);
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      margin-top: 10px;
+    }
+
+    .btn-submit:hover {
+      background-color: var(--accent-hover);
+    }
+
+    @media (max-width: 600px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+      .form-container {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <div class="form-header">
+      <h1>Preencha seus Dados</h1>
+      <p>Insira as informações para gerar a prévia do seu currículo dinamicamente.</p>
+    </div>
+
+    <form id="cvForm">
+      <!-- ESCOLHA DO MODELO -->
+      <fieldset>
+        <legend>1. Escolha o Modelo</legend>
+        <div class="form-group">
+          <label for="modelo">Modelo Visual</label>
+          <select id="modelo" name="modelo" required>
+            <option value="clean">Profissional Clean</option>
+            <option value="criativo" selected>Design Criativo</option>
+            <option value="tecnico">Especialista Técnico</option>
+          </select>
+        </div>
+      </fieldset>
+
+      <!-- DADOS PESSOAIS -->
+      <fieldset>
+        <legend>2. Dados Pessoais</legend>
+        <div class="grid-2">
+          <div class="form-group">
+            <label for="nome">Nome Completo</label>
+            <input type="text" id="nome" placeholder="Ex: João da Silva" required>
+          </div>
+          <div class="form-group">
+            <label for="cargo">Cargo / Função</label>
+            <input type="text" id="cargo" placeholder="Ex: Desenvolvedor Front-End" required>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" placeholder="seuemail@exemplo.com" required>
+          </div>
+          <div class="form-group">
+            <label for="telefone">Telefone / WhatsApp</label>
+            <input type="text" id="telefone" placeholder="(00) 99999-9999" required>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label for="localizacao">Cidade / Estado</label>
+            <input type="text" id="localizacao" placeholder="Ex: São Paulo, SP">
+          </div>
+          <div class="form-group">
+            <label for="linkedin">LinkedIn / GitHub</label>
+            <input type="text" id="linkedin" placeholder="linkedin.com/in/seuusuario">
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- RESUMO -->
+      <fieldset>
+        <legend>3. Resumo Profissional</legend>
+        <div class="form-group">
+          <label for="resumo">Breve Apresentação</label>
+          <textarea id="resumo" placeholder="Escreva um resumo objetivo destacando suas principais competências e metas profissionais..."></textarea>
+        </div>
+      </fieldset>
+
+      <!-- EXPERIÊNCIA PROFISSIONAL -->
+      <fieldset>
+        <legend>4. Experiências Profissionais</legend>
+        <div id="experiencias-container">
+          <div class="dynamic-item">
+            <div class="grid-2">
+              <div class="form-group">
+                <label>Empresa</label>
+                <input type="text" class="exp-empresa" placeholder="Nome da Empresa">
+              </div>
+              <div class="form-group">
+                <label>Cargo</label>
+                <input type="text" class="exp-cargo" placeholder="Seu Cargo">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Período</label>
+              <input type="text" class="exp-periodo" placeholder="Ex: 2022 - Presente">
+            </div>
+            <div class="form-group">
+              <label>Descrição das Atividades</label>
+              <textarea class="exp-descricao" placeholder="Resumo das atribuições e conquistas..."></textarea>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn-add" onclick="addExperiencia()">+ Adicionar Outra Experiência</button>
+      </fieldset>
+
+      <!-- HABILIDADES -->
+      <fieldset>
+        <legend>5. Habilidades e Competências</legend>
+        <div class="form-group">
+          <label for="habilidades">Habilidades (separadas por vírgula)</label>
+          <input type="text" id="habilidades" placeholder="Ex: HTML5, CSS3, React, Comunicação, Gestão de Projetos">
+        </div>
+      </fieldset>
+
+      <button type="submit" class="btn-submit">🚀 Gerar Visualização do Currículo</button>
+    </form>
+  </div>
+
+  <script>
+    // Função para adicionar novo bloco de experiência
+    function addExperiencia() {
+      const container = document.getElementById('experiencias-container');
+      const newItem = document.createElement('div');
+      newItem.className = 'dynamic-item';
+      newItem.innerHTML = `
+        <div class="grid-2">
+          <div class="form-group">
+            <label>Empresa</label>
+            <input type="text" class="exp-empresa" placeholder="Nome da Empresa">
+          </div>
+          <div class="form-group">
+            <label>Cargo</label>
+            <input type="text" class="exp-cargo" placeholder="Seu Cargo">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Período</label>
+          <input type="text" class="exp-periodo" placeholder="Ex: 2020 - 2022">
+        </div>
+        <div class="form-group">
+          <label>Descrição das Atividades</label>
+          <textarea class="exp-descricao" placeholder="Resumo das atribuições e conquistas..."></textarea>
+        </div>
+      `;
+      container.appendChild(newItem);
+    }
+
+    // Processamento do formulário
+    document.getElementById('cvForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Aqui você pode enviar os dados para o servidor ou salvar no localStorage
+      alert('Dados coletados com sucesso! O currículo será gerado.');
+    });
+  </script>
+</body>
+</html>
