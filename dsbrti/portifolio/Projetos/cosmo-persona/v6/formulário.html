@@ -300,6 +300,29 @@
         </div>
       </fieldset>
 
+      <!-- RECURSOS INTERATIVOS (IFRAMES) -->
+      <fieldset>
+        <legend>6. Recursos Interativos / Projetos (iFrames)</legend>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">
+          Adicione URLs de demonstrações ao vivo, protótipos do Figma, CodePen ou projetos hospedados para incorporar no modelo de Especialista Técnico.
+        </p>
+        <div id="recursos-container">
+          <div class="dynamic-item">
+            <div class="grid-2">
+              <div class="form-group">
+                <label>Título do Recurso / Projeto</label>
+                <input type="text" class="rec-titulo" placeholder="Ex: Dashboard ERP / Protótipo Figma">
+              </div>
+              <div class="form-group">
+                <label>URL para Embed (iFrame)</label>
+                <input type="url" class="rec-url" placeholder="https://exemplo.com ou https://codepen.io/...">
+              </div>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn-add" onclick="addRecurso()">+ Adicionar Outro Recurso Interativo</button>
+      </fieldset>
+
       <button type="submit" id="btnSubmit" class="btn-submit">🚀 Gerar Visualização do Currículo</button>
     </form>
   </div>
@@ -323,7 +346,7 @@
       const newItem = document.createElement('div');
       newItem.className = 'dynamic-item';
       newItem.innerHTML = `
-        <button type="button" class="btn-remove" onclick="removeExperiencia(this)">Remover</button>
+        <button type="button" class="btn-remove" onclick="removeDynamicItem(this)">Remover</button>
         <div class="grid-2">
           <div class="form-group">
             <label>Empresa</label>
@@ -346,8 +369,29 @@
       container.appendChild(newItem);
     }
 
-    // Remover bloco de experiência
-    function removeExperiencia(button) {
+    // Função para adicionar novo bloco de recurso interativo (iFrame)
+    function addRecurso() {
+      const container = document.getElementById('recursos-container');
+      const newItem = document.createElement('div');
+      newItem.className = 'dynamic-item';
+      newItem.innerHTML = `
+        <button type="button" class="btn-remove" onclick="removeDynamicItem(this)">Remover</button>
+        <div class="grid-2">
+          <div class="form-group">
+            <label>Título do Recurso / Projeto</label>
+            <input type="text" class="rec-titulo" placeholder="Ex: Dashboard ERP / Protótipo Figma">
+          </div>
+          <div class="form-group">
+            <label>URL para Embed (iFrame)</label>
+            <input type="url" class="rec-url" placeholder="https://exemplo.com ou https://codepen.io/...">
+          </div>
+        </div>
+      `;
+      container.appendChild(newItem);
+    }
+
+    // Remover qualquer item dinâmico (experiência ou recurso)
+    function removeDynamicItem(button) {
       const item = button.closest('.dynamic-item');
       if (item) {
         item.remove();
@@ -371,6 +415,13 @@
         descricao: item.querySelector('.exp-descricao')?.value || ''
       })).filter(exp => exp.empresa || exp.cargo);
 
+      // Coletar dados dos recursos interativos (iFrames)
+      const recItems = document.querySelectorAll('#recursos-container .dynamic-item');
+      const recursos = Array.from(recItems).map(item => ({
+        titulo: item.querySelector('.rec-titulo')?.value || '',
+        url: item.querySelector('.rec-url')?.value || ''
+      })).filter(rec => rec.url);
+
       // Tratar array de habilidades
       const habRaw = document.getElementById('habilidades').value;
       const habilidades = habRaw ? habRaw.split(',').map(h => h.trim()).filter(Boolean) : [];
@@ -385,7 +436,8 @@
         linkedin: document.getElementById('linkedin').value,
         resumo: document.getElementById('resumo').value,
         experiencias,
-        habilidades
+        habilidades,
+        recursos
       };
 
       try {
