@@ -74,6 +74,7 @@
       color: #ffffff;
       margin: 0 auto;
       box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+      text-transform: uppercase;
     }
 
     .sidebar-section h3 {
@@ -145,6 +146,7 @@
       font-weight: 600;
       color: var(--accent-cyan);
       letter-spacing: 1px;
+      text-transform: uppercase;
     }
 
     .section-title {
@@ -220,6 +222,29 @@
       line-height: 1.6;
     }
 
+    /* Botão de Impressão Flutuante */
+    .print-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: var(--accent-blue);
+      color: #ffffff;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+      transition: background-color 0.2s, transform 0.2s;
+      z-index: 1000;
+    }
+
+    .print-btn:hover {
+      background-color: #1d4ed8;
+      transform: translateY(-2px);
+    }
+
     /* ESTILOS PARA IMPRESSÃO / SALVAR EM PDF */
     @media print {
       body {
@@ -252,6 +277,9 @@
         color: #0284c7;
         background: none;
       }
+      .print-btn {
+        display: none !important;
+      }
     }
 
     /* Responsividade em telas pequenas */
@@ -268,27 +296,29 @@
 </head>
 <body>
 
+  <button class="print-btn" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button>
+
   <div class="cv-container">
     
     <aside class="sidebar">
       
-      <div class="profile-photo">
+      <div class="profile-photo" id="cv-avatar">
         N
       </div>
 
-      <div class="sidebar-section">
+      <div class="sidebar-section" id="sec-contato">
         <h3>Contato</h3>
         <ul class="contact-list">
-          <li>📍 Cidade, Estado</li>
-          <li>📱 (00) 99999-9999</li>
-          <li>✉️ seuemail@exemplo.com</li>
-          <li>🔗 linkedin.com/in/seuusuario</li>
+          <li id="cv-localizacao">📍 Cidade, Estado</li>
+          <li id="cv-telefone">📱 (00) 99999-9999</li>
+          <li id="cv-email">✉️ seuemail@exemplo.com</li>
+          <li id="cv-linkedin">🔗 linkedin.com/in/seuusuario</li>
         </ul>
       </div>
 
-      <div class="sidebar-section">
+      <div class="sidebar-section" id="sec-habilidades">
         <h3>Habilidades</h3>
-        <div class="skills-tags">
+        <div class="skills-tags" id="cv-habilidades-tags">
           <span class="tag">UI/UX Design</span>
           <span class="tag">Figma</span>
           <span class="tag">HTML5 / CSS3</span>
@@ -298,7 +328,7 @@
         </div>
       </div>
 
-      <div class="sidebar-section">
+      <div class="sidebar-section" id="sec-idiomas">
         <h3>Idiomas</h3>
         <div class="lang-list">
           <p><strong>Português:</strong> Nativo</p>
@@ -311,20 +341,20 @@
     <main class="main-content">
       
       <header>
-        <h1>Seu Nome Completo</h1>
-        <span class="role-badge">UI/UX DESIGNER & FRONT-END DEVELOPER</span>
+        <h1 id="cv-nome">Seu Nome Completo</h1>
+        <span class="role-badge" id="cv-cargo">UI/UX DESIGNER & FRONT-END DEVELOPER</span>
       </header>
 
-      <section>
+      <section id="sec-sobre">
         <div class="section-title">Sobre Mim</div>
-        <p class="about-text">
+        <p class="about-text" id="cv-resumo">
           Profissional focado em transformar requisitos complexos em interfaces simples, elegantes e responsivas. Apaixonado por otimização de experiência do usuário (UX), prototipagem e desenvolvimento web moderno.
         </p>
       </section>
 
-      <section>
+      <section id="sec-experiencias">
         <div class="section-title">Experiência</div>
-        <div class="timeline">
+        <div class="timeline" id="cv-experiencias-container">
           
           <div class="timeline-item">
             <div class="job-title">UI/UX Designer & Front-End</div>
@@ -347,7 +377,7 @@
         </div>
       </section>
 
-      <section>
+      <section id="sec-formacao">
         <div class="section-title">Formação</div>
         <div class="timeline">
           
@@ -364,5 +394,116 @@
 
   </div>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const id = urlParams.get('id');
+
+      if (!id) return; // Se não houver ID na URL, mantém o conteúdo estático de demonstração
+
+      try {
+        const response = await fetch(`/api/curriculos/${id}`);
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          const cv = result.data;
+          const extras = cv.dados_extras || {};
+
+          // Cabeçalho e Avatar Inicial
+          if (cv.nome) {
+            document.getElementById('cv-nome').innerText = cv.nome;
+            const partesNome = cv.nome.trim().split(' ');
+            const inicial = partesNome.length > 1 
+              ? (partesNome[0][0] + partesNome[partesNome.length - 1][0]).toUpperCase()
+              : partesNome[0][0].toUpperCase();
+            document.getElementById('cv-avatar').innerText = inicial;
+          }
+
+          if (cv.cargo) {
+            document.getElementById('cv-cargo').innerText = cv.cargo;
+          } else {
+            document.getElementById('cv-cargo').style.display = 'none';
+          }
+
+          // Contatos
+          let contatosVisiveis = 0;
+
+          if (cv.localizacao) {
+            document.getElementById('cv-localizacao').innerText = `📍 ${cv.localizacao}`;
+            contatosVisiveis++;
+          } else {
+            document.getElementById('cv-localizacao').style.display = 'none';
+          }
+
+          if (cv.telefone) {
+            document.getElementById('cv-telefone').innerText = `📱 ${cv.telefone}`;
+            contatosVisiveis++;
+          } else {
+            document.getElementById('cv-telefone').style.display = 'none';
+          }
+
+          if (cv.email) {
+            document.getElementById('cv-email').innerText = `✉️ ${cv.email}`;
+            contatosVisiveis++;
+          } else {
+            document.getElementById('cv-email').style.display = 'none';
+          }
+
+          if (cv.linkedin) {
+            document.getElementById('cv-linkedin').innerText = `🔗 ${cv.linkedin}`;
+            contatosVisiveis++;
+          } else {
+            document.getElementById('cv-linkedin').style.display = 'none';
+          }
+
+          if (contatosVisiveis === 0) {
+            document.getElementById('sec-contato').style.display = 'none';
+          }
+
+          // Resumo (Sobre Mim)
+          if (cv.resumo) {
+            document.getElementById('cv-resumo').innerText = cv.resumo;
+          } else {
+            document.getElementById('sec-sobre').style.display = 'none';
+          }
+
+          // Experiências
+          const expContainer = document.getElementById('cv-experiencias-container');
+          if (extras.experiencias && extras.experiencias.length > 0) {
+            expContainer.innerHTML = '';
+            extras.experiencias.forEach(exp => {
+              const div = document.createElement('div');
+              div.className = 'timeline-item';
+              div.innerHTML = `
+                <div class="job-title">${exp.cargo || 'Cargo não informado'}</div>
+                <div class="job-company">${exp.empresa || ''}</div>
+                ${exp.periodo ? `<div class="job-date">${exp.periodo}</div>` : ''}
+                ${exp.descricao ? `<p class="job-desc">${exp.descricao.replace(/\n/g, '<br>')}</p>` : ''}
+              `;
+              expContainer.appendChild(div);
+            });
+          } else {
+            document.getElementById('sec-experiencias').style.display = 'none';
+          }
+
+          // Habilidades
+          const tagsContainer = document.getElementById('cv-habilidades-tags');
+          if (extras.habilidades && extras.habilidades.length > 0) {
+            tagsContainer.innerHTML = '';
+            extras.habilidades.forEach(hab => {
+              const span = document.createElement('span');
+              span.className = 'tag';
+              span.innerText = hab;
+              tagsContainer.appendChild(span);
+            });
+          } else {
+            document.getElementById('sec-habilidades').style.display = 'none';
+          }
+        }
+      } catch (err) {
+        console.error('Erro ao carregar dados do currículo criativo:', err);
+      }
+    });
+  </script>
 </body>
 </html>
