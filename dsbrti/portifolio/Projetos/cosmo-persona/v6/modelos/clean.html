@@ -24,46 +24,75 @@
     .item-header { display: flex; justify-content: space-between; font-weight: 600; font-size: 15px; }
     .item-sub { font-size: 13px; color: #64748b; margin-bottom: 6px; }
 
+    /* Botão de Impressão Flutuante */
+    .print-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #2563eb;
+      color: #ffffff;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      transition: background-color 0.2s, transform 0.2s;
+      z-index: 1000;
+    }
+
+    .print-btn:hover {
+      background-color: #1d4ed8;
+      transform: translateY(-2px);
+    }
+
     @media print {
       body { background: none; padding: 0; }
       .cv-container { box-shadow: none; padding: 0; }
+      .print-btn { display: none !important; }
     }
   </style>
 </head>
 <body>
+
+  <button class="print-btn" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button>
+
   <div class="cv-container">
     <header>
-      <h1>Seu Nome Completo</h1>
-      <div class="subtitle">Desenvolvedor Full Stack / Analista de Sistemas</div>
+      <h1 id="cv-nome">Seu Nome Completo</h1>
+      <div class="subtitle" id="cv-cargo">Desenvolvedor Full Stack / Analista de Sistemas</div>
       <div class="contact-info">
-        <span>📍 Blumenau, SC</span>
-        <span>📧 seuemail@email.com</span>
-        <span>📱 (47) 99999-9999</span>
-        <span>🔗 linkedin.com/in/seuusuario</span>
+        <span id="cv-localizacao">📍 Blumenau, SC</span>
+        <span id="cv-email">📧 seuemail@email.com</span>
+        <span id="cv-telefone">📱 (47) 99999-9999</span>
+        <span id="cv-linkedin">🔗 linkedin.com/in/seuusuario</span>
       </div>
     </header>
 
-    <section>
+    <section id="sec-resumo">
       <h2>Resumo Profissional</h2>
-      <p>Profissional com mais de 5 anos de experiência no desenvolvimento de sistemas web, suporte a ERPs e automação de processos. Foco em entrega de código limpo e arquitetura escalável.</p>
+      <p id="cv-resumo">Profissional com mais de 5 anos de experiência no desenvolvimento de sistemas web, suporte a ERPs e automação de processos. Foco em entrega de código limpo e arquitetura escalável.</p>
     </section>
 
-    <section>
+    <section id="sec-experiencias">
       <h2>Experiência Profissional</h2>
-      <div class="item">
-        <div class="item-header">
-          <span>Desenvolvedor Pleno — Destiny Services TI</span>
-          <span>2024 - Atual</span>
+      <div id="cv-experiencias-container">
+        <div class="item">
+          <div class="item-header">
+            <span>Desenvolvedor Pleno — Destiny Services TI</span>
+            <span>2024 - Atual</span>
+          </div>
+          <div class="item-sub">Desenvolvimento Web & Integrações</div>
+          <ul>
+            <li>Criação de módulos e dashboards para ERPs em Node.js e React.</li>
+            <li>Otimização de consultas SQL reduzindo tempo de resposta em 40%.</li>
+          </ul>
         </div>
-        <div class="item-sub">Desenvolvimento Web & Integrações</div>
-        <ul>
-          <li>Criação de módulos e dashboards para ERPs em Node.js e React.</li>
-          <li>Otimização de consultas SQL reduzindo tempo de resposta em 40%.</li>
-        </ul>
       </div>
     </section>
 
-    <section>
+    <section id="sec-formacao">
       <h2>Formação Acadêmica</h2>
       <div class="item">
         <div class="item-header">
@@ -74,11 +103,94 @@
       </div>
     </section>
 
-    <section>
+    <section id="sec-habilidades">
       <h2>Habilidades Técnicas</h2>
-      <p><strong>Linguagens & Frameworks:</strong> JavaScript, TypeScript, Node.js, Express, HTML5/CSS3, React.</p>
-      <p><strong>Bancos de Dados & Ferramentas:</strong> PostgreSQL, MySQL, Git, Docker, REST APIs.</p>
+      <p id="cv-habilidades"><strong>Habilidades & Competências:</strong> JavaScript, TypeScript, Node.js, Express, HTML5/CSS3, React, PostgreSQL, MySQL, Git, Docker, REST APIs.</p>
     </section>
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const id = urlParams.get('id');
+
+      if (!id) return; // Se não houver ID na URL, mantém os dados estáticos/padrão
+
+      try {
+        const response = await fetch(`/api/curriculos/${id}`);
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          const cv = result.data;
+          const extras = cv.dados_extras || {};
+
+          // Atualizar cabeçalho e contatos
+          if (cv.nome) document.getElementById('cv-nome').innerText = cv.nome;
+          if (cv.cargo) document.getElementById('cv-cargo').innerText = cv.cargo;
+          
+          if (cv.localizacao) {
+            document.getElementById('cv-localizacao').innerText = `📍 ${cv.localizacao}`;
+          } else {
+            document.getElementById('cv-localizacao').style.display = 'none';
+          }
+
+          if (cv.email) {
+            document.getElementById('cv-email').innerText = `📧 ${cv.email}`;
+          } else {
+            document.getElementById('cv-email').style.display = 'none';
+          }
+
+          if (cv.telefone) {
+            document.getElementById('cv-telefone').innerText = `📱 ${cv.telefone}`;
+          } else {
+            document.getElementById('cv-telefone').style.display = 'none';
+          }
+
+          if (cv.linkedin) {
+            document.getElementById('cv-linkedin').innerText = `🔗 ${cv.linkedin}`;
+          } else {
+            document.getElementById('cv-linkedin').style.display = 'none';
+          }
+
+          // Resumo
+          if (cv.resumo) {
+            document.getElementById('cv-resumo').innerText = cv.resumo;
+          } else {
+            document.getElementById('sec-resumo').style.display = 'none';
+          }
+
+          // Experiências
+          const expContainer = document.getElementById('cv-experiencias-container');
+          if (extras.experiencias && extras.experiencias.length > 0) {
+            expContainer.innerHTML = '';
+            extras.experiencias.forEach(exp => {
+              const div = document.createElement('div');
+              div.className = 'item';
+              div.innerHTML = `
+                <div class="item-header">
+                  <span>${exp.cargo || ''} — ${exp.empresa || ''}</span>
+                  <span>${exp.periodo || ''}</span>
+                </div>
+                ${exp.descricao ? `<p style="margin-top: 4px;">${exp.descricao.replace(/\n/g, '<br>')}</p>` : ''}
+              `;
+              expContainer.appendChild(div);
+            });
+          } else {
+            document.getElementById('sec-experiencias').style.display = 'none';
+          }
+
+          // Habilidades
+          if (extras.habilidades && extras.habilidades.length > 0) {
+            const habsText = extras.habilidades.join(', ');
+            document.getElementById('cv-habilidades').innerHTML = `<strong>Habilidades & Competências:</strong> ${habsText}`;
+          } else {
+            document.getElementById('sec-habilidades').style.display = 'none';
+          }
+        }
+      } catch (err) {
+        console.error('Erro ao carregar os dados do currículo:', err);
+      }
+    });
+  </script>
 </body>
 </html>
