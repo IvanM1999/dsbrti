@@ -12,44 +12,58 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-        body {
-            margin: 0;
-            padding: 5px;
-            background: transparent;
-            font-family: 'Inter', -apple-system, sans-serif;
-            color: #f3f4f6;
+        * {
             box-sizing: border-box;
         }
 
-        /* Container ajustado para o espaço menor da iframe (220px) */
+        body {
+            margin: 0;
+            padding: 8px;
+            background: transparent;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #f3f4f6;
+            overflow: hidden; /* Evita barras de rolagem desnecessárias na iframe */
+        }
+
+        /* Container Principal com Estilo Moderno / Glassmorphism */
         .dashboard-container {
-            background: linear-gradient(145deg, #181d24, #11141a);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 24px;
-            padding: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            box-sizing: border-box;
+            background: rgba(22, 27, 34, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 14px 16px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
             display: flex;
-            flex-direction: row; /* Lado a lado por padrão no desktop */
+            flex-direction: row;
             gap: 16px;
             align-items: center;
+            width: 100%;
+            max-width: 100%;
         }
 
         /* Lado Esquerdo: Perfil do Usuário */
         .profile-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 18px;
-            padding: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 10px 14px;
             text-align: center;
-            min-width: 130px;
+            min-width: 110px;
             flex-shrink: 0;
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+
+        .profile-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateY(-2px);
         }
 
         .avatar-container {
-            width: 45px;
-            height: 45px;
-            margin: 0 auto 8px auto;
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 6px auto;
+            position: relative;
         }
 
         .avatar-img {
@@ -57,105 +71,136 @@
             height: 100%;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid #26a641;
+            border: 2px solid #39d353;
+            box-shadow: 0 0 10px rgba(57, 211, 83, 0.3);
         }
 
         .username {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 700;
             color: #ffffff;
-            margin: 0 0 2px 0;
+            margin: 0;
+            letter-spacing: -0.2px;
         }
 
         .role-text {
             font-size: 10px;
-            color: #9ca3af;
-            margin: 0;
+            color: #8b949e;
+            margin-top: 1px;
         }
 
-        /* Lado Direito: Área do Gráfico */
+        /* Lado Direito: Gráfico de Atividade */
         .grid-content {
             flex-grow: 1;
-            min-width: 0; /* Evita quebra de flexbox */
+            min-width: 0; /* Essencial para conter o SVG em flexbox */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
         }
 
         .section-title {
             font-size: 10px;
-            font-weight: 700;
-            color: #9ca3af;
+            font-weight: 600;
+            color: #8b949e;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
+            letter-spacing: 0.8px;
         }
 
-        /* Wrapper do calendário com scroll suave para telas pequenas */
+        .legend {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            font-size: 9px;
+            color: #8b949e;
+        }
+
+        .legend-box {
+            width: 8px;
+            height: 8px;
+            border-radius: 2px;
+        }
+
+        /* Otimização de Responsividade do SVG */
         .calendar-wrapper {
-            overflow-x: auto;
             width: 100%;
-            scrollbar-width: none; /* Oculta barra no Firefox */
-        }
-        .calendar-wrapper::-webkit-scrollbar {
-            display: none; /* Oculta barra no Chrome/Safari */
+            overflow: hidden;
         }
 
-        /* Limpeza das labels e textos da API do GitHub */
-        .calendar text, .calendar .contrib-column, .calendar .contrib-number,
-        .calendar .text-muted, .calendar h2, .calendar .float-left,
-        .calendar-graph text, .ContributionCalendar-label, .sr-only, .month {
+        .calendar { 
+            border: none !important; 
+            background: transparent !important; 
+        }
+
+        .js-calendar-graph { 
+            margin: 0 !important; 
+            padding: 0 !important; 
+        }
+
+        /* Torna o elemento SVG dinâmico para caber no container */
+        svg.js-calendar-graph-svg { 
+            width: 100% !important;
+            height: auto !important;
+            background: transparent !important;
+        }
+
+        /* Oculta textos indesejados fornecidos pelo script padrão */
+        .calendar text, 
+        .calendar .contrib-column, 
+        .calendar .contrib-number,
+        .calendar .text-muted, 
+        .calendar h2, 
+        .calendar .float-left,
+        .ContributionCalendar-label, 
+        .sr-only, 
+        .month {
             display: none !important;
         }
 
-        .calendar { border: none !important; background: transparent !important; }
-        .js-calendar-graph { margin: 0 !important; padding: 0 !important; }
-        svg.js-calendar-graph-svg { background: transparent !important; }
-
-        /* Estilo dos quadradinhos */
+        /* Arredondamento e formato dos quadradinhos */
         .grid-content rect.ContributionCalendar-day {
-            rx: 4px !important;
-            ry: 4px !important;
-            width: 11px !important;
-            height: 11px !important;
+            rx: 2px !important;
+            ry: 2px !important;
         }
 
-        /* Paleta de cores */
-        .grid-content [data-level="0"] { fill: #2d3139 !important; }
-        .grid-content [data-level="1"] { fill: #0e4429 !important; }
+        /* Paleta de Cores de Alto Contraste (Destaque para Pequenas Alterações) */
+        .grid-content [data-level="0"] { fill: #161b22 !important; outline: 1px solid rgba(255, 255, 255, 0.03); }
+        .grid-content [data-level="1"] { fill: #0e4429 !important; } /* 1-3 commits: verde bem perceptível */
         .grid-content [data-level="2"] { fill: #006d32 !important; }
         .grid-content [data-level="3"] { fill: #26a641 !important; }
-        .grid-content [data-level="4"] { fill: #39d353 !important; }
+        .grid-content [data-level="4"] { fill: #39d353 !important; } /* Nível máximo: Verde brilhante */
 
-        .widget-footer-text {
-            font-size: 10px;
-            color: #6b7280;
-            margin-top: 8px;
-        }
-
-        /* ================= MEDIA QUERY PARA CELULARES (MOBILE) ================= */
-        @media (max-width: 600px) {
+        /* Ajuste para telas pequenas/mobile dentro de iframes */
+        @media (max-width: 480px) {
             .dashboard-container {
-                flex-direction: column; /* Empilha o perfil acima do gráfico */
-                align-items: stretch;
-                padding: 12px;
-                gap: 10px;
+                flex-direction: column;
+                padding: 10px;
+                gap: 8px;
             }
 
             .profile-card {
                 display: flex;
                 align-items: center;
+                gap: 10px;
                 text-align: left;
-                padding: 8px 12px;
-                min-width: 100%;
-                box-sizing: border-box;
+                width: 100%;
+                padding: 6px 10px;
             }
 
             .avatar-container {
-                margin: 0 12px 0 0;
-                width: 35px;
-                height: 35px;
+                margin: 0;
+                width: 30px;
+                height: 30px;
             }
 
-            .widget-footer-text {
-                display: none; /* Esconde o texto longo no mobile para poupar espaço */
+            .header-row {
+                margin-bottom: 4px;
             }
         }
     </style>
@@ -166,20 +211,32 @@
         <!-- Perfil -->
         <div class="profile-card">
             <div class="avatar-container">
-                <img src="https://github.com/IvanM1999.png" alt="Avatar" class="avatar-img">
+                <img src="https://github.com/IvanM1999.png" alt="IvanM1999" class="avatar-img">
             </div>
-            <div class="username">IvanM1999</div>
-            <div class="role-text">GitHub User</div>
+            <div>
+                <div class="username">IvanM1999</div>
+                <div class="role-text">GitHub Developer</div>
+            </div>
         </div>        
+
         <!-- Gráfico -->
         <div class="grid-content">
-            <div class="section-title">Commit Activity</div>
-            <div class="calendar-wrapper">
-                <div class="calendar">
-                    <span style="color: #6b7280; font-size: 11px;">Carregando...</span>
+            <div class="header-row">
+                <div class="section-title">Contribuições do Ano</div>
+                <div class="legend">
+                    <span>Menos</span>
+                    <div class="legend-box" style="background: #161b22;"></div>
+                    <div class="legend-box" style="background: #0e4429;"></div>
+                    <div class="legend-box" style="background: #26a641;"></div>
+                    <div class="legend-box" style="background: #39d353;"></div>
+                    <span>Mais</span>
                 </div>
             </div>
-            <div class="widget-footer-text">
+
+            <div class="calendar-wrapper">
+                <div class="calendar">
+                    <span style="color: #8b949e; font-size: 11px;">Carregando histórico...</span>
+                </div>
             </div>
         </div>
     </div>
