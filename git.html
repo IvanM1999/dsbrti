@@ -23,7 +23,6 @@
             color: #f3f4f6;
         }
 
-        /* Container Principal */
         .dashboard-container {
             background: linear-gradient(145deg, rgba(42, 22, 33, 0.9), rgba(24, 14, 21, 0.95));
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -37,7 +36,6 @@
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
         }
 
-        /* Cabeçalho do Card */
         .card-header {
             width: 100%;
             display: flex;
@@ -46,12 +44,11 @@
             gap: 6px;
         }
 
-        /* Perfil (Lado Esquerdo) */
         .user-info {
             display: flex;
             align-items: center;
             gap: 6px;
-            min-width: 0; /* Impede transbordamento de texto */
+            min-width: 0;
         }
 
         .avatar-img {
@@ -59,7 +56,7 @@
             height: 26px;
             border-radius: 50%;
             object-fit: cover;
-            border: 1.5px solid #2ea043;
+            border: 1.5px solid #00ff87;
             flex-shrink: 0;
         }
 
@@ -85,7 +82,6 @@
             white-space: nowrap;
         }
 
-        /* Métrica de Commits (Lado Direito) */
         .metric-box {
             display: flex;
             align-items: center;
@@ -96,7 +92,7 @@
         .commit-count {
             font-size: 22px;
             font-weight: 800;
-            color: #f95721; /* Laranja idêntico aos outros cards do portfólio */
+            color: #f95721;
             line-height: 1;
         }
 
@@ -116,7 +112,6 @@
             white-space: nowrap;
         }
 
-        /* Seção do Calendário */
         .chart-section {
             width: 100%;
             display: flex;
@@ -125,7 +120,6 @@
             padding-bottom: 2px;
         }
 
-        /* Grid do Calendário (8 Semanas x 7 Dias) */
         .heatmap-grid {
             display: grid;
             grid-template-columns: repeat(8, 12px);
@@ -138,19 +132,45 @@
             width: 12px;
             height: 12px;
             border-radius: 2.5px;
-            transition: transform 0.15s ease;
+            transition: transform 0.15s ease, filter 0.15s ease;
         }
 
         .day-cell:hover {
-            transform: scale(1.25);
+            transform: scale(1.35);
+            z-index: 10;
         }
 
-        /* Cores do Heatmap */
-        .level-0 { background-color: rgba(255, 255, 255, 0.06) !important; }
-        .level-1 { background-color: #0e4429 !important; }
-        .level-2 { background-color: #006d32 !important; }
-        .level-3 { background-color: #26a641 !important; }
-        .level-4 { background-color: #39d353 !important; }
+        /* ================= PALETA DE 5 NÍVEIS (VISIBILIDADE TOTAL) ================= */
+        
+        /* Level 0: Nenhuma atividade -> 100% Transparente */
+        .level-0 { 
+            background-color: transparent !important; 
+            border: 1px solid rgba(255, 255, 255, 0.05) !important;
+        }
+
+        /* Level 1: 1 a 3 contribuições -> Verde Sutil */
+        .level-1 { 
+            background-color: #00aa55 !important; 
+            box-shadow: 0 0 3px rgba(0, 170, 85, 0.4);
+        }
+
+        /* Level 2: 4 a 8 contribuições -> Verde Médio */
+        .level-2 { 
+            background-color: #00e676 !important; 
+            box-shadow: 0 0 5px rgba(0, 230, 118, 0.5);
+        }
+
+        /* Level 3: 9 a 15 contribuições -> Verde Menta/Neon */
+        .level-3 { 
+            background-color: #00ff87 !important; 
+            box-shadow: 0 0 8px rgba(0, 255, 135, 0.7);
+        }
+
+        /* Level 4: 16+ contribuições (Dias intensos de 20+) -> Verde-Lima Fluorescente com Glow */
+        .level-4 { 
+            background-color: #a3ff12 !important; 
+            box-shadow: 0 0 12px rgba(163, 255, 18, 0.9);
+        }
 
         #loading-text {
             font-size: 10px;
@@ -161,7 +181,6 @@
 <body>
 
     <div class="dashboard-container">
-        <!-- Cabeçalho com alinhamento otimizado de texto -->
         <div class="card-header">
             <div class="user-info">
                 <img src="https://github.com/IvanM1999.png" alt="IvanM1999" class="avatar-img">
@@ -180,7 +199,6 @@
             </div>
         </div>        
 
-        <!-- Calendário -->
         <div class="chart-section">
             <div id="heatmap" class="heatmap-grid">
                 <span id="loading-text">Carregando...</span>
@@ -209,7 +227,16 @@
 
                 recentContributions.forEach(day => {
                     const cell = document.createElement('div');
-                    cell.className = `day-cell level-${day.level}`;
+                    
+                    // Cálculo de Nível Personalizado para garantir que dias de 20+ destaquem em nível 4
+                    let calculatedLevel = day.level;
+                    if (day.count === 0) calculatedLevel = 0;
+                    else if (day.count >= 1 && day.count <= 3) calculatedLevel = 1;
+                    else if (day.count >= 4 && day.count <= 8) calculatedLevel = 2;
+                    else if (day.count >= 9 && day.count <= 15) calculatedLevel = 3;
+                    else if (day.count >= 16) calculatedLevel = 4; // 16 a 20+ inserções em destaque máximo
+
+                    cell.className = `day-cell level-${calculatedLevel}`;
                     cell.title = `${day.date}: ${day.count} contribuição(ões)`;
                     heatmapContainer.appendChild(cell);
                 });
