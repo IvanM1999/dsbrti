@@ -23,48 +23,50 @@
             color: #f3f4f6;
         }
 
-        /* Container que simula EXATAMENTE o estilo dos cards superiores */
+        /* Container Principal */
         .dashboard-container {
-            background: linear-gradient(145deg, rgba(42, 22, 33, 0.85), rgba(28, 16, 25, 0.95));
+            background: linear-gradient(145deg, rgba(42, 22, 33, 0.9), rgba(24, 14, 21, 0.95));
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 20px;
-            padding: 14px 16px;
+            padding: 12px;
             height: 100vh;
             display: flex;
-            flex-direction: row;
-            gap: 12px;
-            align-items: center;
+            flex-direction: column;
             justify-content: space-between;
+            align-items: center;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
         }
 
-        /* Card do Perfil estilo Pill */
-        .profile-card {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 16px;
-            padding: 10px 8px;
-            text-align: center;
-            width: 90px;
-            flex-shrink: 0;
+        /* Cabeçalho do Card */
+        .card-header {
+            width: 100%;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
+            gap: 6px;
         }
 
-        .avatar-container {
-            width: 38px;
-            height: 38px;
-            margin-bottom: 6px;
+        /* Perfil (Lado Esquerdo) */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            min-width: 0; /* Impede transbordamento de texto */
         }
 
         .avatar-img {
-            width: 100%;
-            height: 100%;
+            width: 26px;
+            height: 26px;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid #2ea043;
+            border: 1.5px solid #2ea043;
+            flex-shrink: 0;
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
         .username {
@@ -73,63 +75,68 @@
             color: #ffffff;
             line-height: 1.1;
             white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .role-text {
-            font-size: 9px;
+            font-size: 8px;
             color: #9ca3af;
-            margin-top: 2px;
+            white-space: nowrap;
         }
 
-        /* Lado do Gráfico e Métrica */
-        .grid-content {
-            flex: 1;
-            min-width: 0;
-            height: 100%;
+        /* Métrica de Commits (Lado Direito) */
+        .metric-box {
             display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: flex-end; /* Alinha o gráfico à direita para dar respiro ao perfil */
-        }
-
-        .metric-header {
-            display: flex;
-            align-items: baseline;
+            align-items: center;
             gap: 6px;
-            margin-bottom: 8px;
-            width: 100%;
-            justify-content: flex-end;
+            flex-shrink: 0;
         }
 
-        /* Destaque em Laranja no tom dos números do seu portfólio (#f95721 / #f97316) */
         .commit-count {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 800;
-            color: #f95721;
+            color: #f95721; /* Laranja idêntico aos outros cards do portfólio */
             line-height: 1;
         }
 
+        .metric-label {
+            display: flex;
+            flex-direction: column;
+            text-align: right;
+        }
+
         .section-title {
-            font-size: 9px;
-            font-weight: 600;
+            font-size: 7px;
+            font-weight: 700;
             color: #9ca3af;
             text-transform: uppercase;
-            letter-spacing: 0.6px;
+            letter-spacing: 0.5px;
+            line-height: 1.1;
+            white-space: nowrap;
         }
 
-        /* Grid de 8 Colunas (Semanas) x 7 Linhas (Dias) */
+        /* Seção do Calendário */
+        .chart-section {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-bottom: 2px;
+        }
+
+        /* Grid do Calendário (8 Semanas x 7 Dias) */
         .heatmap-grid {
             display: grid;
-            grid-template-columns: repeat(8, 11px);
-            grid-template-rows: repeat(7, 11px);
+            grid-template-columns: repeat(8, 12px);
+            grid-template-rows: repeat(7, 12px);
             grid-auto-flow: column;
-            gap: 3px;
+            gap: 3.5px;
         }
 
-        /* Formato dos Blocos */
         .day-cell {
-            width: 11px;
-            height: 11px;
+            width: 12px;
+            height: 12px;
             border-radius: 2.5px;
             transition: transform 0.15s ease;
         }
@@ -138,7 +145,7 @@
             transform: scale(1.25);
         }
 
-        /* Níveis de cor otimizados para o tema escuro/vinho */
+        /* Cores do Heatmap */
         .level-0 { background-color: rgba(255, 255, 255, 0.06) !important; }
         .level-1 { background-color: #0e4429 !important; }
         .level-2 { background-color: #006d32 !important; }
@@ -154,21 +161,27 @@
 <body>
 
     <div class="dashboard-container">
-        <!-- Perfil -->
-        <div class="profile-card">
-            <div class="avatar-container">
+        <!-- Cabeçalho com alinhamento otimizado de texto -->
+        <div class="card-header">
+            <div class="user-info">
                 <img src="https://github.com/IvanM1999.png" alt="IvanM1999" class="avatar-img">
+                <div class="user-details">
+                    <span class="username">IvanM1999</span>
+                    <span class="role-text">GitHub User</span>
+                </div>
             </div>
-            <div class="username">IvanM1999</div>
-            <div class="role-text">GitHub User</div>
+
+            <div class="metric-box">
+                <span id="commit-total" class="commit-count">0</span>
+                <div class="metric-label">
+                    <span class="section-title">COMMITS</span>
+                    <span class="section-title" style="opacity: 0.6; font-size: 6.5px;">8 SEMANAS</span>
+                </div>
+            </div>
         </div>        
 
-        <!-- Gráfico e Métricas -->
-        <div class="grid-content">
-            <div class="metric-header">
-                <span id="commit-total" class="commit-count">0</span>
-                <span class="section-title">Commits (8 Semanas)</span>
-            </div>
+        <!-- Calendário -->
+        <div class="chart-section">
             <div id="heatmap" class="heatmap-grid">
                 <span id="loading-text">Carregando...</span>
             </div>
@@ -186,11 +199,9 @@
                 
                 if (!data.contributions) throw new Error("Erro nos dados");
 
-                // Filtra os últimos 56 dias
                 const totalDaysNeeded = 8 * 7;
                 const recentContributions = data.contributions.slice(-totalDaysNeeded);
 
-                // Calcula o total de commits no período
                 const totalCommits = recentContributions.reduce((sum, day) => sum + day.count, 0);
                 commitTotalCounter.innerText = totalCommits;
 
