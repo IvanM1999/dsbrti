@@ -14,7 +14,7 @@
   <script src="../tema-inteligente.js"></script>
   
   <style>
-    /* Estilos complementares que integram as novas seções ao CSS original do ecossistema */
+    /* Estilos complementares integrados ao ecossistema DSBRTI */
     body { font-family: 'Inter', sans-serif; }
     .metrics-section { margin: 40px 0; }
     .metrics-grid {
@@ -100,7 +100,6 @@
       border: 1px solid var(--border-color, rgba(255,255,255,0.1));
       border-radius: 12px;
       padding: 20px;
-      cursor: pointer;
       transition: all 0.3s ease;
       display: flex;
       flex-direction: column;
@@ -203,14 +202,6 @@
       text-decoration: none;
     }
     
-    .timeline {
-      border-left: 3px solid var(--accent-color, #E95420);
-      padding-left: 25px;
-      margin-top: 30px;
-    }
-    .timeline-item { margin-bottom: 25px; }
-    .timeline-item h3 { font-size: 1.3rem; margin-bottom: 5px; }
-    
     .empty-state {
       text-align: center;
       padding: 60px 20px;
@@ -271,7 +262,7 @@
     <div class="portfolio-filters" id="filterButtons"></div>
 
     <div class="search-container">
-      <input type="text" class="search-input" id="searchInput" placeholder="Pesquisar projeto por nome ou tecnologia...">
+      <input type="text" class="search-input" id="searchInput" placeholder="Pesquisar projeto por nome, descrição ou tecnologia...">
       <span id="resultCount" style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-sub);">Carregando projetos...</span>
     </div>
 
@@ -285,7 +276,7 @@
 
   <footer class="footer">
     <p>DSBRTI © 2026 — Ivan Montibeller</p>
-    <p class="footer-msg">✔ Projetos Feitos Com Dedicação e Carinho.</p>
+    <p class="footer-msg">✔ Projetos demonstrados com excelência.</p>
   </footer>
 
   <div id="toast" class="toast" role="alert" aria-live="assertive"></div>
@@ -293,14 +284,37 @@
   <script src="../senai/core.js"></script>
 
   <script>
-    let allProjects = [];
-    let filteredProjects = [];
-    let currentFilter = 'all';
+    // Configurações Globais
+    const GITHUB_USERS = ['IvanM1999', 'IvvyDestiny1999', 'IvvyDestiny'];
 
-    const languageEmojis = {
-      'JavaScript': '⚡', 'TypeScript': '🔷', 'HTML': '🌐', 
-      'CSS': '🎨', 'Python': '🐍', 'C++': '⚙️', 'C#': '🎯', 
-      'Java': '☕', 'C': '💻', 'PHP': '🐘'
+    // Mapeamento: "Topic do GitHub" -> "ID da Categoria do Site"
+    const TOPIC_MAP = {
+      // Metrologia & Medição
+      'metrologia': 'metrologia',
+      'calibracao': 'metrologia',
+      'medicao': 'metrologia',
+      'instrumentacao': 'metrologia',
+
+      // Mecânica & Elétrica & Automação
+      'mecanica': 'mecanica',
+      'eletronica': 'mecanica',
+      'automacao': 'mecanica',
+      'mecatronica': 'mecanica',
+      'plc': 'mecanica',
+      'cad': 'mecanica',
+      'iot': 'mecanica',
+
+      // Qualidade & Processos
+      'qualidade': 'qualidade',
+      'iso9001': 'qualidade',
+      'processos': 'qualidade',
+
+      // Software, Web e SaaS (Padrão/Fallback)
+      'web': 'software',
+      'software': 'software',
+      'frontend': 'software',
+      'backend': 'software',
+      'saas': 'software'
     };
 
     const defaultCategories = {
@@ -310,11 +324,32 @@
       "qualidade": { "nome": "Qualidade", "emoji": "✅" }
     };
 
+    const languageEmojis = {
+      'JavaScript': '⚡', 'TypeScript': '🔷', 'HTML': '🌐', 
+      'CSS': '🎨', 'Python': '🐍', 'C++': '⚙️', 'C#': '🎯', 
+      'Java': '☕', 'C': '💻', 'PHP': '🐘'
+    };
+
+    let allProjects = [];
+    let filteredProjects = [];
+    let currentFilter = 'all';
+
+    // Determina a categoria a partir dos Topics
+    function getCategoryFromTopics(topics = []) {
+      for (const topic of topics) {
+        const cleanTopic = topic.toLowerCase().trim();
+        if (TOPIC_MAP[cleanTopic]) {
+          return TOPIC_MAP[cleanTopic];
+        }
+      }
+      return 'software';
+    }
+
     async function initPortfolio() {
       let localProjects = [];
       let categorias = defaultCategories;
 
-      // 1. Carrega dados do projetos.json local
+      // 1. Carrega projetos locais do arquivo JSON
       try {
         const jsonResponse = await fetch('projetos.json');
         if (jsonResponse.ok) {
@@ -323,7 +358,7 @@
           if (jsonData.categorias) categorias = { ...categorias, ...jsonData.categorias };
         }
       } catch (e) {
-        console.warn('⚠️ projetos.json não encontrado. Carregando dados do GitHub.');
+        console.warn('⚠️ projetos.json não encontrado. Carregando dados via API do GitHub.');
       }
 
       allProjects = [...localProjects];
@@ -331,48 +366,69 @@
       renderFilters(categorias);
       renderProjects();
 
-      // 2. Busca dados do GitHub em paralelo sem travar a interface
+      // 2. Busca dados de TODOS os 3 perfis do GitHub simultaneamente
       try {
-        const [userRes, reposRes] = await Promise.all([
-          fetch('https://api.github.com/users/IvanM1999'),
-          fetch('https://api.github.com/users/IvanM1999/repos?per_page=100&type=owner&sort=updated')
-        ]);
+        const fetchPromises = GITHUB_USERS.map(username => 
+          Promise.all([
+            fetch(`https://api.github.com/users/${username}`),
+            fetch(`https://api.github.com/users/${username}/repos?per_page=100&type=owner&sort=updated`)
+          ])
+        );
 
-        if (userRes.ok) {
-          const user = await userRes.json();
-          document.getElementById('repos').textContent = user.public_repos;
-          document.getElementById('followers').textContent = user.followers;
+        const results = await Promise.all(fetchPromises);
+        
+        let totalRepos = 0;
+        let totalFollowers = 0;
+        let totalStars = 0;
+        let githubProjects = [];
+
+        for (const [userRes, reposRes] of results) {
+          if (userRes.ok) {
+            const user = await userRes.json();
+            totalRepos += user.public_repos || 0;
+            totalFollowers += user.followers || 0;
+          }
+
+          if (reposRes.ok) {
+            const repos = await reposRes.json();
+            
+            repos.forEach(repo => {
+              totalStars += repo.stargazers_count || 0;
+
+              const categoryId = getCategoryFromTopics(repo.topics);
+              
+              githubProjects.push({
+                id: `gh-${repo.id}`,
+                titulo: repo.name.replace(/-/g, ' ').toUpperCase(),
+                descricao: repo.description || 'Repositório público focado em desenvolvimento e soluções técnicas.',
+                categoria: categoryId,
+                tags: [
+                  repo.language || 'GitHub',
+                  ...(repo.topics || []).slice(0, 3)
+                ],
+                link: repo.homepage || repo.html_url,
+                github: repo.html_url,
+                imagem: languageEmojis[repo.language] || '📦',
+                status: repo.archived ? 'legado' : 'ativo'
+              });
+            });
+          }
         }
 
-        if (reposRes.ok) {
-          const ghRepos = await reposRes.json();
-          
-          // Calcula total exato de estrelas
-          const totalStars = ghRepos.reduce((acc, repo) => acc + repo.stargazers_count, 0);
-          document.getElementById('stars').textContent = totalStars;
+        // Atualiza as métricas com a soma dos 3 perfis
+        document.getElementById('repos').textContent = totalRepos;
+        document.getElementById('followers').textContent = totalFollowers;
+        document.getElementById('stars').textContent = totalStars;
 
-          // Mapeia repositórios para o formato do portfólio
-          const githubProjects = ghRepos.map(repo => ({
-            id: `gh-${repo.id}`,
-            titulo: repo.name.replace(/-/g, ' ').toUpperCase(),
-            descricao: repo.description || 'Repositório público no GitHub.',
-            categoria: 'software',
-            tags: [repo.language || 'GitHub', `⭐ ${repo.stargazers_count}`],
-            link: repo.homepage || repo.html_url,
-            github: repo.html_url,
-            imagem: languageEmojis[repo.language] || '📦',
-            status: repo.archived ? 'legado' : 'ativo'
-          }));
+        // Mescla repositórios evitando duplicatas
+        const existingLinks = new Set(localProjects.map(p => p.github || p.link));
+        const newGithubProjects = githubProjects.filter(p => !existingLinks.has(p.github));
 
-          // Mescla sem duplicar projetos já definidos no projetos.json
-          const existingLinks = new Set(localProjects.map(p => p.github || p.link));
-          const newGithubProjects = githubProjects.filter(p => !existingLinks.has(p.github));
+        allProjects = [...localProjects, ...newGithubProjects];
+        filterProjects(currentFilter);
 
-          allProjects = [...localProjects, ...newGithubProjects];
-          filterProjects(currentFilter);
-        }
       } catch (err) {
-        console.error('❌ Erro na integração com GitHub:', err);
+        console.error('❌ Erro ao integrar os perfis do GitHub:', err);
       }
     }
 
@@ -486,7 +542,7 @@
       });
     });
 
-    console.log('%c⚙️ Portfólio Otimizado DSBRTI Carregado com Sucesso', 'color: #E95420; font-weight: bold;');
+    console.log('%c⚙️ Portfólio Multi-Perfil DSBRTI Otimizado', 'color: #E95420; font-weight: bold;');
   </script>
 </body>
 </html>
