@@ -284,72 +284,115 @@
   <script src="../senai/core.js"></script>
 
   <script>
-    // Configurações Globais
+    // Configurações Globais (3 Perfis)
     const GITHUB_USERS = ['IvanM1999', 'IvvyDestiny1999', 'IvvyDestiny'];
 
-    // Mapeamento: "Topic do GitHub" -> "ID da Categoria do Site"
-    const TOPIC_MAP = {
-      // Metrologia & Medição
-      'metrologia': 'metrologia',
-      'calibracao': 'metrologia',
-      'medicao': 'metrologia',
-      'instrumentacao': 'metrologia',
-
-      // Mecânica & Elétrica & Automação
-      'mecanica': 'mecanica',
-      'eletronica': 'mecanica',
-      'automacao': 'mecanica',
-      'mecatronica': 'mecanica',
-      'plc': 'mecanica',
-      'cad': 'mecanica',
-      'iot': 'mecanica',
-
-      // Qualidade & Processos
-      'qualidade': 'qualidade',
-      'iso9001': 'qualidade',
-      'processos': 'qualidade',
-
-      // Software, Web e SaaS (Padrão/Fallback)
-      'web': 'software',
-      'software': 'software',
-      'frontend': 'software',
-      'backend': 'software',
-      'saas': 'software'
-    };
-
+    // Novos Temas e Categorias do Portfólio
     const defaultCategories = {
-      "software": { "nome": "Software & Web", "emoji": "💻" },
+      "robotica": { "nome": "Automação & Robótica", "emoji": "🤖" },
+      "mobile": { "nome": "Mobile & Apps", "emoji": "📱" },
+      "software": { "nome": "Software & C++", "emoji": "💻" },
+      "web": { "nome": "Sistemas & Web SPA", "emoji": "🌐" },
       "metrologia": { "nome": "Metrologia", "emoji": "📐" },
       "mecanica": { "nome": "Mecânica & Elétrica", "emoji": "⚙️" },
       "qualidade": { "nome": "Qualidade", "emoji": "✅" }
     };
 
+    // Mapeamento: "Topic do GitHub" -> "ID da Categoria"
+    const TOPIC_MAP = {
+      // Automação & Robótica (.ino, C++ embarcado)
+      'arduino': 'robotica',
+      'robotica': 'robotica',
+      'robotics': 'robotica',
+      'esp32': 'robotica',
+      'esp8266': 'robotica',
+      'embedded': 'robotica',
+      'embarcados': 'robotica',
+      'automacao': 'robotica',
+      'plc': 'robotica',
+      'mecatronica': 'robotica',
+
+      // Mobile & Apps (Kotlin, Android, Apps nativos)
+      'kotlin': 'mobile',
+      'android': 'mobile',
+      'mobile': 'mobile',
+      'app': 'mobile',
+
+      // Sistemas & Web SPA (HTML, JS Single Page Apps)
+      'html': 'web',
+      'spa': 'web',
+      'frontend': 'web',
+      'web-app': 'web',
+      'pwa': 'web',
+      'web': 'web',
+
+      // Software Geral / Desktop / C++
+      'cpp': 'software',
+      'cplusplus': 'software',
+      'desktop': 'software',
+      'backend': 'software',
+      'software': 'software',
+
+      // Metrologia, Mecânica & Qualidade
+      'metrologia': 'metrologia',
+      'calibracao': 'metrologia',
+      'medicao': 'metrologia',
+      'instrumentacao': 'metrologia',
+      'mecanica': 'mecanica',
+      'eletronica': 'mecanica',
+      'cad': 'mecanica',
+      'qualidade': 'qualidade',
+      'iso9001': 'qualidade',
+      'processos': 'qualidade'
+    };
+
+    // Mapeamento Visual de Linguagens
     const languageEmojis = {
-      'JavaScript': '⚡', 'TypeScript': '🔷', 'HTML': '🌐', 
-      'CSS': '🎨', 'Python': '🐍', 'C++': '⚙️', 'C#': '🎯', 
-      'Java': '☕', 'C': '💻', 'PHP': '🐘'
+      'Arduino': '🤖',
+      'Kotlin': '📱',
+      'C++': '⚡',
+      'HTML': '🌐',
+      'JavaScript': '🟨',
+      'TypeScript': '🔷',
+      'CSS': '🎨',
+      'Python': '🐍',
+      'C#': '🎯',
+      'C': '💻',
+      'Java': '☕',
+      'PHP': '🐘'
     };
 
     let allProjects = [];
     let filteredProjects = [];
     let currentFilter = 'all';
 
-    // Determina a categoria a partir dos Topics
-    function getCategoryFromTopics(topics = []) {
+    // Função de Categoria Inteligente: Avalia Topics primeiro e usa a Linguagem como fallback
+    function getCategoryFromRepo(repo) {
+      const topics = repo.topics || [];
+      const language = repo.language || '';
+
+      // 1. Verifica se alguma Topic do GitHub corresponde
       for (const topic of topics) {
         const cleanTopic = topic.toLowerCase().trim();
         if (TOPIC_MAP[cleanTopic]) {
           return TOPIC_MAP[cleanTopic];
         }
       }
-      return 'software';
+
+      // 2. Fallback Inteligente baseado na Linguagem do repositório
+      if (language === 'Arduino') return 'robotica';
+      if (language === 'Kotlin') return 'mobile';
+      if (language === 'HTML' || language === 'CSS') return 'web';
+      if (language === 'C++') return 'software';
+
+      return 'web'; // Padrão
     }
 
     async function initPortfolio() {
       let localProjects = [];
       let categorias = defaultCategories;
 
-      // 1. Carrega projetos locais do arquivo JSON
+      // 1. Carrega projetos locais do projetos.json (se existir)
       try {
         const jsonResponse = await fetch('projetos.json');
         if (jsonResponse.ok) {
@@ -366,7 +409,7 @@
       renderFilters(categorias);
       renderProjects();
 
-      // 2. Busca dados de TODOS os 3 perfis do GitHub simultaneamente
+      // 2. Busca dados simultaneamente dos 3 perfis do GitHub
       try {
         const fetchPromises = GITHUB_USERS.map(username => 
           Promise.all([
@@ -395,7 +438,8 @@
             repos.forEach(repo => {
               totalStars += repo.stargazers_count || 0;
 
-              const categoryId = getCategoryFromTopics(repo.topics);
+              // Identifica a categoria (pelas topics ou pela linguagem)
+              const categoryId = getCategoryFromRepo(repo);
               
               githubProjects.push({
                 id: `gh-${repo.id}`,
@@ -415,12 +459,12 @@
           }
         }
 
-        // Atualiza as métricas com a soma dos 3 perfis
+        // Atualiza as métricas consolidadas dos 3 perfis
         document.getElementById('repos').textContent = totalRepos;
         document.getElementById('followers').textContent = totalFollowers;
         document.getElementById('stars').textContent = totalStars;
 
-        // Mescla repositórios evitando duplicatas
+        // Mescla evitando repositórios duplicados
         const existingLinks = new Set(localProjects.map(p => p.github || p.link));
         const newGithubProjects = githubProjects.filter(p => !existingLinks.has(p.github));
 
