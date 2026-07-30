@@ -11,6 +11,11 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname));
 
+// Configuração padrão de timeout para requisições externas via Axios
+const axiosInstance = axios.create({
+    timeout: 8000
+});
+
 function normalizarTelefoneBR(telefoneRaw) {
     let numeros = telefoneRaw.replace(/\D/g, '');
     if (numeros.length === 10 || numeros.length === 11) {
@@ -24,18 +29,21 @@ app.post('/api/osint/phone', async (req, res) => {
     try {
         const { phone } = req.body;
         if (!phone) return res.status(400).json({ error: "Telefone não informado." });
+        
         const telefoneFormatado = normalizarTelefoneBR(phone);
         const ddd = telefoneFormatado.substring(3, 5);
                  
         let dadosDdd = { state: "SP", cities: ["São Paulo"] };
         try {
-            const responseDdd = await axios.get(`https://brasilapi.com.br/api/ddd/v1/${ddd}`);
+            const responseDdd = await axiosInstance.get(`https://brasilapi.com.br/api/ddd/v1/${ddd}`);
             dadosDdd = responseDdd.data;
         } catch (err) {
-            // Fallback caso a API de DDD falhe
+            // Fallback seguro caso a API de DDD instabilize temporariamente
         }
+
         const tamanhoNumero = telefoneFormatado.replace('+', '').length;
         const isValid = (tamanhoNumero === 12 || tamanhoNumero === 13);
+
         res.json({
             phone: telefoneFormatado,
             valid: isValid,
@@ -46,11 +54,12 @@ app.post('/api/osint/phone', async (req, res) => {
             message: `Infraestrutura validada com sucesso para o DDD ${ddd}.`
         });
     } catch (error) {
-        res.status(500).json({ error: "Erro interno ao processar o telefone." });
+        console.error("Erro em /api/osint/phone:", error.message);
+        res.status(500).json({ error: "Erro interno ao processar o telefone no barramento." });
     }
 });
 
-// API 2: Crawler / Validador de Documentos consultando APIs de Juntas/Receita
+// API 2: Validador de Documentos consultando APIs Oficiais
 app.post('/api/validate/document', async (req, res) => {
     try {
         const { docType, document } = req.body;
@@ -61,9 +70,8 @@ app.post('/api/validate/document', async (req, res) => {
 
         if (docType === "CNPJ") {
             try {
-                // Consulta real na API da Receita Federal via BrasilAPI
                 const cnpjLimpo = document.replace(/\D/g, '');
-                const responseCnpj = await axios.get(`https://brasilapi.com.br/api/cnpj/v1/${cnpjLimpo}`);
+                const responseCnpj = await axiosInstance.get(`https://brasilapi.com.br/api/cnpj/v1/${cnpjLimpo}`);
                 const dadosEmpresa = responseCnpj.data;
                 
                 fonteOficial = "Receita Federal do Brasil (DataLake Oficial)";
@@ -99,6 +107,7 @@ app.post('/api/validate/document', async (req, res) => {
             leaks: leaks
         });
     } catch (error) {
+        console.error("Erro em /api/validate/document:", error.message);
         res.status(500).json({ error: "Erro ao processar o documento no motor central." });
     }
 });
@@ -114,14 +123,13 @@ app.post('/api/osint/email', async (req, res) => {
             return res.status(500).json({ error: "Chave HIBP_API_KEY não configurada no ambiente do Render." });
         }
 
-        // Chamada real à API oficial do Have I Been Pwned
-        const response = await axios.get(`https://haveibeenpwned.com/api/v3/breachedaccount/${encodeURIComponent(email)}?truncateResponse=false`, {
+        const response = await axiosInstance.get(`https://haveibeenpwned.com/api/v3/breachedaccount/${encodeURIComponent(email)}?truncateResponse=false`, {
             headers: {
                 'User-Agent': 'Cyber360-Audit-Suite',
                 'hibp-api-key': hibpApiKey
             },
             validateStatus: function (status) {
-                return status === 200 || status === 404; // 404 significa que o e-mail está limpo
+                return status === 200 || status === 404; // 404 indica ausência de ocorrências
             }
         });
 
@@ -134,12 +142,11 @@ app.post('/api/osint/email', async (req, res) => {
             });
         }
 
-        // Mapeia os vazamentos reais retornados pela API oficial do HIBP
         const breachesReais = response.data.map(b => ({
             name: b.Name,
             year: b.AddedDate ? b.AddedDate.substring(0, 4) : "Desconhecido",
-            description: b.Description.replace(/<\/?[^>]+(>|$)/g, ""), // Remove tags HTML da descrição do HIBP
-            impact: `Dados comprometidos: ${b.DataClasses.join(', ')}`,
+            description: b.Description ? b.Description.replace(/<\/?[^>]+(>|$)/g, "") : "Sem descrição detalhada.",
+            impact: `Dados comprometidos: ${b.DataClasses ? b.DataClasses.join(', ') : 'Não especificado'}`,
             fix: "Recomenda-se a troca imediata de senha e ativação de 2FA.",
             source: `Oficial HIBP - Domínio da Brecha: ${b.Domain || 'N/A'}`
         }));
@@ -162,5 +169,5 @@ app.get('*', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`[Cyber360 Server] Rodando com fontes reais na porta ${PORT}`);
+    console.log(`[Cyber360 Server] Rodando com fontes reais e segurança otimizada na porta ${PORT}`);
 });
