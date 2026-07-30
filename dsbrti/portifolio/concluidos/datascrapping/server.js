@@ -11,7 +11,6 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname));
 
-// Função auxiliar para normalizar telefones para o padrão internacional brasileiro (+55)
 function normalizarTelefoneBR(telefoneRaw) {
     let numeros = telefoneRaw.replace(/\D/g, '');
     if (numeros.length === 10 || numeros.length === 11) {
@@ -20,17 +19,13 @@ function normalizarTelefoneBR(telefoneRaw) {
     return '+' + numeros;
 }
 
-// ==========================================
-// API 1: Lookup e Threat Intelligence de Telefones
-// ==========================================
 app.post('/api/osint/phone', async (req, res) => {
     try {
         const { phone } = req.body;
         if (!phone) return res.status(400).json({ error: "Telefone não informado." });
-
         const telefoneFormatado = normalizarTelefoneBR(phone);
         const ddd = telefoneFormatado.substring(3, 5);
-        
+                 
         let dadosDdd = { state: "SP", cities: ["São Paulo"] };
         try {
             const responseDdd = await axios.get(`https://brasilapi.com.br/api/ddd/v1/${ddd}`);
@@ -38,10 +33,8 @@ app.post('/api/osint/phone', async (req, res) => {
         } catch (err) {
             // Fallback caso a API de DDD falhe
         }
-
         const tamanhoNumero = telefoneFormatado.replace('+', '').length;
         const isValid = (tamanhoNumero === 12 || tamanhoNumero === 13);
-
         res.json({
             phone: telefoneFormatado,
             valid: isValid,
@@ -55,17 +48,12 @@ app.post('/api/osint/phone', async (req, res) => {
     }
 });
 
-// ==========================================
-// API 2: Validação Multi-Target e Crawler OSINT de Documentos
-// ==========================================
 app.post('/api/validate/document', async (req, res) => {
     try {
         const { docType, document } = req.body;
         if (!document) return res.status(400).json({ error: "Documento não informado." });
-
         let leaks = [];
-        
-        // Simulação realista baseada em inteligência de fontes abertas e registros históricos
+                 
         if (docType === "CPF" || docType === "CNPJ") {
             leaks = [
                 {
@@ -88,7 +76,6 @@ app.post('/api/validate/document', async (req, res) => {
                 }
             ];
         }
-
         res.json({
             success: true,
             document: document,
@@ -100,17 +87,12 @@ app.post('/api/validate/document', async (req, res) => {
     }
 });
 
-// ==========================================
-// API 3: Varredura de E-mails em Brechas (Simulador K-Anonymity / Global)
-// ==========================================
 app.post('/api/osint/email', async (req, res) => {
     try {
         const { email } = req.body;
         if (!email) return res.status(400).json({ error: "E-mail não informado." });
-
-        // Regra de exemplo para demonstrar o retorno dinâmico
         const isSafe = email.includes("seguro") || email.includes("admin-test");
-        
+                 
         if (isSafe) {
             return res.json({
                 status: "INTEGRO",
@@ -118,7 +100,6 @@ app.post('/api/osint/email', async (req, res) => {
                 leaks: []
             });
         }
-
         res.json({
             status: "ALERTA",
             message: "Foram identificados rastros em listagens públicas de vazamentos e logs corporativos.",
@@ -137,7 +118,6 @@ app.post('/api/osint/email', async (req, res) => {
     }
 });
 
-// Rota coringa para servir o front-end HTML principal caso necessário
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
