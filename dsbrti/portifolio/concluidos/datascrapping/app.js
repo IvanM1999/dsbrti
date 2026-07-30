@@ -197,8 +197,11 @@ document.getElementById('contact-form').addEventListener('submit', async (e) => 
         OSINT_DATA.scrapedLeaks = data.leaks || [];
         container.innerHTML = OSINT_DATA.scrapedLeaks.map(lk => `
             <div class="p-3 bg-slate-950 rounded-xl border border-slate-800">
-                <span class="text-rose-400 font-bold block mb-1">[REGISTRO HISTÓRICO] ${lk.title} (${lk.year})</span>
-                <span class="text-slate-400">${lk.detail}</span>
+                <div class="flex justify-between items-center mb-1">
+                    <span class="text-rose-400 font-bold">[REGISTRO OFICIAL] ${lk.title} (${lk.year})</span>
+                    <span class="text-cyan-400 text-[10px] bg-cyan-950/40 px-2 py-0.5 rounded border border-cyan-900/30">Fonte: ${lk.source || data.officialSource}</span>
+                </div>
+                <span class="text-slate-400 block">${lk.detail}</span>
             </div>
         `).join('');
         OSINT_DATA.scrapedLeaks.forEach(lk => pushTimeline(`Incidente: ${lk.title}`, lk.detail, 'danger', lk.year));
@@ -241,7 +244,7 @@ document.getElementById('lookup-form').addEventListener('submit', async (e) => {
             <div class="p-3 bg-slate-950/80 border border-slate-800 rounded-xl font-mono text-[11px] space-y-1">
                 <span class="text-purple-400 font-bold block">[Escopo de Cobertura Pública]</span>
                 <p class="text-slate-300"><strong>Cidades do Prefixo:</strong> ${listaCidades}</p>
-                <p class="text-slate-500 mt-2 text-[10px] italic">Origem da informação extraída: Registro Nacional de Prefixos e Numeração (BrasilAPI).</p>
+                <p class="text-cyan-400 mt-2 text-[10px]"><strong>Fonte Oficial:</strong> ${data.source || "Registro Nacional de Prefixos e Numeração (BrasilAPI)"}</p>
             </div>
         `;
         pushTimeline("Mapeamento Telefônico Real", `Linha identificada na infraestrutura do estado de ${data.state}.`, 'info', '2026');
@@ -297,6 +300,7 @@ document.getElementById('pwned-form').addEventListener('submit', async (e) => {
                     </div>
                     <p class="text-slate-300"><span class="text-slate-500 font-bold">[Contexto]:</span> ${b.description}</p>
                     <p class="text-rose-400"><span class="text-slate-500 font-bold">[Impacto]:</span> ${b.impact}</p>
+                    <p class="text-cyan-400 mt-1"><span class="text-slate-500 font-bold">[Fonte Oficial]:</span> ${b.source || data.source || "Have I Been Pwned Database"}</p>
                     <div class="p-2 bg-emerald-950/30 border border-emerald-900/50 text-emerald-400 rounded-lg mt-2 text-[11px]">
                         <strong>Plano de Ação:</strong> ${b.fix}
                     </div>
