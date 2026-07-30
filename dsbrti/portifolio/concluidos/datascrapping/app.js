@@ -135,7 +135,7 @@ document.getElementById('audit-form').addEventListener('submit', async (e) => {
         const res = await fetch(`https://brasilapi.com.br/api/cnpj/v1/${cnpj}`);
         if(!res.ok) throw new Error("Registro ativo não encontrado na base governamental.");
         const data = await res.json();
-        
+                 
         OSINT_DATA.cnpj = data.cnpj;
         OSINT_DATA.razaoSocial = data.razao_social;
         OSINT_DATA.emailRF = data.email;
@@ -153,7 +153,10 @@ document.getElementById('audit-form').addEventListener('submit', async (e) => {
         dash.classList.remove('hidden');
     } catch(e) {
         err.innerText = e.message; err.classList.remove('hidden');
-    } finally { toggleLoader(false); if (typeof lucide !== 'undefined') lucide.createIcons(); }
+    } finally { 
+        toggleLoader(false); 
+        if (typeof lucide !== 'undefined') lucide.createIcons(); 
+    }
 });
 
 document.getElementById('contact-form').addEventListener('submit', async (e) => {
@@ -163,7 +166,7 @@ document.getElementById('contact-form').addEventListener('submit', async (e) => 
     const err = document.getElementById('error-crawler');
     const resultsSection = document.getElementById('contact-results');
     const container = document.getElementById('multi-osint-container');
-    
+         
     if(err) err.classList.add('hidden');
     resultsSection.classList.add('hidden');
     if (targetType === "CPF" && !validarCPF(documentRaw)) {
@@ -214,7 +217,7 @@ document.getElementById('lookup-form').addEventListener('submit', async (e) => {
     const phoneInput = document.getElementById('lookup-phone').value;
     const results = document.getElementById('lookup-results');
     const leakContainer = document.getElementById('phone-leak-container');
-    
+         
     if(!phoneInput) return;
     results.classList.add('hidden');
     toggleLoader(true, "Rastreando barramentos de operadoras e prefixos geográficos em tempo real...");
@@ -233,7 +236,7 @@ document.getElementById('lookup-form').addEventListener('submit', async (e) => {
         document.getElementById('look-abuse-tag').className = data.valid ? "text-emerald-400 font-bold" : "text-rose-400 font-bold";
         document.getElementById('look-carrier').innerText = data.message;
         const listaCidades = data.cities.slice(0, 8).join(', ') + (data.cities.length > 8 ? '...' : '');
-        
+                 
         leakContainer.innerHTML = `
             <div class="p-3 bg-slate-950/80 border border-slate-800 rounded-xl font-mono text-[11px] space-y-1">
                 <span class="text-purple-400 font-bold block">[Escopo de Cobertura Pública]</span>
@@ -258,7 +261,7 @@ document.getElementById('pwned-form').addEventListener('submit', async (e) => {
     const results = document.getElementById('pwned-results');
     const card = document.getElementById('pwned-status-card');
     const container = document.getElementById('breaches-container');
-    
+         
     if(!emailInput) return;
     results.classList.add('hidden');
     toggleLoader(true, "Interrogando logs globais e tabelas de credenciais vazadas...");
