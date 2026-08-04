@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeLib - Biblioteca Virtual</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 500: '#6366f1', 600: '#4f46e5' }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans antialiased">
+
+    <!-- Cabeçalho / Barra de Navegação -->
+    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <span class="text-xl font-bold tracking-wider text-brand-500">WeLib</span>
+                <span class="text-xs bg-slate-800 text-slate-400 px-2 py-0.5 rounded">v2.0</span>
+            </div>
+            <div class="flex-1 max-w-md mx-6">
+                <input type="text" id="searchInput" placeholder="Pesquisar livros, autores ou artigos..." class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-brand-500 transition">
+            </div>
+            <div>
+                <button id="themeToggle" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition">
+                    💡
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-8">
+        <div class="flex items-center justify-between mb-6">
+            <h1 class="text-2xl font-semibold tracking-tight">Acervo Disponível</h1>
+            <span id="resultsCount" class="text-sm text-slate-400">A carregar recursos...</span>
+        </div>
+
+        <!-- Grelha de Livros / Recursos -->
+        <div id="libraryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- Os cartões serão injetados dinamicamente via JavaScript -->
+        </div>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="border-t border-slate-800 py-4 text-center text-xs text-slate-500">
+        WeLib &copy; 2026 — Biblioteca Virtual Modular
+    </footer>
+
+    <!-- Script Principal -->
+    <script src="assets/js/app.js"></script>
+</body>
+</html>
