@@ -12,8 +12,7 @@ void resolverLabirinto() {
     for(int i = 0; i < 4; i++) {
         mover('S');
     }
-}
-`;
+}`;
 
 const editor = CodeMirror.fromTextArea(document.getElementById('codeEditor'), {
     mode: 'text/x-c++src',
@@ -22,9 +21,9 @@ const editor = CodeMirror.fromTextArea(document.getElementById('codeEditor'), {
     tabSize: 4,
     autoCloseBrackets: true
 });
+
 editor.setValue(codigoInicial);
 
-// Evento de auto validação de sintaxe se ativado
 editor.on('change', () => {
     const autoCheckInput = document.getElementById('settingAutoCheck');
     if (autoCheckInput && autoCheckInput.checked) {
@@ -35,16 +34,15 @@ editor.on('change', () => {
 /* ==========================================================================
    2. RECURSOS DO TECLADO HACKER & INTELIGÊNCIA DE SINTAXE
    ========================================================================== */
-
 function toggleHackerKeyboard() {
     const kb = document.getElementById('hackerKeyboard');
     const btn = document.getElementById('toggleKbNavBtn');
     kb.classList.toggle('hidden');
     const isHidden = kb.classList.contains('hidden');
-    
+     
     const kbSetting = document.getElementById('settingKbToggle');
     if (kbSetting) kbSetting.checked = !isHidden;
-    
+     
     if (isHidden) {
         btn.classList.remove('active');
     } else {
@@ -66,7 +64,6 @@ function toggleHackerKeyboardSetting(checked) {
     setTimeout(() => editor.refresh(), 100);
 }
 
-// Inserir texto simples na posição atual do cursor
 function inserirTexto(texto) {
     const doc = editor.getDoc();
     const cursor = doc.getCursor();
@@ -74,12 +71,10 @@ function inserirTexto(texto) {
     editor.focus();
 }
 
-// Inserir Par de Caracteres Abertura/Fechamento juntos e posicionar cursor no meio
 function inserirPar(abertura, fechamento) {
     const doc = editor.getDoc();
     const cursor = doc.getCursor();
     const selecao = doc.getSelection();
-
     if (selecao.length > 0) {
         doc.replaceSelection(abertura + selecao + fechamento);
     } else {
@@ -89,14 +84,12 @@ function inserirPar(abertura, fechamento) {
     editor.focus();
 }
 
-// Inserção de Snippets Estruturados (for loop, if block)
 function inserirSnippet(tipo) {
     const doc = editor.getDoc();
     const cursor = doc.getCursor();
     let snippet = '';
     let offsetLine = 0;
     let offsetCh = 0;
-
     if (tipo === 'for') {
         snippet = 'for (int i = 0; i < 4; i++) {\n    \n}';
         offsetLine = 1;
@@ -106,20 +99,16 @@ function inserirSnippet(tipo) {
         offsetLine = 0;
         offsetCh = 4;
     }
-
     doc.replaceRange(snippet, cursor);
     doc.setCursor({ line: cursor.line + offsetLine, ch: offsetCh });
     editor.focus();
 }
 
-// Inteligência de Sintaxe: Verifica aspas e delimitadores abertos
 function verificarSintaxeInteligente() {
     const code = editor.getValue();
     const erro = analisarSintaxeCode(code);
-
     const alertBox = document.getElementById('syntaxAlert');
     const alertMsg = document.getElementById('syntaxAlertMsg');
-
     if (erro) {
         alertBox.className = "syntax-check-box error";
         alertMsg.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> <strong>Atenção:</strong> ${erro}`;
@@ -136,7 +125,6 @@ function verificarSintaxeSilenciosa() {
     const erro = analisarSintaxeCode(code);
     const alertBox = document.getElementById('syntaxAlert');
     const alertMsg = document.getElementById('syntaxAlertMsg');
-
     if (erro) {
         alertBox.className = "syntax-check-box error";
         alertMsg.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> <strong>Atenção:</strong> ${erro}`;
@@ -155,13 +143,9 @@ function analisarSintaxeCode(code) {
     let inStringDouble = false;
     let inStringSingle = false;
     let lineNum = 1;
-
     for (let i = 0; i < code.length; i++) {
         const char = code[i];
-
         if (char === '\n') lineNum++;
-
-        // Checar Strings
         if (char === '"' && !inStringSingle) {
             inStringDouble = !inStringDouble;
             continue;
@@ -170,10 +154,7 @@ function analisarSintaxeCode(code) {
             inStringSingle = !inStringSingle;
             continue;
         }
-
         if (inStringDouble || inStringSingle) continue;
-
-        // Empilha delimitadores
         if (char === '(' || char === '{' || char === '[') {
             stack.push({ char, line: lineNum });
         } else if (char === ')' || char === '}' || char === ']') {
@@ -190,15 +171,12 @@ function analisarSintaxeCode(code) {
             }
         }
     }
-
     if (inStringDouble) return `Há uma String com aspas duplas ("...") não fechada no seu código.`;
     if (inStringSingle) return `Há um caractere com aspas simples ('...') não fechado no seu código.`;
-
     if (stack.length > 0) {
         const topo = stack.pop();
         return `O bloco '${topo.char}' aberto na linha ${topo.line} não foi fechado!`;
     }
-
     return null;
 }
 
@@ -210,11 +188,10 @@ let termosDicionario = [];
 async function carregarDicionario() {
     const list = document.getElementById('dictList');
     if (!list) return;
-
     try {
         const response = await fetch('dicionario.json');
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        
+         
         termosDicionario = await response.json();
         renderizarDicionario(termosDicionario);
     } catch (err) {
@@ -226,12 +203,10 @@ async function carregarDicionario() {
 function renderizarDicionario(itens) {
     const list = document.getElementById('dictList');
     if (!list) return;
-
     if (itens.length === 0) {
         list.innerHTML = `<p style="color: var(--text-sub); font-size: 12px; padding: 8px;">Nenhum termo encontrado.</p>`;
         return;
     }
-
     list.innerHTML = itens.map(t => `
         <div class="dict-item">
             <h4><i class="fa-solid fa-code"></i> ${t.termo}</h4>
@@ -252,7 +227,6 @@ function switchTab(tabName) {
     document.querySelectorAll('.tabs-header .tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('tab-curso').style.display = 'none';
     document.getElementById('tab-dicionario').style.display = 'none';
-
     if (tabName === 'curso') {
         document.querySelectorAll('.tabs-header .tab-btn')[0].classList.add('active');
         document.getElementById('tab-curso').style.display = 'block';
@@ -262,7 +236,6 @@ function switchTab(tabName) {
     }
 }
 
-// Inicializa a busca externa ao carregar a página
 carregarDicionario();
 
 /* ==========================================================================
@@ -272,7 +245,6 @@ const canvas = document.getElementById('canvasLabirinto');
 const ctx = canvas.getContext('2d');
 const GRID = 5;
 const CELL = canvas.width / GRID;
-
 const mapaOriginal = [
     [0, 0, 0, 0, 0],
     [1, 1, 1, 1, 0],
@@ -300,12 +272,12 @@ function desenhar() {
             }
         }
     }
-    // Desenhar Jogador (Bolinha)
     ctx.fillStyle = '#89b4fa';
     ctx.beginPath();
     ctx.arc(player.x * CELL + CELL / 2, player.y * CELL + CELL / 2, CELL / 3, 0, Math.PI * 2);
     ctx.fill();
 }
+
 desenhar();
 
 async function compilarEExecutar() {
@@ -315,15 +287,15 @@ async function compilarEExecutar() {
     document.getElementById('hudStatus').innerText = "Executando...";
     document.getElementById('hudStatus').className = "hud-value status-running";
     desenhar();
-
+    
     const code = editor.getValue();
     const linhas = code.split('\n');
     const comandos = [];
-
+    
     linhas.forEach(linha => {
         const matchMover = linha.match(/mover\s*\(\s*['"]([WASDwasd])['"]\s*\)/);
         const matchFor = linha.match(/for\s*\(\s*int\s+\w+\s*=\s*0\s*;\s*\w+\s*<\s*(\d+)/);
-        
+         
         if (matchFor) {
             const repeticoes = parseInt(matchFor[1]);
             const idx = linhas.indexOf(linha);
@@ -342,12 +314,11 @@ async function compilarEExecutar() {
         await new Promise(r => setTimeout(r, 250));
         let nx = player.x;
         let ny = player.y;
-
         if (cmd === 'D') nx++;
         if (cmd === 'A') nx--;
         if (cmd === 'S') ny++;
         if (cmd === 'W') ny--;
-
+        
         if (nx >= 0 && nx < GRID && ny >= 0 && ny < GRID && mapaOriginal[ny][nx] !== 1) {
             player.x = nx;
             player.y = ny;
@@ -371,14 +342,14 @@ async function compilarEExecutar() {
 }
 
 /* ==========================================================================
-   5. IA CHAT PÚBLICA & CONTROLE DO BALÃO FLUTUANTE
+   5. IA CHAT & CONTROLE DO BALÃO FLUTUANTE
    ========================================================================== */
 function toggleAIChat() {
     const bubble = document.getElementById('aiChatBubble');
     if (!bubble) return;
-    
+     
     bubble.classList.toggle('hidden');
-    
+     
     if (!bubble.classList.contains('hidden')) {
         setTimeout(() => {
             const input = document.getElementById('chatInput');
@@ -387,9 +358,7 @@ function toggleAIChat() {
     }
 }
 
-const systemPrompt = `Você é um tutor de programação C++ e lógica. 
-REGRA DE OURO IMPRESCINDÍVEL: NUNCA forneça o código pronto ou a resposta exata para o usuário. 
-Sua função é dar dicas conceituais, explicar onde estão os erros lógicos e guiar a linha de raciocínio do estudante.`;
+const systemPrompt = `Você é um tutor de programação C++ e lógica. REGRA DE OURO IMPRESCINDÍVEL: NUNCA forneça o código pronto ou a resposta exata para o usuário. Sua função é dar dicas conceituais, explicar onde estão os erros lógicos e guiar a linha de raciocínio do estudante.`;
 
 async function chamarIAPublica(mensagens) {
     try {
@@ -420,52 +389,45 @@ async function enviarMsgChat() {
     const input = document.getElementById('chatInput');
     const texto = input.value.trim();
     if (!texto) return;
-
     adicionarMensagemChat(texto, 'user');
     input.value = '';
-
+    
     const carregandoDiv = document.createElement('div');
     carregandoDiv.className = 'msg ai';
     carregandoDiv.innerText = "Pensando...";
     document.getElementById('chatBox').appendChild(carregandoDiv);
-
-    const repostaIA = await chamarIAPublica([{ role: 'user', content: texto }]);
-    carregandoDiv.remove();
     
-    adicionarMensagemChat(repostaIA, 'ai');
+    const respostaIA = await chamarIAPublica([{ role: 'user', content: texto }]);
+    carregandoDiv.remove();
+     
+    adicionarMensagemChat(respostaIA, 'ai');
 }
 
 async function analisarCodigoComIA() {
-    // Garante que o balão está aberto ao analisar
     const bubble = document.getElementById('aiChatBubble');
     if (bubble && bubble.classList.contains('hidden')) {
         toggleAIChat();
     }
-
     const codigoAtual = editor.getValue();
     adicionarMensagemChat("Analise meu código na IDE e me dê orientações.", 'user');
-
+    
     const carregandoDiv = document.createElement('div');
     carregandoDiv.className = 'msg ai';
     carregandoDiv.innerText = "Analisando IDE...";
     document.getElementById('chatBox').appendChild(carregandoDiv);
-
-    const promptAnalise = `Analise o seguinte código C++ e diga onde o usuário pode melhorar sem dar a resposta pronta:
-
-\`\`\`cpp
-${codigoAtual}
-\`\`\``;
-
-    const repostaIA = await chamarIAPublica([{ role: 'user', content: promptAnalise }]);
-    carregandoDiv.remove();
     
-    adicionarMensagemChat(repostaIA, 'ai');
+    const promptAnalise = `Analise o seguinte código C++ e diga onde o usuário pode melhorar sem dar a resposta pronta: \`\`\`cpp ${codigoAtual} \`\`\``;
+    const respostaIA = await chamarIAPublica([{ role: 'user', content: promptAnalise }]);
+    carregandoDiv.remove();
+     
+    adicionarMensagemChat(respostaIA, 'ai');
 }
 
 /* Modals */
 function abrirConfiguracoes() {
     document.getElementById('modalSettings').style.display = 'flex';
 }
+
 function fecharConfiguracoes() {
     document.getElementById('modalSettings').style.display = 'none';
 }
