@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Currículo - Especialista Técnico</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-page: #090d16;
+      --card-bg: #111827;
+      --accent-green: #10b981;
+      --accent-cyan: #06b6d4;
+      --text-bright: #f3f4f6;
+      --text-muted: #9ca3af;
+      --border-color: #1f2937;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--bg-page); color: var(--text-bright); font-family: 'Inter', sans-serif; padding: 40px 20px; display: flex; justify-content: center; min-height: 100vh; }
+
+    .cv-container { width: 100%; max-width: 850px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+    
+    header { border-bottom: 2px dashed var(--border-color); padding-bottom: 24px; margin-bottom: 28px; }
+    .code-prompt { font-family: 'Fira Code', monospace; color: var(--accent-green); font-size: 0.85rem; margin-bottom: 8px; }
+    header h1 { font-size: 30px; font-weight: 700; color: #ffffff; letter-spacing: -0.5px; }
+    header .subtitle { font-family: 'Fira Code', monospace; font-size: 15px; color: var(--accent-cyan); margin-top: 6px; }
+    
+    .contact-bar { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 16px; font-size: 13px; color: var(--text-muted); font-family: 'Fira Code', monospace; }
+    
+    section { margin-bottom: 28px; }
+    section h2 { font-family: 'Fira Code', monospace; font-size: 14px; text-transform: uppercase; color: var(--accent-green); border-bottom: 1px solid var(--border-color); padding-bottom: 8px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    section h2::before { content: '>'; color: var(--accent-cyan); }
+    
+    p, li { font-size: 14px; line-height: 1.6; color: var(--text-muted); }
+    
+    .item { margin-bottom: 20px; background: rgba(31, 41, 55, 0.4); padding: 16px; border-radius: 8px; border-left: 3px solid var(--accent-cyan); }
+    .item-header { display: flex; justify-content: space-between; font-weight: 600; font-size: 15px; color: #ffffff; }
+    .item-sub { font-family: 'Fira Code', monospace; font-size: 13px; color: var(--accent-green); margin: 4px 0 8px 0; }
+    
+    .skills-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tech-pill { font-family: 'Fira Code', monospace; background: #1f2937; color: var(--accent-cyan); border: 1px solid rgba(6, 182, 212, 0.3); padding: 4px 10px; border-radius: 4px; font-size: 12px; }
+
+    .print-btn { position: fixed; bottom: 20px; right: 20px; background: var(--accent-green); color: #000; border: none; padding: 12px 22px; border-radius: 50px; font-family: 'Fira Code', monospace; font-weight: 700; cursor: pointer; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); z-index: 1000; }
+
+    @media print {
+      body { background: #fff; color: #000; padding: 0; }
+      .cv-container { box-shadow: none; border: none; background: #fff; }
+      header h1, .item-header { color: #000 !important; }
+      p, li, .contact-bar { color: #333 !important; }
+      .item { background: #f9fafb; border-left-color: #000; }
+      .print-btn { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <button class="print-btn" onclick="window.print()">[P] IMPRIMIR / PDF</button>
+
+  <div class="cv-container">
+    <header>
+      <div class="code-prompt">class SystemEngineer extends Developer {</div>
+      <h1 id="cv-nome">Seu Nome Completo</h1>
+      <div class="subtitle" id="cv-cargo">Especialista Técnico / Software Architect</div>
+      <div class="contact-bar">
+        <span id="cv-localizacao">loc: SC, Brasil</span>
+        <span id="cv-email">email: dev@exemplo.com</span>
+        <span id="cv-telefone">tel: (00) 00000-0000</span>
+        <span id="cv-linkedin">web: github.com/dev</span>
+      </div>
+    </header>
+
+    <section id="sec-resumo">
+      <h2>// RESUMO_EXECUTIVO</h2>
+      <p id="cv-resumo">Especialista no desenvolvimento de arquiteturas de alto desempenho, microsserviços e integração contínua de software.</p>
+    </section>
+
+    <section id="sec-experiencias">
+      <h2>// EXPERIENCIA_PROFISSIONAL</h2>
+      <div id="cv-experiencias-container">
+        <div class="item">
+          <div class="item-header">
+            <span>Engenheiro de Software Senior</span>
+            <span>2022 - Presente</span>
+          </div>
+          <div class="item-sub">Tech Company Inc.</div>
+          <p>Liderança técnica no desenvolvimento de microsserviços de alta disponibilidade.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-habilidades">
+      <h2>// STACK_TECNOLOGICA</h2>
+      <div class="skills-grid" id="cv-habilidades-pills">
+        <span class="tech-pill">Node.js</span>
+        <span class="tech-pill">PostgreSQL</span>
+        <span class="tech-pill">Docker</span>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const id = urlParams.get('id');
+
+      if (!id) return;
+
+      try {
+        const response = await fetch(`/api/curriculos/${id}`);
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          const cv = result.data;
+          const extras = cv.dados_extras || {};
+
+          if (cv.nome) document.getElementById('cv-nome').innerText = cv.nome;
+          if (cv.cargo) document.getElementById('cv-cargo').innerText = cv.cargo;
+          
+          if (cv.localizacao) document.getElementById('cv-localizacao').innerText = `loc: ${cv.localizacao}`;
+          else document.getElementById('cv-localizacao').style.display = 'none';
+
+          if (cv.email) document.getElementById('cv-email').innerText = `email: ${cv.email}`;
+          else document.getElementById('cv-email').style.display = 'none';
+
+          if (cv.telefone) document.getElementById('cv-telefone').innerText = `tel: ${cv.telefone}`;
+          else document.getElementById('cv-telefone').style.display = 'none';
+
+          if (cv.linkedin) document.getElementById('cv-linkedin').innerText = `web: ${cv.linkedin}`;
+          else document.getElementById('cv-linkedin').style.display = 'none';
+
+          if (cv.resumo) document.getElementById('cv-resumo').innerText = cv.resumo;
+          else document.getElementById('sec-resumo').style.display = 'none';
+
+          const expContainer = document.getElementById('cv-experiencias-container');
+          if (extras.experiencias && extras.experiencias.length > 0) {
+            expContainer.innerHTML = '';
+            extras.experiencias.forEach(exp => {
+              const div = document.createElement('div');
+              div.className = 'item';
+              div.innerHTML = `
+                <div class="item-header">
+                  <span>${exp.cargo || 'Cargo não especificado'}</span>
+                  <span>${exp.periodo || ''}</span>
+                </div>
+                <div class="item-sub">${exp.empresa || ''}</div>
+                ${exp.descricao ? `<p>${exp.descricao.replace(/\n/g, '<br>')}</p>` : ''}
+              `;
+              expContainer.appendChild(div);
+            });
+          } else {
+            document.getElementById('sec-experiencias').style.display = 'none';
+          }
+
+          const pillsContainer = document.getElementById('cv-habilidades-pills');
+          if (extras.habilidades && extras.habilidades.length > 0) {
+            pillsContainer.innerHTML = '';
+            extras.habilidades.forEach(hab => {
+              const span = document.createElement('span');
+              span.className = 'tech-pill';
+              span.innerText = hab;
+              pillsContainer.appendChild(span);
+            });
+          } else {
+            document.getElementById('sec-habilidades').style.display = 'none';
+          }
+        }
+      } catch (err) {
+        console.error('Erro ao carregar currículo técnico:', err);
+      }
+    });
+  </script>
+</body>
+</html>

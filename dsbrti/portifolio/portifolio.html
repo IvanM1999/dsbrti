@@ -14,7 +14,7 @@
   <script src="../tema-inteligente.js"></script>
   
   <style>
-    /* Estilos complementares que integram as novas seções ao CSS original do ecossistema */
+    /* Estilos complementares integrados ao ecossistema DSBRTI */
     body { font-family: 'Inter', sans-serif; }
     .metrics-section { margin: 40px 0; }
     .metrics-grid {
@@ -100,7 +100,6 @@
       border: 1px solid var(--border-color, rgba(255,255,255,0.1));
       border-radius: 12px;
       padding: 20px;
-      cursor: pointer;
       transition: all 0.3s ease;
       display: flex;
       flex-direction: column;
@@ -203,14 +202,6 @@
       text-decoration: none;
     }
     
-    .timeline {
-      border-left: 3px solid var(--accent-color, #E95420);
-      padding-left: 25px;
-      margin-top: 30px;
-    }
-    .timeline-item { margin-bottom: 25px; }
-    .timeline-item h3 { font-size: 1.3rem; margin-bottom: 5px; }
-    
     .empty-state {
       text-align: center;
       padding: 60px 20px;
@@ -257,23 +248,21 @@
           <span>Seguidores Ativos</span>
         </div>
         <div class="metric-card">
-          <h3 id="stars">error</h3>
+          <h3 id="stars">--</h3>
           <span>Estrelas</span>
         </div>
-<iframe 
-    src="/git.html" 
-    style="border: none; width: 100%; height: 220px; overflow: hidden;" 
-    scrolling="">
-</iframe>
-
+        <iframe 
+            src="/git.html" 
+            style="border: none; width: 100%; height: 220px; overflow: hidden;" 
+            scrolling="no">
+        </iframe>
       </div>
-
     </section>
 
     <div class="portfolio-filters" id="filterButtons"></div>
 
     <div class="search-container">
-      <input type="text" class="search-input" id="searchInput" placeholder="Pesquisar projeto por nome ou tecnologia...">
+      <input type="text" class="search-input" id="searchInput" placeholder="Pesquisar projeto por nome, descrição ou tecnologia...">
       <span id="resultCount" style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-sub);">Carregando projetos...</span>
     </div>
 
@@ -282,28 +271,6 @@
     <section class="project-detail" id="projectDetail" hidden>
       <button id="detailClose" class="btn-sm">✕ Fechar</button>
       <div id="detailContent"></div>
-    </section>
-
-    <section style="margin-top: 60px;">
-      <h2>📈 Trajetória Recente</h2>
-      <div class="timeline">
-        <div class="timeline-item">
-          <h3>2026</h3>
-          <p>Expansão da DestinyServicesBR (DSBRTI) e evolução dos ecossistemas digitais aplicados.</p>
-        </div>
-        <div class="timeline-item">
-          <h3>2025</h3>
-          <p>Desenvolvimento do PegaJogos Research e ferramentas avançadas de automação industrial.</p>
-        </div>
-        <div class="timeline-item">
-          <h3>2024</h3>
-          <p>Consolidação da plataforma educacional Mecatrônica V4 e sistemas de metrologia.</p>
-        </div>
-        <div class="timeline-item">
-          <h3>2023</h3>
-          <p>Início dos projetos voltados à pesquisa aplicada e experimentação de software industrial.</p>
-        </div>
-      </div>
     </section>
   </main>
 
@@ -317,44 +284,202 @@
   <script src="../senai/core.js"></script>
 
   <script>
-    // Dados globais
+    // Configurações Globais (3 Perfis)
+    const GITHUB_USERS = ['IvanM1999', 'IvvyDestiny1999', 'IvvyDestiny'];
+
+    // Novos Temas e Categorias do Portfólio
+    const defaultCategories = {
+      "robotica": { "nome": "Automação & Robótica", "emoji": "🤖" },
+      "mobile": { "nome": "Mobile & Apps", "emoji": "📱" },
+      "software": { "nome": "Software & C++", "emoji": "💻" },
+      "web": { "nome": "Sistemas & Web SPA", "emoji": "🌐" },
+      "metrologia": { "nome": "Metrologia", "emoji": "📐" },
+      "mecanica": { "nome": "Mecânica & Elétrica", "emoji": "⚙️" },
+      "qualidade": { "nome": "Qualidade", "emoji": "✅" }
+    };
+
+    // Mapeamento: "Topic do GitHub" -> "ID da Categoria"
+    const TOPIC_MAP = {
+      // Automação & Robótica (.ino, C++ embarcado)
+      'arduino': 'robotica',
+      'robotica': 'robotica',
+      'robotics': 'robotica',
+      'esp32': 'robotica',
+      'esp8266': 'robotica',
+      'embedded': 'robotica',
+      'embarcados': 'robotica',
+      'automacao': 'robotica',
+      'plc': 'robotica',
+      'mecatronica': 'robotica',
+
+      // Mobile & Apps (Kotlin, Android, Apps nativos)
+      'kotlin': 'mobile',
+      'android': 'mobile',
+      'mobile': 'mobile',
+      'app': 'mobile',
+
+      // Sistemas & Web SPA (HTML, JS Single Page Apps)
+      'html': 'web',
+      'spa': 'web',
+      'frontend': 'web',
+      'web-app': 'web',
+      'pwa': 'web',
+      'web': 'web',
+
+      // Software Geral / Desktop / C++
+      'cpp': 'software',
+      'cplusplus': 'software',
+      'desktop': 'software',
+      'backend': 'software',
+      'software': 'software',
+
+      // Metrologia, Mecânica & Qualidade
+      'metrologia': 'metrologia',
+      'calibracao': 'metrologia',
+      'medicao': 'metrologia',
+      'instrumentacao': 'metrologia',
+      'mecanica': 'mecanica',
+      'eletronica': 'mecanica',
+      'cad': 'mecanica',
+      'qualidade': 'qualidade',
+      'iso9001': 'qualidade',
+      'processos': 'qualidade'
+    };
+
+    // Mapeamento Visual de Linguagens
+    const languageEmojis = {
+      'Arduino': '🤖',
+      'Kotlin': '📱',
+      'C++': '⚡',
+      'HTML': '🌐',
+      'JavaScript': '🟨',
+      'TypeScript': '🔷',
+      'CSS': '🎨',
+      'Python': '🐍',
+      'C#': '🎯',
+      'C': '💻',
+      'Java': '☕',
+      'PHP': '🐘'
+    };
+
     let allProjects = [];
     let filteredProjects = [];
     let currentFilter = 'all';
 
-    // 1. Carrega o JSON de projetos
-    async function loadProjects() {
+    // Função de Categoria Inteligente: Avalia Topics primeiro e usa a Linguagem como fallback
+    function getCategoryFromRepo(repo) {
+      const topics = repo.topics || [];
+      const language = repo.language || '';
+
+      // 1. Verifica se alguma Topic do GitHub corresponde
+      for (const topic of topics) {
+        const cleanTopic = topic.toLowerCase().trim();
+        if (TOPIC_MAP[cleanTopic]) {
+          return TOPIC_MAP[cleanTopic];
+        }
+      }
+
+      // 2. Fallback Inteligente baseado na Linguagem do repositório
+      if (language === 'Arduino') return 'robotica';
+      if (language === 'Kotlin') return 'mobile';
+      if (language === 'HTML' || language === 'CSS') return 'web';
+      if (language === 'C++') return 'software';
+
+      return 'web'; // Padrão
+    }
+
+    async function initPortfolio() {
+      let localProjects = [];
+      let categorias = defaultCategories;
+
+      // 1. Carrega projetos locais do projetos.json (se existir)
       try {
-        const response = await fetch('projetos.json');
-        if (!response.ok) throw new Error('Erro ao carregar projetos');
-        const data = await response.json();
-        allProjects = data.projetos;
+        const jsonResponse = await fetch('projetos.json');
+        if (jsonResponse.ok) {
+          const jsonData = await jsonResponse.json();
+          localProjects = jsonData.projetos || [];
+          if (jsonData.categorias) categorias = { ...categorias, ...jsonData.categorias };
+        }
+      } catch (e) {
+        console.warn('⚠️ projetos.json não encontrado. Carregando dados via API do GitHub.');
+      }
+
+      allProjects = [...localProjects];
+      filteredProjects = allProjects;
+      renderFilters(categorias);
+      renderProjects();
+
+      // 2. Busca dados simultaneamente dos 3 perfis do GitHub
+      try {
+        const fetchPromises = GITHUB_USERS.map(username => 
+          Promise.all([
+            fetch(`https://api.github.com/users/${username}`),
+            fetch(`https://api.github.com/users/${username}/repos?per_page=100&type=owner&sort=updated`)
+          ])
+        );
+
+        const results = await Promise.all(fetchPromises);
         
-        // Renderiza filtros dinamicamente
-        renderFilters(data.categorias);
-        
-        // Renderiza todos os projetos
-        filteredProjects = allProjects;
-        renderProjects();
-        
-        console.log('✅ Projetos carregados com sucesso:', allProjects.length);
-      } catch(err) {
-        console.error('❌ Erro ao carregar projetos:', err);
-        document.getElementById('portfolioGrid').innerHTML = `
-          <div class="empty-state" style="grid-column: 1/-1;">
-            <h3>⚠️ Erro ao carregar projetos</h3>
-            <p>${err.message}</p>
-          </div>
-        `;
+        let totalRepos = 0;
+        let totalFollowers = 0;
+        let totalStars = 0;
+        let githubProjects = [];
+
+        for (const [userRes, reposRes] of results) {
+          if (userRes.ok) {
+            const user = await userRes.json();
+            totalRepos += user.public_repos || 0;
+            totalFollowers += user.followers || 0;
+          }
+
+          if (reposRes.ok) {
+            const repos = await reposRes.json();
+            
+            repos.forEach(repo => {
+              totalStars += repo.stargazers_count || 0;
+
+              // Identifica a categoria (pelas topics ou pela linguagem)
+              const categoryId = getCategoryFromRepo(repo);
+              
+              githubProjects.push({
+                id: `gh-${repo.id}`,
+                titulo: repo.name.replace(/-/g, ' ').toUpperCase(),
+                descricao: repo.description || 'Repositório público focado em desenvolvimento e soluções técnicas.',
+                categoria: categoryId,
+                tags: [
+                  repo.language || 'GitHub',
+                  ...(repo.topics || []).slice(0, 3)
+                ],
+                link: repo.homepage || repo.html_url,
+                github: repo.html_url,
+                imagem: languageEmojis[repo.language] || '📦',
+                status: repo.archived ? 'legado' : 'ativo'
+              });
+            });
+          }
+        }
+
+        // Atualiza as métricas consolidadas dos 3 perfis
+        document.getElementById('repos').textContent = totalRepos;
+        document.getElementById('followers').textContent = totalFollowers;
+        document.getElementById('stars').textContent = totalStars;
+
+        // Mescla evitando repositórios duplicados
+        const existingLinks = new Set(localProjects.map(p => p.github || p.link));
+        const newGithubProjects = githubProjects.filter(p => !existingLinks.has(p.github));
+
+        allProjects = [...localProjects, ...newGithubProjects];
+        filterProjects(currentFilter);
+
+      } catch (err) {
+        console.error('❌ Erro ao integrar os perfis do GitHub:', err);
       }
     }
 
-    // 2. Renderiza os botões de filtro dinamicamente
     function renderFilters(categorias) {
       const filterContainer = document.getElementById('filterButtons');
       filterContainer.innerHTML = '';
       
-      // Botão "Todos"
       const allBtn = document.createElement('button');
       allBtn.className = 'filter-btn active';
       allBtn.dataset.filter = 'all';
@@ -362,7 +487,6 @@
       allBtn.addEventListener('click', () => filterProjects('all'));
       filterContainer.appendChild(allBtn);
       
-      // Botões por categoria
       Object.entries(categorias).forEach(([key, category]) => {
         const btn = document.createElement('button');
         btn.className = 'filter-btn';
@@ -373,23 +497,18 @@
       });
     }
 
-    // 3. Filtra projetos por categoria
     function filterProjects(category) {
       currentFilter = category;
-      
-      // Atualiza o estado dos botões
       document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.filter === category);
       });
       
-      // Filtra os projetos
       if (category === 'all') {
         filteredProjects = allProjects;
       } else {
         filteredProjects = allProjects.filter(p => p.categoria === category);
       }
       
-      // Re-aplica a busca se houver
       const searchQuery = document.getElementById('searchInput').value;
       if (searchQuery.trim()) {
         applySearch(searchQuery);
@@ -398,27 +517,23 @@
       }
     }
 
-    // 4. Busca e filtra em tempo real
     function applySearch(query) {
       const lowerQuery = query.toLowerCase().trim();
-      
       if (!lowerQuery) {
         renderProjects();
         return;
       }
       
-      filteredProjects = (currentFilter === 'all' ? allProjects : filteredProjects)
-        .filter(project => 
-          project.titulo.toLowerCase().includes(lowerQuery) ||
-          project.descricao.toLowerCase().includes(lowerQuery) ||
-          project.tags.some(tag => tag.toLowerCase().includes(lowerQuery)) ||
-          project.categoria.toLowerCase().includes(lowerQuery)
-        );
-      
+      const baseList = (currentFilter === 'all' ? allProjects : allProjects.filter(p => p.categoria === currentFilter));
+      filteredProjects = baseList.filter(project => 
+        project.titulo.toLowerCase().includes(lowerQuery) ||
+        project.descricao.toLowerCase().includes(lowerQuery) ||
+        project.tags.some(tag => tag.toLowerCase().includes(lowerQuery)) ||
+        project.categoria.toLowerCase().includes(lowerQuery)
+      );
       renderProjects();
     }
 
-    // 5. Renderiza os cartões de projeto
     function renderProjects() {
       const grid = document.getElementById('portfolioGrid');
       const resultCount = document.getElementById('resultCount');
@@ -464,39 +579,14 @@
       resultCount.textContent = `Mostrando ${filteredProjects.length} de ${allProjects.length} projetos`;
     }
 
-    // 6. Carrega métricas do GitHub
-    async function loadGithubMetrics(){
-      try {
-        const userResponse = await fetch("https://api.github.com/users/IvanM1999");
-        if(userResponse.ok) {
-          const user = await userResponse.json();
-          document.getElementById("repos").textContent = user.public_repos;
-          document.getElementById("followers").textContent = user.followers;
-        }
-
-        const reposResponse = await fetch("https://api.github.com/users/IvanM1999/repos?per_page=100");
-        if(reposResponse.ok) {
-          const repos = await reposResponse.json();
-          let stars = repos.reduce((total, repo) => total + repo.stargazers_count, 0);
-          document.getElementById("stars").textContent = stars;
-        }
-      } catch(err) {
-        console.error("Erro ao carregar dados do GitHub:", err);
-      }
-    }
-
-    // 7. Inicialização
     document.addEventListener('DOMContentLoaded', () => {
-      loadProjects();
-      loadGithubMetrics();
-      
-      // Event listener para busca em tempo real
+      initPortfolio();
       document.getElementById("searchInput").addEventListener("input", (e) => {
         applySearch(e.target.value);
       });
     });
 
-    console.log('%c⚙️ Portfólio Dinâmico Carregado', 'color: #E95420; font-weight: bold;');
+    console.log('%c⚙️ Portfólio Multi-Perfil DSBRTI Otimizado', 'color: #E95420; font-weight: bold;');
   </script>
 </body>
 </html>

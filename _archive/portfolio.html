@@ -203,14 +203,6 @@
       text-decoration: none;
     }
     
-    .timeline {
-      border-left: 3px solid var(--accent-color, #E95420);
-      padding-left: 25px;
-      margin-top: 30px;
-    }
-    .timeline-item { margin-bottom: 25px; }
-    .timeline-item h3 { font-size: 1.3rem; margin-bottom: 5px; }
-    
     .empty-state {
       text-align: center;
       padding: 60px 20px;
@@ -257,9 +249,14 @@
           <span>Seguidores Ativos</span>
         </div>
         <div class="metric-card">
-          <h3 id="stars">error</h3>
+          <h3 id="stars">--</h3>
           <span>Estrelas</span>
         </div>
+        <iframe 
+            src="/git.html" 
+            style="border: none; width: 100%; height: 220px; overflow: hidden;" 
+            scrolling="no">
+        </iframe>
       </div>
     </section>
 
@@ -276,33 +273,11 @@
       <button id="detailClose" class="btn-sm">✕ Fechar</button>
       <div id="detailContent"></div>
     </section>
-
-    <section style="margin-top: 60px;">
-      <h2>📈 Trajetória Recente & Ecossistema de Engenharia</h2>
-      <div class="timeline">
-        <div class="timeline-item">
-          <h3>2026</h3>
-          <p><strong>Consolidação da DSBRTI & Automação Avançada:</strong> Integração de hardware e inteligência artificial através de braços robóticos industriais emulados no Wokwi (<em>ARM Tank Arduino</em>). Desenvolvimento do ecossistema corporativo descentralizado <strong>Olympus (Suite, Nexus e Server Provider)</strong> e ferramentas de gerenciamento inteligente em tempo real.</p>
-        </div>
-        <div class="timeline-item">
-          <h3>2025</h3>
-          <p><strong>Sistemas Sociais, Comerciais e IoT:</strong> Implementação de sistemas web de grande impacto institucional, como a plataforma de apoio do <strong>Conselho Tutelar BNU (SIPIA-CT-ECA)</strong> e o <em>Supabase Editor</em>. Prototipagem em automação de hardware e segurança com os projetos <em>Orquidea Inteligent</em> e os módulos de sincronização <em>VortexSync</em>.</p>
-        </div>
-        <div class="timeline-item">
-          <h3>2024</h3>
-          <p><strong>Consolidação Educacional e Metrologia:</strong> Lançamento e estabilização da plataforma educacional <strong>Mecatrônica v4</strong> baseada em Arduino. Desenvolvimento e validação do <strong>Sistema Industrial SENAI</strong>, focado em módulos didáticos de metrologia, controle de processos e instrumentação técnica.</p>
-        </div>
-        <div class="timeline-item">
-          <h3>2023</h3>
-          <p><strong>Fundação do Ecossistema e Pesquisa:</strong> Início do desenvolvimento de softwares industriais e das primeiras iterações legadas da suíte de Mecatrônica (Versões v1 e v2). Foco em pesquisa aplicada, experimentação de arquitetura de software e catalogação de documentações técnicas.</p>
-        </div>
-      </div>
-    </section>
   </main>
 
   <footer class="footer">
     <p>DSBRTI © 2026 — Ivan Montibeller</p>
-    <p class="footer-msg">✔ Projetos com Amor.</p>
+    <p class="footer-msg">✔ Projetos demonstrados com excelência.</p>
   </footer>
 
   <div id="toast" class="toast" role="alert" aria-live="assertive"></div>
@@ -310,44 +285,94 @@
   <script src="../senai/core.js"></script>
 
   <script>
-    // Dados globais
     let allProjects = [];
     let filteredProjects = [];
     let currentFilter = 'all';
 
-    // 1. Carrega o JSON de projetos
-    async function loadProjects() {
+    const languageEmojis = {
+      'JavaScript': '⚡', 'TypeScript': '🔷', 'HTML': '🌐', 
+      'CSS': '🎨', 'Python': '🐍', 'C++': '⚙️', 'C#': '🎯', 
+      'Java': '☕', 'C': '💻', 'PHP': '🐘'
+    };
+
+    const defaultCategories = {
+      "software": { "nome": "Software & Web", "emoji": "💻" },
+      "metrologia": { "nome": "Metrologia", "emoji": "📐" },
+      "mecanica": { "nome": "Mecânica & Elétrica", "emoji": "⚙️" },
+      "qualidade": { "nome": "Qualidade", "emoji": "✅" }
+    };
+
+    // Otimização: Carrega JSON e GitHub em PARALELO e com aceleração
+    async function initPortfolio() {
+      let localProjects = [];
+      let categorias = defaultCategories;
+
+      // 1. Renderiza imediatamente os locais do JSON para não congelar a tela
       try {
-        const response = await fetch('listas.json');
-        if (!response.ok) throw new Error('Erro ao carregar projetos');
-        const data = await response.json();
-        allProjects = data.projetos;
-        
-        // Renderiza filtros dinamicamente
-        renderFilters(data.categorias);
-        
-        // Renderiza todos os projetos
-        filteredProjects = allProjects;
-        renderProjects();
-        
-        console.log('✅ Projetos carregados com sucesso:', allProjects.length);
-      } catch(err) {
-        console.error('❌ Erro ao carregar projetos:', err);
-        document.getElementById('portfolioGrid').innerHTML = `
-          <div class="empty-state" style="grid-column: 1/-1;">
-            <h3>⚠️ Erro ao carregar projetos</h3>
-            <p>${err.message}</p>
-          </div>
-        `;
+        const jsonResponse = await fetch('projetos.json');
+        if (jsonResponse.ok) {
+          const jsonData = await jsonResponse.json();
+          localProjects = jsonData.projetos || [];
+          if (jsonData.categorias) categorias = { ...categorias, ...jsonData.categorias };
+        }
+      } catch (e) {
+        console.warn('projetos.json não encontrado ou em segundo plano.');
+      }
+
+      allProjects = [...localProjects];
+      filteredProjects = allProjects;
+      renderFilters(categorias);
+      renderProjects();
+
+      // 2. Busca GitHub e métricas ao mesmo tempo em segundo plano (Promise.all)
+      try {
+        const [userRes, reposRes] = await Promise.all([
+          fetch('https://api.github.com/users/IvanM1999'),
+          fetch('https://api.github.com/users/IvanM1999/repos?per_page=100&type=owner&sort=updated')
+        ]);
+
+        if (userRes.ok) {
+          const user = await userRes.json();
+          document.getElementById('repos').textContent = user.public_repos;
+          document.getElementById('followers').textContent = user.followers;
+        }
+
+        if (reposRes.ok) {
+          const ghRepos = await reposRes.json();
+          
+          // Calcula estrelas
+          const totalStars = ghRepos.reduce((acc, repo) => acc + repo.stargazers_count, 0);
+          document.getElementById('stars').textContent = totalStars;
+
+          // Transforma repositórios em cartões do portfólio
+          const githubProjects = ghRepos.map(repo => ({
+            id: `gh-${repo.id}`,
+            titulo: repo.name.replace(/-/g, ' ').toUpperCase(),
+            descricao: repo.description || 'Repositório público no GitHub.',
+            categoria: 'software',
+            tags: [repo.language || 'GitHub', `⭐ ${repo.stargazers_count}`],
+            link: repo.homepage || repo.html_url,
+            github: repo.html_url,
+            imagem: languageEmojis[repo.language] || '📦',
+            status: repo.archived ? 'legado' : 'ativo'
+          }));
+
+          // Mescla sem duplicatas
+          const existingLinks = new Set(localProjects.map(p => p.github || p.link));
+          const newGithubProjects = githubProjects.filter(p => !existingLinks.has(p.github));
+
+          allProjects = [...localProjects, ...newGithubProjects];
+          filterProjects(currentFilter);
+        }
+      } catch (err) {
+        console.error('Erro na requisição em segundo plano do GitHub:', err);
       }
     }
 
-    // 2. Renderiza os botões de filtro dinamicamente
     function renderFilters(categorias) {
       const filterContainer = document.getElementById('filterButtons');
       filterContainer.innerHTML = '';
       
-      // Botão "Todos"
       const allBtn = document.createElement('button');
       allBtn.className = 'filter-btn active';
       allBtn.dataset.filter = 'all';
@@ -355,7 +380,6 @@
       allBtn.addEventListener('click', () => filterProjects('all'));
       filterContainer.appendChild(allBtn);
       
-      // Botões por categoria
       Object.entries(categorias).forEach(([key, category]) => {
         const btn = document.createElement('button');
         btn.className = 'filter-btn';
@@ -366,23 +390,18 @@
       });
     }
 
-    // 3. Filtra projetos por categoria
     function filterProjects(category) {
       currentFilter = category;
-      
-      // Atualiza o estado dos botões
       document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.filter === category);
       });
       
-      // Filtra os projetos
       if (category === 'all') {
         filteredProjects = allProjects;
       } else {
         filteredProjects = allProjects.filter(p => p.categoria === category);
       }
       
-      // Re-aplica a busca se houver
       const searchQuery = document.getElementById('searchInput').value;
       if (searchQuery.trim()) {
         applySearch(searchQuery);
@@ -391,27 +410,22 @@
       }
     }
 
-    // 4. Busca e filtra em tempo real
     function applySearch(query) {
       const lowerQuery = query.toLowerCase().trim();
-      
       if (!lowerQuery) {
         renderProjects();
         return;
       }
       
-      filteredProjects = (currentFilter === 'all' ? allProjects : filteredProjects)
-        .filter(project => 
-          project.titulo.toLowerCase().includes(lowerQuery) ||
-          project.descricao.toLowerCase().includes(lowerQuery) ||
-          project.tags.some(tag => tag.toLowerCase().includes(lowerQuery)) ||
-          project.categoria.toLowerCase().includes(lowerQuery)
-        );
-      
+      const baseList = (currentFilter === 'all' ? allProjects : allProjects.filter(p => p.categoria === currentFilter));
+      filteredProjects = baseList.filter(project => 
+        project.titulo.toLowerCase().includes(lowerQuery) ||
+        project.descricao.toLowerCase().includes(lowerQuery) ||
+        project.tags.some(tag => tag.toLowerCase().includes(lowerQuery))
+      );
       renderProjects();
     }
 
-    // 5. Renderiza os cartões de projeto
     function renderProjects() {
       const grid = document.getElementById('portfolioGrid');
       const resultCount = document.getElementById('resultCount');
@@ -457,68 +471,12 @@
       resultCount.textContent = `Mostrando ${filteredProjects.length} de ${allProjects.length} projetos`;
     }
 
-    // 6. Carrega métricas unificadas das 3 contas do GitHub
-    async function loadGithubMetrics(){
-      const githubUsers = ["IvanM1999", "IvvyDestiny", "IvvyDestiny1999"];
-      
-      let totalRepos = 0;
-      let totalFollowers = 0;
-      let totalStars = 0;
-
-      try {
-        // Busca os dados de perfil em paralelo para todas as contas
-        const profilePromises = githubUsers.map(user => 
-          fetch(`https://api.github.com/users/${user}`).then(res => res.ok ? res.json() : null)
-        );
-        
-        // Busca os dados de repositórios (estrelas) em paralelo para todas as contas
-        const repoPromises = githubUsers.map(user => 
-          fetch(`https://api.github.com/users/${user}/repos?per_page=100`).then(res => res.ok ? res.json() : [])
-        );
-
-        const profiles = await Promise.all(profilePromises);
-        const reposLists = await Promise.all(repoPromises);
-
-        // Agrega os dados de perfil (Repositórios e Seguidores)
-        profiles.forEach(profile => {
-          if (profile) {
-            totalRepos += profile.public_repos || 0;
-            totalFollowers += profile.followers || 0;
-          }
-        });
-
-        // Agrega a contagem de estrelas de todos os repositórios de todas as contas
-        reposLists.forEach(repos => {
-          if (Array.isArray(repos)) {
-            totalStars += repos.reduce((sum, repo) => sum + (repo.stargazers_count || 0), 0);
-          }
-        });
-
-        // Atualiza a interface de usuário com os totais somados
-        document.getElementById("repos").textContent = totalRepos;
-        document.getElementById("followers").textContent = totalFollowers;
-        document.getElementById("stars").textContent = totalStars;
-        
-        console.log(`📊 Métricas integradas com sucesso! Repos: ${totalRepos} | Seguidores: ${totalFollowers} | Estrelas: ${totalStars}`);
-      } catch(err) {
-        console.error("Erro ao agregar dados das contas do GitHub:", err);
-        document.getElementById("stars").textContent = "error";
-      }
-    }
-
-
-    // 7. Inicialização
     document.addEventListener('DOMContentLoaded', () => {
-      loadProjects();
-      loadGithubMetrics();
-      
-      // Event listener para busca em tempo real
+      initPortfolio();
       document.getElementById("searchInput").addEventListener("input", (e) => {
         applySearch(e.target.value);
       });
     });
-
-    console.log('%c⚙️ Portfólio Dinâmico Carregado', 'color: #E95420; font-weight: bold;');
   </script>
 </body>
 </html>

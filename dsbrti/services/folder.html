@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Destiny Services - Catálogo e Orçamento</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            color: #2d3748;
+            background-color: #f7fafc;
+            line-height: 1.5;
+            padding: 20px;
+        }
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 20mm;
+            margin: 0 auto 30px auto;
+            background: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            position: relative;
+        }
+        @media print {
+            body { background: none; padding: 0; }
+            .page { box-shadow: none; margin: 0; width: 100%; page-break-after: always; }
+        }
+        .header {
+            border-bottom: 3px solid #1a365d;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .brand-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1a365d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .brand-subtitle {
+            font-size: 11px;
+            font-weight: bold;
+            color: #4a5568;
+            margin-top: 2px;
+        }
+        .owner-info {
+            text-align: right;
+            font-size: 12px;
+            color: #4a5568;
+        }
+        .owner-name {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2b6cb0;
+        }
+        .summary-box {
+            background-color: #ebf8ff;
+            border-left: 4px solid #3182ce;
+            padding: 10px 15px;
+            font-size: 12px;
+            margin-bottom: 20px;
+            color: #2c5282;
+        }
+        .section-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #ffffff;
+            background-color: #1a365d;
+            padding: 6px 10px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            border-radius: 2px;
+        }
+        .qualifications-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .qual-card {
+            border: 1px solid #e2e8f0;
+            padding: 8px 12px;
+            border-radius: 4px;
+            background-color: #f8fafc;
+        }
+        .qual-title {
+            font-weight: bold;
+            color: #2b6cb0;
+            font-size: 13px;
+        }
+        .qual-subtitle {
+            font-size: 10px;
+            color: #718096;
+            text-transform: uppercase;
+        }
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .service-category {
+            border: 1px solid #cbd5e0;
+            border-radius: 4px;
+            padding: 12px;
+        }
+        .service-category h3 {
+            font-size: 13px;
+            color: #2b6cb0;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 5px;
+            margin-bottom: 8px;
+        }
+        .service-category ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .service-category li {
+            font-size: 11px;
+            margin-bottom: 4px;
+            position: relative;
+            padding-left: 12px;
+        }
+        .service-category li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #3182ce;
+            font-weight: bold;
+        }
+        .differentials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .diff-card {
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #f7fafc;
+        }
+        .diff-title {
+            font-size: 11px;
+            font-weight: bold;
+            color: #1a365d;
+            margin-bottom: 4px;
+        }
+        .diff-desc {
+            font-size: 10px;
+            color: #4a5568;
+        }
+        .footer {
+            position: absolute;
+            bottom: 20mm;
+            left: 20mm;
+            right: 20mm;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 8px;
+            font-size: 10px;
+            color: #718096;
+            display: flex;
+            justify-content: space-between;
+        }
+        /* Page 2 Styles */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .form-field {
+            font-size: 11px;
+            border-bottom: 1px solid #cbd5e0;
+            padding: 4px 0;
+        }
+        .form-label {
+            font-weight: bold;
+            color: #4a5568;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+            font-size: 11px;
+        }
+        table th {
+            background-color: #2b6cb0;
+            color: white;
+            text-align: left;
+            padding: 6px 8px;
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+        table td {
+            border: 1px solid #e2e8f0;
+            padding: 6px 8px;
+            height: 24px;
+        }
+        .financial-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .financial-summary {
+            border: 1px solid #cbd5e0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .financial-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            margin-bottom: 4px;
+        }
+        .financial-row.total {
+            font-weight: bold;
+            font-size: 12px;
+            border-top: 1px solid #cbd5e0;
+            padding-top: 4px;
+            color: #1a365d;
+        }
+        .conditions-box {
+            border: 1px solid #cbd5e0;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 11px;
+        }
+        .terms-list {
+            font-size: 10px;
+            color: #4a5568;
+            padding-left: 15px;
+            margin-bottom: 20px;
+        }
+        .terms-list li {
+            margin-bottom: 4px;
+        }
+        .signatures {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 30px;
+            text-align: center;
+            font-size: 11px;
+        }
+        .signature-line {
+            border-top: 1px solid #a0aec0;
+            padding-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PÁGINA 1: CATÁLOGO DE SERVIÇOS -->
+    <div class="page">
+        <div class="header">
+            <div>
+                <div class="brand-title">Destiny ServicesTI & BR</div>
+                <div class="brand-subtitle">SOLUÇÕES ESPECIALIZADAS EM HARDWARE, ELETRÔNICA & TI</div>
+            </div>
+            <div class="owner-info">
+                <div class="owner-name">Ivan Montibeller</div>
+                <div>CNPJ: 45.609.430/0001-43</div>
+                <div>Técnico em Eletroeletrônica & Automação</div>
+            </div>
+        </div>
+
+        <div class="summary-box">
+            <strong>Atendimento Técnico Multidisciplinar:</strong> Diagnósticos precisos com instrumentação eletrônica, padrões industriais de segurança ESD e soluções completas para Computadores, Notebooks, Mobiles e Equipamentos Eletrônicos.
+        </div>
+
+        <div class="section-title">Formações & Qualificações Técnicas</div>
+        <div class="qualifications-grid">
+            <div class="qual-card">
+                <div class="qual-title">Eletrotécnica</div>
+                <div class="qual-subtitle">Infraestrutura & Rede</div>
+            </div>
+            <div class="qual-card">
+                <div class="qual-title">Eletrônica</div>
+                <div class="qual-subtitle">Placas & Componentes</div>
+            </div>
+            <div class="qual-card">
+                <div class="qual-title">Automação Industrial</div>
+                <div class="qual-subtitle">Sistemas & Processos</div>
+            </div>
+            <div class="qual-card">
+                <div class="qual-title">Comércio Eletrônico</div>
+                <div class="qual-subtitle">Peças & Suprimentos</div>
+            </div>
+        </div>
+
+        <div class="section-title">Catálogo Completo de Serviços</div>
+        <div class="services-grid">
+            <div class="service-category">
+                <h3>Computadores & Desktops</h3>
+                <ul>
+                    <li>Formatação limpa e atualização de S.O. (Windows/Linux)</li>
+                    <li>Otimização de desempenho e remoção de vírus/malwares</li>
+                    <li>Montagem personalizada de PCs (Gamer, Home & Office)</li>
+                    <li>Diagnóstico avançado de placa-mãe, memória e fontes</li>
+                    <li>Upgrade de desempenho (Instalação de SSD NVMe e RAM)</li>
+                    <li>Limpeza química e substituição de pasta térmica</li>
+                </ul>
+            </div>
+
+            <div class="service-category">
+                <h3>Dispositivos Móveis</h3>
+                <ul>
+                    <li>Troca de telas, touchscreens e displays originais/OEM</li>
+                    <li>Substituição de baterias com teste de ciclos de carga</li>
+                    <li>Reparo e troca de conectores de carga (USB-C/Lightning)</li>
+                    <li>Banho químico para desoxidação após contato com líquidos</li>
+                    <li>Restauração, atualização de sistema e backup de dados</li>
+                    <li>Troca de câmeras, alto-falantes e botões físicos</li>
+                </ul>
+            </div>
+
+            <div class="service-category">
+                <h3>Notebooks & Laptops</h3>
+                <ul>
+                    <li>Manutenção preventiva completa e limpeza térmica</li>
+                    <li>Reparo e substituição de conectores de energia (Jack DC)</li>
+                    <li>Reparo estrutural de dobradiças e carcaça</li>
+                    <li>Troca de teclados, touchpads e telas LED/OLED</li>
+                    <li>Diagnóstico elétrico de placa mãe e circuito de carga</li>
+                    <li>Recuperação de arquivos e migração de dados de HD/SSD</li>
+                </ul>
+            </div>
+
+            <div class="service-category">
+                <h3>Eletrônica & Automação Industrial</h3>
+                <ul>
+                    <li>Análise de circuitos e bancada com instrumentação</li>
+                    <li>Inspeção de fontes chaveadas e no-breaks (Nobreak/UPS)</li>
+                    <li>Configuração e manutenção de PCs de processo / IHMs</li>
+                    <li>Diagnóstico de ruídos elétricos, aterramento e ESD</li>
+                    <li>Fornecimento de periféricos e componentes eletrônicos</li>
+                    <li>Suporte técnico preventivo e corretivo para empresas/B2B</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section-title">Diferenciais Técnicos & Garantia de Qualidade</div>
+        <div class="differentials-grid">
+            <div class="diff-card">
+                <div class="diff-title">Rigor Métrico e Eletrônico</div>
+                <div class="diff-desc">Análise minuciosa de tensões, consumo e integridade de barramentos antes de qualquer procedimento de software.</div>
+            </div>
+            <div class="diff-card">
+                <div class="diff-title">Proteção e Segurança ESD</div>
+                <div class="diff-desc">Bancada de manutenção com proteção contra descargas eletrostáticas, garantindo a integridade dos chips.</div>
+            </div>
+            <div class="diff-card">
+                <div class="diff-title">Transparência & Relatórios</div>
+                <div class="diff-desc">Comunicação clara de diagnósticos, orçamentos sem surpresas e garantia formal de 30 a 90 dias nos serviços.</div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div>Destiny ServicesTI / Destiny ServicesBR - Ivan Montibeller | Atendimento Residencial, Comercial e Industrial</div>
+            <div>CNPJ: 45.609.430/0001-43 | Página 1 de 2</div>
+        </div>
+    </div>
+
+    <!-- PÁGINA 2: ORÇAMENTO TÉCNICO -->
+    <div class="page">
+        <div class="header">
+            <div>
+                <div class="brand-title">Destiny Services TI</div>
+                <div class="brand-subtitle">ORÇAMENTO TÉCNICO & PROPOSTA COMERCIAL</div>
+            </div>
+            <div class="owner-info">
+                <div class="owner-name">Ivan Montibeller</div>
+                <div>CNPJ: 45.609.430/0001-43</div>
+                <div>Data: ___/___/2026 | Orçamento Nº: #________</div>
+                <div>Validade: 7 dias</div>
+            </div>
+        </div>
+
+        <div class="section-title">1. Dados do Cliente e Equipamento</div>
+        <div class="form-grid">
+            <div class="form-field"><span class="form-label">Cliente:</span> </div>
+            <div class="form-field"><span class="form-label">WhatsApp/Tel:</span> </div>
+            <div class="form-field"><span class="form-label">E-mail:</span> </div>
+            <div class="form-field"><span class="form-label">Equipamento(s):</span> </div>
+            <div class="form-field" style="grid-column: span 2;"><span class="form-label">Modelo / Nº Série:</span> </div>
+        </div>
+
+        <div class="section-title">2. Descrição dos Serviços & Peças Solicitadas</div>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 8%;">Item</th>
+                    <th style="width: 52%;">Descrição Detalhada do Serviço/Componente</th>
+                    <th style="width: 10%;">Qtd</th>
+                    <th style="width: 15%;">Valor Unit. (R$)</th>
+                    <th style="width: 15%;">Total (R$)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>01</td><td></td><td></td><td></td><td></td></tr>
+                <tr><td>02</td><td></td><td></td><td></td><td></td></tr>
+                <tr><td>03</td><td></td><td></td><td></td><td></td></tr>
+                <tr><td>04</td><td></td><td></td><td></td><td></td></tr>
+                <tr><td>05</td><td></td><td></td><td></td><td></td></tr>
+                <tr><td>06</td><td></td><td></td><td></td><td></td></tr>
+            </tbody>
+        </table>
+
+        <div class="section-title">3. Resumo Financeiro & Condições</div>
+        <div class="financial-container">
+            <div class="financial-summary">
+                <div class="financial-row"><span>Subtotal Serviços:</span> <span>R$</span></div>
+                <div class="financial-row"><span>Subtotal Peças:</span> <span>R$</span></div>
+                <div class="financial-row"><span>Desconto Especial:</span> <span>R$</span></div>
+                <div class="financial-row total"><span>VALOR TOTAL:</span> <span>R$</span></div>
+            </div>
+            <div class="conditions-box">
+                <div style="margin-bottom: 6px;"><strong>Condições de Pagamento:</strong></div>
+                <div style="margin-bottom: 4px;">[ ] PIX / Dinheiro</div>
+                <div style="margin-bottom: 4px;">[ ] Cartão de Débito</div>
+                <div style="margin-bottom: 6px;">[ ] Cartão de Crédito (até ____x)</div>
+                <div><strong>Prazo de Execução:</strong> ____ dias úteis após aprovação.</div>
+                <div style="margin-top: 4px; font-size: 10px; color: #718096;">Garantia dos Serviços: 30 a 90 dias (conforme legislação e peça).</div>
+            </div>
+        </div>
+
+        <div class="section-title">4. Observações Técnicas & Termos de Garantia</div>
+        <ul class="terms-list">
+            <li>Os valores de peças estão sujeitos a alteração de cotação de fornecedores caso o orçamento não seja aprovado dentro do prazo de validade (7 dias).</li>
+            <li>O backup de dados pessoais abrange as pastas padrão do usuário. Recomenda-se a sinalização prévia de arquivos específicos.</li>
+            <li>Equipamentos não retirados em até 90 dias após a notificação de conclusão estarão sujeitos a cobrança de taxa de custódia.</li>
+        </ul>
+
+        <div class="signatures">
+            <div class="signature-line">
+                <strong>Ivan Montibeller</strong><br>
+                Destiny Services TI & Destiny ServicesBR<br>
+                CNPJ: 45.609.430/0001-43
+            </div>
+            <div class="signature-line">
+                <strong>Aceite do Cliente / De acordo</strong><br>
+                Nome:<br>
+                CPF/CNPJ:
+            </div>
+        </div>
+
+        <div class="footer">
+            <div>Destiny ServicesTI / Destiny ServicesBR - Atendimento Especializado Residencial & B2B</div>
+            <div>CNPJ: 45.609.430/0001-43 | Página 2 de 2</div>
+        </div>
+    </div>
+
+</body>
+</html>

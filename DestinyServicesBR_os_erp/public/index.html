@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERP DSBRTI - DestinyServices OS</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2c3e50">
+</head>
+<body>
+    <div id="app">
+        <!-- Barra Lateral de Navegação -->
+        <nav class="sidebar">
+            <h2>ERP DSBRTI</h2>
+            <ul>
+                <li><a href="#dashboard">Dashboard</a></li>
+                <li><a href="#clientes">Clientes</a></li>
+                <li><a href="#estoque">Estoque</a></li>
+                <li><a href="#finance">Financeiro</a></li>
+                <li><a href="#os">Ordens de Serviço</a></li>
+                <li><a href="#settings">Configurações</a></li>
+            </ul>
+        </nav>
+
+        <!-- Área Principal de Conteúdo -->
+        <div class="main-wrapper">
+            <header class="topbar">
+                <input type="text" id="global-search" placeholder="Pesquisar registros..." />
+                <button id="theme-toggle" class="btn-secondary" title="Alternar Tema">🌓</button>
+            </header>
+
+            <main id="content">
+                <div id="page-content" style="padding: 20px;">Carregando o sistema...</div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Inicialização da SPA com ES Modules -->
+    <script type="module" src="app.js"></script>
+
+    <!-- Registro do Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('SW Registrado:', reg.scope))
+                    .catch(err => console.error('Falha no Registro do SW:', err));
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+{
+  "projetos": [
+    {
+      "id": "dsbrti-main",
+      "titulo": "Plataforma DSBRTI",
+      "descricao": "Portal principal e ecossistema de soluções digitais",
+      "categoria": "software",
+      "tags": ["DSBRTI", "SaaS", "web"],
+      "link": "https://dsbrti.qzz.io",
+      "imagem": "🌐",
+      "status": "ativo"
+    },
+    {
+      "id": "industrial-senai",
+      "titulo": "Sistema de Metrologia & Automação",
+      "descricao": "Módulo educacional e ferramentas para controle de processos e metrologia",
+      "categoria": "metrologia",
+      "tags": ["metrologia", "SENAI", "processos"],
+      "link": "../senai/metrologia.html",
+      "imagem": "📐",
+      "status": "ativo"
+    },
+    {
+      "id": "cosmo-v5",
+      "titulo": "Cosmo Persona v5",
+      "descricao": "Plataforma avançada de gestão de identidade digital",
+      "categoria": "software",
+      "tags": ["identidade", "portfólio"],
+      "link": "Projetos/cosmo-persona/v5/",
+      "imagem": "👤",
+      "status": "ativo"
+    }
+  ],
+  "categorias": {
+    "software": { "nome": "Software & Web", "emoji": "💻" },
+    "metrologia": { "nome": "Metrologia", "emoji": "📐" },
+    "mecanica": { "nome": "Mecânica & Elétrica", "emoji": "⚙️" },
+    "qualidade": { "nome": "Qualidade", "emoji": "✅" }
+  }
+}

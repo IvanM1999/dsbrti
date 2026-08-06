@@ -792,28 +792,130 @@
 </head>
 <body>
   <header>
-    <nav class="nav">
-      <div class="logo">
-        <div class="logo-mark"></div>
-        <div>
-          <div class="logo-text-main">DSBRTI</div>
-          <div class="logo-text-sub">Destiny ServicesBR</div>
-        </div>
-      </div>
-      <div class="nav-links">
-        <a href="#servicos">Serviços</a>
-        <a href="#calculo">Como calculamos</a>
-        <a href="#orcamento">Orçamento</a>
-        <a href="#contato">Contato</a>
-      </div>
-      <div class="nav-cta">
-        <span>Projetos em todo o Brasil</span>
-        <button class="btn-primary" onclick="scrollToId('orcamento')">
-          Solicitar orçamento
-          <span>↗</span>
-        </button>
-      </div>
-    </nav>
+<nav class="nav">
+  <div class="logo">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 70" width="220" height="40">
+      <defs>
+        <linearGradient id="logoGradPrimary" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#2563EB" />
+          <stop offset="100%" stop-color="#06B6D4" />
+        </linearGradient>
+        <linearGradient id="logoGradTI" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#3B82F6" />
+          <stop offset="100%" stop-color="#10B981" />
+        </linearGradient>
+      </defs>
+
+      <style>
+        .char {
+          font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+          font-weight: 800;
+          font-size: 26px;
+          fill: url(#logoGradPrimary);
+          opacity: 0;
+          display: inline-block;
+          animation: dropIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .char-ti {
+          fill: url(#logoGradTI);
+          font-weight: 900;
+        }
+
+        .subtext {
+          font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+          font-weight: 600;
+          font-size: 10px;
+          letter-spacing: 4px;
+          fill: #64748B;
+          opacity: 0;
+          animation: fadeIn 0.5s ease forwards 1.7s;
+        }
+
+        /* Animação que faz a letra "cair" sem desalinhá-la do eixo Y definitivo */
+        @keyframes dropIn {
+          0% {
+            opacity: 0;
+            transform: translateY(-15px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes fadeIn {
+          to { opacity: 1; }
+        }
+
+        /* Sequência de delay das letras (efeito cascata) */
+        .c-1 { animation-delay: 0.05s; }
+        .c-2 { animation-delay: 0.10s; }
+        .c-3 { animation-delay: 0.15s; }
+        .c-4 { animation-delay: 0.20s; }
+        .c-5 { animation-delay: 0.25s; }
+        .c-6 { animation-delay: 0.30s; }
+        .c-7 { animation-delay: 0.35s; }
+
+        .c-8 { animation-delay: 0.45s; }
+        .c-9 { animation-delay: 0.50s; }
+        .c-10{ animation-delay: 0.55s; }
+        .c-11{ animation-delay: 0.60s; }
+        .c-12{ animation-delay: 0.65s; }
+        .c-13{ animation-delay: 0.70s; }
+        .c-14{ animation-delay: 0.75s; }
+        .c-15{ animation-delay: 0.80s; }
+
+        .c-16{ animation-delay: 0.95s; }
+        .c-17{ animation-delay: 1.00s; }
+      </style>
+
+      <!-- Linha Principal (Todas as letras no eixo Y = 38) -->
+      <g>
+        <!-- DESTINY -->
+        <text x="0"   y="38" class="char c-1">D</text>
+        <text x="19"  y="38" class="char c-2">E</text>
+        <text x="35"  y="38" class="char c-3">S</text>
+        <text x="51"  y="38" class="char c-4">T</text>
+        <text x="66"  y="38" class="char c-5">I</text>
+        <text x="75"  y="38" class="char c-6">N</text>
+        <text x="94"  y="38" class="char c-7">Y</text>
+
+        <!-- SERVICES -->
+        <text x="122" y="38" class="char c-8">S</text>
+        <text x="138" y="38" class="char c-9">E</text>
+        <text x="154" y="38" class="char c-10">R</text>
+        <text x="170" y="38" class="char c-11">V</text>
+        <text x="187" y="38" class="char c-12">I</text>
+        <text x="196" y="38" class="char c-13">C</text>
+        <text x="213" y="38" class="char c-14">E</text>
+        <text x="229" y="38" class="char c-15">S</text>
+
+        <!-- TI -->
+        <text x="254" y="38" class="char char-ti c-16">T</text>
+        <text x="270" y="38" class="char char-ti c-17">I</text>
+      </g>
+
+      <!-- Subtítulo Reto e Alinhado na Margem Esquerda -->
+      <text x="2" y="58" class="subtext">DESTINY SERVICES BR</text>
+    </svg>
+  </div>
+
+  <div class="nav-links">
+    <a href="#servicos">Serviços</a>
+    <a href="#calculo">Como calculamos</a>
+    <a href="#orcamento">Orçamento</a>
+    <a href="#contato">Contato</a>
+  </div>
+
+  <div class="nav-cta">
+    <span>Projetos em todo o Brasil</span>
+    <button class="btn-primary" onclick="scrollToId('orcamento')">
+      Solicitar orçamento
+      <span>↗</span>
+    </button>
+  </div>
+</nav>
   </header>
 
   <main>
@@ -826,8 +928,7 @@
           <span>sob medida para o seu negócio.</span>
         </h1>
         <p class="hero-subtitle">
-          Atuamos em todo o Brasil com foco em clareza, transparência e resultados. Você sabe exatamente
-          o que está contratando e quanto está investindo.
+          Atuação em todo o Brasil com foco em clareza, transparência e resultados. Você sabe exatamente o que está contratando e quanto está investindo.
         </p>
 
         <div class="hero-badges">
@@ -873,7 +974,8 @@
 
           <div class="hero-card-grid">
             <div class="hero-card-list">
-              <div><strong>Valor/Hora Sênior:</strong> R$ 90 a R$ 150/h</div>
+              <div>
+              <strong>Valor/Hora Sênior:</strong><br> R$ 90 a R$ 150 por hora ou R$ 990 a diária </div>
               <div><strong>Escopo:</strong> Modular & Escalável</div>
               <div><strong>Suporte Técnico:</strong> Incluso pós-entrega</div>
               <div><strong>Foco:</strong> Automação de Processos</div>
