@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Plataforma C++ Gamificada & Tutor IA - Hacker Edition</title>
+    
+    <!-- CodeMirror Editor & Themes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/clike/clike.min.js"></script>
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app-container">
+    <!-- Navbar -->
+    <header class="navbar">
+        <div class="brand">
+            <i class="fa-solid fa-code brand-icon"></i> 
+            <span>C++ Logic Master</span> 
+            <span class="version-badge hide-mobile">v2.0</span>
+        </div>
+        <div class="nav-actions">
+            <button class="btn-icon-nav active" id="toggleKbNavBtn" onclick="toggleHackerKeyboard()">
+                <i class="fa-solid fa-keyboard"></i> <span class="hide-mobile">Teclado</span>
+            </button>
+            <button class="btn-icon-nav" onclick="abrirConfiguracoes()">
+                <i class="fa-solid fa-gear"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Workspace Grid (Agora sem o painel direito fixo) -->
+    <main class="workspace">
+        
+        <!-- Painel Esquerdo: Aulas e Dicionário -->
+        <section class="left-panel">
+            <div class="tabs-header">
+                <button class="tab-btn active" onclick="switchTab('curso')"><i class="fa-solid fa-book"></i> Aulas</button>
+                <button class="tab-btn" onclick="switchTab('dicionario')"><i class="fa-solid fa-spell-check"></i> Dicionário</button>
+            </div>
+
+            <div id="tab-curso" class="tab-body">
+                <div class="module-card">
+                    <h3 class="module-title">Módulo 1: O Labirinto</h3>
+                    <p class="module-desc">
+                        Programe a movimentação da bolinha (<code>O</code>) até a saída (<code>X</code>).
+                    </p>
+                    
+                    <div class="api-reference">
+                        <h4 class="api-title"><i class="fa-solid fa-terminal"></i> Funções:</h4>
+                        <ul class="api-list">
+                            <li><code>mover('D');</code> &rarr; Direita</li>
+                            <li><code>mover('S');</code> &rarr; Baixo</li>
+                            <li><code>mover('A');</code> &rarr; Esquerda</li>
+                            <li><code>mover('W');</code> &rarr; Cima</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-dicionario" class="tab-body" style="display: none;">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" id="dictSearch" class="dict-search" placeholder="Buscar comando..." oninput="filtrarDicionario()">
+                </div>
+                <div id="dictList" class="dict-list"></div>
+            </div>
+        </section>
+
+        <!-- Painel Central: IDE e Jogo -->
+        <section class="center-panel">
+            <div class="ide-container">
+                <div class="ide-toolbar">
+                    <div class="ide-title">
+                        <i class="fa-solid fa-file-code icon-cpp"></i> main.cpp
+                    </div>
+                    <div class="ide-actions">
+                        <button class="btn-run" id="btnRunCode" onclick="compilarEExecutar()">
+                            <i class="fa-solid fa-play"></i> <span>Executar</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Editor de Código -->
+                <div class="editor-wrapper">
+                    <textarea id="codeEditor"></textarea>
+                </div>
+
+                <!-- Alerta de Sintaxe -->
+                <div id="syntaxAlert" class="syntax-check-box">
+                    <span id="syntaxAlertMsg">Nenhum erro encontrado.</span>
+                    <i class="fa-solid fa-xmark close-alert" onclick="fecharAlertaSintaxe()"></i>
+                </div>
+
+                <!-- Teclado Hacker -->
+                <div id="hackerKeyboard" class="hacker-keyboard">
+                    <div class="hacker-kb-row">
+                        <button class="hacker-btn" onmousedown="event.preventDefault(); inserirPar('(', ')')">( )</button>
+                        <button class="hacker-btn" onmousedown="event.preventDefault(); inserirPar('{', '}')">{ }</button>
+                        <button class="hacker-btn" onmousedown="event.preventDefault(); inserirPar('[', ']')">[ ]</button>
+                        <button class="hacker-btn" onmousedown="event.preventDefault(); inserirPar('<', '>')">&lt; &gt;</button>
+                        <button class="hacker-btn" onmousedown="event.preventDefault(); inserirPar('&quot;', '&quot;')">&quot; &quot;</button>
+                        <button class="hacker-btn" onmousedown="event.preventDefault(); inserirPar('\'', '\'')">' '</button>
+                        
+                        <button class="hacker-btn special-intel" onclick="verificarSintaxeInteligente()">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> Validar
+                        </button>
+                    </div>
+
+                    <div class="hacker-kb-row">
+                        <button class="hacker-btn" onmousedown="event.preventDefault(); inserirTexto(';')">;</button>
+                        <button class="hacker-btn" onmousedown="event.preventDefault(); inserirTexto('=')">=</button>
+                        <button class="hacker-btn" onmousedown="event.preventDefault(); inserirTexto('+')">+</button>
+                        <button class="hacker-btn" onmousedown="event.preventDefault(); inserirTexto('-')">-</button>
+                        <button class="hacker-btn" onmousedown="event.preventDefault(); inserirTexto('*')">*</button>
+                        <button class="hacker-btn" onmousedown="event.preventDefault(); inserirTexto('/')">/</button>
+                        <button class="hacker-btn" onmousedown="event.preventDefault(); inserirTexto('!')">!</button>
+                        <button class="hacker-btn" onmousedown="event.preventDefault(); inserirTexto('&amp;')">&amp;</button>
+                        <button class="hacker-btn" onmousedown="event.preventDefault(); inserirTexto('|')">|</button>
+                        <button class="hacker-btn" onmousedown="event.preventDefault(); inserirSnippet('for')">for</button>
+                        <button class="hacker-btn" onmousedown="event.preventDefault(); inserirSnippet('if')">if</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Jogo do Labirinto -->
+            <div class="game-section">
+                <div class="canvas-wrapper">
+                    <canvas id="canvasLabirinto" width="180" height="180"></canvas>
+                </div>
+                <div class="game-hud">
+                    <div class="hud-card">
+                        <div class="hud-title">Pontos</div>
+                        <div id="hudPontos" class="hud-value highlight">100</div>
+                    </div>
+                    <div class="hud-card">
+                        <div class="hud-title">Status</div>
+                        <div id="hudStatus" class="hud-value status-ready">Pronto</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Botão Flutuante (FAB) para acionar o Tutor IA -->
+    <button class="ai-fab-btn" onclick="toggleAIChat()" title="Abrir Tutor IA">
+        <i class="fa-solid fa-robot"></i>
+        <span class="ai-badge-dot"></span>
+    </button>
+
+    <!-- Balão Flutuante do Chat Tutor IA -->
+    <section id="aiChatBubble" class="ai-chat-bubble hidden">
+        <div class="ai-header">
+            <div class="ai-title">
+                <i class="fa-solid fa-robot"></i> <span>Tutor IA</span>
+            </div>
+            <div class="ai-header-actions">
+                <button class="btn-analyze-ai" onclick="analisarCodigoComIA()" title="Analisar IDE">
+                    <i class="fa-solid fa-bug"></i> <span>Analisar</span>
+                </button>
+                <button class="btn-close-bubble" onclick="toggleAIChat()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="chatBox" class="chat-box">
+            <div class="msg ai">
+                Olá! Sou seu assistente de C++. Posso ajudar na sua lógica!
+            </div>
+        </div>
+
+        <div class="chat-input-area">
+            <input type="text" id="chatInput" class="chat-input" placeholder="Pergunte sobre seu código..." onkeypress="if(event.key==='Enter') enviarMsgChat()">
+            <button class="btn-send" onclick="enviarMsgChat()"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+    </section>
+</div>
+
+<!-- Modal de Configurações -->
+<div id="modalSettings" class="modal-overlay">
+    <div class="modal-card">
+        <div class="modal-header">
+            <div class="modal-title"><i class="fa-solid fa-sliders"></i> Configurações</div>
+            <button class="modal-close" onclick="fecharConfiguracoes()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        
+        <div class="setting-row">
+            <div>
+                <div class="setting-label">Teclado Hacker</div>
+                <div class="setting-desc">Barra de atalhos e símbolos</div>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="settingKbToggle" checked onchange="toggleHackerKeyboardSetting(this.checked)">
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
