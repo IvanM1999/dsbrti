@@ -257,9 +257,101 @@
             border-top: 1px solid #a0aec0;
             padding-top: 5px;
         }
+        .form-panel {
+            max-width: 1100px;
+            margin: 0 auto 24px auto;
+            background: #ffffff;
+            border: 1px solid #dce7f1;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+            padding: 20px;
+        }
+        .form-panel h2 {
+            font-size: 22px;
+            color: #1a365d;
+            margin-bottom: 8px;
+        }
+        .form-panel p {
+            font-size: 13px;
+            color: #4a5568;
+            margin-bottom: 16px;
+        }
+        .form-grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .form-group label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #4a5568;
+        }
+        .form-group input,
+        .form-group textarea {
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            padding: 9px 10px;
+            font-size: 13px;
+            color: #2d3748;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+        .btn-primary, .btn-secondary {
+            border: none;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .btn-primary {
+            background: #2b6cb0;
+            color: #fff;
+        }
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #2d3748;
+        }
+        .form-help {
+            font-size: 11px;
+            color: #718096;
+            margin-top: 10px;
+        }
+        @media (max-width: 900px) {
+            .form-grid-2 { grid-template-columns: 1fr; }
+            .page { width: 100%; min-height: auto; padding: 20px; }
+        }
+        @media print {
+            body { background: none; padding: 0; }
+            .form-panel { display: none; }
+            .page { box-shadow: none; margin: 0; width: 100%; page-break-after: always; }
+        }
     </style>
 </head>
 <body>
+
+    <div class="summary-box" style="display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 20px;">
+        <div>
+            <strong>Orçamento técnico em PDF</strong><br>
+            Use a página dedicada para preencher os dados do cliente e gerar o pdf já estruturado.
+        </div>
+        <a href="gerar-orcamento.html" style="display: inline-block; background: #2b6cb0; color: #fff; text-decoration: none; padding: 10px 14px; border-radius: 8px; font-weight: 700;">Abrir formulário de orçamento</a>
+    </div>
 
     <!-- PÁGINA 1: CATÁLOGO DE SERVIÇOS -->
     <div class="page">
@@ -369,95 +461,6 @@
         <div class="footer">
             <div>Destiny ServicesTI / Destiny ServicesBR - Ivan Montibeller | Atendimento Residencial, Comercial e Industrial</div>
             <div>CNPJ: 45.609.430/0001-43 | Página 1 de 2</div>
-        </div>
-    </div>
-
-    <!-- PÁGINA 2: ORÇAMENTO TÉCNICO -->
-    <div class="page">
-        <div class="header">
-            <div>
-                <div class="brand-title">Destiny Services TI</div>
-                <div class="brand-subtitle">ORÇAMENTO TÉCNICO & PROPOSTA COMERCIAL</div>
-            </div>
-            <div class="owner-info">
-                <div class="owner-name">Ivan Montibeller</div>
-                <div>CNPJ: 45.609.430/0001-43</div>
-                <div>Data: ___/___/2026 | Orçamento Nº: #________</div>
-                <div>Validade: 7 dias</div>
-            </div>
-        </div>
-
-        <div class="section-title">1. Dados do Cliente e Equipamento</div>
-        <div class="form-grid">
-            <div class="form-field"><span class="form-label">Cliente:</span> </div>
-            <div class="form-field"><span class="form-label">WhatsApp/Tel:</span> </div>
-            <div class="form-field"><span class="form-label">E-mail:</span> </div>
-            <div class="form-field"><span class="form-label">Equipamento(s):</span> </div>
-            <div class="form-field" style="grid-column: span 2;"><span class="form-label">Modelo / Nº Série:</span> </div>
-        </div>
-
-        <div class="section-title">2. Descrição dos Serviços & Peças Solicitadas</div>
-        <table>
-            <thead>
-                <tr>
-                    <th style="width: 8%;">Item</th>
-                    <th style="width: 52%;">Descrição Detalhada do Serviço/Componente</th>
-                    <th style="width: 10%;">Qtd</th>
-                    <th style="width: 15%;">Valor Unit. (R$)</th>
-                    <th style="width: 15%;">Total (R$)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr><td>01</td><td></td><td></td><td></td><td></td></tr>
-                <tr><td>02</td><td></td><td></td><td></td><td></td></tr>
-                <tr><td>03</td><td></td><td></td><td></td><td></td></tr>
-                <tr><td>04</td><td></td><td></td><td></td><td></td></tr>
-                <tr><td>05</td><td></td><td></td><td></td><td></td></tr>
-                <tr><td>06</td><td></td><td></td><td></td><td></td></tr>
-            </tbody>
-        </table>
-
-        <div class="section-title">3. Resumo Financeiro & Condições</div>
-        <div class="financial-container">
-            <div class="financial-summary">
-                <div class="financial-row"><span>Subtotal Serviços:</span> <span>R$</span></div>
-                <div class="financial-row"><span>Subtotal Peças:</span> <span>R$</span></div>
-                <div class="financial-row"><span>Desconto Especial:</span> <span>R$</span></div>
-                <div class="financial-row total"><span>VALOR TOTAL:</span> <span>R$</span></div>
-            </div>
-            <div class="conditions-box">
-                <div style="margin-bottom: 6px;"><strong>Condições de Pagamento:</strong></div>
-                <div style="margin-bottom: 4px;">[ ] PIX / Dinheiro</div>
-                <div style="margin-bottom: 4px;">[ ] Cartão de Débito</div>
-                <div style="margin-bottom: 6px;">[ ] Cartão de Crédito (até ____x)</div>
-                <div><strong>Prazo de Execução:</strong> ____ dias úteis após aprovação.</div>
-                <div style="margin-top: 4px; font-size: 10px; color: #718096;">Garantia dos Serviços: 30 a 90 dias (conforme legislação e peça).</div>
-            </div>
-        </div>
-
-        <div class="section-title">4. Observações Técnicas & Termos de Garantia</div>
-        <ul class="terms-list">
-            <li>Os valores de peças estão sujeitos a alteração de cotação de fornecedores caso o orçamento não seja aprovado dentro do prazo de validade (7 dias).</li>
-            <li>O backup de dados pessoais abrange as pastas padrão do usuário. Recomenda-se a sinalização prévia de arquivos específicos.</li>
-            <li>Equipamentos não retirados em até 90 dias após a notificação de conclusão estarão sujeitos a cobrança de taxa de custódia.</li>
-        </ul>
-
-        <div class="signatures">
-            <div class="signature-line">
-                <strong>Ivan Montibeller</strong><br>
-                Destiny Services TI & Destiny ServicesBR<br>
-                CNPJ: 45.609.430/0001-43
-            </div>
-            <div class="signature-line">
-                <strong>Aceite do Cliente / De acordo</strong><br>
-                Nome:<br>
-                CPF/CNPJ:
-            </div>
-        </div>
-
-        <div class="footer">
-            <div>Destiny ServicesTI / Destiny ServicesBR - Atendimento Especializado Residencial & B2B</div>
-            <div>CNPJ: 45.609.430/0001-43 | Página 2 de 2</div>
         </div>
     </div>
 
