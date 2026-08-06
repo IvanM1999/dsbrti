@@ -331,10 +331,42 @@
             return card;
         }
 
+        function collectItemValues() {
+            const valuesByIndex = {};
+            const existingCards = container.querySelectorAll('.item-card');
+
+            existingCards.forEach((card, index) => {
+                const itemValues = {};
+                card.querySelectorAll('input, select').forEach((field) => {
+                    const match = field.name.match(/^item(\d+)(Desc|Qty|Tipo|Valor)$/);
+                    if (match) {
+                        itemValues[match[2]] = field.value;
+                    }
+                });
+                valuesByIndex[index + 1] = itemValues;
+            });
+
+            return valuesByIndex;
+        }
+
         function renderItems() {
+            const existingValues = collectItemValues();
             container.innerHTML = '';
             for (let i = 1; i <= itemCount; i += 1) {
-                container.appendChild(createItemCard(i));
+                const card = createItemCard(i);
+                const values = existingValues[i] || {};
+
+                const descInput = card.querySelector(`#item${i}Desc`);
+                const qtyInput = card.querySelector(`#item${i}Qty`);
+                const tipoSelect = card.querySelector(`#item${i}Tipo`);
+                const valorInput = card.querySelector(`#item${i}Valor`);
+
+                if (descInput) descInput.value = values.Desc || '';
+                if (qtyInput) qtyInput.value = values.Qty || '';
+                if (tipoSelect) tipoSelect.value = values.Tipo || 'Serviço';
+                if (valorInput) valorInput.value = values.Valor || '';
+
+                container.appendChild(card);
             }
         }
 
@@ -409,6 +441,7 @@
         });
 
         form.addEventListener('input', updatePreview);
+        form.addEventListener('change', updatePreview);
         form.addEventListener('submit', (event) => {
             event.preventDefault();
             updatePreview();
