@@ -280,64 +280,124 @@ function desenhar() {
 
 desenhar();
 
+/* ==========================================================================
+   NOVO MOTOR DO INTERPRETADOR (Transpilador C++ para JS)
+   ========================================================================== */
+
+function transpiladorCppParaJs(codigoCpp) {
+    let jsCode = codigoCpp;
+
+    // 1. Limpa bibliotecas e namespaces comuns do C++
+    jsCode = jsCode.replace(/#include\s*<.*?>/g, '');
+    jsCode = jsCode.replace(/using\s+namespace\s+\w+;/g, '');
+
+    // 2. Converte tipos de variáveis do C++ para 'let' do JavaScript
+    const tipos = ['int', 'float', 'double', 'char', 'bool', 'string', 'auto'];
+    tipos.forEach(tipo => {
+        const regex = new RegExp(`\\b${tipo}\\b`, 'g');
+        jsCode = jsCode.replace(regex, 'let');
+    });
+
+    // 3. Intercepta os comandos da engine para que o loop aguarde a animação (await)
+    jsCode = jsCode.replace(/mover\s*\(/g, 'await mover(');
+    jsCode = jsCode.replace(/verificarParede\s*\(/g, 'await verificarParede(');
+
+    // 4. Transforma as declarações de funções C++ (void/int) em funções assíncronas JS
+    jsCode = jsCode.replace(/void\s+(\w+)\s*\(\)/g, 'async function $1()');
+    jsCode = jsCode.replace(/int\s+main\s*\(\)/g, 'async function main()');
+
+    // 5. Injeta a chamada de inicialização automática no final do script
+    if (jsCode.includes('async function resolverLabirinto()')) {
+        jsCode += '\nawait resolverLabirinto();';
+    } else if (jsCode.includes('async function main()')) {
+        jsCode += '\nawait main();';
+    }
+
+    return jsCode;
+}
+
 async function compilarEExecutar() {
+    // Reinicia os estados do jogo e limpa o HUD
     player = { x: 0, y: 0 };
     pontos = 100;
     document.getElementById('hudPontos').innerText = pontos;
     document.getElementById('hudStatus').innerText = "Executando...";
     document.getElementById('hudStatus').className = "hud-value status-running";
     desenhar();
-    
-    const code = editor.getValue();
-    const linhas = code.split('\n');
-    const comandos = [];
-    
-    linhas.forEach(linha => {
-        const matchMover = linha.match(/mover\s*\(\s*['"]([WASDwasd])['"]\s*\)/);
-        const matchFor = linha.match(/for\s*\(\s*int\s+\w+\s*=\s*0\s*;\s*\w+\s*<\s*(\d+)/);
-         
-        if (matchFor) {
-            const repeticoes = parseInt(matchFor[1]);
-            const idx = linhas.indexOf(linha);
-            if (linhas[idx+1] && linhas[idx+1].includes('mover')) {
-                const subMatch = linhas[idx+1].match(/mover\s*\(\s*['"]([WASDwasd])['"]\s*\)/);
-                if (subMatch) {
-                    for (let i = 0; i < repeticoes; i++) comandos.push(subMatch[1].toUpperCase());
-                }
-            }
-        } else if (matchMover && !linha.includes('for')) {
-            comandos.push(matchMover[1].toUpperCase());
-        }
-    });
 
-    for (let cmd of comandos) {
-        await new Promise(r => setTimeout(r, 250));
+    // Obtém o código do editor e transpila
+    const codigoCpp = editor.getValue();
+    const codigoJS = transpiladorCppParaJs(codigoCpp);
+
+    // Ação Encapsulada: Movimentação (com tratamentos assíncronos)
+    const moverAction = async (direcao) => {
+        // Aborta imediatamente se o jogador perdeu todos os pontos ou já venceu/bateu
+        if (pontos <= 0 || document.getElementById('hudStatus').innerText !== "Executando...") return;
+
+        await new Promise(r => setTimeout(r, 250)); // Mantém o delay visual da animação
+
         let nx = player.x;
         let ny = player.y;
+        let cmd = direcao.toUpperCase();
+
         if (cmd === 'D') nx++;
         if (cmd === 'A') nx--;
         if (cmd === 'S') ny++;
         if (cmd === 'W') ny--;
-        
+
+        // Valida colisões utilizando o mapaOriginal fornecido
         if (nx >= 0 && nx < GRID && ny >= 0 && ny < GRID && mapaOriginal[ny][nx] !== 1) {
             player.x = nx;
             player.y = ny;
-            pontos -= 2;
+            pontos -= 2; // Custo do passo
         } else {
-            pontos -= 10;
+            pontos -= 10; // Penalidade por bater na parede
             document.getElementById('hudStatus').innerText = "Colisão!";
             document.getElementById('hudStatus').className = "hud-value status-error";
         }
+
         document.getElementById('hudPontos').innerText = Math.max(0, pontos);
         desenhar();
-    }
+    };
 
-    if (mapaOriginal[player.y][player.x] === 3) {
-        document.getElementById('hudStatus').innerText = "Vitória!";
-        document.getElementById('hudStatus').className = "hud-value status-ready";
-    } else if (!document.getElementById('hudStatus').innerText.includes("Colisão")) {
-        document.getElementById('hudStatus').innerText = "Incompleto";
-        document.getElementById('hudStatus').className = "hud-value";
+    // NOVO COMANDO: Retorna 'true' se houver parede ou borda na direção informada
+    const verificarParedeAction = async (direcao) => {
+         let nx = player.x;
+         let ny = player.y;
+         let cmd = direcao.toUpperCase();
+         
+         if (cmd === 'D') nx++;
+         if (cmd === 'A') nx--;
+         if (cmd === 'S') ny++;
+         if (cmd === 'W') ny--;
+         
+         return (nx < 0 || nx >= GRID || ny < 0 || ny >= GRID || mapaOriginal[ny][nx] === 1);
+    };
+
+    // Cria o ambiente de execução isolado via AsyncFunction (Sandbox do navegador)
+    const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
+
+    try {
+        // Instancia a função, injetando as variáveis globais que o código C++ chamará
+        const executarSimulacao = new AsyncFunction('mover', 'verificarParede', codigoJS);
+
+        // Dispara a execução transpilada passando nossas funções
+        await executarSimulacao(moverAction, verificarParedeAction);
+
+        // Analisa as condições de encerramento apenas quando o script terminar sua execução
+        if (mapaOriginal[player.y][player.x] === 3) {
+            document.getElementById('hudStatus').innerText = "Vitória!";
+            document.getElementById('hudStatus').className = "hud-value status-ready";
+        } else if (!document.getElementById('hudStatus').innerText.includes("Colisão")) {
+            document.getElementById('hudStatus').innerText = "Incompleto";
+            document.getElementById('hudStatus').className = "hud-value";
+        }
+
+    } catch (err) {
+        // Exibe erro na interface caso haja alguma falha real na codificação
+        console.error("Falha no Interpretador:", err);
+        document.getElementById('hudStatus').innerText = "Erro de Lógica!";
+        document.getElementById('hudStatus').className = "hud-value status-error";
     }
 }
 
