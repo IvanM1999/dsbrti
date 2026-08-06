@@ -5,30 +5,26 @@
     { "termo": "char", "def": "Tipo de dado para um único caractere envolto em aspas simples (ex: 'A')." },
     { "termo": "bool", "def": "Tipo lógico que armazena apenas true ou false." },
     { "termo": "string", "def": "Classe da biblioteca padrão usada para armazenar textos." },
-    { "termo": "void", "def": "Indica que uma função não retorna nenhum valor." },
+    { "termo": "void", "def": "Indica que uma função retorna nenhum valor." },
     { "termo": "auto", "def": "Permite que o compilador deduza automaticamente o tipo da variável." },
     { "termo": "const", "def": "Define que um valor não poderá ser alterado após sua criação." },
     { "termo": "unsigned", "def": "Modificador que permite apenas valores positivos." },
     { "termo": "signed", "def": "Modificador que permite valores positivos e negativos." },
     { "termo": "long", "def": "Modificador que aumenta a capacidade de armazenamento de alguns tipos numéricos." },
     { "termo": "short", "def": "Modificador que reduz o tamanho de alguns tipos numéricos." },
-    
     { "termo": "if", "def": "Executa um bloco de código caso uma condição seja verdadeira." },
     { "termo": "else", "def": "Executa um bloco alternativo quando a condição do if é falsa." },
     { "termo": "else if", "def": "Permite testar uma nova condição após um if." },
     { "termo": "switch", "def": "Seleciona um entre vários blocos de código baseado no valor de uma variável." },
     { "termo": "case", "def": "Representa uma opção dentro de um switch." },
     { "termo": "default", "def": "Executado quando nenhum case corresponde ao valor analisado." },
-    
     { "termo": "for", "def": "Laço de repetição com contador." },
     { "termo": "while", "def": "Repete um bloco de código enquanto a condição for verdadeira." },
     { "termo": "do...while", "def": "Executa o bloco ao menos uma vez antes de verificar a condição." },
     { "termo": "break", "def": "Interrompe imediatamente um laço ou um switch." },
     { "termo": "continue", "def": "Pula a iteração atual do laço e continua para a próxima." },
-    
     { "termo": "return", "def": "Encerra uma função e devolve um valor ao ponto de chamada." },
     { "termo": "function", "def": "Bloco reutilizável de código que executa uma tarefa específica." },
-    
     { "termo": "class", "def": "Define uma classe utilizada na programação orientada a objetos." },
     { "termo": "struct", "def": "Estrutura que agrupa variáveis relacionadas." },
     { "termo": "object", "def": "Instância criada a partir de uma classe." },
@@ -40,40 +36,32 @@
     { "termo": "inheritance", "def": "Permite que uma classe herde características de outra." },
     { "termo": "polymorphism", "def": "Permite que um mesmo método tenha diferentes comportamentos." },
     { "termo": "encapsulation", "def": "Protege os dados internos de uma classe controlando seu acesso." },
-    
     { "termo": "array", "def": "Conjunto de elementos do mesmo tipo armazenados em posições consecutivas." },
     { "termo": "vector", "def": "Container dinâmico da STL que cresce automaticamente." },
     { "termo": "map", "def": "Container que associa chaves a valores." },
     { "termo": "set", "def": "Container que armazena elementos únicos ordenados." },
-    
     { "termo": "pointer", "def": "Variável que armazena o endereço de memória de outra variável." },
     { "termo": "reference", "def": "Apelido para uma variável existente." },
     { "termo": "nullptr", "def": "Representa um ponteiro nulo." },
     { "termo": "new", "def": "Aloca memória dinamicamente." },
     { "termo": "delete", "def": "Libera memória alocada com new." },
-    
     { "termo": "#include", "def": "Diretiva do pré-processador usada para incluir bibliotecas." },
     { "termo": "#define", "def": "Cria constantes ou macros durante a compilação." },
     { "termo": "namespace", "def": "Agrupa identificadores para evitar conflitos de nomes." },
     { "termo": "using namespace", "def": "Permite utilizar os elementos de um namespace sem escrever seu nome completo." },
-    
     { "termo": "cin", "def": "Objeto usado para entrada de dados pelo teclado." },
     { "termo": "cout", "def": "Objeto usado para saída de dados no console." },
     { "termo": "endl", "def": "Insere uma quebra de linha e limpa o buffer de saída." },
-    
     { "termo": "true", "def": "Valor lógico verdadeiro." },
     { "termo": "false", "def": "Valor lógico falso." },
     { "termo": "NULL", "def": "Representação antiga de ponteiro nulo (substituída por nullptr)." },
-    
     { "termo": "template", "def": "Permite criar funções e classes genéricas." },
     { "termo": "typedef", "def": "Cria um apelido para um tipo de dado." },
     { "termo": "using", "def": "Pode criar apelidos de tipos ou importar nomes de um namespace." },
     { "termo": "enum", "def": "Define um conjunto de constantes nomeadas." },
-    
     { "termo": "try", "def": "Inicia um bloco de tratamento de exceções." },
     { "termo": "catch", "def": "Captura uma exceção lançada por throw." },
     { "termo": "throw", "def": "Lança uma exceção." },
-    
     { "termo": "operator", "def": "Permite sobrecarregar operadores para tipos definidos pelo usuário." },
     { "termo": "sizeof", "def": "Retorna o tamanho de um tipo ou variável em bytes." },
     { "termo": "static", "def": "Define membros compartilhados ou variáveis persistentes." },
