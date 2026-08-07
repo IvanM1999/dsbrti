@@ -11,9 +11,17 @@ import { Utils } from './utils.js';
 export const API = (() => {
     const BASE_URL = "/api";
 
+    function normalizeEndpoint(endpoint) {
+        if (!endpoint) return BASE_URL;
+        if (endpoint.startsWith("/api")) return endpoint;
+        return `${BASE_URL}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`;
+    }
+
     async function request(endpoint, options = {}) {
+        const normalizedEndpoint = normalizeEndpoint(endpoint);
+
         try {
-            const response = await fetch(`${BASE_URL}${endpoint}`, {
+            const response = await fetch(normalizedEndpoint, {
                 headers: {
                     "Content-Type": "application/json",
                     ...options.headers
@@ -21,13 +29,24 @@ export const API = (() => {
                 ...options
             });
 
+            const text = await response.text();
+            let payload = null;
+
+            if (text) {
+                try {
+                    payload = JSON.parse(text);
+                } catch {
+                    payload = text;
+                }
+            }
+
             if (!response.ok) {
                 throw new Error(`Erro na API (${response.status}): ${response.statusText}`);
             }
 
-            return await response.json();
+            return payload ?? { success: true };
         } catch (error) {
-            console.error(`[API Error]: ${endpoint}`, error);
+            console.error(`[API Error]: ${normalizedEndpoint}`, error);
             throw error;
         }
     }
@@ -130,6 +149,7 @@ const App = (() => {
             }
 
             initializeTheme();
+            await initializeCompanyDefaults();
             initializeSearch();
             initializeEvents();
 
@@ -147,6 +167,46 @@ const App = (() => {
                 `;
             }
         }
+    }
+
+    async function initializeCompanyDefaults() {
+        const defaults = {
+            nomeEmpresa: 'Ivan Montibeller',
+            razaoSocial: 'Destiny Services TI & Destiny ServicesBR',
+            cnpj: '45.609.430/0001-43',
+            telefone: '',
+            chavePix: '',
+            endereco: ''
+        };
+
+        const current = {
+            nomeEmpresa: localStorage.getItem('cfg_empresa_nome') || defaults.nomeEmpresa,
+            razaoSocial: localStorage.getItem('cfg_empresa_razao_social') || defaults.razaoSocial,
+            cnpj: localStorage.getItem('cfg_empresa_cnpj') || defaults.cnpj,
+            telefone: localStorage.getItem('cfg_empresa_telefone') || defaults.telefone,
+            chavePix: localStorage.getItem('cfg_empresa_pix') || defaults.chavePix,
+            endereco: localStorage.getItem('cfg_empresa_endereco') || defaults.endereco
+        };
+
+        try {
+            const response = await API.get('/config');
+            if (response?.empresa) {
+                current.nomeEmpresa = response.empresa.nomeEmpresa || current.nomeEmpresa;
+                current.razaoSocial = response.empresa.razaoSocial || current.razaoSocial;
+                current.cnpj = response.empresa.cnpj || current.cnpj;
+                current.telefone = response.empresa.telefone || current.telefone;
+                current.endereco = response.empresa.endereco || current.endereco;
+            }
+        } catch (error) {
+            console.warn('Não foi possível carregar os dados da empresa do servidor, usando os valores locais.', error);
+        }
+
+        localStorage.setItem('cfg_empresa_nome', current.nomeEmpresa);
+        localStorage.setItem('cfg_empresa_razao_social', current.razaoSocial);
+        localStorage.setItem('cfg_empresa_cnpj', current.cnpj);
+        localStorage.setItem('cfg_empresa_telefone', current.telefone);
+        localStorage.setItem('cfg_empresa_pix', current.chavePix);
+        localStorage.setItem('cfg_empresa_endereco', current.endereco);
     }
 
     function initializeTheme() {

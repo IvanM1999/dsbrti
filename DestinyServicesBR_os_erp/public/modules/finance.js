@@ -90,13 +90,25 @@ export const Financeiro = {
         if (form) {
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                await window.api.post('/api/financeiro', {
-                    descricao: container.querySelector('#fin-desc').value,
-                    valor: parseFloat(container.querySelector('#fin-valor').value),
-                    tipo: container.querySelector('#fin-tipo').value,
-                    data: container.querySelector('#fin-data').value
-                });
-                this.render(container);
+                const submitButton = form.querySelector('button[type="submit"]');
+                if (submitButton) submitButton.disabled = true;
+
+                try {
+                    await window.api.post('/financeiro', {
+                        descricao: container.querySelector('#fin-desc').value,
+                        valor: parseFloat(container.querySelector('#fin-valor').value),
+                        tipo: container.querySelector('#fin-tipo').value,
+                        data: container.querySelector('#fin-data').value
+                    });
+                    form.reset();
+                    Utils.toast('Lançamento salvo com sucesso!', 'success');
+                    this.render(container);
+                } catch (error) {
+                    console.error('[Financeiro Save Error]:', error);
+                    Utils.toast('Não foi possível salvar o lançamento.', 'error');
+                } finally {
+                    if (submitButton) submitButton.disabled = false;
+                }
             });
         }
 
@@ -104,8 +116,14 @@ export const Financeiro = {
             btn.addEventListener('click', async (e) => {
                 const id = e.target.getAttribute('data-id');
                 if (confirm('Tem certeza que deseja remover este lançamento?')) {
-                    await window.api.delete(`/api/financeiro/${id}`);
-                    this.render(container);
+                    try {
+                        await window.api.delete(`/financeiro/${id}`);
+                        Utils.toast('Lançamento removido com sucesso.', 'success');
+                        this.render(container);
+                    } catch (error) {
+                        console.error('[Financeiro Delete Error]:', error);
+                        Utils.toast('Não foi possível remover o lançamento.', 'error');
+                    }
                 }
             });
         });

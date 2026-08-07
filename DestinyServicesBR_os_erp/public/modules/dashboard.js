@@ -12,10 +12,23 @@ export const Dashboard = {
         container.innerHTML = '<h2>Dashboard</h2><p>Carregando dados...</p>';
 
         try {
-            const stats = await window.api.get('/api/dashboard');
+            const [stats, config] = await Promise.all([
+                window.api.get('/api/dashboard'),
+                window.api.get('/api/config').catch(() => ({ empresa: {} }))
+            ]);
+
+            const empresa = config.empresa || {};
+            const nomeEmpresa = empresa.nomeEmpresa || localStorage.getItem('cfg_empresa_nome') || 'Ivan Montibeller';
+            const cnpj = empresa.cnpj || localStorage.getItem('cfg_empresa_cnpj') || '45.609.430/0001-43';
 
             container.innerHTML = `
                 <h2>Visão Geral</h2>
+                <div class="card" style="margin-bottom: 16px;">
+                    <h3>Empresa</h3>
+                    <p><strong>${Utils.escape(nomeEmpresa)}</strong></p>
+                    <p>${Utils.escape(empresa.razaoSocial || 'Destiny Services TI & Destiny ServicesBR')}</p>
+                    <p><strong>CNPJ:</strong> ${Utils.escape(cnpj)}</p>
+                </div>
                 <div class="grid">
                     <div class="stat-box">
                         <h4>Total de Clientes</h4>

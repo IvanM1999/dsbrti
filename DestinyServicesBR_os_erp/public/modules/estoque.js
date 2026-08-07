@@ -79,12 +79,24 @@ export const Estoque = {
         if (form) {
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                await window.api.post('/api/estoque', {
-                    nome: container.querySelector('#prod-nome').value,
-                    quantidade: parseInt(container.querySelector('#prod-qtd').value, 10),
-                    preco: parseFloat(container.querySelector('#prod-preco').value)
-                });
-                this.render(container);
+                const submitButton = form.querySelector('button[type="submit"]');
+                if (submitButton) submitButton.disabled = true;
+
+                try {
+                    await window.api.post('/estoque', {
+                        nome: container.querySelector('#prod-nome').value,
+                        quantidade: parseInt(container.querySelector('#prod-qtd').value, 10),
+                        preco: parseFloat(container.querySelector('#prod-preco').value)
+                    });
+                    form.reset();
+                    Utils.toast('Produto cadastrado com sucesso!', 'success');
+                    this.render(container);
+                } catch (error) {
+                    console.error('[Estoque Save Error]:', error);
+                    Utils.toast('Não foi possível salvar o produto.', 'error');
+                } finally {
+                    if (submitButton) submitButton.disabled = false;
+                }
             });
         }
 
@@ -92,8 +104,14 @@ export const Estoque = {
             btn.addEventListener('click', async (e) => {
                 const id = e.target.getAttribute('data-id');
                 if (confirm('Tem certeza que deseja remover este produto?')) {
-                    await window.api.delete(`/api/estoque/${id}`);
-                    this.render(container);
+                    try {
+                        await window.api.delete(`/estoque/${id}`);
+                        Utils.toast('Produto removido com sucesso.', 'success');
+                        this.render(container);
+                    } catch (error) {
+                        console.error('[Estoque Delete Error]:', error);
+                        Utils.toast('Não foi possível remover o produto.', 'error');
+                    }
                 }
             });
         });

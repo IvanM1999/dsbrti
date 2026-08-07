@@ -106,20 +106,32 @@ export const OS = {
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
 
-                const selectCliente = container.querySelector('#os-cliente');
-                const clienteOpcao = selectCliente.options[selectCliente.selectedIndex];
+                const submitButton = form.querySelector('button[type="submit"]');
+                if (submitButton) submitButton.disabled = true;
 
-                await window.api.post('/api/os', {
-                    clienteId: selectCliente.value,
-                    clienteNome: clienteOpcao.getAttribute('data-nome'),
-                    equipamento: container.querySelector('#os-equipamento').value,
-                    defeito: container.querySelector('#os-defeito').value,
-                    valorTotal: parseFloat(container.querySelector('#os-valor').value),
-                    garantiaDias: parseInt(container.querySelector('#os-garantia').value, 10),
-                    data: new Date().toISOString().split('T')[0]
-                });
+                try {
+                    const selectCliente = container.querySelector('#os-cliente');
+                    const clienteOpcao = selectCliente.options[selectCliente.selectedIndex];
 
-                this.render(container);
+                    await window.api.post('/os', {
+                        clienteId: selectCliente.value,
+                        clienteNome: clienteOpcao.getAttribute('data-nome'),
+                        equipamento: container.querySelector('#os-equipamento').value,
+                        defeito: container.querySelector('#os-defeito').value,
+                        valorTotal: parseFloat(container.querySelector('#os-valor').value),
+                        garantiaDias: parseInt(container.querySelector('#os-garantia').value, 10),
+                        data: new Date().toISOString().split('T')[0]
+                    });
+
+                    form.reset();
+                    Utils.toast('Ordem de serviço registrada com sucesso!', 'success');
+                    this.render(container);
+                } catch (error) {
+                    console.error('[OS Save Error]:', error);
+                    Utils.toast('Não foi possível registrar a ordem de serviço.', 'error');
+                } finally {
+                    if (submitButton) submitButton.disabled = false;
+                }
             });
         }
 
@@ -147,8 +159,14 @@ export const OS = {
             btn.addEventListener('click', async (e) => {
                 const id = e.target.getAttribute('data-id');
                 if (confirm('Tem certeza que deseja remover esta Ordem de Serviço?')) {
-                    await window.api.delete(`/api/os/${id}`);
-                    this.render(container);
+                    try {
+                        await window.api.delete(`/os/${id}`);
+                        Utils.toast('Ordem de serviço removida com sucesso.', 'success');
+                        this.render(container);
+                    } catch (error) {
+                        console.error('[OS Delete Error]:', error);
+                        Utils.toast('Não foi possível remover a ordem de serviço.', 'error');
+                    }
                 }
             });
         });

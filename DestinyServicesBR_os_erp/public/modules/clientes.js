@@ -82,13 +82,25 @@ export const Clientes = {
         if (form) {
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                await window.api.post('/api/clientes', {
-                    nome: container.querySelector('#cli-nome').value,
-                    email: container.querySelector('#cli-email').value,
-                    telefone: container.querySelector('#cli-telefone').value,
-                    endereco: container.querySelector('#cli-endereco').value
-                });
-                this.render(container);
+                const submitButton = form.querySelector('button[type="submit"]');
+                if (submitButton) submitButton.disabled = true;
+
+                try {
+                    await window.api.post('/clientes', {
+                        nome: container.querySelector('#cli-nome').value,
+                        email: container.querySelector('#cli-email').value,
+                        telefone: container.querySelector('#cli-telefone').value,
+                        endereco: container.querySelector('#cli-endereco').value
+                    });
+                    form.reset();
+                    Utils.toast('Cliente cadastrado com sucesso!', 'success');
+                    this.render(container);
+                } catch (error) {
+                    console.error('[Clientes Save Error]:', error);
+                    Utils.toast('Não foi possível salvar o cliente.', 'error');
+                } finally {
+                    if (submitButton) submitButton.disabled = false;
+                }
             });
         }
 
@@ -96,8 +108,14 @@ export const Clientes = {
             btn.addEventListener('click', async (e) => {
                 const id = e.target.getAttribute('data-id');
                 if (confirm('Tem certeza que deseja remover este cliente?')) {
-                    await window.api.delete(`/api/clientes/${id}`);
-                    this.render(container);
+                    try {
+                        await window.api.delete(`/clientes/${id}`);
+                        Utils.toast('Cliente removido com sucesso.', 'success');
+                        this.render(container);
+                    } catch (error) {
+                        console.error('[Clientes Delete Error]:', error);
+                        Utils.toast('Não foi possível remover o cliente.', 'error');
+                    }
                 }
             });
         });

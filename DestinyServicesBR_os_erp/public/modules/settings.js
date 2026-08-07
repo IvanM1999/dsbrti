@@ -33,8 +33,13 @@ export const Settings = {
                 <h3>Dados da Empresa / Prestador</h3>
                 <form id="form-settings">
                     <div class="form-group">
-                        <label for="emp-nome">Nome Fantasia / Razão Social</label>
-                        <input type="text" id="emp-nome" value="${Utils.escape(config.nomeEmpresa)}" placeholder="Ex: DestinyServices BR" required>
+                        <label for="emp-nome">Nome Fantasia</label>
+                        <input type="text" id="emp-nome" value="${Utils.escape(config.nomeEmpresa)}" placeholder="Ex: Ivan Montibeller" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="emp-razao-social">Razão Social</label>
+                        <input type="text" id="emp-razao-social" value="${Utils.escape(config.razaoSocial)}" placeholder="Ex: Destiny Services TI & Destiny ServicesBR">
                     </div>
 
                     <div class="form-group">
@@ -80,8 +85,9 @@ export const Settings = {
 
     getConfig() {
         return {
-            nomeEmpresa: localStorage.getItem('cfg_empresa_nome') || 'DestinyServices BR',
-            cnpj: localStorage.getItem('cfg_empresa_cnpj') || '',
+            nomeEmpresa: localStorage.getItem('cfg_empresa_nome') || 'Ivan Montibeller',
+            razaoSocial: localStorage.getItem('cfg_empresa_razao_social') || 'Destiny Services TI & Destiny ServicesBR',
+            cnpj: localStorage.getItem('cfg_empresa_cnpj') || '45.609.430/0001-43',
             telefone: localStorage.getItem('cfg_empresa_telefone') || '',
             chavePix: localStorage.getItem('cfg_empresa_pix') || '',
             endereco: localStorage.getItem('cfg_empresa_endereco') || ''
@@ -107,16 +113,28 @@ export const Settings = {
                 e.preventDefault();
 
                 const nome = container.querySelector('#emp-nome').value.trim();
+                const razaoSocial = container.querySelector('#emp-razao-social').value.trim();
                 const cnpj = container.querySelector('#emp-cnpj').value.trim();
                 const telefone = container.querySelector('#emp-telefone').value.trim();
                 const chavePix = container.querySelector('#emp-pix').value.trim();
                 const endereco = container.querySelector('#emp-endereco').value.trim();
 
                 localStorage.setItem('cfg_empresa_nome', nome);
+                localStorage.setItem('cfg_empresa_razao_social', razaoSocial);
                 localStorage.setItem('cfg_empresa_cnpj', cnpj);
                 localStorage.setItem('cfg_empresa_telefone', telefone);
                 localStorage.setItem('cfg_empresa_pix', chavePix);
                 localStorage.setItem('cfg_empresa_endereco', endereco);
+
+                window.api.post('/config', {
+                    nomeEmpresa: nome,
+                    razaoSocial,
+                    cnpj,
+                    telefone,
+                    endereco
+                }).catch(() => {
+                    Utils.toast('Os dados foram salvos localmente, mas a sincronização com o servidor falhou.', 'warning');
+                });
 
                 Utils.toast('Configurações da empresa salvas com sucesso!', 'success');
             });
