@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: destinyservices-erp
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/ping
+    envVars:
+      - key: NODE_ENV
+        value: production

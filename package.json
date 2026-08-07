@@ -1,0 +1,9 @@
+{
+  "name": "dsbrti-monorepo",
+  "private": true,
+  "scripts": {
+    "postinstall": "npm --prefix DestinyServicesBR_os_erp install",
+    "start": "npm --prefix DestinyServicesBR_os_erp start",
+    "dev": "npm --prefix DestinyServicesBR_os_erp run dev"
+  }
+}
