@@ -1,10 +1,11 @@
 // server.js
 
 const http = require("http");
+const https = require("https");
 const fs = require("fs");
 const path = require("path");
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000; // Render injeta a porta via process.env.PORT
 const ROOT_DIR = __dirname;
 
 // Mapeamento de MIME types para extensões comuns
@@ -103,7 +104,6 @@ const LOADING_HTML = `
   </div>
 
   <script>
-    // Controla a transição e simula carregamento dos módulos
     const statusEl = document.getElementById('status');
     const steps = [
       "Iniciando Serviços...",
@@ -118,7 +118,6 @@ const LOADING_HTML = `
         currentStep++;
       } else {
         clearInterval(interval);
-        // Redireciona para a landing/index real do ERP
         window.location.href = "/dsbrti/index.html";
       }
     }, 800);
@@ -151,6 +150,13 @@ const sendFile = (res, filePath) => {
 const server = http.createServer((req, res) => {
   const requestUrl = new URL(req.url, `http://${req.headers.host || "localhost"}`);
   let pathname = decodeURIComponent(requestUrl.pathname);
+
+  // ROTA DE HEALTH CHECK (Usada pelo Self-Ping e Monitores Externos)
+  if (pathname === "/healthz") {
+    res.writeHead(200, { "Content-Type": "text/plain" });
+    res.end("OK");
+    return;
+  }
 
   // 1. Rota de entrada principal exibe o Loading
   if (pathname === "/" || pathname === "/dsbrti") {
@@ -197,6 +203,24 @@ const server = http.createServer((req, res) => {
   });
 });
 
+// FUNÇÃO DE PERSISTÊNCIA (Keep-Alive)
+const startKeepAlive = () => {
+  const serviceUrl = process.env.RENDER_EXTERNAL_URL; // O Render preenche automaticamente
+  if (!serviceUrl) return;
+
+  const pingUrl = `${serviceUrl}/healthz`;
+  const INTERVAL_MS = 10 * 60 * 1000; // 10 minutos (Render dorme com 15m)
+
+  setInterval(() => {
+    https.get(pingUrl, (res) => {
+      console.log(`[Keep-Alive] Ping enviado a ${pingUrl}. Status: ${res.statusCode}`);
+    }).on("error", (err) => {
+      console.error(`[Keep-Alive] Erro no ping:`, err.message);
+    });
+  }, INTERVAL_MS);
+};
+
 server.listen(PORT, () => {
-  console.log(`Servidor rodando em http://localhost:${PORT}`);
+  console.log(`Servidor rodando na porta ${PORT}`);
+  startKeepAlive();
 });
