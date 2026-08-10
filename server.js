@@ -4,11 +4,37 @@ const http = require("http");
 const https = require("https");
 const fs = require("fs");
 const path = require("path");
+const crypto = require("crypto");
 
-const PORT = process.env.PORT || 3000; // Render injeta a porta via process.env.PORT
+const PORT = process.env.PORT || 3000;
 const ROOT_DIR = __dirname;
 
-// Mapeamento de MIME types para extensões comuns
+// CREdENCIAIS E SEGREDO EXTRAÍDOS DAS VARIÁVEIS DO RENDER
+const ADMIN_USER = process.env.ADMIN_USER || "admin";
+const ADMIN_PASS = process.env.ADMIN_PASS || "SenhaForteDefinaNoRender123!";
+const JWT_SECRET = process.env.JWT_SECRET || crypto.randomBytes(32).toString("hex");
+
+// RATE LIMITER (MEMÓRIA) - Prevenção contra Ataques de Negação de Serviço (DoS) e Força Bruta
+const rateLimitMap = new Map();
+const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutos
+const MAX_REQUESTS_PER_WINDOW = 100;
+
+function isRateLimited(ip) {
+  const now = Date.now();
+  const userData = rateLimitMap.get(ip) || { count: 0, resetTime: now + RATE_LIMIT_WINDOW_MS };
+
+  if (now > userData.resetTime) {
+    userData.count = 1;
+    userData.resetTime = now + RATE_LIMIT_WINDOW_MS;
+  } else {
+    userData.count++;
+  }
+
+  rateLimitMap.set(ip, userData);
+  return userData.count > MAX_REQUESTS_PER_WINDOW;
+}
+
+// MIME TYPES
 const MIME_TYPES = {
   ".html": "text/html; charset=utf-8",
   ".css": "text/css; charset=utf-8",
@@ -16,156 +42,251 @@ const MIME_TYPES = {
   ".json": "application/json; charset=utf-8",
   ".png": "image/png",
   ".jpg": "image/jpeg",
-  ".jpeg": "image/jpeg",
-  ".gif": "image/gif",
   ".svg": "image/svg+xml",
   ".ico": "image/x-icon",
-  ".pdf": "application/pdf",
-  ".txt": "text/plain; charset=utf-8",
-  ".woff": "font/woff",
   ".woff2": "font/woff2",
-  ".ttf": "font/ttf",
-  ".otf": "font/otf",
 };
 
-// HTML da Tela de Loading/Splash do ERP
-const LOADING_HTML = `
+// UTILITÁRIO DE SESSÃO / COOKIES HTTP-ONLY
+function signToken(username) {
+  const header = Buffer.from(JSON.stringify({ alg: "HS256", typ: "JWT" })).toString("base64url");
+  const payload = Buffer.from(JSON.stringify({ sub: username, exp: Date.now() + (8 * 60 * 60 * 1000) })).toString("base64url");
+  const signature = crypto.createHmac("sha256", JWT_SECRET).update(`${header}.${payload}`).digest("base64url");
+  return `${header}.${payload}.${signature}`;
+}
+
+function verifyToken(token) {
+  if (!token) return false;
+  const parts = token.split(".");
+  if (parts.length !== 3) return false;
+
+  const [header, payload, signature] = parts;
+  const expectedSignature = crypto.createHmac("sha256", JWT_SECRET).update(`${header}.${payload}`).digest("base64url");
+  
+  if (signature !== expectedSignature) return false;
+
+  try {
+    const decodedPayload = JSON.parse(Buffer.from(payload, "base64url").toString());
+    if (decodedPayload.exp < Date.now()) return false;
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+function parseCookies(req) {
+  const list = {};
+  const rc = req.headers.cookie;
+  if (rc) {
+    rc.split(";").forEach((cookie) => {
+      const parts = cookie.split("=");
+      list[parts.shift().trim()] = decodeURI(parts.join("="));
+    });
+  }
+  return list;
+}
+
+// TELA DE LOGIN HTML EMBUTIDA
+const LOGIN_HTML = `
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Iniciando ERP - Destiny Services TI</title>
+  <title>Login - ERP Destiny Services TI</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       background-color: #0F172A;
       height: 100vh;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
       font-family: 'Segoe UI', system-ui, sans-serif;
       color: #F8FAFC;
-      overflow: hidden;
     }
-    .loading-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
+    .login-card {
+      background: #1E293B;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      width: 100%;
+      max-width: 400px;
+      border: 1px solid #334155;
     }
-    .spinner {
-      transform-origin: center;
-      animation: spin 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    h2 { margin-bottom: 20px; text-align: center; color: #38BDF8; font-weight: 600; }
+    .form-group { margin-bottom: 18px; }
+    label { display: block; margin-bottom: 6px; font-size: 14px; color: #94A3B8; }
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid #475569;
+      background: #0F172A;
+      color: #FFF;
+      font-size: 14px;
+      outline: none;
     }
-    .pulse {
-      transform-origin: center;
-      animation: corePulse 1.5s ease-in-out infinite alternate;
+    input:focus { border-color: #38BDF8; }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #2563EB;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 15px;
+      transition: background 0.2s;
     }
-    .status-text {
-      font-size: 13px;
-      letter-spacing: 4px;
-      color: #38BDF8;
-      font-weight: 700;
-      text-transform: uppercase;
-      animation: blink 1.2s infinite alternate;
-    }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    @keyframes corePulse { 0% { transform: scale(0.95); opacity: 0.8; } 100% { transform: scale(1.05); opacity: 1; } }
-    @keyframes blink { 0% { opacity: 0.4; } 100% { opacity: 1; } }
+    button:hover { background: #1D4ED8; }
+    .error-msg { color: #EF4444; font-size: 13px; margin-top: 10px; text-align: center; display: none; }
   </style>
 </head>
 <body>
-  <div class="loading-container">
-    <!-- SVG de Loading Animado -->
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="120" height="120">
-      <defs>
-        <linearGradient id="loadGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#2563EB" />
-          <stop offset="50%" stop-color="#06B6D4" />
-          <stop offset="100%" stop-color="#10B981" />
-        </linearGradient>
-      </defs>
-
-      <!-- Anel Circundante -->
-      <circle class="spinner" cx="100" cy="100" r="70" 
-              fill="none" stroke="url(#loadGrad)" stroke-width="6" 
-              stroke-linecap="round" stroke-dasharray="240 90" />
-
-      <!-- Monograma "D" -->
-      <g class="pulse">
-        <path d="M80 65 L100 65 C120 65 135 80 135 100 C135 120 120 135 100 135 L80 135 Z" 
-              fill="none" stroke="#FFFFFF" stroke-width="7" stroke-linejoin="round" />
-      </g>
-    </svg>
-
-    <div class="status-text" id="status">Carregando ERP...</div>
+  <div class="login-card">
+    <h2>ERP Destiny Services TI</h2>
+    <form id="loginForm">
+      <div class="form-group">
+        <label>Usuário</label>
+        <input type="text" id="username" required autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label>Senha</label>
+        <input type="password" id="password" required autocomplete="current-password">
+      </div>
+      <button type="submit">Entrar no Sistema</button>
+      <div id="error" class="error-msg">Usuário ou senha inválidos.</div>
+    </form>
   </div>
 
   <script>
-    const statusEl = document.getElementById('status');
-    const steps = [
-      "Iniciando Serviços...",
-      "Autenticando Sessão...",
-      "Carregando Módulos do ERP..."
-    ];
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const user = document.getElementById('username').value;
+      const pass = document.getElementById('password').value;
+      const errorEl = document.getElementById('error');
 
-    let currentStep = 0;
-    const interval = setInterval(() => {
-      if (currentStep < steps.length) {
-        statusEl.innerText = steps[currentStep];
-        currentStep++;
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user, pass })
+      });
+
+      if (res.ok) {
+        window.location.href = "/erp";
       } else {
-        clearInterval(interval);
-        window.location.href = "/dsbrti/index.html";
+        errorEl.style.display = "block";
       }
-    }, 800);
+    });
   </script>
 </body>
 </html>
 `;
 
+// ENVIAR ARQUIVOS ESTÁTICOS
 const sendFile = (res, filePath) => {
   const ext = path.extname(filePath).toLowerCase();
   const contentType = MIME_TYPES[ext] || "application/octet-stream";
 
   fs.readFile(filePath, (err, data) => {
     if (err) {
-      if (err.code === "ENOENT") {
-        res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
-        res.end("<h1>404 - Arquivo não encontrado</h1>");
-      } else {
-        res.writeHead(500, { "Content-Type": "text/html; charset=utf-8" });
-        res.end("<h1>500 - Erro interno do servidor</h1>");
-      }
+      res.writeHead(err.code === "ENOENT" ? 404 : 500, { "Content-Type": "text/html; charset=utf-8" });
+      res.end(`<h1>${err.code === "ENOENT" ? "404 - Não encontrado" : "500 - Erro Interno"}</h1>`);
       return;
     }
-
     res.writeHead(200, { "Content-Type": contentType });
     res.end(data);
   });
 };
 
+// SERVIDOR HTTP PRINCIPAL
 const server = http.createServer((req, res) => {
+  const clientIp = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+
+  // 1. APLICAÇÃO DE SECURITY HEADERS
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("X-XSS-Protection", "1; mode=block");
+
+  // 2. BLOQUEIO DE RATE LIMITING
+  if (isRateLimited(clientIp)) {
+    res.writeHead(429, { "Content-Type": "text/plain; charset=utf-8" });
+    res.end("Muitas requisições originadas do mesmo IP. Tente novamente em 15 minutos.");
+    return;
+  }
+
   const requestUrl = new URL(req.url, `http://${req.headers.host || "localhost"}`);
   let pathname = decodeURIComponent(requestUrl.pathname);
 
-  // ROTA DE HEALTH CHECK (Usada pelo Self-Ping e Monitores Externos)
+  // 3. ROTA DE HEALTH CHECK (Pings do Render/UptimeRobot)
   if (pathname === "/healthz") {
     res.writeHead(200, { "Content-Type": "text/plain" });
     res.end("OK");
     return;
   }
 
-  // 1. Rota de entrada principal exibe o Loading
-  if (pathname === "/" || pathname === "/dsbrti") {
+  // 4. ROTA DE LOGIN (TELA)
+  if (pathname === "/login") {
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-    res.end(LOADING_HTML);
+    res.end(LOGIN_HTML);
     return;
   }
 
-  // 2. Servidor estático padrão para os arquivos reais
+  // 5. API DE LOGIN (AUTENTICAÇÃO)
+  if (pathname === "/api/login" && req.method === "POST") {
+    let body = "";
+    req.on("data", chunk => { body += chunk.toString(); });
+    req.on("end", () => {
+      try {
+        const { user, pass } = JSON.parse(body);
+        if (user === ADMIN_USER && pass === ADMIN_PASS) {
+          const token = signToken(user);
+          res.writeHead(200, {
+            "Set-Cookie": `auth_token=${token}; HttpOnly; Secure; SameSite=Strict; Path=/`,
+            "Content-Type": "application/json"
+          });
+          res.end(JSON.stringify({ status: "success" }));
+        } else {
+          res.writeHead(401, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ status: "unauthorized" }));
+        }
+      } catch (e) {
+        res.writeHead(400);
+        res.end("Bad Request");
+      }
+    });
+    return;
+  }
+
+  // 6. ROTA PROTEGIDA: /erp (Redireciona para /login se não estiver autenticado)
+  if (pathname === "/erp" || pathname.startsWith("/dsbrti")) {
+    const cookies = parseCookies(req);
+    const isAuthenticated = verifyToken(cookies.auth_token);
+
+    if (!isAuthenticated) {
+      res.writeHead(302, { Location: "/login" });
+      res.end();
+      return;
+    }
+
+    // Se estiver autenticado e acessou /erp, serve a pasta ou arquivo padrão
+    if (pathname === "/erp") {
+      res.writeHead(302, { Location: "/dsbrti/index.html" });
+      res.end();
+      return;
+    }
+  }
+
+  // 7. ROTA PÁGINA INICIAL LIBERADA
+  if (pathname === "/") {
+    res.writeHead(302, { Location: "/login" });
+    res.end();
+    return;
+  }
+
+  // SERVIDOR ESTÁTICO DE ARQUIVOS
   const normalizedPath = pathname.replace(/^\/+/, "");
   const filePath = path.resolve(ROOT_DIR, normalizedPath || ".");
 
@@ -177,23 +298,12 @@ const server = http.createServer((req, res) => {
 
   fs.stat(filePath, (err, stats) => {
     if (err) {
-      if (err.code === "ENOENT") {
-        res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
-        res.end("<h1>404 - Arquivo não encontrado</h1>");
-      } else {
-        res.writeHead(500, { "Content-Type": "text/html; charset=utf-8" });
-        res.end("<h1>500 - Erro interno do servidor</h1>");
-      }
+      res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
+      res.end("<h1>404 - Arquivo Não Encontrado</h1>");
       return;
     }
 
     if (stats.isDirectory()) {
-      if (!pathname.endsWith("/")) {
-        res.writeHead(302, { Location: `${pathname}/` });
-        res.end();
-        return;
-      }
-
       const indexPath = path.join(filePath, "index.html");
       sendFile(res, indexPath);
       return;
@@ -203,21 +313,17 @@ const server = http.createServer((req, res) => {
   });
 });
 
-// FUNÇÃO DE PERSISTÊNCIA (Keep-Alive)
+// MANTER SERVIÇO ATIVO NO RENDER
 const startKeepAlive = () => {
-  const serviceUrl = process.env.RENDER_EXTERNAL_URL; // O Render preenche automaticamente
+  const serviceUrl = process.env.RENDER_EXTERNAL_URL;
   if (!serviceUrl) return;
 
   const pingUrl = `${serviceUrl}/healthz`;
-  const INTERVAL_MS = 10 * 60 * 1000; // 10 minutos (Render dorme com 15m)
-
   setInterval(() => {
     https.get(pingUrl, (res) => {
-      console.log(`[Keep-Alive] Ping enviado a ${pingUrl}. Status: ${res.statusCode}`);
-    }).on("error", (err) => {
-      console.error(`[Keep-Alive] Erro no ping:`, err.message);
-    });
-  }, INTERVAL_MS);
+      console.log(`[Keep-Alive] Ping: ${res.statusCode}`);
+    }).on("error", () => {});
+  }, 10 * 60 * 1000);
 };
 
 server.listen(PORT, () => {
