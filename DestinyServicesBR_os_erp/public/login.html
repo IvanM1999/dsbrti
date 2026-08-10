@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="ubuntu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#E95420">
+  <title>Login - Destiny Services TI ERP</title>
+  
+  <!-- Estilos e Gerenciamento de Temas Separados -->
+  <link rel="stylesheet" href="./css/login-style.css">
+  <script src="./js/theme-manager.js" defer></script>
+</head>
+<body>
+
+  <!-- CARD PRINCIPAL DE LOGIN COM EFEITO DE VIDRO -->
+  <main class="login-card">
+    
+    <!-- BARRA SUPERIOR COM LOGO E SELETOR DE TEMAS -->
+
+    <header class="card-header">
+      <div class="logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 70" width="220" height="40">
+          <defs>
+            <linearGradient id="logoGradPrimary" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#2563EB" />
+              <stop offset="100%" stop-color="#06B6D4" />
+            </linearGradient>
+            <linearGradient id="logoGradTI" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#3B82F6" />
+              <stop offset="100%" stop-color="#10B981" />
+            </linearGradient>
+          </defs>
+
+          <g>
+            <text x="0"   y="38" class="char c-1">D</text>
+            <text x="19"  y="38" class="char c-2">E</text>
+            <text x="35"  y="38" class="char c-3">S</text>
+            <text x="51"  y="38" class="char c-4">T</text>
+            <text x="66"  y="38" class="char c-5">I</text>
+            <text x="75"  y="38" class="char c-6">N</text>
+            <text x="94"  y="38" class="char c-7">Y</text>
+
+            <text x="122" y="38" class="char c-8">S</text>
+            <text x="138" y="38" class="char c-9">E</text>
+            <text x="154" y="38" class="char c-10">R</text>
+            <text x="170" y="38" class="char c-11">V</text>
+            <text x="187" y="38" class="char c-12">I</text>
+            <text x="196" y="38" class="char c-13">C</text>
+            <text x="213" y="38" class="char c-14">E</text>
+            <text x="229" y="38" class="char c-15">S</text>
+
+            <text x="254" y="38" class="char char-ti c-16">T</text>
+            <text x="270" y="38" class="char char-ti c-17">I</text>
+          </g>
+
+          <text x="2" y="58" class="subtext">DESTINY SERVICES BR</text>
+        </svg>
+      </div>
+
+      <!-- SELETOR DE ECOSSISTEMA VISUAL -->
+      <div class="theme-switcher" title="Selecione o tema de sua preferência">
+        <button type="button" class="theme-btn" data-theme="ubuntu" title="Ubuntu Yaru">🟠</button>
+        <button type="button" class="theme-btn" data-theme="fedora" title="Linux Mint Esmeralda">🟢</button>
+        <button type="button" class="theme-btn" data-theme="winxp" title="Windows 11 Fluent">🔵</button>
+      </div>
+    </header>
+
+    <!-- NOTIFICAÇÕES DINÂMICAS -->
+    <div id="sessionNotice" class="badge-notice info">
+      Sua sessão expirou por inatividade. Faça login novamente.
+    </div>
+    
+    <div id="errorMessage" class="badge-notice error">
+      Usuário ou senha incorretos. Tente novamente.
+    </div>
+
+    <!-- FORMULÁRIO DE LOGIN -->
+    <form id="loginForm" autocomplete="off">
+      <div class="form-group">
+        <label for="username">Usuário</label>
+        <input type="text" id="username" name="username" required placeholder="Digite seu usuário..." autocomplete="username">
+      </div>
+
+      <div class="form-group">
+        <label for="password">Senha</label>
+        <input type="password" id="password" name="password" required placeholder="••••••••••••" autocomplete="current-password">
+      </div>
+
+      <button type="submit" id="btnSubmit">
+        <span>Acessar o ERP</span>
+      </button>
+    </form>
+
+    <footer class="card-footer">
+      <p class="meta">ERP Logic &bull; Destiny Services BR &copy; 2026</p>
+    </footer>
+
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Verifica parâmetro de expiração por inatividade
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('reason') === 'expired') {
+        document.getElementById('sessionNotice').style.display = 'block';
+      }
+
+      // Processamento de Login
+      const form = document.getElementById('loginForm');
+      const errorNotice = document.getElementById('errorMessage');
+      const submitBtn = document.getElementById('btnSubmit');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        errorNotice.style.display = 'none';
+        submitBtn.disabled = true;
+        submitBtn.innerText = 'Autenticando...';
+
+        const user = document.getElementById('username').value;
+        const pass = document.getElementById('password').value;
+
+        try {
+          const res = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user, pass })
+          });
+
+          if (res.ok) {
+            window.location.href = "/erp";
+          } else {
+            errorNotice.style.display = 'block';
+            submitBtn.disabled = false;
+            submitBtn.innerText = 'Acessar o ERP';
+          }
+        } catch (err) {
+          errorNotice.innerText = 'Erro de conexão com o servidor.';
+          errorNotice.style.display = 'block';
+          submitBtn.disabled = false;
+          submitBtn.innerText = 'Acessar o ERP';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
