@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<!-- public/index -->
+<html lang="pt-BR" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DestinyServices OS</title>
+<meta name="description" content="Sistema de gestão de orçamentos para manutenção elétrica e eletrônica">
+<meta name="theme-color" content="#0F172A">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="assets/favicon.ico">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+<header class="app-header">
+<div class="logo-area">
+<div class="logo">DS</div>
+<div class="logo-title">
+<h1>DestinyServices OS</h1>
+<small>Gestão de Assistência Técnica</small>
+</div>
+</div>
+<nav class="main-nav">
+<a href="#dashboard" data-route="dashboard" class="active">Dashboard</a>
+<a href="#clients" data-route="clients">Clientes</a>
+<a href="#budgets" data-route="budgets">Orçamentos</a>
+<a href="#orders" data-route="orders">Ordens de Serviço</a>
+<a href="#finance" data-route="finance">Financeiro</a>
+<a href="#reports" data-route="reports">Relatórios</a>
+<a href="#settings" data-route="settings">Configurações</a>
+</nav>
+<div class="header-right">
+<input type="search" id="global-search" placeholder="Pesquisar...">
+<button id="theme-toggle" class="btn btn-outline" title="Tema">🌙</button>
+<div class="user-box">
+<div class="user-avatar">DS</div>
+<div class="user-info">
+<strong>Administrador</strong>
+<small>Local</small>
+</div>
+</div>
+</div>
+</header>
+<div class="app-shell">
+<aside class="sidebar">
+<div class="sidebar-header">MENU</div>
+<div class="sidebar-menu">
+<a href="#dashboard" data-route="dashboard" class="active">🏠 Dashboard</a>
+<a href="#clients" data-route="clients">👥 Clientes</a>
+<a href="#budgets" data-route="budgets">📄 Orçamentos</a>
+<a href="#orders" data-route="orders">🛠 Ordens de Serviço</a>
+<a href="#finance" data-route="finance">💰 Financeiro</a>
+<a href="#reports" data-route="reports">📊 Relatórios</a>
+<a href="#settings" data-route="settings">⚙ Configurações</a>
+</div>
+</aside>
+<main id="main" class="main-content">
+<section id="page-dashboard" class="page">
+<div class="page-header">
+<div class="page-title">
+<h2>Dashboard</h2>
+<span>Painel Geral</span>
+</div>
+<div>
+<button id="new-budget-btn" class="btn btn-primary">Novo Orçamento</button>
+</div>
+</div>
+<div class="kpi-grid">
+<div class="kpi-card">
+<div class="kpi-header">
+<div>
+<div class="kpi-title">Clientes</div>
+<div id="kpiClients" class="kpi-value">0</div>
+</div>
+<div class="kpi-icon">👥</div>
+</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-header">
+<div>
+<div class="kpi-title">Orçamentos</div>
+<div id="kpiBudgets" class="kpi-value">0</div>
+</div>
+<div class="kpi-icon">📄</div>
+</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-header">
+<div>
+<div class="kpi-title">Ordens</div>
+<div id="kpiOrders" class="kpi-value">0</div>
+</div>
+<div class="kpi-icon">🛠</div>
+</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-header">
+<div>
+<div class="kpi-title">Receita</div>
+<div id="kpiRevenue" class="kpi-value">R$ 0,00</div>
+</div>
+<div class="kpi-icon">💰</div>
+</div>
+</div>
+</div>
+<div id="page-content"></div>
+</section>
+</main>
+</div>
+<footer class="document-footer">
+DestinyServices OS • 2026
+</footer>
+</div>
+<script src="utils.js"></script>
+<script src="storage.js"></script>
+<script src="router.js"></script>
+<script src="./modules/warranty.js"></script>
+<script src="./dashboard.js"></script>
+<script src="./modules/clientes.js"></script>
+<script src="budget.js"></script>
+<script src="settings.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
+
