@@ -1,0 +1,32 @@
+{
+  "public": [
+    "/",
+    "/dsbrti/index.html",
+    "/dsbrti/",
+    "/dsbrti/curriculo",
+    "/dsbrti/cursos",
+    "/dsbrti/portifolio",
+    "/dsbrti/landingpage",
+    "/dsbrti/senai",
+    "/healthz",
+    "/api/ping",
+    "/login",
+    "/assets",
+    "/css",
+    "/js",
+    "/images"
+  ],
+  "admin": [
+    "/erp",
+    "/dsbrti/orcamentos",
+    "/dsbrti/orcamento.html",
+    "/dsbrti/private_medical",
+    "/api/admin",
+    "/admin"
+  ],
+  "bypass": [
+    "/api/login",
+    "/api/logout",
+    "/healthz"
+  ]
+}
