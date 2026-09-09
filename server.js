@@ -8,15 +8,17 @@ const crypto = require("crypto");
 
 const PORT = process.env.PORT || 3000;
 const ROOT_DIR = __dirname;
+const SITE_ROOT = path.join(ROOT_DIR, "dsbrti");
+const ERP_ROOT = path.join(ROOT_DIR, "ERP");
 
 // TEMPO DE EXPIRAÇÃO DE SESSÃO: 30 MINUTOS
 const SESSION_TIMEOUT_MS = 30 * 60 * 1000;  // 30 minutos em ms
 const SESSION_TIMEOUT_SEC = 30 * 60;        // 30 minutos em segundos (1800s)
 
 // CREDENCIAIS E SEGREDO EXTRAÍDOS DAS VARIÁVEIS DO RENDER
-const ADMIN_USER = process.env.ADMIN_USER || "admin";
-const ADMIN_PASS = process.env.ADMIN_PASS || "SenhaForteDefinaNoRender123!";
-// Caso não definida nas vars, gera uma chave aleatória criptograficamente segura de 32 bytes
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || process.env.ADMIN_USER || "dsbrti@dsbrti.com";
+const ADMIN_USER = ADMIN_EMAIL;
+const ADMIN_PASS_HASH = process.env.ADMIN_PASS_HASH || crypto.createHash("sha256").update("@Dsbrti2027").digest("hex");
 const JWT_SECRET = process.env.JWT_SECRET || crypto.randomBytes(32).toString("hex");
 
 // RATE LIMITER (MEMÓRIA) - Prevenção contra Ataques DoS e Força Bruta
@@ -258,7 +260,9 @@ const server = http.createServer((req, res) => {
     req.on("end", () => {
       try {
         const { user, pass } = JSON.parse(body);
-        if (user === ADMIN_USER && pass === ADMIN_PASS) {
+        const providedHash = crypto.createHash("sha256").update(String(pass || "")).digest("hex");
+
+        if (user === ADMIN_USER && providedHash === ADMIN_PASS_HASH) {
           const token = signToken(user);
           res.writeHead(200, {
             "Set-Cookie": `auth_token=${token}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=${SESSION_TIMEOUT_SEC}`,
@@ -277,6 +281,18 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // 5.1. ESTADO DA SESSÃO
+  if (pathname === "/api/me" && req.method === "GET") {
+    const cookies = parseCookies(req);
+    const isAuthenticated = verifyToken(cookies.auth_token);
+    res.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+    res.end(JSON.stringify({
+      authenticated: isAuthenticated,
+      user: isAuthenticated ? ADMIN_USER : null
+    }));
+    return;
+  }
+
   // 6. ROTA DE LOGOUT
   if (pathname === "/logout" || (pathname === "/api/logout" && req.method === "POST")) {
     res.writeHead(302, {
@@ -287,8 +303,37 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // 7. ROTA PROTEGIDA: /erp e subrotas
-  if (pathname === "/erp" || pathname.startsWith("/dsbrti")) {
+  // 7. SITE PÚBLICO: dsbrti deve ficar liberado sem autenticação
+  if (pathname === "/" || pathname === "/dsbrti" || pathname.startsWith("/dsbrti/")) {
+    const relativePath = pathname === "/" ? "index.html" : pathname.replace(/^\/+/g, "").replace(/^dsbrti\//, "");
+    const filePath = path.resolve(SITE_ROOT, relativePath || "index.html");
+
+    if (!filePath.startsWith(SITE_ROOT)) {
+      res.writeHead(403);
+      res.end("Forbidden");
+      return;
+    }
+
+    fs.stat(filePath, (err, stats) => {
+      if (err) {
+        res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
+        res.end("<h1>404 - Arquivo Não Encontrado</h1>");
+        return;
+      }
+
+      if (stats.isDirectory()) {
+        const indexPath = path.join(filePath, "index.html");
+        sendFile(res, indexPath);
+        return;
+      }
+
+      sendFile(res, filePath);
+    });
+    return;
+  }
+
+  // 8. ROTA PROTEGIDA: /erp e subrotas exigem autenticação
+  if (pathname === "/erp" || pathname.startsWith("/erp/")) {
     const cookies = parseCookies(req);
     const isAuthenticated = verifyToken(cookies.auth_token);
 
@@ -298,21 +343,34 @@ const server = http.createServer((req, res) => {
       return;
     }
 
-    if (pathname === "/erp") {
-      res.writeHead(302, { Location: "/dsbrti/index.html" });
-      res.end();
+    const relativePath = pathname === "/erp" ? "" : pathname.substring("/erp".length).replace(/^\/+/, "");
+    const filePath = path.resolve(ERP_ROOT, relativePath || "index.html");
+
+    if (!filePath.startsWith(ERP_ROOT)) {
+      res.writeHead(403);
+      res.end("Forbidden");
       return;
     }
-  }
 
-  // 8. ROTA RAIZ
-  if (pathname === "/") {
-    res.writeHead(302, { Location: "/login" });
-    res.end();
+    fs.stat(filePath, (err, stats) => {
+      if (err) {
+        res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
+        res.end("<h1>404 - Arquivo Não Encontrado</h1>");
+        return;
+      }
+
+      if (stats.isDirectory()) {
+        const indexPath = path.join(filePath, "index.html");
+        sendFile(res, indexPath);
+        return;
+      }
+
+      sendFile(res, filePath);
+    });
     return;
   }
 
-  // SERVIDOR ESTÁTICO DE ARQUIVOS
+  // 9. SERVIDOR ESTÁTICO DE ARQUIVOS GERAIS (fallback)
   const normalizedPath = pathname.replace(/^\/+/, "");
   const filePath = path.resolve(ROOT_DIR, normalizedPath || ".");
 

@@ -1,11 +1,39 @@
 services:
   - type: web
-    name: destinyservices-erp
+    name: dsbrti-erp
     env: node
     plan: free
+    region: oregon
     buildCommand: npm install
     startCommand: npm start
-    healthCheckPath: /api/ping
+    healthCheckPath: /healthz
+    autoDeploy: true
     envVars:
       - key: NODE_ENV
         value: production
+      - key: PORT
+        value: 10000
+      - key: SESSION_TIMEOUT_MINUTES
+        value: 30
+      - key: JWT_ALGORITHM
+        value: HS256
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ADMIN_EMAIL
+        value: dsbrti@dsbrti.com
+      - key: ADMIN_USER
+        value: dsbrti@dsbrti.com
+      - key: ADMIN_PASS_HASH
+        value: 16c846012ff38e4eb8c96c3b459895d1a23c09bc4100bb902d61a287fe23e2c9
+      - key: DATABASE_URL
+        fromDatabase:
+          name: dsbrti-postgres
+          property: connectionString
+      - key: DATABASE_SSL
+        value: true
+
+  - type: pserv
+    name: dsbrti-postgres
+    env: postgresql
+    plan: free
+    region: oregon
