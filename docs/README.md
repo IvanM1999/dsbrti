@@ -1,3 +1,5 @@
+# Atenção! O projeto está em revisão, reconstrução e melhorias, podem haver diferenças reais entre documentação e projeto!
+
 # 🚀 DestinyServicesBR
 
 Hub Operacional de Engenharia de Software, Metrologia Industrial e Ecossistemas Digitais.
