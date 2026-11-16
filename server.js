@@ -41,6 +41,14 @@ function isRateLimited(ip) {
   return userData.count > MAX_REQUESTS_PER_WINDOW;
 }
 
+function isPathInside(root, target) {
+  const relativePath = path.relative(root, target);
+  return relativePath === "" ||
+    (!path.isAbsolute(relativePath) &&
+      relativePath !== ".." &&
+      !relativePath.startsWith(`..${path.sep}`));
+}
+
 // MIME TYPES
 const MIME_TYPES = {
   ".html": "text/html; charset=utf-8",
@@ -237,7 +245,14 @@ const server = http.createServer((req, res) => {
   }
 
   const requestUrl = new URL(req.url, `http://${req.headers.host || "localhost"}`);
-  let pathname = decodeURIComponent(requestUrl.pathname);
+  let pathname;
+  try {
+    pathname = decodeURIComponent(requestUrl.pathname);
+  } catch {
+    res.writeHead(400, { "Content-Type": "text/plain; charset=utf-8" });
+    res.end("URL inválida.");
+    return;
+  }
 
   // 3. ROTA DE HEALTH CHECK (Render / UptimeRobot)
   if (pathname === "/healthz") {
@@ -303,36 +318,7 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // 7. SITE PÚBLICO: dsbrti deve ficar liberado sem autenticação
-  if (pathname === "/" || pathname === "/dsbrti" || pathname.startsWith("/dsbrti/")) {
-    const relativePath = pathname === "/" ? "index.html" : pathname.replace(/^\/+/g, "").replace(/^dsbrti\//, "");
-    const filePath = path.resolve(SITE_ROOT, relativePath || "index.html");
-
-    if (!filePath.startsWith(SITE_ROOT)) {
-      res.writeHead(403);
-      res.end("Forbidden");
-      return;
-    }
-
-    fs.stat(filePath, (err, stats) => {
-      if (err) {
-        res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
-        res.end("<h1>404 - Arquivo Não Encontrado</h1>");
-        return;
-      }
-
-      if (stats.isDirectory()) {
-        const indexPath = path.join(filePath, "index.html");
-        sendFile(res, indexPath);
-        return;
-      }
-
-      sendFile(res, filePath);
-    });
-    return;
-  }
-
-  // 8. ROTA PROTEGIDA: /erp e subrotas exigem autenticação
+  // 7. ROTA PROTEGIDA: /erp e subrotas exigem autenticação
   if (pathname === "/erp" || pathname.startsWith("/erp/")) {
     const cookies = parseCookies(req);
     const isAuthenticated = verifyToken(cookies.auth_token);
@@ -346,7 +332,7 @@ const server = http.createServer((req, res) => {
     const relativePath = pathname === "/erp" ? "" : pathname.substring("/erp".length).replace(/^\/+/, "");
     const filePath = path.resolve(ERP_ROOT, relativePath || "index.html");
 
-    if (!filePath.startsWith(ERP_ROOT)) {
+    if (!isPathInside(ERP_ROOT, filePath)) {
       res.writeHead(403);
       res.end("Forbidden");
       return;
@@ -370,11 +356,15 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // 9. SERVIDOR ESTÁTICO DE ARQUIVOS GERAIS (fallback)
-  const normalizedPath = pathname.replace(/^\/+/, "");
-  const filePath = path.resolve(ROOT_DIR, normalizedPath || ".");
+  // 8. SITE PÚBLICO: todos os caminhos públicos são servidos apenas de dsbrti/
+  const relativePath = pathname === "/" || pathname === "/dsbrti"
+    ? "index.html"
+    : pathname.startsWith("/dsbrti/")
+      ? pathname.slice("/dsbrti/".length)
+      : pathname.replace(/^\/+/, "");
+  const filePath = path.resolve(SITE_ROOT, relativePath || "index.html");
 
-  if (!filePath.startsWith(ROOT_DIR)) {
+  if (!isPathInside(SITE_ROOT, filePath)) {
     res.writeHead(403);
     res.end("Forbidden");
     return;

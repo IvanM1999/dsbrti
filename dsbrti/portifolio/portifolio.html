@@ -10,7 +10,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23E95420'/%3E%3Ctext x='4' y='24' font-size='20' font-weight='bold' fill='%23fff'%3ED%3C/text%3E%3C/svg%3E">
   
-  <script src="../senai/patches.js" defer></script>
   <script src="../tema-inteligente.js"></script>
   
   <style>
@@ -219,7 +218,7 @@
       <ul class="nav-links">
         <li><a href="../index.html">Início</a></li>
         <li><a href="../landingpage/land.html">Landing</a></li>
-        <li><a href="senai/projetos/metrologia/calculadora/metrologia.html">Metrologia</a></li>
+        <li><a href="../senai/projetos/metrologia/calculadora/metrologia.html">Metrologia</a></li>
         <li><a href="../curriculo/index.html">Currículo</a></li>
         <li><a href="portifolio.html" class="active">Portfólio</a></li>
       </ul>
@@ -281,11 +280,8 @@
 
   <div id="toast" class="toast" role="alert" aria-live="assertive"></div>
 
-  <script src="../senai/core.js"></script>
-
   <script>
-    // Configurações Globais (3 Perfis)
-    const GITHUB_USERS = ['IvanM1999', 'IvvyDestiny1999', 'IvvyDestiny'];
+    const GITHUB_USERS = ['IvanM1999'];
 
     // Novos Temas e Categorias do Portfólio
     const defaultCategories = {
@@ -366,6 +362,25 @@
     let filteredProjects = [];
     let currentFilter = 'all';
 
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, character => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      })[character]);
+    }
+
+    function safeExternalUrl(value) {
+      try {
+        const url = new URL(value, window.location.href);
+        return url.protocol === 'https:' || url.protocol === 'http:' ? url.href : '';
+      } catch {
+        return '';
+      }
+    }
+
     // Função de Categoria Inteligente: Avalia Topics primeiro e usa a Linguagem como fallback
     function getCategoryFromRepo(repo) {
       const topics = repo.topics || [];
@@ -390,26 +405,14 @@
 
     async function initPortfolio() {
       let localProjects = [];
-      let categorias = defaultCategories;
-
-      // 1. Carrega projetos locais do projetos.json (se existir)
-      try {
-        const jsonResponse = await fetch('projetos.json');
-        if (jsonResponse.ok) {
-          const jsonData = await jsonResponse.json();
-          localProjects = jsonData.projetos || [];
-          if (jsonData.categorias) categorias = { ...categorias, ...jsonData.categorias };
-        }
-      } catch (e) {
-        console.warn('⚠️ projetos.json não encontrado. Carregando dados via API do GitHub.');
-      }
+      const categorias = defaultCategories;
 
       allProjects = [...localProjects];
       filteredProjects = allProjects;
       renderFilters(categorias);
       renderProjects();
 
-      // 2. Busca dados simultaneamente dos 3 perfis do GitHub
+      // 2. Busca os repositórios públicos do perfil principal
       try {
         const fetchPromises = GITHUB_USERS.map(username => 
           Promise.all([
@@ -549,32 +552,39 @@
         return;
       }
       
-      grid.innerHTML = filteredProjects.map(project => `
+      grid.innerHTML = filteredProjects.map(project => {
+        const link = safeExternalUrl(project.link);
+        const github = project.github ? safeExternalUrl(project.github) : '';
+        const category = escapeHtml(project.categoria || 'web');
+        const status = ['ativo', 'beta', 'desenvolvimento', 'legado'].includes(project.status)
+          ? project.status
+          : 'ativo';
+
+        return `
         <div class="project-card">
           <div class="project-header">
-            <span class="project-emoji">${project.imagem}</span>
-            <h3 class="project-title">${project.titulo}</h3>
+            <span class="project-emoji">${escapeHtml(project.imagem || '📦')}</span>
+            <h3 class="project-title">${escapeHtml(project.titulo || 'Projeto')}</h3>
           </div>
           
-          <p class="project-description">${project.descricao}</p>
+          <p class="project-description">${escapeHtml(project.descricao || 'Repositório público.')}</p>
           
           <div class="project-meta">
-            <span class="project-category">${project.categoria.charAt(0).toUpperCase() + project.categoria.slice(1)}</span>
-            <span class="project-status ${project.status}">${project.status}</span>
+            <span class="project-category">${category.charAt(0).toUpperCase() + category.slice(1)}</span>
+            <span class="project-status ${status}">${status}</span>
           </div>
           
           <div class="project-tags">
-            ${project.tags.map(tag => `<span class="tag">#${tag}</span>`).join('')}
+            ${(project.tags || []).map(tag => `<span class="tag">#${escapeHtml(tag)}</span>`).join('')}
           </div>
           
           <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: auto;">
-            <a href="${project.link}" target="_blank" rel="noreferrer noopener" class="project-link">
-              Acessar Projeto →
-            </a>
-            ${project.github ? `<a href="${project.github}" target="_blank" rel="noreferrer noopener" class="project-link" style="background: rgba(255,255,255,0.1); color: inherit; border-color: rgba(255,255,255,0.15);">GitHub →</a>` : ''}
+            ${link ? `<a href="${escapeHtml(link)}" target="_blank" rel="noreferrer noopener" class="project-link">Acessar Projeto →</a>` : ''}
+            ${github ? `<a href="${escapeHtml(github)}" target="_blank" rel="noreferrer noopener" class="project-link" style="background: rgba(255,255,255,0.1); color: inherit; border-color: rgba(255,255,255,0.15);">GitHub →</a>` : ''}
           </div>
         </div>
-      `).join('');
+      `;
+      }).join('');
       
       resultCount.textContent = `Mostrando ${filteredProjects.length} de ${allProjects.length} projetos`;
     }
@@ -586,7 +596,7 @@
       });
     });
 
-    console.log('%c⚙️ Portfólio Multi-Perfil DSBRTI Otimizado', 'color: #E95420; font-weight: bold;');
+    console.log('%c⚙️ Portfólio DSBRTI integrado ao GitHub', 'color: #E95420; font-weight: bold;');
   </script>
 </body>
 </html>

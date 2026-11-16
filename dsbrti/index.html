@@ -23,7 +23,6 @@
     href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='none' stroke='%23ffffff' stroke-width='2' stroke-opacity='0.2'/%3E%3Cpath d='M16 8v16M8 16h16' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-opacity='0.6'/%3E%3Ccircle cx='16' cy='16' r='5' fill='%230078d4'/%3E%3C/svg%3E">
 
   <!-- Scripts de Inicialização e Patches de Escopo -->
-  <script src="senai/patches.js" defer></script>
   <script src="tema-inteligente.js"></script>
 </head>
 
@@ -58,7 +57,7 @@
       <p class="subtitle">Desenvolvimento de Software, Sistemas Web Interativos e Integração com Hardware/Mecatrônica.
       </p>
       <div class="hero-actions" style="margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: center;">
-        <a href="landingpage.html" class="text-link"
+        <a href="landingpage/land.html" class="text-link"
           style="background: var(--primary); color: #fff; padding: 0.75rem 1.5rem; border-radius: var(--radius);">Conhecer
           Soluções →</a>
         <a href="#institucional" class="text-link"
@@ -72,7 +71,7 @@
     <section id="institucional" class="curriculo-layout" style="margin-top: 2rem;">
 
       <article class="curriculo-section">
-        <h2><img src="https://storage.freeicon.com/free-computer-icon-gQYEJBhfIys6" alt="Ícone de computador" style="height: 1em; width: auto; vertical-align: middle; margin-left: 0.35em;">DestinyServicesBR </h2>
+        <h2>⚙️ DestinyServicesBR</h2>
 
           <p class="meta">CNPJ: 45.609.430/0001-43</p>
         <p style="margin-bottom: 1rem;">
@@ -111,11 +110,11 @@
       <div class="card" style="margin-bottom: 1.5rem; padding: 1.5rem;">
         <h2 style="margin-bottom: 0.5rem;">🎓 Ferramentas e Blogs em Desenvolvimento</h2>
           <strong data-current-course-badge>MecatronLabs</strong>
-          <p style="margin-top: 0.35rem; color: var(--text-sec);" data-current-course-description>MecatronLabs é um multisistema de ferramentas e informações publicas para estudante, engenheiros e hobbistas de plantão</p>
+          <p style="margin-top: 0.35rem; color: var(--text-sec);" data-current-course-description>MecatronLabs é um multisistema de ferramentas e informações públicas para estudantes, engenheiros e entusiastas.</p>
           <a href="https://meca-master-lab.base44.app/" class="text-link" data-current-course-link style="margin-top: 0.7rem;">Abrir Site</a>
                 <h2 style="margin-bottom: 0.5rem;">🎓 Ferramentas de Metrologia em Desenvolvimento</h2>
           <strong data-current-course-badge>Ubuntu Metrologics</strong>
-          <p style="margin-top: 0.35rem; color: var(--text-sec);" data-current-course-description>MecatronLabs é um multisistema de ferramentas e informações publicas para estudante, engenheiros e hobbistas de plantão</p>
+          <p style="margin-top: 0.35rem; color: var(--text-sec);" data-current-course-description>Ferramentas e referências de metrologia para apoiar medições e atividades técnicas.</p>
           <a href="./senai/projetos/metrologia/calculadora/metrologia.html" class="text-link" data-current-course-link style="margin-top: 0.7rem;">Abrir Site</a>
         
         </div>
@@ -123,7 +122,7 @@
 
       <h2>🚀 Hub de Projetos & Extensão Acadêmica</h2>
       <p style="margin-bottom: 1.5rem;">Sistemas públicos desenvolvidos com foco em acessibilidade, triagem automatizada
-        e utilidade social:</p>
+        e utilidade social. <a href="portifolio/portifolio.html" class="text-link">Ver projetos e repositórios →</a></p>
 
       <div class="dashboard"
         style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
@@ -166,14 +165,14 @@
         <div style="padding: 1rem; border-left: 3px solid var(--primary);">
           <h4>📐 Central Metrológica</h4>
           <p style="font-size: 0.9rem; color: var(--text-sub); margin-bottom: 0.5rem;">Tabelas e Conversores Bidirecionais de uso Industrial e Técnicos, para auxilio diário de produção e desenvolvimento.</p>
-          <a href="senai/metrologia.html" class="text-link" style="font-size: 0.9rem;">Abrir Módulo →</a>
+          <a href="senai/projetos/metrologia/calculadora/metrologia.html" class="text-link" style="font-size: 0.9rem;">Abrir Módulo →</a>
         </div>
 
         <div style="padding: 1rem; border-left: 3px solid var(--secondary);">
           <h4>💼 Landing Page Comercial</h4>
           <p style="font-size: 0.9rem; color: var(--text-sub); margin-bottom: 0.5rem;">Nossos pacotes de desenvolvimento
             web, integração de robótica embarcada e contato para orçamentos de sistemas personalizados.</p>
-          <a href="../dsbrti/landingpage/land.html" class="text-link" style="font-size: 0.9rem;">Abrir Módulo →</a>
+          <a href="landingpage/land.html" class="text-link" style="font-size: 0.9rem;">Abrir Módulo →</a>
         </div>
 
         <div style="padding: 1rem; border-left: 3px solid var(--warning);">
@@ -202,9 +201,6 @@
   <div id="toast" class="toast" role="alert" aria-live="assertive"></div>
 
   <!-- Scripts de Controle de Escopo Limpo -->
-  <script src="senai/core.js"></script>
-  <script src="curso-atual.js"></script>
-
   <!-- Camada protetiva e inicialização limpa -->
   <script>
     document.documentElement.setAttribute('data-protected', 'true');
