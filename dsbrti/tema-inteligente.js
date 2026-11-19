@@ -1,21 +1,21 @@
 /**
  * DSBRTI - GERENCIADOR DE TEMAS INTELIGENTE E INTEGRADO V2.0
- * Controla os ecossistemas industriais (Ubuntu, Fedora, Windows XP)
+ * Controla os ecossistemas visuais (Ubuntu, Linux Mint, GNOME)
  * com persistência local e fallback automático por faixa de horário.
  */
 
 const GerenciadorTemasIndustrial = {
     // 1. Tabela central de controle e mapeamento de comportamento dos temas atuais
     TABELA_TEMAS: {
-        'ubuntu': { id: 'ubuntu', nome: 'Ubuntu OS', padraoDia: true, temaBarra: '#E95420' },
-        'fedora': { id: 'fedora', nome: 'Fedora Linux', padraoDia: false, temaBarra: '#294172' },
-        'winxp':  { id: 'winxp',  nome: 'Windows XP', padraoDia: false, temaBarra: '#215dc6' }
+        'ubuntu': { id: 'ubuntu', nome: 'Ubuntu', padraoDia: true, temaBarra: '#E95420' },
+        'fedora': { id: 'fedora', nome: 'Linux Mint', padraoDia: false, temaBarra: '#87cf3f' },
+        'winxp':  { id: 'winxp',  nome: 'GNOME Shell', padraoDia: false, temaBarra: '#3584e4' }
     },
 
     CHAVE_STORAGE: 'dsbrti_tema_preferido',
 
     config: {
-        horaNoite: 18, // Início do turno da noite (aplica winxp se nenhuma escolha prévia existir)
+        horaNoite: 18, // Início do turno da noite (aplica GNOME se nenhuma escolha prévia existir)
         horaDia: 6,     // Início do turno do dia
         intervaloVerificacao: 60000 // 1 minuto
     },
@@ -55,7 +55,7 @@ const GerenciadorTemasIndustrial = {
         const ehTurnoNoite = (horaAtual >= this.config.horaNoite || horaAtual < this.config.horaDia);
 
         if (ehTurnoNoite) {
-            return 'winxp'; // Alterna automaticamente para o turno noturno
+            return 'winxp'; // Alterna automaticamente para o tema GNOME
         }
 
         // Tema padrão de fábrica (Ubuntu)
