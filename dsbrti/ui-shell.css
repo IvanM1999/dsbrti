@@ -1,0 +1,109 @@
+:root {
+  --font-body: Ubuntu, Cantarell, "Noto Sans", "Segoe UI", sans-serif;
+}
+
+.dsbrti-icon {
+  display: inline-block;
+  width: 1.05em;
+  height: 1.05em;
+  flex: 0 0 auto;
+  vertical-align: -0.15em;
+}
+
+.dsbrti-inline-icon {
+  display: inline-flex;
+  align-items: center;
+  color: var(--accent, #e95420);
+  vertical-align: -0.14em;
+}
+
+.dsbrti-inline-icon .dsbrti-icon {
+  width: 1em;
+  height: 1em;
+}
+
+[data-theme="winxp"] {
+  --bg: #1d2027;
+  --bg-image: radial-gradient(circle at 50% -20%, rgba(53, 132, 228, 0.16), transparent 50%),
+    linear-gradient(135deg, #171a20 0%, #232833 100%);
+  --bg-card: rgba(36, 40, 48, 0.88);
+  --bg-nav: rgba(28, 31, 38, 0.96);
+  --bg-hover: rgba(255, 255, 255, 0.08);
+  --text: #f6f5f4;
+  --text-sec: #c9c7c5;
+  --text-nav: #fff;
+  --text-sub: #a7a5a3;
+  --accent: #78aeed;
+  --accent-hover: #91c2f5;
+  --primary: #3584e4;
+  --secondary: #9141ac;
+  --border: rgba(255, 255, 255, 0.1);
+  --border-glow: rgba(53, 132, 228, 0.45);
+  --radius: 10px;
+  --radius-sm: 7px;
+}
+
+[data-theme="winxp"] .navbar {
+  margin: 0 auto;
+  width: 100%;
+  max-width: none;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+[data-theme="winxp"] .nav-links a.active {
+  background: var(--bg-hover);
+}
+
+[data-theme="winxp"] .nav-links a.active::after {
+  background: var(--accent);
+}
+
+.nav-links [data-dsbrti-workspace] {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.dsbrti-launcher {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 1000;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.7rem 0.95rem;
+  border: 1px solid var(--border, rgba(255, 255, 255, 0.12));
+  border-radius: 999px;
+  background: var(--bg-nav, #25232a);
+  color: var(--text, #fff);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.3);
+  font-size: 0.83rem;
+  font-weight: 600;
+  backdrop-filter: blur(16px);
+}
+
+.dsbrti-launcher:hover {
+  color: #fff;
+  background: var(--accent, #e95420);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 720px) {
+  .dsbrti-launcher {
+    right: 0.75rem;
+    bottom: 0.75rem;
+  }
+
+  .dsbrti-launcher span {
+    display: none;
+  }
+
+  .dsbrti-launcher .dsbrti-icon {
+    width: 1.3rem;
+    height: 1.3rem;
+  }
+}
