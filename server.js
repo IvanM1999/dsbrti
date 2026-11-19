@@ -55,10 +55,16 @@ const MIME_TYPES = {
   ".css": "text/css; charset=utf-8",
   ".js": "application/javascript; charset=utf-8",
   ".json": "application/json; charset=utf-8",
+  ".svg": "image/svg+xml",
+  ".webmanifest": "application/manifest+json",
   ".png": "image/png",
   ".jpg": "image/jpeg",
-  ".svg": "image/svg+xml",
+  ".jpeg": "image/jpeg",
+  ".webp": "image/webp",
+  ".avif": "image/avif",
   ".ico": "image/x-icon",
+  ".ttf": "font/ttf",
+  ".woff": "font/woff",
   ".woff2": "font/woff2",
 };
 
@@ -213,7 +219,7 @@ const LOGIN_HTML = `
 `;
 
 // ENVIAR ARQUIVOS ESTÁTICOS
-const sendFile = (res, filePath) => {
+const sendFile = (res, filePath, { enhancePublic = false } = {}) => {
   const ext = path.extname(filePath).toLowerCase();
   const contentType = MIME_TYPES[ext] || "application/octet-stream";
 
@@ -224,6 +230,14 @@ const sendFile = (res, filePath) => {
       return;
     }
     res.writeHead(200, { "Content-Type": contentType });
+    if (enhancePublic && ext === ".html") {
+      const source = data.toString("utf8");
+      const shellCss = /<link\b[^>]*href=["']\/ui-shell\.css(?:[?#][^"']*)?["']/i.test(source);
+      const shellScript = /<script\b[^>]*src=["']\/ui-shell\.js(?:[?#][^"']*)?["']/i.test(source);
+      const assets = `${shellCss ? "" : '<link rel="stylesheet" href="/ui-shell.css">'}${shellScript ? "" : '<script defer src="/ui-shell.js"></script>'}`;
+      res.end(source.replace(/<\/head\s*>/i, `${assets}</head>`));
+      return;
+    }
     res.end(data);
   });
 };
@@ -236,6 +250,8 @@ const server = http.createServer((req, res) => {
   res.setHeader("X-Content-Type-Options", "nosniff");
   res.setHeader("X-Frame-Options", "DENY");
   res.setHeader("X-XSS-Protection", "1; mode=block");
+  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+  res.setHeader("Content-Security-Policy", "frame-ancestors 'none'; object-src 'none'; base-uri 'self'");
 
   // 2. BLOQUEIO DE RATE LIMITING
   if (isRateLimited(clientIp)) {
@@ -370,6 +386,9 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  res.setHeader("X-Frame-Options", "SAMEORIGIN");
+  res.setHeader("Content-Security-Policy", "frame-ancestors 'self'; object-src 'none'; base-uri 'self'");
+
   fs.stat(filePath, (err, stats) => {
     if (err) {
       res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
@@ -379,11 +398,11 @@ const server = http.createServer((req, res) => {
 
     if (stats.isDirectory()) {
       const indexPath = path.join(filePath, "index.html");
-      sendFile(res, indexPath);
+      sendFile(res, indexPath, { enhancePublic: true });
       return;
     }
 
-    sendFile(res, filePath);
+    sendFile(res, filePath, { enhancePublic: true });
   });
 });
 
