@@ -155,3 +155,9 @@ O servidor implementa validação de caminhos para prevenir acesso não autoriza
 ## 📞 Suporte
 
 Para dúvidas, parcerias ou desenvolvimento de novos ecossistemas digitais, entre em contato através do email ou redes sociais listadas acima. 
+
+## Histórico e expansão da IA
+
+- [Histórico de versões e política de versionamento](./CHANGELOG.md)
+- [Catálogo de agentes do workspace](../dsbrti/agentes/README.md)
+- [Base de expansão para WhatsApp](../dsbrti/agentes/integracoes/whatsapp.md) — documentação apenas; não há conexão ou envio nesta versão.

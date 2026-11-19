@@ -88,42 +88,106 @@
         <header class="panel-heading">
           <div>
             <p class="eyebrow">Inferência no seu dispositivo</p>
-            <h1 id="assistantTitle">Assistente local</h1>
-            <p>O modelo roda no navegador. Nenhuma mensagem é enviada a uma API de IA.</p>
+            <h1 id="assistantTitle">Assistente pessoal</h1>
+            <p>Converse com um agente na janela flutuante. Modelos e agentes podem ser configurados aqui.</p>
           </div>
           <span class="local-badge">Somente neste dispositivo</span>
         </header>
 
-        <div class="ai-consent-card">
-          <h2>Modelo Qwen 2.5 · 0,5B</h2>
-          <p>O download começa apenas depois da sua autorização. O modelo quantizado ocupa aproximadamente <strong>483 MB</strong> com WebGPU ou <strong>512 MB</strong> em modo CPU, além do runtime. O navegador pode limitar ou limpar o cache.</p>
-          <p>Para buscar e armazenar o modelo, o navegador acessa Hugging Face e jsDelivr. As conversas permanecem na memória desta página e não são gravadas nem enviadas para esses serviços.</p>
-          <label class="consent-row">
-            <input id="modelConsent" type="checkbox">
-            <span>Autorizo baixar o runtime e o modelo para este navegador. Entendo que o consumo de dados pode ultrapassar 500 MB.</span>
-          </label>
-          <div class="ai-actions">
-            <button class="workspace-button primary" id="loadModel" type="button" disabled>Autorizar e preparar modelo</button>
-            <button class="workspace-button" id="clearModel" type="button">Apagar cache do modelo</button>
-            <span id="modelStorage" class="storage-label">Verificando armazenamento disponível…</span>
-          </div>
-          <p id="modelStatus" class="workspace-status" role="status" aria-live="polite">Modelo não baixado. A compatibilidade será verificada ao iniciar.</p>
-          <progress id="modelProgress" max="100" value="0" hidden></progress>
-        </div>
+        <nav class="assistant-settings-tabs" role="tablist" aria-label="Configurações do assistente">
+          <button id="modelsTab" class="settings-tab active" type="button" role="tab" aria-selected="true" aria-controls="modelsSettings" data-settings-tab="models">Modelos</button>
+          <button id="agentsTab" class="settings-tab" type="button" role="tab" aria-selected="false" aria-controls="agentsSettings" data-settings-tab="agents">Agentes</button>
+        </nav>
 
-        <section class="chat-card" aria-label="Conversa com a IA local">
-          <div id="chatMessages" class="chat-messages" aria-live="polite">
-            <p class="chat-placeholder">Prepare o modelo para iniciar uma conversa. A primeira resposta pode demorar enquanto o dispositivo carrega os pesos em memória.</p>
+        <section id="modelsSettings" class="settings-panel" role="tabpanel" aria-labelledby="modelsTab">
+          <div class="ai-consent-card">
+            <h2>Modelos locais</h2>
+            <p>Os tamanhos são estimativas e variam conforme o dispositivo. O download começa somente após autorização; o runtime é obtido via jsDelivr e os arquivos do modelo via Hugging Face. O cache pode ser removido pelo navegador.</p>
+            <label class="model-picker" for="modelSelect">Modelo para baixar ou carregar</label>
+            <select id="modelSelect" class="workspace-select">
+              <option value="onnx-community/Qwen2.5-0.5B-Instruct">Qwen 2.5 · 0,5B (aprox. 500 MB)</option>
+              <option value="onnx-community/SmolLM2-360M-Instruct">SmolLM2 · 360M (aprox. 350 MB)</option>
+              <option value="onnx-community/Llama-3.2-1B-Instruct">Llama 3.2 · 1B (aprox. 800 MB)</option>
+              <option value="onnx-community/Qwen2.5-1.5B-Instruct">Qwen 2.5 · 1,5B (aprox. 1,2 GB)</option>
+            </select>
+            <label class="consent-row">
+              <input id="modelConsent" type="checkbox">
+              <span>Autorizo baixar o runtime e o modelo selecionado para este navegador. Entendo que o consumo pode ultrapassar 1 GB.</span>
+            </label>
+            <div class="ai-actions">
+              <button class="workspace-button primary" id="loadModel" type="button" disabled>Autorizar e preparar modelo</button>
+              <button class="workspace-button" id="unloadModel" type="button" disabled>Trocar modelo</button>
+              <button class="workspace-button" id="clearModel" type="button">Apagar cache do modelo</button>
+              <span id="modelStorage" class="storage-label">Verificando armazenamento disponível…</span>
+            </div>
+            <p id="modelStatus" class="workspace-status" role="status" aria-live="polite">Modelo não baixado. A compatibilidade será verificada ao iniciar.</p>
+            <progress id="modelProgress" max="100" value="0" hidden></progress>
           </div>
-          <form id="chatForm" class="chat-composer">
-            <label class="sr-only" for="chatInput">Mensagem</label>
-            <textarea id="chatInput" rows="2" placeholder="Converse com a IA local…" disabled required></textarea>
-            <button class="workspace-button primary" id="sendMessage" type="submit" disabled>Enviar</button>
-          </form>
+        </section>
+
+        <section id="agentsSettings" class="settings-panel" role="tabpanel" aria-labelledby="agentsTab" hidden>
+          <section class="agent-manager" aria-labelledby="agentsTitle">
+            <div class="agent-manager-heading">
+              <div>
+                <h2 id="agentsTitle">Catálogo de agentes</h2>
+                <p>Os agentes oficiais são mantidos e versionados no diretório <code>dsbrti/agentes</code>. Selecione um deles na janela do assistente.</p>
+              </div>
+              <span id="agentCount" class="local-badge">Carregando…</span>
+            </div>
+            <ul id="agentCatalog" class="agent-catalog" aria-label="Agentes oficiais"></ul>
+            <p>Agentes não executam comandos nem acessam arquivos. Agentes pessoais criados abaixo ficam somente neste navegador.</p>
+            <details class="agent-create">
+              <summary>Criar agente pessoal</summary>
+              <form id="agentForm" class="agent-form">
+                <label for="agentName">Nome do agente</label>
+                <input id="agentName" name="name" maxlength="32" placeholder="Ex.: Assistente de estudos" required>
+                <label for="agentDescription">Função</label>
+                <input id="agentDescription" name="description" maxlength="120" placeholder="Resumo do que ele faz" required>
+                <label for="agentInstructions">Instruções</label>
+                <textarea id="agentInstructions" name="instructions" maxlength="1200" rows="3" placeholder="Descreva como o agente deve responder" required></textarea>
+                <button class="workspace-button" type="submit">Salvar agente neste navegador</button>
+              </form>
+            </details>
+            <p id="agentStatus" class="workspace-status" role="status" aria-live="polite">Agentes prontos para seleção no assistente.</p>
+          </section>
         </section>
       </section>
     </section>
   </main>
+
+  <button id="assistantLauncher" class="assistant-launcher" type="button" aria-controls="assistantPopup" aria-expanded="false">
+    <span aria-hidden="true">IA</span> Assistente
+  </button>
+  <aside id="assistantPopup" class="assistant-popup" aria-label="Assistente pessoal" hidden>
+    <header class="assistant-popup-header">
+      <div>
+        <strong>Assistente pessoal</strong>
+        <span id="activeAgentDescription">Escolha um agente</span>
+      </div>
+      <button id="closeAssistant" class="popup-close" type="button" aria-label="Fechar assistente">×</button>
+    </header>
+    <div class="popup-agent-picker">
+      <label for="agentSelect">Agente</label>
+      <select id="agentSelect" class="workspace-select" disabled>
+        <option value="">Carregando agentes…</option>
+      </select>
+      <button id="openAssistantSettings" class="workspace-button" type="button">Gerenciar IA</button>
+    </div>
+    <section class="chat-card" aria-label="Conversa com a IA local">
+      <div id="chatMessages" class="chat-messages" aria-live="polite">
+        <p class="chat-placeholder">Prepare um modelo no painel de IA para iniciar. As conversas ficam neste navegador.</p>
+      </div>
+      <form id="chatForm" class="chat-composer">
+        <label class="sr-only" for="chatInput">Mensagem</label>
+        <textarea id="chatInput" rows="2" maxlength="4000" placeholder="Converse com o agente selecionado…" disabled required></textarea>
+        <button class="workspace-button primary" id="sendMessage" type="submit" disabled>Enviar</button>
+      </form>
+      <div class="chat-footer">
+        <span>Histórico salvo localmente neste navegador.</span>
+        <button id="clearConversation" type="button">Limpar conversa</button>
+      </div>
+    </section>
+  </aside>
   <script src="/workspace.js" defer></script>
 </body>
 </html>
