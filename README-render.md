@@ -26,3 +26,10 @@
 - Nunca comitar o arquivo `.env`
 - Sempre setar os valores no painel do Render
 - O arquivo `.env.example` serve apenas como exemplo para dev/local
+
+## Espaço de trabalho
+- `/workspace.html` reúne o executor Web isolado e o assistente local opcional.
+- O executor aceita somente HTTPS e usa `iframe sandbox`; sites que bloqueiam incorporação continuam abrindo apenas fora do painel.
+- O assistente roda no navegador com Transformers.js e o modelo `onnx-community/Qwen2.5-0.5B-Instruct`. O modelo só é baixado depois do consentimento e fica no cache do navegador, não no Render.
+- O download do modelo pode consumir aproximadamente 483 MB (WebGPU) ou 512 MB (CPU), além do runtime. A disponibilidade depende do navegador, hardware, conexão e cota de armazenamento.
+- As conversas do assistente ficam em memória na página; não são enviadas a uma API de IA nem salvas pelo site.
